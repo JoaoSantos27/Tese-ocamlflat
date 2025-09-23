@@ -1,0 +1,262 @@
+<!--
+ * OFLAT/index.html
+ *
+ * This file is part of the OFLAT app
+ *
+ * LEAFS project (partially supported by the OCaml Software Foundation) [2020/21]
+ * FACTOR project (partially supported by the Tezos Foundation) [2019/20]
+ *
+ * NOVA LINCS - NOVA Laboratory for Computer Science and Informatics
+ * Dept. de Informatica, FCT, Universidade Nova de Lisboa.
+ *
+ * This software is distributed under the terms of the GPLv3 license.
+ * See the included LICENSE file for details.
+ *
+ *  Written by Rita Macedo
+ *-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>OFLAT</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+    charset="utf-8">
+  <!-- <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.31.1/dist/cytoscape.min.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/cytoscape-cxtmenu@3.5.0/cytoscape-cxtmenu.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-context-menus@4.2.1/cytoscape-context-menus.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-edgehandles@4.0.1/cytoscape-edgehandles.min.js"></script>  -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>  -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper@4.0.1/cytoscape-popper.min.js"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>  -->
+  <script src="https://unpkg.com/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <!-- <script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.js"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-popper/4.0.1/cytoscape-popper.js"></script> -->
+  <!-- <script src="https://unpkg.com/lodash"></script> 
+  <script src="https://unpkg.com/cytoscape"></script> 
+  <script src="https://unpkg.com/cytoscape-cxtmenu"></script>
+  <script src="https://unpkg.com/cytoscape-context-menus"></script>
+  <script src="https://unpkg.com/cytoscape-edgehandles"></script> 
+  <script src="https://unpkg.com/dagre/dist/dagre.js"></script>
+  <script src="https://unpkg.com/cytoscape-dagre"></script>  -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/lodash"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-edgehandles"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-cxtmenu"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-context-menus"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dagre/dist/dagre.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre"></script>
+
+  <!-- <script src="https://unpkg.com/lodash"></script>
+  <script src="https://unpkg.com/cytoscape"></script>
+  <script src="https://unpkg.com/cytoscape-cxtmenu"></script>
+  <script src="https://unpkg.com/cytoscape-context-menus"></script>
+  <script src="https://unpkg.com/cytoscape-edgehandles"></script> -->
+  <script src="https://unpkg.com/@popperjs/core"></script>
+  <script src="https://unpkg.com/cytoscape-popper@2.0.0/cytoscape-popper.js"></script>
+
+
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-cxtmenu"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-context-menus"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-edgehandles"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/dagre/dist/dagre.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre"></script> -->
+  <script src="OFLAT.js"></script>
+  <script src="GraphLibrary.js"></script>
+  <script src="XBridge.js"></script>
+  <script src="Logging.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3KCTZ7Y12"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-Z3KCTZ7Y12');
+  </script>
+  <link rel="stylesheet" href="Formatting.css">
+  <!-- link rel="manifest" href="manifest.json" -->
+
+  <script>
+    function selectConversion() {
+      let x = document.getElementById("selectConversion");
+      let y = x.selectedIndex;
+      jscode.selectConversions(y);
+      x.selectedIndex = 0;
+    }
+
+    function selectLang() {
+      let x = document.getElementById("selectLang");
+      let y = x.selectedIndex;
+      jscode.selectLang(y);
+      x.selectedIndex = 0;
+    }
+
+    function openFile(event) {
+      let input = event.target.files[0];
+      if (!input) return;
+      let reader = new FileReader();
+      reader.onload =
+        function () {
+          let text = reader.result;
+          jscode.readFromFile(text);
+        };
+      reader.readAsText(input);
+    }
+
+    function closeFunction() {
+      let modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    }
+  </script>
+
+</head>
+
+<body onload="startup();">
+  <div class="sidenav">
+    <div id="oflat">
+      <h2 id="title">OFLAT</h2>
+      <p id="version"></p>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipNewModel ()">
+      <select name="selectNewModel" id="selectNewModel" class="selectBoxes" onchange="jscode.newModel()">
+        <option id="optionNewDefault" value="optionNewDefault" hidden></option>
+        <option id="optionNewAutomatonFA" value="optionNewAutomatonFA"></option>
+        <option id="optionNewRegularExpression" value="optionNewRegularExpression"></option>
+        <option id="optionNewAutomatonPDA" value="optionNewAutomatonPDA"></option>
+        <option id="optionNewContextFreeGrammar" value="optionNewContextFreeGrammar"></option>
+        <option id="optionNewGrammar" value="optionNewGrammar"></option>
+        <option id="optionNewComposition" value="optionNewComposition"></option>
+        <option id="optionNewTuringMachine" value="optionNewTuringMachine"></option>
+      </select>
+      <div id="tooltipNewModel" class="tooltiptext"></div>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipEditModel ()">
+      <button id="editModel" onclick="jscode.editModel ()" disabled></button>
+      <div id="tooltipEditModel" class="tooltiptext"></div>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipFitGraph ()">
+      <button id="fitGraph" onclick="jscode.fitGraph ()" disabled></button>
+      <div id="tooltipFitGraph" class="tooltiptext"></div>
+    </div>
+    <hr>
+    <div class="tooltip" onmouseover="jscode.tooltipGenerate ()">
+      <button id="generate" onclick="jscode.generateWords ()" disabled></button>
+      <div id="tooltipGenerate" class="tooltiptext"></div>
+    </div>
+    <div id="testTrace">
+      <button id="testing" onclick="jscode.test()" disabled>
+        <div class="tooltip" onmouseover="jscode.tooltipTest ()">
+          <div id="tooltipTest" class="tooltiptext"></div>
+        </div>
+      </button>
+      <button id="trace" onclick="jscode.trace()" disabled>
+        <div class="tooltip" onmouseover="jscode.tooltipTrace ()">
+          <div id="tooltipTrace" class="tooltiptext"></div>
+        </div>
+      </button>
+    </div>
+    <div>
+      <p id="step"></p>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipStep ()">
+      <button id="backwards" onclick="jscode.backwards ()" disabled>◀︎</button>
+      <button id="start" onclick="jscode.stepbystep ()" disabled></button>
+      <button id="forward" onclick="jscode.forward ()" disabled>▶︎</button>
+      <button id="autoAccept" onclick="jscode.auto()" disabled>Auto</button>
+      <div id="tooltipStep" class="tooltiptext"></div>
+    </div>
+    <hr>
+    <div class="tooltip" onmouseover="jscode.tooltipConvert ()">
+      <select name="selectConversion" id="selectConversion" class="selectBoxes" onchange="selectConversion()">
+        <option id="selectConv" value="selectConv" hidden></option>
+        <option id="selectRegex" value="selectRegex" disabled></option>
+        <option id="selectFA" value="selectFA" disabled></option>
+        <option id="selectCFG" value="selectCFG" disabled></option>
+        <option id="selectGR" value="selectGR" disabled></option>
+        <option id="selectPDA" value="selectPDA" disabled></option>
+        <option id="selectTM" value="selectTM" disabled></option>
+        <option id="selectTM2Tapes" value="selectTM2Tapes" disabled></option>
+      </select>
+      <div id="tooltipConvert" class="tooltiptext"></div>
+    </div>
+    <hr>
+    <div class="tooltip" onmouseover="jscode.tooltipFile ()">
+      <button id="importModel" onclick="document.getElementById('file_input').click()">
+      </button>
+      <input type="file" id="file_input" onchange='openFile(event)' />
+      <div id="tooltipFile" class="tooltiptext"></div>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipExportModel ()">
+      <button id="exportModel" onclick="jscode.exportToFile ()" disabled></button>
+      <div id="tooltipExportModel" class="tooltiptext"></div>
+    </div>
+    <div id="server"></div>
+    <div id="examplesServer"></div>
+    <hr>
+    <div class="tooltip4" onmouseover="jscode.tooltipAbout ()">
+      <button id="about" onclick="jscode.about ()"></button>
+      <div id="tooltipAbout" class="tooltiptext4"></div>
+    </div>
+    <div class="tooltip4" onmouseover="jscode.tooltipFeedback ()">
+      <button id="feedback" onclick="jscode.feedback ()"></button>
+      <div id="tooltipFeedback" class="tooltiptext4"></div>
+    </div>
+    <div class="tooltip4" onmouseover="jscode.tooltipSettings()">
+      <button id="settings" onclick=jscode.settings()></button>
+      <div id="tooltipSettings" class="tooltiptext4"></div>
+    </div>
+  </div>
+  <div class="main">
+    <div id="mainBar">
+      <h1 id="mainTitle"></h1>
+    </div>
+    <div class="test">
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div id="modal-window" class="modal-window">
+          <button id="modalClose" class="close" onclick="closeFunction ()">X</button>
+          <div id="modal-content" class="modal-content"></div>
+        </div>
+      </div>
+      <div id="Box1">
+        <div id="buttonBox"></div>
+        <div id="regExp"></div>
+        <div id="gr"></div>
+        <div id="cy"></div>
+        <div id="infoBox"></div>
+      </div>
+      <div id="Box2">
+        <div id="buttonBox1"></div>
+        <div id="textBox"></div>
+        <div id="cy2"></div>
+        <div id="infoBox2"></div>
+      </div>
+    </div>
+    <footer class="footer">
+      <span id="developed"></span>
+      <a id="footerButton0" href="https://nova-lincs.di.fct.unl.pt/">NOVA-LINCS</a>
+      <span id="project"></span>
+      <a id="footerButton3" href="https://release.di.ubi.pt/factor/index.html">Factor</a>
+      <span id="and"></span>
+      <a id="footerButton3" href="https://release.di.ubi.pt/leafs/index.html">LEAFs</a>
+      <span id="financing"></span>
+      <a id="footerButton1" href="https://tezos.com/">Tezos Foundation</a>
+      <span id="and1"></span>
+      <a id="footerButton2" href="https://www.inria.fr/en">INRIA Foundation</a>
+    </footer>
+  </div>
+
+</body>
+
+</html>

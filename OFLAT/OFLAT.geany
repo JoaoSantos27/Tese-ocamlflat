@@ -1,0 +1,63 @@
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=true
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=false
+detect_indent_width=false
+indent_mode=2
+
+[project]
+name=OFLAT
+description=
+file_patterns=
+base_path=
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=80
+
+[files]
+current_page=11
+FILE_NAME_0=2177;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FTuringMachineView.ml;0;4
+FILE_NAME_1=2361;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FAutomatonView.ml;0;4
+FILE_NAME_2=20272;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FPushdownAutomatonView.ml;0;4
+FILE_NAME_3=512;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FFiniteAutomatonView.ml;0;4
+FILE_NAME_4=471;Make;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2FMakefile;0;4
+FILE_NAME_5=1959;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FJS.ml;0;4
+FILE_NAME_6=55;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FContextFreeGrammarLRView.ml;0;4
+FILE_NAME_7=476;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FFiniteAutomatonController.ml;0;4
+FILE_NAME_8=0;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FGrammarView.ml;0;4
+FILE_NAME_9=1397;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FViewUtil.ml;0;4
+FILE_NAME_10=5052;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FModel.ml;0;4
+FILE_NAME_11=11161;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FController.ml;0;4
+FILE_NAME_12=2707;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FListeners.ml;0;4
+FILE_NAME_13=10694;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FControllerListeners.ml;0;4
+FILE_NAME_14=19680;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOFLAT%2Fsrc%2FHtmlPageClient.ml;0;4
+
+[VTE]
+last_dir=/home/amd
+
+[build-menu]
+EX_00_LB=_Execute
+EX_00_CM=cd .. ; make run
+EX_00_WD=
+NF_00_LB=_Make
+NF_00_CM=cd .. ; make
+NF_00_WD=
+NF_02_LB=Test
+NF_02_CM=cd ..; make test
+NF_02_WD=
+NF_03_LB=Clean
+NF_03_CM=cd ..; make clean
+NF_03_WD=
+
+[editor]
+line_wrapping=true
+line_break_column=80
+auto_continue_multiline=true

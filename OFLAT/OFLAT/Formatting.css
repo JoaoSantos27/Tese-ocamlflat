@@ -1,0 +1,1682 @@
+/*
+ * OFLAT/Formatting.js
+ *
+ * This file is part of the OFLAT app
+ *
+ * LEAFS project (partially supported by the OCaml Software Foundation) [2020/21]
+ * FACTOR project (partially supported by the Tezos Foundation) [2019/20]
+ *
+ * NOVA LINCS - NOVA Laboratory for Computer Science and Informatics
+ * Dept. de Informatica, FCT, Universidade Nova de Lisboa.
+ *
+ * This software is distributed under the terms of the GPLv3 license.
+ * See the included LICENSE file for details.
+ *
+ *  Written by Rita Macedo
+ */
+
+body {
+  font-family: helvetica neue, helvetica, liberation sans, arial, sans-serif;
+  font-size: 14px;
+  height: 100%
+}
+
+.cxtmenu {
+  font-size: 12px;
+  width: 50px;
+}
+
+#help {
+  float: right;
+}
+
+/* you can set the disabled style how you like on the text/icon */
+.cxtmenu-disabled {
+  opacity: 0.333;
+}
+
+#mainTitle {
+  width: 100%;
+  color: #000030;
+  margin-top: 0vh;
+  margin-bottom: 0vh;
+  font-size: 3.1vmax;
+  height: inherit;
+}
+
+#under {
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  width: 198px;
+  text-decoration: underline;
+}
+
+#underBig {
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  width: 198px;
+  text-decoration: underline;
+}
+
+#buttonDiv {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+#regExp {
+  text-align: center;
+  /* padding-top: 10px; */
+  height: 0%;
+}
+
+.title {
+  color: white;
+  font-size: 19px;
+  width: 198px;
+}
+
+#Box1 {
+  width: 99%;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  display: block;
+  /* vertical-align: top; */
+  border: 1px solid black;
+  overflow: auto;
+
+  float: left;
+  /*    transition: all 0.1s ease;*/
+}
+
+#buttonBox {
+  height: 17%h;
+}
+
+#cy {
+  height: 60vh;
+}
+
+#Box2 {
+  width: 0%;
+  height: inherit;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  display: block;
+  /* vertical-align: top; */
+  border: 1px solid black;
+  overflow: scroll;
+  float: left;
+  /*    transition: all 0.1s ease;*/
+}
+
+#cy2 {
+  height: 60vh;
+  margin-top: 30px;
+}
+
+#oflat {
+  padding-top: 2vh;
+}
+
+#complete {
+  width: 0%;
+  height: 400px;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid black;
+  font-size: 12px;
+  overflow: scroll;
+  margin-top: 0px;
+}
+
+.test {
+  left: inherit;
+  /*width: 100%;*/
+  height: 90%;
+}
+
+#blah {
+  margin-bottom: 30px;
+}
+
+#leftBox {
+  width: 150px;
+  float: left;
+}
+
+#rightBox {
+  width: 150px;
+  float: left;
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+}
+
+h2 {
+  font-size: 30px;
+  margin: 5px;
+}
+
+button {
+  border-style: solid;
+  border-radius: 5px;
+  padding-left: 10px;
+  border-color: lightgray;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  background-color: #b0bec5;
+  opacity: 0.3px;
+  margin: 4px;
+  font-size: 11px;
+  /* width: 170px; */
+}
+
+#inputBox {
+  top: 100px;
+  left: 10px;
+  width: 400px;
+  border-style: solid;
+  border-radius: 5px;
+  padding-left: 10px;
+  border-color: dimgray;
+  overflow: hidden;
+}
+
+* {
+  font-family: sans-serif;
+}
+
+div.button {
+  width: 400px;
+  height: 30px;
+  padding: 0;
+  cursor: pointer;
+}
+
+div.content {
+  width: 200px;
+  padding: 5px;
+  margin-top: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+#test {
+  float: left;
+}
+
+#invisible {
+  border-style: hidden;
+  background-color: unset;
+  text-decoration: underline;
+  width: 80px;
+}
+
+#separate {
+  padding-bottom: 10px;
+}
+
+#box {
+  width: 170px;
+  margin-left: 5px;
+}
+
+#space {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#leftBox1 {
+  width: 500px;
+  float: left;
+}
+
+#rightBox1 {
+  width: 500px;
+  float: left;
+}
+
+#answerBox {
+  width: 500px;
+  border: none;
+}
+
+/* Menu formatting */
+
+.sidenav {
+  height: 100%;
+  width: 15%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #000030;
+  overflow-x: hidden;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 15%;
+  /* Same as the width of the sidenav */
+  font-size: 28px;
+  /* Increased text to enable scrolling */
+  padding: 0px 10px;
+  width: 85%;
+  height: 100vh;
+}
+
+#mainBar {
+  height: 8%;
+  margin-top: 1%;
+  margin-bottom: 0.5%;
+}
+
+.text {
+  color: white;
+}
+
+.Box1 {
+  align-content: center;
+  display: grid;
+  width: 180px;
+}
+
+.inputBox {
+  width: inherit;
+}
+
+.smallTitle {
+  color: white;
+}
+
+#file_input {
+  display: none;
+  /*  color: white;*/
+  /*  margin-bottom: 10px;*/
+  /*  margin-left: 10px;*/
+  /*  font-size: 11px;*/
+}
+
+#examplesServer::-webkit-scrollbar {
+  display: none;
+}
+
+#box1::-webkit-scrollbar {
+  display: none;
+}
+
+#row1, #min {
+  padding-top: 10px;
+}
+
+#infoBox {
+  width: 99%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  /*border: 1px solid black;*/
+  height: max(15vh, 10vw);
+  overflow: auto;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  overflow-x: hidden;
+  padding-left: 10px;
+  padding-bottom: 20px;
+}
+
+
+#automataButtons {
+  padding-left: 5%;
+}
+
+#textarea {
+  width: 98%;
+  border: 0px;
+  padding-top: 10px;
+  overflow: scroll;
+  height: 300px;
+  display: block;
+}
+
+#isdeterministic,
+#isminimal,
+#areuseful,
+#numbertransitions,
+#numberstates,
+#wordTitle,
+#errorsInfo,
+#isLL1,
+#isLeftRecursive,
+#isLeftFactoring,
+#hasParsingTableConflict,
+#isCFGClean,
+#transformLabel,
+#accepted,
+#configs,
+#exact,
+#time,
+#isEquivalentFA {
+  font-size: 14px;
+  /* padding-top: 10px; */
+}
+
+#titleInfo {
+  font-size: 20px;
+  padding-top: 5px;
+}
+
+#info {
+  font-size: 22px;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 5px;
+  background-color: #000030;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.75;
+  color: white;
+  margin-left: inherit;
+  width: inherit;
+}
+
+#footerButton0,
+#footerButton1,
+#footerButton2,
+#footerButton3 {
+  border-style: none;
+  border-radius: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin: 0px;
+  color: white;
+  display: inline-block;
+  text-decoration: underline;
+}
+
+#title {
+  color: white;
+  text-align: center;
+}
+
+#version {
+  font-size: 12px;
+  color: white;
+  text-align: center;
+}
+
+hr {
+  color: white;
+  margin-bottom: 10px;
+}
+
+#exampleButton {
+  border-style: none;
+  background-color: transparent;
+  color: white;
+  text-decoration: underline;
+  width: 42%;
+}
+
+#formatting {
+  float: right;
+}
+
+#input {
+  margin-bottom: 10px;
+  margin-right: 15px;
+  margin-left: 5px;
+}
+
+#error {
+  color: red;
+}
+
+#right {
+  color: green;
+}
+
+#wrong {
+  color: red;
+}
+
+#correct {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
+.right {
+  color: green;
+}
+
+#nothing {
+  font-size: 15px;
+  padding: 20px;
+}
+
+#prob,
+#accept,
+#notAccept,
+#prop {
+  font-size: 17px;
+}
+
+#enum {
+  text-align: center;
+}
+
+#convert {
+  width: 47%;
+  margin-bottom: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+#newModel,
+#editModel,
+#addTransition,
+#generate,
+#importModel,
+#exportModel,
+#box,
+#server,
+#fitGraph,
+#clearAuto {
+  width: 97%;
+  margin-left: 3px;
+}
+
+#clean,
+#deterministic,
+#minimize,
+#productive,
+#accessible,
+#useful,
+#showTable,
+#cleanCFG,
+#rLeftRecursion,
+#leftFactorization,
+#rEpsilon,
+#rUnit,
+#transformLL1,
+#setTables,
+#acceptCFG,
+#rdparserCFG,
+#toggle,
+#clearAuto,
+#changeDirection,
+#convertAcceptStates,
+#convertEmptyStackAccept {
+  width: 30%;
+  margin-left: 3px;
+  margin-right: 0px;
+}
+
+#backwards,
+#start,
+#forward,
+#autoAccept {
+  width: 22%;
+  margin-left: 3px;
+  margin-right: 0px;
+}
+
+#testing,
+#trace {
+  width: 47.5%;
+  margin-left: 3px;
+  margin-right: 0px;
+}
+
+#infoAutomata,
+#treeResult,
+#treeGoodDerivations,
+#treeBadDerivations,
+#treeNumbers {
+  font-size: 14px;
+}
+
+#treeResult,
+#resultBox,
+#treeGoodDerivations,
+#treeBadDerivations,
+#treeNumbers {
+  text-align: center;
+}
+
+#resultBox {
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.selectBoxes {
+  border-style: solid;
+  border-radius: 5px;
+  padding-left: 10px;
+  border-color: lightgray;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #b0bec5;
+  opacity: 0.3px;
+  margin: 5px;
+  width: 97%;
+  margin-left: 3px;
+}
+
+/*style the arrow inside the select element:*/
+.selectBoxes:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+
+/*point the arrow upwards when the select box is open (active):*/
+.selectBoxes.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+
+/*style the items (options), including the selected item:*/
+.select-items div,
+.selectBoxes {
+  color: #ffffff;
+  padding: 3px 16px;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+  user-select: none;
+}
+
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: #b0bec5;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover,
+.same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#step {
+  color: white;
+  font-size: 11px;
+}
+
+#closeLeft,
+#closeRight {
+  width: 20px;
+  padding: 0px;
+  text-align: center;
+  float: left
+}
+
+#aboutTitle {
+  font-size: 30px;
+}
+
+#aboutSubtitle,
+#aboutSubtitle2 {
+  font-size: 20px;
+}
+
+#aboutText,
+#aboutText17,
+#aboutText5,
+#aboutText6,
+#aboutText7,
+#aboutText8,
+#aboutText9,
+#aboutText10,
+#aboutText11,
+#aboutText12,
+#aboutText13,
+#aboutText14,
+#aboutText15 {
+  font-size: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#aboutBox {
+  overflow: scroll;
+}
+
+#feedbackTitle {
+  font-size: 30px;
+}
+
+#feedbackText,
+#feedbackText1,
+#feedbackThankYou {
+  font-size: 15px;
+}
+
+#feedbackText1 a:link {
+  color: black;
+}
+
+#feedbackBox {
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+#examplesServer {
+  width: 100%;
+  height: 15%;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+#aboutText a:link {
+  color: black;
+}
+
+#selectNewModel,
+#selectConversion,
+#selectNode,
+#selectTrans,
+#selectLang,
+#selectedL {
+  color: black;
+  text-align: center;
+  font-size: 11px;
+}
+
+#inputTitle,
+#importTitle {
+  color: white;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  font-size: 11px;
+}
+
+#about,
+#feedback,
+#selectLang,
+#settings {
+  width: 97%
+}
+
+#box {
+  height: 15px;
+}
+
+#server {
+  border-style: none;
+  padding-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: transparent;
+  margin: 5px;
+  width: 170px;
+  color: white;
+  text-align: left;
+  font-size: 11px;
+}
+
+#inside,
+#outside,
+#properties {
+  font-size: 15px;
+  margin-left: 15px;
+}
+
+#treeButtons {
+  display: flex;
+  justify-content: center;
+}
+
+#bottomLineButtons,
+#topLineButtons,
+#clear,
+#min,
+#prod,
+#row1,
+#row2,
+#row3,
+#row4,
+#middleLineButtons {
+  padding-left: 7%;
+  height: 28px;
+}
+
+#close {
+  height: 30px;
+}
+
+/* Tooltip Menu */
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #b0bec5;
+  color: #000030;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  /* top: 150%; */
+  left: 50%;
+  margin-left: -60px;
+  font-size: 12px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #b0bec5 transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* Tooltip Direita */
+
+.tooltip1 {
+  position: relative;
+}
+
+.tooltip1 .tooltiptext1 {
+  visibility: hidden;
+  width: 120px;
+  background-color: #b0bec5;
+  color: #000030;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 110%;
+  font-size: 12px;
+}
+
+.tooltip1 .tooltiptext1::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #b0bec5 transparent transparent;
+}
+
+.tooltip1:hover .tooltiptext1 {
+  visibility: visible;
+}
+
+/* Tooltip Baixo */
+
+.tooltip3 {
+  position: relative;
+}
+
+.tooltip3 .tooltiptext3 {
+  visibility: hidden;
+  width: 120px;
+  background-color: #b0bec5;
+  color: #000030;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip3 .tooltiptext3::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #b0bec5 transparent;
+}
+
+.tooltip3:hover .tooltiptext3 {
+  visibility: visible;
+}
+
+/* Tooltip Esquerda */
+.tooltip2 {
+  position: relative;
+}
+
+.tooltip2 .tooltiptext2 {
+  visibility: hidden;
+  width: 120px;
+  background-color: #b0bec5;
+  color: #000030;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 110%;
+}
+
+.tooltip2 .tooltiptext2::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #b0bec5;
+}
+
+.tooltip2:hover .tooltiptext2 {
+  visibility: visible;
+}
+
+.tooltip4 {
+  position: relative;
+}
+
+.tooltip4 .tooltiptext4 {
+  visibility: hidden;
+  width: 120px;
+  background-color: #b0bec5;
+  color: #000030;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+  font-size: 12px;
+}
+
+.tooltip4 .tooltiptext4::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #b0bec5 transparent transparent transparent;
+}
+
+.tooltip4:hover .tooltiptext4 {
+  visibility: visible;
+}
+
+@media only screen and (max-width: 1212px) {
+  .footer {
+    font-size: 12px;
+  }
+
+  #backwards,
+  #start,
+  #forward,
+  #clean,
+  #deterministic,
+  #minimize,
+  #productive,
+  #accessible,
+  #useful,
+  #clearAuto,
+  #convertAcceptStates,
+  #convertEmptyStackAccept {
+    width: 29%;
+    margin-left: 3px;
+    margin-right: 0px;
+  }
+
+  button {
+    font-size: 10px;
+  }
+
+  #step {
+    font-size: 10px;
+  }
+
+  #selectNewModel,
+  #selectConversion,
+  #selectNode,
+  #selectTrans,
+  #selectLang {
+    font-size: 10px;
+  }
+
+  #inputTitle,
+  #importTitle {
+    font-size: 10px;
+  }
+
+  #server {
+    font-size: 10px;
+  }
+
+  #file_input {
+    font-size: 10px;
+  }
+
+}
+
+@media only screen and (max-width: 1067px) {
+
+  #backwards,
+  #start,
+  #forward,
+  #clean,
+  #deterministic,
+  #minimize,
+  #productive,
+  #accessible,
+  #useful,
+  #clearAuto,
+  #convertAcceptStates,
+  #convertEmptyStackAccept {
+    width: 29%;
+    margin-left: 3px;
+    margin-right: 0px;
+  }
+
+  button {
+    font-size: 9px;
+  }
+
+  #step {
+    font-size: 9px;
+  }
+
+  #selectNewModel,
+  #selectConversion,
+  #selectNode,
+  #selectTrans,
+  #selectLang {
+    font-size: 9px;
+  }
+
+  #inputTitle,
+  #importTitle {
+    font-size: 9px;
+  }
+
+  #server {
+    font-size: 9px;
+  }
+
+  #file_input {
+    font-size: 9px;
+  }
+
+}
+
+@media only screen and (max-width: 858px) {
+  .footer {
+    font-size: 11px;
+  }
+
+  #backwards,
+  #start,
+  #forward,
+  #clean,
+  #deterministic,
+  #minimize,
+  #productive,
+  #accessible,
+  #useful,
+  #clearAuto,
+  #convertAcceptStates,
+  #convertEmptyStackAccept {
+    width: 28%;
+    margin-left: 3px;
+    margin-right: 0px;
+    padding-left: 8px;
+  }
+
+  button {
+    font-size: 7.5px;
+  }
+
+  #step {
+    font-size: 7.5px;
+  }
+
+  #selectNewModel,
+  #selectConversion,
+  #selectNode,
+  #selectTrans,
+  #selectLang {
+    font-size: 7.5px;
+  }
+
+  #inputTitle,
+  #importTitle {
+    font-size: 7.5px;
+  }
+
+  #server {
+    font-size: 7.5px;
+  }
+
+  #file_input {
+    font-size: 7.5px;
+  }
+
+}
+
+@media only screen and (max-width: 855px) {
+  .footer {
+    font-size: 10px;
+  }
+
+  #backwards,
+  #start,
+  #forward,
+  #clean,
+  #deterministic,
+  #minimize,
+  #productive,
+  #accessible,
+  #useful,
+  #clearAuto,
+  #convertAcceptStates,
+  #convertEmptyStackAccept {
+    width: 28%;
+    margin-left: 3px;
+    margin-right: 0px;
+    padding-left: 6px;
+  }
+
+  .sidenav {
+    width: 16%;
+  }
+
+}
+
+@media only screen and (max-width: 855px) {
+  #regExp {
+    font-size: 25px;
+    padding-top: 8px;
+  }
+
+  div#cfgGrammar2 {
+    font-size: 25px;
+    padding-top: 8px;
+  }
+
+}
+
+@media only screen and (max-height: 768px) {
+  #regExp {
+    font-size: 20px;
+    padding-top: 8px;
+  }
+
+  #title {
+    font-size: 26px;
+  }
+
+  div#cfgGrammar2 {
+    font-size: 25px;
+    padding-top: 8px;
+  }
+
+}
+
+@media only screen and (max-height: 404px) {
+  #regExp {
+    font-size: 18px;
+    padding-top: 8px;
+  }
+
+  #isdeterministic,
+  #isminimal,
+  #areuseful,
+  #numbertransitions,
+  #numberstates,
+  #wordTitle,
+  #errorsInfo,
+  #isLL1,
+  #isLeftRecursive,
+  #isLeftFactoring,
+  #isCFGClean,
+  #isEquivalentFA {
+    font-size: 11px;
+    position: relative;
+    top: -9px;
+  }
+
+  #bottomLineButtons,
+  #topLineButtons,
+  #clear,
+  #middleLineButtons {
+    padding-left: 7%;
+    height: 23px;
+  }
+
+  #close {
+    height: 25px;
+  }
+
+  div#cfgGrammar2 {
+    font-size: 25px;
+    padding-top: 8px;
+  }
+
+}
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-window {
+  background-color: #fefefe;
+  margin: 15% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border-style: double;
+  width: 60%;
+  /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  float: left;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+div#editModelOther {
+  font-size: 14px;
+}
+
+/* CFG Tables */
+
+table#cfgProductionsTable {
+  text-align: left;
+  margin: auto;
+  border-collapse: collapse;
+  border: none;
+}
+
+table#cfgProductionsTable td {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#cfgProductionsTable th {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#cfgProductionsTable td:nth-child(1) {
+  font-weight: bold;
+}
+
+/* GR Tables */
+table#grProductionsTable {
+  text-align: left;
+  margin: auto;
+  border-collapse: collapse;
+  border: none;
+}
+
+table#grProductionsTable td {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#grProductionsTable th {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#grProductionsTable td:nth-child(1) {
+  font-weight: bold;
+}
+
+h2#wordAcceptTitle {
+  text-align: center;
+}
+
+table#cfgTable,
+td,
+th {
+  border: 1px solid black;
+}
+
+table#cfgParsingTable {
+  margin: auto;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+  table-layout: fixed;
+  width: 75%;
+  border-collapse: collapse;
+}
+
+table#cfgParsingTable tr:nth-child(1) {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+table#cfgParsingTable td:nth-child(1) {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+table#cfgFirstFollowTable {
+  margin: auto;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+  table-layout: fixed;
+  width: 75%;
+  border-collapse: collapse;
+}
+
+table#cfgFirstFollowTable tr:nth-child(1) {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+table#cfgFirstFollowTable td:nth-child(1) {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.bgSymbolColor {
+  background-color: lightblue !important;
+  ;
+  font-family: inherit;
+}
+
+.bgSymbolColorFail {
+  background-color: #ff9999 !important;
+  ;
+  font-family: inherit;
+}
+
+.bgRuleColor {
+  background-color: lightgreen !important;
+  ;
+  font-family: inherit;
+}
+
+.bgRuleColorFail {
+  background-color: #ff9999 !important;
+  ;
+  font-family: inherit;
+}
+
+table#cfgGuideTable th {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+table#cfgGuideTable {
+  margin: auto;
+  font-size: 14px;
+  table-layout: auto;
+  /*    width: 35%;*/
+  border-collapse: collapse;
+}
+
+table#cfgGuideTable tr:hover {
+  cursor: pointer;
+}
+
+table#cfgGuideTable tr:nth-child(1) {
+  cursor: default;
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+table#cfgGuideTable td {
+  font-family: monospace;
+}
+
+.monospaceClass {
+  font-family: monospace
+}
+
+.currentRow {
+  background-color: antiquewhite;
+}
+
+div#acceptLL1CurrentWord {
+  text-align: center;
+  margin: auto;
+  display: block;
+}
+
+.stringSymbolRemove {
+  background-color: #ff9999;
+  font-family: inherit;
+}
+
+.stringSymbolAdd {
+  background-color: lightgreen;
+  font-family: inherit;
+}
+
+.wordAccepted {
+  color: green
+}
+
+.wordRejected {
+  color: red
+}
+
+/*New CFG*/
+div#cfgGrammar2 {
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+table#cfgProductionsTable2 {
+  text-align: left;
+  margin: auto;
+  border-collapse: collapse;
+  border: none;
+}
+
+table#cfgProductionsTable2 td {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#cfgProductionsTable2 th {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#cfgProductionsTable2 td:nth-child(1) {
+  font-weight: bold;
+}
+
+
+table#grProductionsTable2 {
+  text-align: left;
+  margin: auto;
+  border-collapse: collapse;
+  border: none;
+}
+
+table#grProductionsTable2 td {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#grProductionsTable2 th {
+  border-collapse: collapse;
+  border: none;
+}
+
+table#grProductionsTable2 td:nth-child(1) {
+  font-weight: bold;
+}
+
+div#newGrammarElem {
+  text-align: center;
+}
+
+div#infoBox2CFG {
+  text-align: left;
+}
+
+/*CFG Recursive descedent parser*/
+h2#rdParserTitle {
+  text-align: center;
+}
+
+pre#rdParserCode {
+  -moz-tab-size: 4;
+  /*Firefox*/
+  tab-size: 4;
+  margin-left: 5%;
+  font-size: 14px;
+}
+
+div#cfgAcceptTable {
+  height: auto;
+  width: 50%;
+  float: left;
+}
+
+.cyBorder {
+  border-style: solid;
+}
+
+select#rdParserSelect {
+  display: block;
+  margin: 0 auto;
+}
+
+button#copyClipboardBtn {
+  display: block;
+  margin: 0 auto;
+}
+
+/* PDA menus and poppers */
+
+/* #buttonBoxPda {
+    float: left;
+    clear: none;
+  } */
+
+#buttonBoxPda {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+#specsMenuPda {
+  width: 152px;
+  margin-left: 10px;
+}
+
+#buttonCommands {
+  width: 100%;
+}
+
+.pdaSpecificationButtons {
+  width: 100%;
+  height: 40%;
+  background-color: #adb4c4;
+}
+
+.pdaButtonCommands {
+  width: 100%;
+}
+
+.popper-div {
+  width: 24px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #b0bec5;
+  color: black;
+  text-align: center;
+  font-size: 20px;
+}
+
+.cy-context-menus-cxt-menuitem {
+  color: black;
+  font-size: 12px;
+}
+
+.display-config-class {
+  text-align: center;
+  border: 1px thin #e6e6ee;
+}
+
+.display-config-class thead tr {
+  background-color: #b0bec5;
+  color: #ffffff;
+}
+
+.display-config-class th {
+  padding: 7px 16px;
+  font-size: 20px;
+}
+
+.display-config-class td {
+  padding: 7px 20px;
+  font-size: 23px;
+  background-color: #ecf2f5;
+}
+
+/* FA/PDA TABLE CSS */
+
+#edgeCell {
+  text-align: center;
+  font-size: 20px;
+  background-color: silver;
+  font-weight: bold;
+}
+
+#contentCell {
+  text-align: center;
+  font-size: 20px;
+  background-color: snow;
+}
+
+#automataTable {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5%;
+}
+
+#pathTable {
+  margin-top: 5%;
+  margin-left: 20%;
+}
+
+/* SETTINGS STUFF */
+
+#settingsIntro {
+  font-size: 20px;
+}
+
+#settingsText {
+  font-size: 15px;
+  margin-left: 2.5%;
+}
+
+#selectEmpty,
+#selectLanguage {
+  margin-left: 2%;
+}
+
+/* TRACE STUFF */
+
+#currChar {
+  font-weight: bold;
+  border: 1px solid #000;
+  border-radius: 0%;
+  padding: 0px;
+}

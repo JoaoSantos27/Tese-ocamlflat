@@ -1,0 +1,54 @@
+AttributeGrammar.ml -----------------------------
+AttributeGrammarSupport.ml -----------------------------
+BasicTypes.ml -----------------------------
+Composition.ml -> LOTS of aditions FEITO!@
+CompositionSupport.ml -----------------------------
+CompositionTests.ml -----------------------------
+Configuration.ml -----------------------------
+ContextFreeGrammarBasic.ml - NOVO find_applied_rules VER! FEITO!????@
+ContextFreeGrammarBasicTests.ml - testes novos para apagar depois FEITO!@
+ContextFreeGrammarChomsky.ml -----------------------------
+ContextFreeGrammarLL1.ml -> so' acrescentou transformationToString FEITO!@
+ContextFreeGrammarLL1Tests.ml - exemplos adicionais FEITO!@
+ContextFreeGrammarLR.ml -----------------------------
+ContextFreeGrammarLRTests.ml -----------------------------
+ContextFreeGrammar.ml -----------------------------
+ContextFreeGrammarRDParser.ml -----------------------------
+ContextFreeGrammarSupport.ml -----------------------------
+Entity.ml -----------------------------
+Error.ml -----------------------------
+Examples.ml -> IMPROVED some aditions FEITO!@
+Exercise.ml -----------------------------
+ExerciseSupport.ml -----------------------------
+FiniteAutomaton.ml -----------------------------
+FiniteAutomatonSupport.ml -> module TransducerBasics ira' para outro ficheiro FEITO!@
+FiniteAutomatonTests.ml -----------------------------
+FiniteEnumeration.ml -----------------------------
+FiniteEnumerationSupport.ml -----------------------------
+FiniteEnumerationTests.ml -----------------------------
+Grammar.ml -> NOVO FEITO! Onde está a arvore de derivacao??? VER!@
+GrammarSupport.ml -> DETALHES mudados FEITO!@
+GrammarTests.ml -> Quase tudo novo 600 linhas FEITO!@
+JSon.ml -----------------------------
+JSonTests.ml -----------------------------
+LearnOCaml.ml -----------------------------
+LearnOCamlTests.ml -----------------------------
+Model.ml -> Pequenas mudancas e ficaram duvidas. FEITO!@
+OCamlFlat.ml -----------------------------
+PolyModel.ml - grandes adicoes VER! FEITO!@
+PreOpen.ml -----------------------------
+PushdownAutomaton.ml -----------------------------
+PushdownAutomatonSupport.ml -----------------------------
+PushdownAutomatonTests.ml -----------------------------
+RegularExpression.ml -----------------------------
+RegularExpressionSupport.ml -----------------------------
+RegularExpressionTests.ml -----------------------------
+Scanner.ml -----------------------------
+Service.ml -----------------------------
+Set.ml -----------------------------
+Tests.ml -----------------------------
+TopLevel.ml -----------------------------
+TuringMachine.ml - cleaned FEITO!@
+TuringMachineSupport.ml small details FEITO!@
+TuringMachineTests.ml -----------------------------
+Util.ml -> novo benchmark FEITO!@

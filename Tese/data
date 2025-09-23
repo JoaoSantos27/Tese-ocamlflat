@@ -1,0 +1,102 @@
+
+https://www-igm.univ-mlv.fr/~perrin/Enseignement/Master2015-16/Cours3/lecture3.pdf
+
+sequential transducer
+
+A transducer is synchronous if for each edge, the input label and the output label are letters.
+A transducer is literal if for each edge the input label and the output label are letters or the empty word. (Todos os nossos são literais por definição).
+
+
+----------------
+https://en.wikipedia.org/wiki/Finite-state_transducer
+Operations on finite-state transducers
+
+----------------
+http://www.jandaciuk.pl/thesis/node13.html  *** EXEMPLO ***
+Transducers can be seen as automata with transitions labeled with symbols from ￼,
+The state transition function d maps 
+The emission function maps
+A transducer is said to be deterministic iff both the transition function d and the emission function ￼ lead to sets containing at most one element.
+Traditionally, such deterministic transducers are called subsequential. For subsequential transducers, the transducing function can be computed by deterministically following a single path in the transducer.
+
+
+----------------
+https://viterbi-web.usc.edu/~jdeshmuk/Papers/icalp11.pdf
+Classical literature on string-to-string transductions largely focusses on finitestate transducers that realize rational relations [13].
+The expressive power of finite transducers is limited. For example, they can implement transductions such as inserting a symbol in
+an input string and deleting a substring of the input string, but they cannot implement transductions such as reversing an input string or the swapping two
+substrings within an input string.
+
+----------------
+https://www.let.rug.nl/vannoord/papers/fsa/node23.html
+Determinization of Transducers
+It is not always possible to construct such a deterministic (subsequential) transducer. Example.
+
+------------------
+https://www.let.rug.nl/vannoord/papers/preds/node22.html
+Determinization of Transducers
+
+--------------
+https://www-igm.univ-mlv.fr/~berstel/LivreTransductions/LivreTransductions.pdf
+Transductions and Context-Free Languages
+6 Transducers
+
+----------------
+https://cs.nyu.edu/~mohri/pub/fla.pdf
+Determinized
+twins property
+
+----------------
+https://cs.nyu.edu/~mohri/pub/twins.pdf
+EFFICIENT ALGORITHMS FOR TESTING THE TWINS PROPERTY
+
+----------------
+https://cseweb.ucsd.edu/classes/wi15/cse105-b/fst.pdf
+Definições
+
+----------------
+https://www.sciencedirect.com/science/article/pii/S0304397598001157/pdf?md5=4c9b5fcdaff8061adf8eb62754dff2c5&pid=1-s2.0-S0304397598001157-main.pdf
+Minimization
+
+----------------
+https://www.microsoft.com/en-us/research/wp-content/uploads/2017/05/cav17paper-1.pdf
+Minimization of Symbolic Transducers
+
+https://cstheory.stackexchange.com/questions/18915/how-to-minimize-a-fsm-transducer
+How to minimize a FSM transducer?
+
+
+-
+
+module TransducerBasics =
+struct
+	type transition4 = state * symbol * symbol * state
+	type transitions4 = transition4 set
+	type t = {
+		inAlphabet : symbols;
+		outAlphabet : symbols;
+		states : states;
+		initialState : state;
+		transitions : transitions4;
+		acceptStates : states
+	}
+
+	type configuration = state * word * word
+	type configurations = configuration set
+	type path = configuration list
+	type trail = configurations list
+
+	let kind = "transducer"
+
+	let ft_zero: t = {
+		inAlphabet = Set.empty;
+		outAlphabet = Set.empty;
+		states = Set.make [draftState];
+		initialState = draftState;
+		transitions = Set.empty;
+		acceptStates = Set.empty
+	}
+end
+
+
+
