@@ -603,6 +603,7 @@ struct
 	let acceptFull = acceptFull
 	let generate = generate	
 	let toDeterministic = toDeterministic	
+	let areAllStatesUseful = areAllStatesUseful
 
 	(* Class *)
 	class model (arg: t Arg.alternatives) =
