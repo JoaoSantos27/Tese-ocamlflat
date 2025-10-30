@@ -156,6 +156,43 @@ struct
 		acceptStates : ["S"]
 	} |}
 
+	let fstD = {| {
+			kind : "transducer",
+    description : "Not determinizable (conflicting outputs)",
+    name : "fstNotDeterminizable",
+    inAlphabet : ["a"],
+    outAlphabet : ["x","y"],
+    states : ["S","A","B"],
+    initialState : "S",
+    transitions : [
+        ["S","a","x","A"],
+        ["S","a","y","B"]
+    ],
+    acceptStates : ["A","B"]
+	} |}
+
+	let fstMin = {| {
+		kind : "transducer",
+		description : "Minimizable: A and B are equivalent (same (in,out,next))",
+		name : "fst_min_merge_AB",
+		inAlphabet : ["a","b"],
+		outAlphabet : ["x","y"],
+		states : ["S","A","B"],
+		initialState : "S",
+		transitions : [
+			["S","a","x","A"],
+			["S","b","y","B"],
+
+			["A","a","x","A"],
+			["A","b","y","B"],
+
+			["B","a","x","A"],
+			["B","b","y","B"]
+		],
+		acceptStates : ["A","B"]
+	} |}
+
+
 
 	let test0 () =
     let fst: t = make (Arg.Text fstIdentity) in
@@ -202,6 +239,11 @@ struct
 		let outs = Transducer.generate fst 3 |> BasicTypes.wordsX in
 		Printf.printf "generate(3) = [%s]\n" (String.concat "; " outs)
 
+	let test8 () =
+		let fst: t = make (Arg.Text fstD) in
+		let fstD = Transducer.toDeterministic fst in
+		show fstD
+
 	let runAll =
 		if Util.testing active "Transducer" then begin
 			Util.header "test0";
@@ -220,6 +262,8 @@ struct
 			test6 ();
 			Util.header "test7";
 			test7 ();
+			Util.header "test8";
+			test8 ();
 			Util.header ""
 		end
 end

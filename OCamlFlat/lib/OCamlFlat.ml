@@ -6153,10 +6153,6 @@ module TransducerAccept =
 struct
   open TransducerSupport
 
-  (* configuration: current state, remaining input word, and accumulated output word *)
-  type config = state * word * word
-  type configurations = config Set.t
-
   let initialConfigs (fst: t) (w: word) : configurations =
     Set.make [(fst.initialState, w, [])]
 
@@ -6210,9 +6206,9 @@ struct
     Set.map
       (fun (_, inSym, outSym, st2) ->
          if inSym = epsilon then
-           (st2, w, out @ [outSym])       (* epsilon transition → no input consumed *)
+           (st2, w, out @ [outSym])       (* epsilon transition no input consumed *)
          else
-           (st2, inSym::w, out @ [outSym])  (* normal transition → prepend input to word *)
+           (st2, inSym::w, out @ [outSym])  (* normal transition prepend input to word *)
       )
       trs
 
@@ -6287,9 +6283,6 @@ struct
 			if not validTrns then
 				Error.error name "Some transitions are invalid" ()
 	
-
-	(** CLEANING FUNCTIONS
-	
 	(**
 	* This function generates all states that are reachable from the given state. A state is reachable from s if there
 	* exists a word that starting on s will lead to that state
@@ -6343,7 +6336,6 @@ struct
 				transitions = usfTrs;
 				acceptStates = accSts
 			}
- 	CLEANING FUNCTIONS **)
 		
 	let isClean (fst: t): bool =
 		let fa = asFiniteAutomaton fst in
@@ -6352,20 +6344,40 @@ struct
 		let usfSts = getUsefulStates fst in
 			Set.size fst.states = Set.size usfSts
 		*)
+
+	(**
+	* Performs a fast check for infinitely ambiguous epsilon-loops.
+	* A transducer with an epsilon self-loop that produces output
+	* is infinitely ambiguous and so, not determinizable.
+	*)
+	let isSelfLoop (fst: t) : bool =
+		let has_output_eps_loop =
+		  Set.exists
+			(fun (a, b, c, d) ->
+			   b = epsilon &&  (* Is it an epsilon transition? *)
+			   a = d &&        (* Is it a self-loop? *)
+			   c <> epsilon   (* Does it produce output? *)
+			)
+			fst.transitions
+		in
+		
+		if has_output_eps_loop then
+			true (* Immediately fail, FST is ambiguous *)
+		else
+			false (* Does not have this *specific* ambiguity *)
 	
 	(**
 	* Computes the ε-closure of a state, keeping track of output words
 	* (lists of symbols) produced along ε-transitions.
 	* Returns a set of (state, word) pairs.
 	*)
-	let epsilonClosureWithOutput (st: state) (ts: transitions4) : (state * word) Set.t =
+	let closeEmptyOut (st: state) (ts: transitions4) : (state * word) Set.t =
 		let rec explore (frontier: (state * word) Set.t) (visited: (state * word) Set.t) =
 			if Set.subset frontier visited then visited
 			else
 				let next =
 					Set.flatMap
 						(fun (s, out) ->
-							(* ε-transitions from s *)
 							let epsTr = Set.filter (fun (a, b, _, _) -> a = s && b = epsilon) ts in
 							Set.map
 								(fun (_, _, epsOut, s2) -> (s2, out @ [epsOut]))
@@ -6409,52 +6421,281 @@ struct
 	* Checks if the transducer fst is deterministic.
 	*
 	* Deterministic means:
+	*  - there are no self looping ε-transitions that produce output
 	*  - ε-closure must not yield multiple output words without consuming input
 	*  - For each (state, input), at most one resulting (nextState, outputWord) is possible
 	*)
 	let isDeterministic (fst: t) : bool =
+		if (isSelfLoop fst) then
+			false (* Fails the fast ambiguity check *)
+		else
 		Set.for_all
 			(fun st ->
-				let epsClosure = epsilonClosureWithOutput st fst.transitions in
-
-				(* --- 1. ε-output ambiguity check --- *)
+				let epsClosure = closeEmptyOut st fst.transitions in
+				(* ε-output ambiguity check *)
 				let epsOutputs = Set.map snd epsClosure in
 					if not (prefix_consistent epsOutputs) then
 						false
 					else
-					(* --- 2. Determinism for each input symbol --- *)
-					Set.for_all
-						(fun input ->
-								if input = epsilon then true  (* skip ε input symbol explicitly *)
-								else
-									let results =
+				(* Determinism for each input symbol *)
+				Set.for_all
+					(fun input ->
+						if input = epsilon then 
+							true  (* skip ε input symbol explicitly *)
+						else
+							let results =
+								Set.flatMap
+									(fun (s, outPrefix) ->
+										(* transitions consuming this input *)
+										let trs =
+											Set.filter (fun (a, b, _, _) -> a = s && b = input) fst.transitions
+										in
+										(* follow each transition, accumulate output, then close with ε *)
 										Set.flatMap
-											(fun (s, outPrefix) ->
-												(* transitions consuming this input *)
-												let trs =
-													Set.filter (fun (a, b, _, _) -> a = s && b = input) fst.transitions
-												in
-												(* follow each transition, accumulate output, then close with ε *)
-												Set.flatMap
-													(fun (_, _, out, s2) ->
-															let eps2 = epsilonClosureWithOutput s2 fst.transitions in
-															Set.map
-																(fun (sFinal, outSuffix) ->
-																	(sFinal, outPrefix @ (out :: outSuffix))
-																)
-																eps2
-													)
-													trs
+											(fun (_, _, out, s2) ->
+													let eps2 = closeEmptyOut s2 fst.transitions in
+													Set.map
+														(fun (sFinal, outSuffix) ->
+															(sFinal, outPrefix @ (out :: outSuffix))
+														)
+														eps2
 											)
-											epsClosure
-									in
-									(* Deterministic if ≤ 1 possible (state, output) result *)
-									Set.size results <= 1
-						)
-						fst.inAlphabet
+											trs
+									)
+								epsClosure
+							in
+						(* Deterministic if ≤ 1 possible (state, output) result *)
+						Set.size results <= 1
+					)
+				fst.inAlphabet
 			)
-			fst.states
+		fst.states
 
+	(* Get all states reachable from 'sts' via epsilon-input transitions *)
+	let rec closeEmpty (sts: states) (ts: transitions4) : states =
+		let nextEps = Set.flatMap (fun st ->
+		Set.map (fun (_,_,_,d) -> d)
+			(Set.filter (fun (a,b,_,_) -> a = st && b = epsilon) ts)
+		) sts in
+		let newSts = Set.union sts nextEps in
+		if Set.equals sts newSts then sts
+		else closeEmpty newSts ts
+
+	(* Get states reachable from 'sts' on one symbol 'sy' (no epsilon-closure) *)
+	let move (sts: states) (sy: symbol) (ts: transitions4) : states =
+		Set.flatMap (fun st ->
+		Set.map (fun (_,_,_,d) -> d)
+			(Set.filter (fun (a,b,_,_) -> a = st && b = sy) ts)
+		) sts
+
+	(* generates the set of states reachable from the given state set though the given symbol *)
+	let newR (oneR: states) (sy: symbol) (ts: transitions4) : states =
+		let nxtSts = move oneR sy ts in
+		Set.union nxtSts (closeEmpty nxtSts ts)
+
+	(* creates all transitions (given state set, a given symbol, output, states reachable) *)
+	let rToTs (r: states) (all_transitions: transitions4) in_alphabet =
+		let nxtTrans = Set.map (fun sy ->
+			(* Find all 'move' transitions (non-epsilon) from set 'r' on 'sy' *)
+			let moveTransitions = Set.filter (fun (a,b,_,_) -> Set.belongs a r && b = sy) all_transitions in
+
+			(* Get all outputs from this 'move' *)
+			let outputs = Set.map (fun (_,_,c,_) -> c) moveTransitions in
+
+			(* Calculate the destination DFST state (move + closeEmpty) *)
+			let destSet = newR r sy all_transitions in
+
+			if Set.isEmpty outputs then
+				(r, sy, epsilon, Set.empty) (* Placeholder, will be filtered *)
+			else
+				let out = List.hd (Set.toList outputs) in (* Pick the single output *)
+        		(r, sy, out, destSet)
+
+		) in_alphabet in
+		Set.filter (fun (_,_,_,z) -> not (Set.isEmpty z)) nxtTrans
+	
+	(* applies previous function to all state sets until no new set is generated *)
+	let rec rsToTs (stsD: states Set.t) (rD: states Set.t) (trnsD: (states * symbol * symbol * states) Set.t) (all_transitions: transitions4) in_alphabet =
+		let nxtTs = Set.flatMap (fun stSet -> rToTs stSet all_transitions in_alphabet) rD in
+		let nxtRs = Set.map (fun (_,_,_,z) -> z) nxtTs in (* Get new destination sets *)
+		let newRs = Set.filter (fun r -> not (Set.belongs r stsD)) nxtRs in
+		if Set.isEmpty newRs then (Set.union trnsD nxtTs) else
+		rsToTs (Set.union newRs stsD) newRs (Set.union trnsD nxtTs) all_transitions in_alphabet
+
+	(* Gets the longest common prefix of two words *)
+	let rec lcp w1 w2 =
+		match (w1, w2) with
+		| (x::xs, y::ys) when x = y -> x :: (lcp xs ys)
+		| _ -> []
+
+	(* Gets the suffix of a word after removing a prefix *)
+	let rec suffix prefix w =
+		match (prefix, w) with
+		| ([], _) -> w
+		| (p::ps, x::xs) when p = x -> suffix ps xs
+		| _ -> w (* Prefix doesn't match, return original word *)
+
+	(*
+	* This is the new "DFST state". It's a set of
+	* (NFST state * pending output word) pairs.
+	*)
+	type dfstState = (state * word) Set.t
+
+	(*
+	* This function "fuses" the dfstState into a single string
+	* name.
+	*)
+	let fusedfstState (st: dfstState) : state =
+		let l = Set.toList st in
+		(* Sort to get a canonical name *)
+		let sorted_l = List.sort (fun (s1, w1) (s2, w2) ->
+			if s1 <> s2 then compare s1 s2 else compare w1 w2
+		) l in
+		let s = String.concat "," (List.map (fun (s, w) ->
+			s ^ "" ^ (String.concat "" (List.map Symbol.symbD w))
+		) sorted_l) in
+	"{" ^ s ^ "}"
+
+	(**
+	* Check for
+	* No ε-transitions from a state that produce two different outputs.
+	* No two transitions from the same (state, input) producing different outputs.
+	*)
+	let hasConflictOut (fst: t): bool =
+		(* ε-transition ambiguity: same source state, multiple ε outputs *)
+		let eps_conflict =
+			Set.exists (fun st ->
+			let outs =
+				Set.map (fun (_,_,out,_) -> out)
+				(Set.filter (fun (a,b,_,_) -> a = st && b = epsilon) fst.transitions)
+			in
+			Set.size outs > 1
+			) fst.states
+		in
+
+		(* input transition ambiguity: same (state, input), multiple outputs *)
+		let input_conflict =
+			Set.exists (fun st ->
+			Set.exists (fun input ->
+				if input = epsilon then false else
+				let outs =
+				Set.map (fun (_,_,out,_) -> out)
+					(Set.filter (fun (a,b,_,_) -> a = st && b = input) fst.transitions)
+				in
+				Set.size outs > 1
+			) fst.inAlphabet
+			) fst.states
+		in
+
+	not eps_conflict && not input_conflict
+
+
+	(**
+	* This function converts the non-deterministic fst into its deterministic equivalent if it exists
+	*)
+	let toDeterministic (fst: t): t =
+	
+	if (isSelfLoop fst) then
+		(Error.error "toDeterministic"
+		"The FST is infinitely ambiguous and cannot be determinized." ();
+		fst)
+	else if not (hasConflictOut fst) then
+		(Error.error "toDeterministic"
+		"The FST has conflicting outputs and cannot be determinized." ();
+		fst)
+	else
+
+		let dfstStates: dfstState Set.t ref = ref Set.empty in
+		let newDfaTransitions: (state * symbol * symbol * state) Set.t ref = ref Set.empty in
+
+		let getNext (q: dfstState) (sy: symbol) (all_transitions: transitions4) =
+			let allResults =
+				Set.flatMap
+				(fun (st, outPrefix) -> 
+					let moveTransitions =
+					Set.filter (fun (a, b, _, _) -> a = st && b = sy) all_transitions
+					in
+					Set.flatMap
+					(fun (_, _, moveOut, destSt) ->
+						let newPrefix = outPrefix @ [moveOut] in
+						let epsClosure = closeEmptyOut destSt all_transitions in
+						Set.map
+						(fun (s, epsOut) -> (s, newPrefix @ epsOut))
+						epsClosure
+					)
+					moveTransitions
+				)
+				q
+			in
+			if Set.isEmpty allResults then
+				None
+			else
+				begin
+				let allWords = Set.map (fun (_, w) -> w) allResults in
+				let firstWord = (Set.toList allWords) |> List.hd in
+				let lcpWord = Set.fold_left lcp firstWord allWords in
+				
+				let newdfstState =
+					Set.map (fun (s, w) -> (s, suffix lcpWord w)) allResults
+				in
+
+				let outSymbol =
+					if List.length lcpWord > 0 then List.hd lcpWord else epsilon
+				in
+				
+				Some (outSymbol, newdfstState)
+				end
+		in
+
+		(* Initial state is the epsilon-closure of the original start state *)
+		let r1 = closeEmptyOut fst.initialState fst.transitions in
+
+		(* Use a worklist to find all reachable DFST states and transitions *)
+		let worklist = ref [r1] in
+		dfstStates := Set.add r1 !dfstStates;
+
+		while !worklist <> [] do
+		let currentdfstState = List.hd !worklist in
+		worklist := List.tl !worklist;
+		let srcFused = fusedfstState currentdfstState in
+
+		Set.iter (fun sy ->
+			match getNext currentdfstState sy fst.transitions with
+			| Some (outSymbol, nextdfstState) ->
+				let destFused = fusedfstState nextdfstState in
+				
+				if outSymbol <> epsilon then
+				newDfaTransitions := Set.add (srcFused, sy, outSymbol, destFused) !newDfaTransitions;
+				
+				if not (Set.belongs nextdfstState !dfstStates) then (
+				dfstStates := Set.add nextdfstState !dfstStates;
+				worklist := nextdfstState :: !worklist
+				)
+			| None -> ()
+		) fst.inAlphabet
+		done;
+
+		(* Determine new accepting states *)
+		let newAllSts = Set.map fusedfstState !dfstStates in
+		let newAccSts =
+		Set.map fusedfstState (
+			Set.filter (fun dfstState ->
+			Set.exists (fun (st, _) -> Set.belongs st fst.acceptStates) dfstState
+			) !dfstStates
+		)
+		in
+		let newOutAlf = Set.map (fun (_,_,c,_) -> c) !newDfaTransitions in
+
+		(* Build the new FST *)
+		{
+		inAlphabet = fst.inAlphabet;
+		outAlphabet = Set.diff newOutAlf (Set.make [epsilon]);
+		states = newAllSts;
+		initialState = fusedfstState r1;
+		transitions = !newDfaTransitions;
+		acceptStates = newAccSts
+		}
+			
 
 
 	let isComplete (fst: t): bool =
@@ -6536,6 +6777,98 @@ struct
 		in
 		deterministic && complete && transition_output_ok
 
+	(**
+	* Minimizes a deterministic transducer.
+	
+	let minimize (fst: t): t =
+		let fst = toDeterministic fst in
+		let fst = cleanUselessStates fst in
+
+		(* Initial partition: finals vs nonfinals *)
+		let finals, nonfinals =
+			Set.partition (fun st -> Set.belongs st fst.acceptStates) fst.states
+		in
+		let init_partition =
+			Set.filter (fun b -> Set.size b > 0) (Set.make [finals; nonfinals])
+		in
+
+		(* Find the block in a partition that contains a given state *)
+		let block_of (partition: states Set.t) (st: state) : states =
+			Set.find (fun b -> Set.belongs st b) partition
+		in
+
+		(* Compute the "signature" of a state relative to a partition:
+			set of (input, output, destBlock) triples for all outgoing transitions *)
+		let signature (partition: states Set.t) (st: state) =
+			let outgoing = Set.filter (fun (a,_,_,_) -> a = st) fst.transitions in
+			Set.map
+			(fun (_,inp,out,dst) -> (inp, out, block_of partition dst))
+			outgoing
+		in
+
+		(* Refine one block into groups of states with identical signatures *)
+		let refine_block (partition: states Set.t) (block: states) : states list =
+			let pairs =
+			Set.map (fun st -> (st, signature partition st)) block |> Set.toList
+			in
+			let rec group acc = function
+			| [] -> acc
+			| (s, sigs) :: rest ->
+				let same, diff = List.partition (fun (_,sigs2) -> sigs2 = sigs) rest in
+				group (Set.make (s :: List.map fst same) :: acc) diff
+			in
+			group [] pairs
+		in
+
+		(* Refine until fixpoint *)
+		let rec refine (partition: states Set.t) : states Set.t =
+			let refined =
+			Set.flatMap
+				(fun block -> Set.make (refine_block partition block))
+				partition
+			in
+			if refined = partition then partition else refine refined
+		in
+
+		let final_partition = refine init_partition in
+
+		(* Representative per block, and translate states *)
+		let representative (block: states) : state = Set.choose block in
+		let translate (st: state) : state =
+			representative (block_of final_partition st)
+		in
+
+		(* Rebuild minimized machine *)
+		let new_states = Set.map representative final_partition in
+		let new_init   = translate fst.initialState in
+		let new_accepts =
+			Set.map representative
+			(Set.filter
+				(fun blk -> Set.exists (fun st -> Set.belongs st fst.acceptStates) blk)
+				final_partition)
+		in
+		let new_trans =
+			Set.map
+			(fun (a,b,c,d) -> (translate a, b, c, translate d))
+			fst.transitions
+		in
+
+		{
+			inAlphabet   = fst.inAlphabet;
+			outAlphabet  = fst.outAlphabet;
+			states       = new_states;
+			initialState = new_init;
+			transitions  = new_trans;
+			acceptStates = new_accepts;
+		}
+	
+	(**
+	* This function verifies if the fst is minimal
+	*)
+	let isMinimized (fst: t): bool =
+		let min = minimize fst in
+			Set.size fst.states = Set.size min.states
+	*)
 end
 
 module Transducer =
@@ -6569,6 +6902,8 @@ struct
 	let generate = generate	
 	let asFiniteAutomaton = asFiniteAutomaton
 	let isDeterministic = isDeterministic
+	let toDeterministic = toDeterministic
+	(*let minimize = minimize*)
 	let isComplete = isComplete
 	let isMooreMachine = isMooreMachine
 	let isMealyMachine = isMealyMachine
@@ -21943,6 +22278,43 @@ struct
 		acceptStates : ["S"]
 	} |}
 
+	let fstD = {| {
+			kind : "transducer",
+    description : "Not determinizable (conflicting outputs)",
+    name : "fstNotDeterminizable",
+    inAlphabet : ["a"],
+    outAlphabet : ["x","y"],
+    states : ["S","A","B"],
+    initialState : "S",
+    transitions : [
+        ["S","a","x","A"],
+        ["S","a","y","B"]
+    ],
+    acceptStates : ["A","B"]
+	} |}
+
+	let fstMin = {| {
+		kind : "transducer",
+		description : "Minimizable: A and B are equivalent (same (in,out,next))",
+		name : "fst_min_merge_AB",
+		inAlphabet : ["a","b"],
+		outAlphabet : ["x","y"],
+		states : ["S","A","B"],
+		initialState : "S",
+		transitions : [
+			["S","a","x","A"],
+			["S","b","y","B"],
+
+			["A","a","x","A"],
+			["A","b","y","B"],
+
+			["B","a","x","A"],
+			["B","b","y","B"]
+		],
+		acceptStates : ["A","B"]
+	} |}
+
+
 
 	let test0 () =
     let fst: t = make (Arg.Text fstIdentity) in
@@ -21989,6 +22361,11 @@ struct
 		let outs = Transducer.generate fst 3 |> BasicTypes.wordsX in
 		Printf.printf "generate(3) = [%s]\n" (String.concat "; " outs)
 
+	let test8 () =
+		let fst: t = make (Arg.Text fstD) in
+		let fstD = Transducer.toDeterministic fst in
+		show fstD
+
 	let runAll =
 		if Util.testing active "Transducer" then begin
 			Util.header "test0";
@@ -22007,6 +22384,8 @@ struct
 			test6 ();
 			Util.header "test7";
 			test7 ();
+			Util.header "test8";
+			test8 ();
 			Util.header ""
 		end
 end
