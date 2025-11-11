@@ -38,29 +38,30 @@ struct
     Set.belongs st fst.acceptStates && w = []
 
   let nextConfigs (fst: t) (st, w, out) : configurations =
+    let build_next_config (new_w) (_, _, outSym, st2) =
+      let new_out = if outSym = epsilon then out else out @ [outSym] in
+      (st2, new_w, new_out)
+    in
+
     match w with
     | [] ->
-        (* epsilon transitions: consume no input, but may emit output *)
         let epsTr =
           Set.filter (fun (st1, sy, _, _) -> st1 = st && sy = epsilon) fst.transitions
         in
-        Set.map (fun (_, _, outSym, st2) -> (st2, [], out @ [outSym])) epsTr
+        Set.map (build_next_config []) epsTr
 
     | x::xs ->
-        (* normal input-consuming transitions *)
         let consume =
           Set.filter (fun (st1, sy, _, _) -> st1 = st && sy = x) fst.transitions
         in
         let viaConsume =
-          Set.map (fun (_, _, outSym, st2) -> (st2, xs, out @ [outSym])) consume
+          Set.map (build_next_config xs) consume
         in
-
-        (* epsilon transitions possible without consuming input *)
         let epsTr =
           Set.filter (fun (st1, sy, _, _) -> st1 = st && sy = epsilon) fst.transitions
         in
         let viaEps =
-          Set.map (fun (_, _, outSym, st2) -> (st2, w, out @ [outSym])) epsTr
+          Set.map (build_next_config w) epsTr
         in
 
         Set.union viaConsume viaEps
@@ -72,6 +73,16 @@ struct
   let acceptFull (fst: t) (w: word) : bool * path * trail =
     ignore (Model.checkWord fst.inAlphabet w);
     Model.acceptFull fst w initialConfigs nextConfigs isAcceptingConfig
+
+  let acceptOut (fst: t) (w: word) : bool*word =
+	let (ok, path, _) = acceptFull fst w in
+	if ok then
+		let (_, _, c) = List.hd (List.rev path) in
+		(ok, c)
+	else
+		(ok, [])
+	(*trail lista de outputs*)
+
 end
 
 module TransducerGenerate =
@@ -84,9 +95,9 @@ struct
     Set.map
       (fun (_, inSym, outSym, st2) ->
          if inSym = epsilon then
-           (st2, w, out @ [outSym])       (* epsilon transition no input consumed *)
+           (st2, w, out @ [outSym])       
          else
-           (st2, inSym::w, out @ [outSym])  (* normal transition prepend input to word *)
+           (st2, inSym::w, out @ [outSym])  
       )
       trs
 
@@ -302,7 +313,7 @@ struct
 	*  - ε-closure must not yield multiple output words without consuming input
 	*  - For each (state, input), at most one resulting (nextState, outputWord) is possible
 	*)
-	let isDeterministic (fst: t) : bool =
+	let isDeterministicEpsilon (fst: t) : bool =
 		if (isSelfLoop fst) then
 			false (* Fails the fast ambiguity check *)
 		else
@@ -346,6 +357,36 @@ struct
 					)
 				fst.inAlphabet
 			)
+		fst.states
+	
+	(**
+	* Checks if the transducer fst is deterministic.
+	*
+	* Deterministic means:
+	*  - The transducer has no ε-transitions.
+	*  - For every (state, input symbol), there is at most one transition.
+	*  - For each  transition, there is a single output.
+	*)
+	let isDeterministic (fst: t) : bool =
+	let has_epsilon =
+		Set.exists (fun (_, b, _, _) -> b = epsilon) fst.transitions
+	in
+	if has_epsilon then
+		false
+	else
+		Set.for_all
+		(fun st ->
+			Set.for_all
+			(fun input ->
+				let trs =
+					Set.filter (fun (a, b, _, _) -> a = st && b = input) fst.transitions
+				in
+				let outs = Set.map (fun (_,_,out,_) -> out) trs in
+				let dests = Set.map (fun (_,_,_,d) -> d) trs in
+				Set.size trs <= 1 && Set.size outs <= 1 && Set.size dests <= 1
+			)
+			fst.inAlphabet
+		)
 		fst.states
 
 	(* Get all states reachable from 'sts' via epsilon-input transitions *)
@@ -469,14 +510,14 @@ struct
 	(**
 	* This function converts the non-deterministic fst into its deterministic equivalent if it exists
 	*)
-	let toDeterministic (fst: t): t =
+	let toDeterministicEpsilon (fst: t): t =
 	
 	if (isSelfLoop fst) then
-		(Error.error "toDeterministic"
+		(Error.error "toDeterministicEpsilon"
 		"The FST is infinitely ambiguous and cannot be determinized." ();
 		fst)
 	else if not (hasConflictOut fst) then
-		(Error.error "toDeterministic"
+		(Error.error "toDeterministicEpsilon"
 		"The FST has conflicting outputs and cannot be determinized." ();
 		fst)
 	else
@@ -571,7 +612,92 @@ struct
 		transitions = !newDfaTransitions;
 		acceptStates = newAccSts
 		}
-			
+	
+	(**
+	* Converts a possibly ε-nondeterministic FST into an equivalent deterministic one,
+	* as long as ε-transitions do not produce any output symbols.
+	*
+	* Determinization fails (and returns the original fst) if:
+	*   - there are ε self-loops with output (infinite ambiguity)
+	*   - there are conflicting outputs for the same (state, input)
+	*
+	*)
+	let toDeterministic (fst: t): t =
+	let has_bad_eps =
+		Set.exists (fun (_, b, c, _) -> b = epsilon && c <> epsilon) fst.transitions
+	in
+	if has_bad_eps then (
+		Error.error "toDeterministic"
+		"The FST has ε-transitions that emit output, cannot determinize." ();
+		fst
+	) else
+	let dfaStates : states Set.t ref = ref Set.empty in
+	let newTransitions : (state * symbol * symbol * state) Set.t ref = ref Set.empty in
+
+	let move (sts: states) (sy: symbol) (ts: transitions4) : states * symbols =
+		let relevant =
+		Set.filter (fun (a,b,_,_) -> Set.belongs a sts && b = sy) ts
+		in
+		let next = Set.map (fun (_,_,_,d) -> d) relevant in
+		let outs = Set.map (fun (_,_,c,_) -> c) relevant in
+		(next, outs)
+	in
+
+	let startSet = closeEmpty (Set.make [fst.initialState]) fst.transitions in
+	let worklist = ref [startSet] in
+	dfaStates := Set.add startSet !dfaStates;
+
+	while !worklist <> [] do
+		let current = List.hd !worklist in
+		worklist := List.tl !worklist;
+		let srcName = fusedfstState (Set.map (fun s -> (s, [])) current) in
+
+		Set.iter (fun sy ->
+		if sy <> epsilon then (
+			let nextSts, outs = move current sy fst.transitions in
+			if not (Set.isEmpty nextSts) then
+			let closedNext = closeEmpty nextSts fst.transitions in
+			let destName = fusedfstState (Set.map (fun s -> (s, [])) closedNext) in
+
+			if Set.size outs > 1 then (
+				Error.error "toDeterministic"
+				"Multiple distinct outputs found for same (state,input), cannot determinize." ();
+				()
+			) else (
+				let outSymbol =
+				if Set.isEmpty outs then epsilon
+				else List.hd (Set.toList outs)
+				in
+
+				newTransitions := Set.add (srcName, sy, outSymbol, destName) !newTransitions;
+
+				if not (Set.belongs closedNext !dfaStates) then (
+				dfaStates := Set.add closedNext !dfaStates;
+				worklist := closedNext :: !worklist
+				)
+			)
+		)
+		) fst.inAlphabet
+	done;
+
+	let newStates = Set.map (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset)) !dfaStates in
+	let newAccepts =
+		Set.filter (fun sname ->
+		let compSet = Set.find (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset) = sname) !dfaStates in
+		Set.exists (fun st -> Set.belongs st fst.acceptStates) compSet
+		) newStates
+	in
+	let newOutAlf = Set.map (fun (_,_,c,_) -> c) !newTransitions in
+
+	{
+		inAlphabet = fst.inAlphabet;
+		outAlphabet = Set.diff newOutAlf (Set.make [epsilon]);
+		states = newStates;
+		initialState = fusedfstState (Set.map (fun s -> (s, [])) startSet);
+		transitions = !newTransitions;
+		acceptStates = newAccepts;
+	}
+
 
 
 	let isComplete (fst: t): bool =
@@ -655,8 +781,9 @@ struct
 
 	(**
 	* Minimizes a deterministic transducer.
-	
+	*)
 	let minimize (fst: t): t =
+		(*
 		let fst = toDeterministic fst in
 		let fst = cleanUselessStates fst in
 
@@ -690,7 +817,9 @@ struct
 			let rec group acc = function
 			| [] -> acc
 			| (s, sigs) :: rest ->
-				let same, diff = List.partition (fun (_,sigs2) -> sigs2 = sigs) rest in
+				let same, diff =
+					List.partition (fun (_, sigs2) -> sigs2 = sigs) rest
+				in
 				group (Set.make (s :: List.map fst same) :: acc) diff
 			in
 			group [] pairs
@@ -737,14 +866,384 @@ struct
 			transitions  = new_trans;
 			acceptStates = new_accepts;
 		}
-	
+	*)
+		{
+			inAlphabet   = fst.inAlphabet;
+			outAlphabet  = fst.outAlphabet;
+			states       = fst.states;
+			initialState = fst.initialState;
+			transitions  = fst.transitions;
+			acceptStates = fst.acceptStates;
+		}
+
+		
 	(**
 	* This function verifies if the fst is minimal
 	*)
 	let isMinimized (fst: t): bool =
 		let min = minimize fst in
 			Set.size fst.states = Set.size min.states
-	*)
+			
+end
+
+(* * 
+ * This module is added to provide composition functionality.
+ *)
+module TransducerComposition =
+struct
+  open TransducerSupport
+  open TransducerPrivate
+
+  let fuse_states (s1: state) (s2: state) : state =
+	s1 ^ "_" ^ s2
+
+  (**
+   * Composes two finite-state transducers.
+   * T1: A -> B
+   * T2: B -> C
+   * T = T1 o T2: A -> C
+   *
+   *)
+  let compose (fst1: t) (fst2: t): t =
+	
+		let new_in_alphabet = fst1.inAlphabet in
+		(*
+		* The new output alphabet is T2's output alphabet.
+		* We also need to add any outputs from T2's epsilon transitions
+		* that might be generated.
+		*)
+		let tr2_eps_outputs =
+			Set.map (fun (_, _, c, _) -> c)
+			(Set.filter (fun (_, a, _, _) -> a = epsilon) fst2.transitions)
+		in
+		let new_out_alphabet = Set.union fst2.outAlphabet (Set.diff tr2_eps_outputs (Set.make[epsilon])) in
+		
+		let initial_pair = (fst1.initialState, fst2.initialState) in
+		let initial_fused_state = fuse_states fst1.initialState fst2.initialState in
+		
+		let new_states = ref (Set.make [initial_fused_state]) in
+		let new_transitions = ref Set.empty in
+		let new_accept_states = ref Set.empty in
+		
+		let worklist = ref (Set.make [initial_pair]) in
+		let visited = ref (Set.make [initial_pair]) in
+
+		if Set.belongs fst1.initialState fst1.acceptStates && Set.belongs fst2.initialState fst2.acceptStates then
+			new_accept_states := Set.add initial_fused_state !new_accept_states;
+
+		while not (Set.isEmpty !worklist) do
+			let (q1, q2) = List.hd (Set.toList !worklist) in
+			worklist := Set.remove (q1, q2) !worklist;
+			
+			let fused_src = fuse_states q1 q2 in
+
+			(*
+			* Case 1: Lock-step (T1 consumes input 'a' != eps, T2 consumes T1's output 'b')
+			* T1: q1 --a/b--> q1' (a != epsilon)
+			* T2: q2 --b/c--> q2'
+			* T: (q1,q2) --a/c--> (q1',q2')
+			*)
+			let tr1_moves = Set.filter (fun (s, a, _, _) -> s = q1 && a != epsilon) fst1.transitions in
+			Set.iter (fun (q1, a, b, q1') ->
+			let tr2_matches = Set.filter (fun (s, b', _, _) -> s = q2 && b' = b) fst2.transitions in
+			Set.iter (fun (q2, b, c, q2') ->
+				let new_pair = (q1', q2') in
+				let fused_dst = fuse_states q1' q2' in
+				
+				new_transitions := Set.add (fused_src, a, c, fused_dst) !new_transitions;
+				new_states := Set.add fused_dst !new_states;
+				
+				if Set.belongs q1' fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
+				new_accept_states := Set.add fused_dst !new_accept_states;
+
+				if not (Set.belongs new_pair !visited) then (
+				visited := Set.add new_pair !visited;
+				worklist := Set.add new_pair !worklist
+				)
+			) tr2_matches
+			) tr1_moves;
+
+			(*
+			* Case 2: T1 epsilon-step (T1 consumes epsilon, T2 consumes T1's output 'b')
+			* T1: q1 --eps/b--> q1'
+			* T2: q2 --b/c--> q2'
+			* T: (q1,q2) --eps/c--> (q1',q2')
+			*)
+			let tr1_eps = Set.filter (fun (s, a, _, _) -> s = q1 && a = epsilon) fst1.transitions in
+			Set.iter (fun (q1, _, b, q1') ->
+			let tr2_matches = Set.filter (fun (s, b', _, _) -> s = q2 && b' = b) fst2.transitions in
+			Set.iter (fun (q2, b, c, q2') ->
+				let new_pair = (q1', q2') in
+				let fused_dst = fuse_states q1' q2' in
+
+				new_transitions := Set.add (fused_src, epsilon, c, fused_dst) !new_transitions;
+				new_states := Set.add fused_dst !new_states;
+
+				if Set.belongs q1' fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
+				new_accept_states := Set.add fused_dst !new_accept_states;
+
+				if not (Set.belongs new_pair !visited) then (
+				visited := Set.add new_pair !visited;
+				worklist := Set.add new_pair !worklist
+				)
+			) tr2_matches
+			) tr1_eps;
+
+			(*
+			* Case 3: T2 epsilon-step (T1 does nothing, T2 consumes epsilon)
+			* T1: (stuck at q1)
+			* T2: q2 --eps/c--> q2'
+			* T: (q1,q2) --eps/c--> (q1,q2')
+			*)
+			let tr2_eps = Set.filter (fun (s, a, _, _) -> s = q2 && a = epsilon) fst2.transitions in
+			Set.iter (fun (q2, _, c, q2') ->
+			let new_pair = (q1, q2') in 
+			let fused_dst = fuse_states q1 q2' in
+
+			new_transitions := Set.add (fused_src, epsilon, c, fused_dst) !new_transitions;
+			new_states := Set.add fused_dst !new_states;
+
+			if Set.belongs q1 fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
+				new_accept_states := Set.add fused_dst !new_accept_states;
+
+			if not (Set.belongs new_pair !visited) then (
+				visited := Set.add new_pair !visited;
+				worklist := Set.add new_pair !worklist
+			)
+			) tr2_eps;
+
+		done;
+		
+		{
+			inAlphabet = new_in_alphabet;
+			outAlphabet = new_out_alphabet;
+			states = !new_states;
+			initialState = initial_fused_state;
+			transitions = !new_transitions;
+			acceptStates = !new_accept_states
+		}
+
+	(*
+   * Union
+   * Implements T1 u T2 using the standard NFA union algorithm.
+   *)
+  let union (fst1: t) (fst2: t): t =
+		let rename_state (suffix: string) (st: state) : state =
+			st ^ suffix
+		in
+		let s1_suffix = "_1" in
+		let s2_suffix = "_2" in
+		
+		let new_init = "S_init_union" in
+		
+		let rename_trans suffix (a,b,c,d) =
+			(rename_state suffix a, b, c, rename_state suffix d)
+		in
+		
+		let sts1 = Set.map (rename_state s1_suffix) fst1.states in
+		let sts2 = Set.map (rename_state s2_suffix) fst2.states in
+		let new_states = Set.union (Set.union sts1 sts2) (Set.make [new_init]) in
+		
+		let trs1 = Set.map (rename_trans s1_suffix) fst1.transitions in
+		let trs2 = Set.map (rename_trans s2_suffix) fst2.transitions in
+		
+		let init_trs = Set.make [
+			(new_init, epsilon, epsilon, rename_state s1_suffix fst1.initialState);
+			(new_init, epsilon, epsilon, rename_state s2_suffix fst2.initialState)
+		] in
+		let new_transitions = Set.union (Set.union trs1 trs2) init_trs in
+		
+		let acc1 = Set.map (rename_state s1_suffix) fst1.acceptStates in
+		let acc2 = Set.map (rename_state s2_suffix) fst2.acceptStates in
+		let new_accepts = Set.union acc1 acc2 in
+		
+		{
+			inAlphabet = Set.union fst1.inAlphabet fst2.inAlphabet;
+			outAlphabet = Set.union fst1.outAlphabet fst2.outAlphabet;
+			states = new_states;
+			initialState = new_init;
+			transitions = new_transitions;
+			acceptStates = new_accepts
+		}
+
+  (*
+   * Intersection
+   * Implements T1 n T2.
+   * This is a product construction where a transition exists
+   * only if both machines take the *same input* and produce the
+   * *same output*.
+   *)
+  let intersection (fst1: t) (fst2: t): t =
+		let new_in_alphabet = Set.inter fst1.inAlphabet fst2.inAlphabet in
+		let new_out_alphabet = Set.inter fst1.outAlphabet fst2.outAlphabet in
+		
+		let initial_pair = (fst1.initialState, fst2.initialState) in
+		let initial_fused_state = fuse_states fst1.initialState fst2.initialState in
+		
+		let new_states = ref (Set.make [initial_fused_state]) in
+		let new_transitions = ref Set.empty in
+		let new_accept_states = ref Set.empty in
+		
+		let worklist = ref (Set.make [initial_pair]) in
+		let visited = ref (Set.make [initial_pair]) in
+
+		if Set.belongs fst1.initialState fst1.acceptStates && Set.belongs fst2.initialState fst2.acceptStates then
+			new_accept_states := Set.add initial_fused_state !new_accept_states;
+
+		while not (Set.isEmpty !worklist) do
+			let (q1, q2) = List.hd (Set.toList !worklist) in
+			worklist := Set.remove (q1, q2) !worklist;
+			
+			let fused_src = fuse_states q1 q2 in
+
+			let trs1 = Set.filter (fun (s, _, _, _) -> s = q1) fst1.transitions in
+			let trs2 = Set.filter (fun (s, _, _, _) -> s = q2) fst2.transitions in
+
+			(*
+			* Case 1: Lock-step on (input, output)
+			* Find all pairs of transitions (t1, t2) where
+			* t1.input = t2.input AND t1.output = t2.output.
+			* This includes (eps, eps) transitions.
+			*)
+			Set.iter (fun (q1, a1, c1, q1') ->
+			let matching_trs2 =
+				Set.filter (fun (_, a2, c2, _) -> a1 = a2 && c1 = c2) trs2
+			in
+			Set.iter (fun (q2, a, c, q2') ->
+				let new_pair = (q1', q2') in
+				let fused_dst = fuse_states q1' q2' in
+
+				new_transitions := Set.add (fused_src, a, c, fused_dst) !new_transitions;
+				new_states := Set.add fused_dst !new_states;
+
+				if Set.belongs q1' fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
+				new_accept_states := Set.add fused_dst !new_accept_states;
+
+				if not (Set.belongs new_pair !visited) then (
+				visited := Set.add new_pair !visited;
+				worklist := Set.add new_pair !worklist
+				)
+			) matching_trs2
+			) trs1;
+			
+			(*
+			* Case 2: T1 moves on (eps, eps), T2 stutters
+			* This is for (eps, eps) only. (eps, output) is handled above.
+			*)
+			let tr1_eps_eps = Set.filter (fun (s, a, c, _) -> s = q1 && a = epsilon && c = epsilon) fst1.transitions in
+			Set.iter (fun (q1, a, c, q1') ->
+			let new_pair = (q1', q2) in
+			let fused_dst = fuse_states q1' q2 in
+			
+			new_transitions := Set.add (fused_src, epsilon, epsilon, fused_dst) !new_transitions;
+			new_states := Set.add fused_dst !new_states;
+
+			if Set.belongs q1' fst1.acceptStates && Set.belongs q2 fst2.acceptStates then
+				new_accept_states := Set.add fused_dst !new_accept_states;
+
+			if not (Set.belongs new_pair !visited) then (
+				visited := Set.add new_pair !visited;
+				worklist := Set.add new_pair !worklist
+			)
+			) tr1_eps_eps;
+			
+			(*
+			* Case 3: T2 moves on (eps, eps), T1 stutters
+			*)
+			let tr2_eps_eps = Set.filter (fun (s, a, c, _) -> s = q2 && a = epsilon && c = epsilon) fst2.transitions in
+			Set.iter (fun (q2, a, c, q2') ->
+			let new_pair = (q1, q2') in
+			let fused_dst = fuse_states q1 q2' in
+			
+			new_transitions := Set.add (fused_src, epsilon, epsilon, fused_dst) !new_transitions;
+			new_states := Set.add fused_dst !new_states;
+
+			if Set.belongs q1 fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
+				new_accept_states := Set.add fused_dst !new_accept_states;
+
+			if not (Set.belongs new_pair !visited) then (
+				visited := Set.add new_pair !visited;
+				worklist := Set.add new_pair !worklist
+			)
+			) tr2_eps_eps;
+
+		done;
+		
+		{
+			inAlphabet = new_in_alphabet;
+			outAlphabet = new_out_alphabet;
+			states = !new_states;
+			initialState = initial_fused_state;
+			transitions = !new_transitions;
+			acceptStates = !new_accept_states
+		}
+
+	(*
+   * Inverse
+   * Creates a new transducer T' that inverts the input/output
+   * relationship of T.
+   * If T maps (w, v), then T' maps (v, w).
+   *)
+  let inverse (fst: t): t =
+		let new_transitions =
+			Set.map (fun (src, inp, outp, dst) ->
+			(src, outp, inp, dst)
+			) fst.transitions
+		in
+		{
+			inAlphabet = fst.outAlphabet;
+			outAlphabet = fst.inAlphabet;
+			states = fst.states;
+			initialState = fst.initialState;
+			transitions = new_transitions;
+			acceptStates = fst.acceptStates
+		}
+	
+  (*
+   * Concatenate
+   * Implements T1 . T2.
+   *)
+  let concatenate (fst1: t) (fst2: t): t =
+		let rename_state (suffix: string) (st: state) : state =
+			st ^ suffix
+		in
+		let s1_suffix = "_1" in
+		let s2_suffix = "_2" in
+		
+		let rename_trans suffix (a,b,c,d) =
+			(rename_state suffix a, b, c, rename_state suffix d)
+		in
+		
+		(* Rename all states and transitions *)
+		let sts1 = Set.map (rename_state s1_suffix) fst1.states in
+		let sts2 = Set.map (rename_state s2_suffix) fst2.states in
+		let new_states = Set.union sts1 sts2 in
+		
+		let trs1 = Set.map (rename_trans s1_suffix) fst1.transitions in
+		let trs2 = Set.map (rename_trans s2_suffix) fst2.transitions in
+		
+		(* Add new epsilon-transitions from fst1's accept states to fst2's start state *)
+		let connect_trs =
+			Set.map (fun acc_st1 ->
+			(rename_state s1_suffix acc_st1, epsilon, epsilon, rename_state s2_suffix fst2.initialState)
+			) fst1.acceptStates
+		in
+		
+		let new_transitions = Set.union (Set.union trs1 trs2) connect_trs in
+		
+		let new_init = rename_state s1_suffix fst1.initialState in
+		
+		let new_accepts = Set.map (rename_state s2_suffix) fst2.acceptStates in
+		
+		{
+			inAlphabet = Set.union fst1.inAlphabet fst2.inAlphabet;
+			outAlphabet = Set.union fst1.outAlphabet fst2.outAlphabet;
+			states = new_states;
+			initialState = new_init;
+			transitions = new_transitions;
+			acceptStates = new_accepts
+		}
+
 end
 
 module Transducer =
@@ -753,6 +1252,7 @@ struct
 	open TransducerAccept
 	open TransducerGenerate
 	open TransducerPrivate
+	open TransducerComposition
 
 	(* Make *)
 	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
@@ -779,11 +1279,16 @@ struct
 	let asFiniteAutomaton = asFiniteAutomaton
 	let isDeterministic = isDeterministic
 	let toDeterministic = toDeterministic
-	(*let minimize = minimize*)
+	let minimize = minimize
 	let isComplete = isComplete
 	let isMooreMachine = isMooreMachine
 	let isMealyMachine = isMealyMachine
 	let isClean = isClean
+	let compose = compose 
+	let union = union 
+	let intersection = intersection 
+	let inverse = inverse
+	let concatenate = concatenate 
 
 	(* Class *)
 	class model (arg: t Arg.alternatives) =
@@ -802,6 +1307,13 @@ struct
 			method acceptFull (w: word) : bool * path * trail = acceptFull representation w
 			method generate (length: int): words = generate representation length
 			method isClean: bool = isClean representation
+			method minimize: t = minimize representation
+			method toDeterministic: t = toDeterministic representation
+			method compose (fst: t): t = compose representation fst
+			method union (fst: t): t = union representation fst
+			method intersection (fst: t): t = intersection representation fst
+			method inverse: t = inverse representation
+			method concatenate (fst: t): t = concatenate representation fst
 		(* Exercices support *)
 			method checkProperty (prop: string) = Util.println["WWW"]; checkProperty representation prop	
 		(* Learn-OCaml support *)
