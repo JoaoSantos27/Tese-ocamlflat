@@ -29,9 +29,6 @@ NAMES =		OCamlFlat Configuration Error 	\
 			RegularExpressionSupport		\
 			RegularExpression				\
 											\
-			TransducerSupport				\
-			Transducer						\
-											\
 			GrammarSupport					\
 			Grammar							\
 			GrammarTests					\
@@ -52,6 +49,9 @@ NAMES =		OCamlFlat Configuration Error 	\
 											\
 			TuringMachineSupport			\
 			TuringMachine					\
+											\
+			TransducerSupport				\
+			Transducer						\
 											\
 			CompositionSupport				\
 			PolyModel						\

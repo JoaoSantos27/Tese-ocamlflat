@@ -48,7 +48,7 @@ struct
 
   let fst1_Identity = {| {
     kind : "transducer",
-    description : "1: Deterministic, Complete, Mealy",
+    description : "Deterministic, Complete, Mealy",
     name : "fst1",
     inAlphabet : ["a", "b"],
     outAlphabet : ["c", "d"],
@@ -63,7 +63,7 @@ struct
 
   let fst2_Moore = {| {
     kind : "transducer",
-    description : "2 Moore",
+    description : "Moore",
     name : "fst2",
     inAlphabet : ["a", "b"],
     outAlphabet : ["x", "y"],
@@ -80,7 +80,7 @@ struct
 
   let fst3_NonDeterministic = {| {
     kind : "transducer",
-    description : "3: Nondeterministic  (2 transitions with same input)",
+    description : "Nondeterministic  (2 transitions with same input)",
     name : "fst3",
     inAlphabet : ["a"],
     outAlphabet : ["x","y"],
@@ -95,7 +95,7 @@ struct
 
   let fst4_Incomplete = {| {
     kind : "transducer",
-    description : "4: Deterministic but incomplete (missing 'b' on S)",
+    description : "Deterministic but incomplete (missing 'b' on S)",
     name : "fst4",
     inAlphabet : ["a", "b"],
     outAlphabet : ["x"],
@@ -109,7 +109,7 @@ struct
 
   let fst5_EpsConflict = {| {
     kind : "transducer",
-    description : "5: Nondeterministic due to epsilon with conflicting outputs",
+    description : "Nondeterministic due to epsilon with conflicting outputs",
     name : "fst5",
     inAlphabet : ["a"],
     outAlphabet : ["x","y"],
@@ -126,7 +126,7 @@ struct
 
   let fst6_EpsDeterministic = {| {
     kind : "transducer",
-    description : "6: ε-closure but deterministic (same epsilon output)",
+    description : "ε-closure but deterministic (same epsilon output)",
     name : "fst6",
     inAlphabet : ["a"],
     outAlphabet : ["x","y"],
@@ -143,7 +143,7 @@ struct
 
   let fst7_NotMoore = {| {
     kind : "transducer",
-    description : "7: Deterministic & complete but not Moore (output depends on input)",
+    description : "Deterministic & complete but not Moore (output depends on input)",
     name : "fst7",
     inAlphabet : ["a","b"],
     outAlphabet : ["x","y"],
@@ -191,8 +191,6 @@ struct
     ],
     acceptStates : ["A","B"]
   } |}
-
-  (* Transducers for composition tests *)
 
   let fst_A_to_B = {| {
     kind : "transducer", 
@@ -330,7 +328,7 @@ struct
     let t1 = make (Arg.Text fst_A_to_B) in
     let t2 = make (Arg.Text fst_B_to_C) in
     let t_comp = Transducer.compose t1 t2 in
-    Printf.printf "--- Composition (a->b o b->c) ---\n";
+    Printf.printf "Composition (a->b o b->c)\n";
     show t_comp;
     let (ok, path, _) = Transducer.acceptFull t_comp (BasicTypes.word "a") in
     Printf.printf "accept(\"a\") = %b\n" ok;
@@ -343,7 +341,7 @@ struct
     let t1 = make (Arg.Text fst_A_to_X) in
     let t2 = make (Arg.Text fst_B_to_Y) in
     let t_union = Transducer.union t1 t2 in
-    Printf.printf "--- Union (a->x U b->y) ---\n";
+    Printf.printf "Union (a->x U b->y)\n";
     show t_union;
     (* Test first machine's word *)
     let (ok1, path1, _) = Transducer.acceptFull t_union (BasicTypes.word "a") in
@@ -363,7 +361,7 @@ struct
     let t1 = make (Arg.Text fst_ax_by) in
     let t2 = make (Arg.Text fst_ax_bz) in
     let t_inter = Transducer.intersection t1 t2 in
-    Printf.printf "--- Intersection (a->x, b->y) n (a->x, b->z) ---\n";
+    Printf.printf "Intersection (a->x, b->y) n (a->x, b->z)\n";
     show t_inter;
     (* Test matching word *)
     let (ok1, path1, _) = Transducer.acceptFull t_inter (BasicTypes.word "a") in
@@ -379,7 +377,7 @@ struct
   let test12 () =
     let t1 = make (Arg.Text fst_A_to_X) in
     let t_inv = Transducer.inverse t1 in
-    Printf.printf "--- Inverse (a->x) => (x->a) ---\n";
+    Printf.printf "Inverse (a->x) => (x->a)\n";
     show t_inv;
     let (ok, path, _) = Transducer.acceptFull t_inv (BasicTypes.word "x") in
     Printf.printf "accept(\"x\") = %b\n" ok;
@@ -392,13 +390,35 @@ struct
     let t1 = make (Arg.Text fst_A_to_X) in
     let t2 = make (Arg.Text fst_B_to_Y) in
     let t_cat = Transducer.concatenate t1 t2 in
-    Printf.printf "--- Concatenate (a->x) . (b->y) ---\n";
+    Printf.printf "Concatenate (a->x) . (b->y)\n";
     show t_cat;
     let (ok, path, _) = Transducer.acceptFull t_cat (BasicTypes.word "ab") in
     Printf.printf "accept(\"ab\") = %b\n" ok;
     if ok then
       let (_, _, output_word) = List.hd (List.rev path) in
       word2str output_word |> Printf.printf "output = %s (expected xy)\n"
+
+
+  let test14 () =
+    let t = make (Arg.Text fstMin) in
+    Printf.printf "Original\n";
+    show t;
+    let t_min = Transducer.minimize t in
+    Printf.printf "Minimized\n";
+    show t_min;
+    let isMin = Transducer.isMinimized t_min in
+    Printf.printf "isMinimized = %b (expected true)\n" isMin
+
+  (* Test for asTuringMachine(T) *)
+  let test15 () =
+    let t = make (Arg.Text fst_A_to_B) in
+    let tm = Transducer.asTuringMachine t in
+    Printf.printf "Transducer to TM (a->b)\n";
+    TuringMachine.show tm;
+    let accepted_a = TuringMachine.accept tm (BasicTypes.word "a") in
+    Printf.printf "TM accept('a') = %b (expected true)\n" accepted_a;
+    let accepted_b = TuringMachine.accept tm (BasicTypes.word "b") in
+    Printf.printf "TM accept('b') = %b (expected false)\n" accepted_b
 
   let runAll =
     if Util.testing active "Transducer" then begin
@@ -430,6 +450,10 @@ struct
       test12 ();
       Util.header "test13 (concatenate)";
       test13 ();
+      Util.header "test14 (minimize)";
+      test14 ();
+      Util.header "test15 (asTuringMachine)";
+      test15 ();
       Util.header ""
     end
 end
