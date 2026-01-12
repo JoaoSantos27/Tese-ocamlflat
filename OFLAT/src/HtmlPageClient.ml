@@ -204,6 +204,8 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       title##.innerHTML := Js.string "";
     if type1 = "finite automaton" then
       title##.innerHTML := Js.string (Lang.i18nMainTitle1 ())
+    else if type1 = "finite state transducer" then
+      title##.innerHTML := Js.string (Lang.i18nMainTitleFST ())
     else if type1 = "pushdown automaton" then
       title##.innerHTML := Js.string (Lang.i18nMainTitlePDA ())
     else if type1 = "regular expression" then
@@ -233,6 +235,12 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> enableButton el) listOnlyPDAButtons;
             (* ????????????????????? TM ?? *)
+      List.iter (fun el -> enableButton el) listOnlyAutomataButtons)
+    else if type1 = "finite state transducer" then
+      (List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
+      List.iter (fun el -> disableButton el) listOnlyCFGButtons;
+      List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
+      List.iter (fun el -> enableButton el) listOnlyPDAButtons;
       List.iter (fun el -> enableButton el) listOnlyAutomataButtons)
     else if type1 = "regular expression" then
       (List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
@@ -650,6 +658,59 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         Dom.appendChild buttonBox test;
         let tool = div2 "tooltipCloseRight" "tooltiptext1" (Lang.i18nTooltipCloseRight ()) in
           Dom.appendChild test tool
+
+  let putCyTransducerButtons () =
+    putCyButtons();
+    let buttonBox = Dom_html.getElementById "buttonBox" in
+    let divButtons1 = div "min" in
+      Dom.appendChild buttonBox divButtons1;
+    
+    (* Clean Button *)
+    let c = button1 (Lang.i18nClean ()) "clean" "tooltip3" !ListenersFST.cleanUselessListener in
+      Dom.appendChild divButtons1 c;
+    let tool = div2 "tooltipClean" "tooltiptext3" (Lang.i18nTooltipClean ()) in
+        Dom.appendChild c tool;
+
+    (* Deterministic Button *)
+    let de = button1 (Lang.i18nDeterministic ()) "deterministic" "tooltip3" !ListenersFST.getDeterministicListener in
+      Dom.appendChild divButtons1 de;
+    let tool = div2 "tooltipDeterministic" "tooltiptext3" (Lang.i18nTooltipDeterministic ()) in
+        Dom.appendChild de tool;
+
+    (* Minimize Button *)
+    let mi = button1 (Lang.i18nMinimize ()) "minimize" "tooltip3" !ListenersFST.defineMinimizedListener in
+      Dom.appendChild divButtons1 mi;
+    let tool = div2 "tooltipMinimize" "tooltiptext3" (Lang.i18nTooltipMinimize ()) in
+        Dom.appendChild mi tool;
+
+    let divButtons = div "prod" in
+      Dom.appendChild buttonBox divButtons;
+
+    (* Productive States Button *)
+    let b = button1 (Lang.i18nProductive ()) "productive" "tooltip3" !ListenersFST.paintAllProductivesListener in 
+      Dom.appendChild divButtons b;
+    let tool = div2 "tooltipProductive" "tooltiptext3" (Lang.i18nTooltipProductive ()) in
+        Dom.appendChild b tool;
+
+    (* Accessible/Reachable States Button *)
+    let a = button1 (Lang.i18nAccessible ()) "accessible" "tooltip3" !ListenersFST.paintAllReachableListener in
+      Dom.appendChild divButtons a;
+    let tool = div2 "tooltipAccessible" "tooltiptext3" (Lang.i18nTooltipAccessible ()) in
+        Dom.appendChild a tool;
+
+    (* Useful States Button *)
+    let u = button1 (Lang.i18nUseful ()) "useful" "tooltip3" !ListenersFST.paintAllUsefulListener in
+      Dom.appendChild divButtons u;
+    let tool = div2 "tooltipUseful" "tooltiptext3" (Lang.i18nTooltipUseful ()) in
+        Dom.appendChild u tool;
+
+    (* Clear Automaton Button *)
+    let divButtons3 = div "clear" in
+      Dom.appendChild buttonBox divButtons3;
+    let clearAuto = button1 (Lang.i18nClearAuto ()) "clearAuto" "tooltip3" !ListenersFST.clearAutoListener in
+      Dom.appendChild divButtons3 clearAuto;
+    let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
+        Dom.appendChild clearAuto tool
     
   let putCyREButtons() =
     putCyButtons();
@@ -1595,9 +1656,9 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     ViewUtil.changeLang !Lang.lang;
     putInnerHtml "title" (Lang.i18nTitle ());
     putInnerHtml "version" (Lang.i18nVersion ());
-    
     putInnerHtml "optionNewDefault" (Lang.i18nNewModel ());
     putInnerHtml "optionNewAutomatonFA" (Lang.i18nMainTitle1());
+    (*putInnerHtml "optionNewAutomatonFST" (Lang.i18nMainTitleFST());*)
     putInnerHtml "optionNewAutomatonPDA" (Lang.i18nMainTitlePDA());
     putInnerHtml "optionNewRegularExpression" (Lang.i18nMainTitle2());
     putInnerHtml "optionNewContextFreeGrammar" (Lang.i18nMainTitle4());
@@ -1616,6 +1677,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         
     putInnerHtml "selectRegex" (Lang.i18nSelectRegex ());
     putInnerHtml "selectFA" (Lang.i18nselectFA ());
+    (*putInnerHtml "selectFST" (Lang.i18nselectFST ());*)
     putInnerHtml "selectPDA" (Lang.i18nselectPDA ());
     putInnerHtml "selectCFG" (Lang.i18nselectCFG ());
 
@@ -1649,7 +1711,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     putInnerHtml "and1" (Lang.i18nAnd ());
     putInnerHtml "footerButton2" (Lang.i18nFooter1 ());
 
-    if (StateVariables.getCy1Type() = StateVariables.getAutomatonType()) then
+    if (StateVariables.getCy1Type() = StateVariables.getAutomatonType() || StateVariables.getCy1Type() = StateVariables.getTransducerType()) then
       (putInnerHtml "tooltipCloseLeft" (Lang.i18nTooltipCloseLeft ());
       putInnerHtmlButtons "save" (Lang.i18nSave ()) "tooltipSpecification" "tooltiptext1" (Lang.i18nTooltipSpecification ());
       putInnerHtmlButtons "formatting" (Lang.i18nFormatting ()) "tooltipSpecification" "tooltiptext2" (Lang.i18nTooltipSpecification ());

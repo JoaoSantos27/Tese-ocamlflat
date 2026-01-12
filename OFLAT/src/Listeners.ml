@@ -71,6 +71,18 @@ struct
 
 end
 
+module ListenersFST = 
+	struct
+		include ListenersAutomaton
+		let createModelListener = ref (fun () -> ())
+		let changeDirectionListener = ref (fun () -> ())
+		let defineInformationBoxListener = ref (fun () -> ())
+		let getDeterministicListener = ref (fun () -> ())
+		let defineMinimizedListener = ref (fun () -> ())
+		let cleanUselessListener = ref (fun () -> ())
+
+	end
+
 module ListenersTM = 
     struct
       include ListenersAutomaton

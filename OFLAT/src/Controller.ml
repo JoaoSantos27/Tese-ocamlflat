@@ -27,6 +27,7 @@ open JS
 open ViewUtil
 open AutomatonView
 open FiniteAutomatonView
+open TransducerView
 open PushdownAutomatonView
 open RegularExpressionView
 open ContextFreeGrammarView
@@ -112,6 +113,7 @@ class virtual controller =
     method defineInformationBox : unit = Error.fatal "defineInformationBox"
     method convertToRegExp : RegularExpressionView.model = Error.fatal "convert to regex"
     method convertToFA : FiniteAutomatonView.model = Error.fatal "convert to FA"
+    method convertToFST : TransducerView.model = Error.fatal "convert to FST"
     method convertToCFG : ContextFreeGrammarView.model = Error.fatal "convert to CFG"
     method convertToGR : GrammarView.model = Error.fatal "convert to GR"
     method convertToTM_SingleTape : TuringMachineView.model = Error.fatal "convert to TM single tape"
@@ -214,6 +216,7 @@ class virtual controller =
       method finish = self#cancelProm (*upgradeable*)  
 
     method getFA : FiniteAutomatonView.model = Error.fatal "get automata"
+    method getFST : TransducerView.model = Error.fatal "get FST"
     method getPDA : PushdownAutomatonView.model = Error.fatal "get PDA"
     method getRE : RegularExpressionView.model = Error.fatal "get RE"
     method getCFG : ContextFreeGrammarView.model = Error.fatal "get CFG"

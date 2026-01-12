@@ -10,6 +10,7 @@ open ContextFreeGrammarBasicView
 open ContextFreeGrammarView
 open ContextFreeGrammarLL1View
 open GrammarView
+open TransducerView
 open TuringMachineView
 open CompositionView
 open Lang
@@ -24,6 +25,7 @@ open FiniteAutomatonController
 open PushdownAutomatonController
 open RegularExpressionController
 open ContextFreeGrammarController
+open TransducerController
 open TuringMachineController
 open CompositionController
 open ExerciseController
@@ -164,6 +166,10 @@ module ControllerListeners = struct
     let gr = GrammarView.adjust gr in
     createGRController gr lr 
   
+  let createTransducerController (fst: TransducerView.model) lr =
+    if not lr then !Ctrl.ctrlL#finish else ();
+    let c = new fstController fst lr in
+      createController c lr
 
   let createTMController (tm: TuringMachineView.model) lr =
     if not lr then !Ctrl.ctrlL#finish else ();
@@ -266,6 +272,12 @@ module ControllerListeners = struct
               HtmlPageClient.clearBox1 ();
               let gr = new GrammarView.model (JSon j) in
               createGRController gr false;
+              !Ctrl.ctrlL#defineExample
+
+        | k when k = Transducer.kind ->
+              HtmlPageClient.clearBox1 ();
+              let fst = new TransducerView.model (JSon j) in 
+              createTransducerController fst false;
               !Ctrl.ctrlL#defineExample
 
         | k when k = TuringMachine.kind ->
@@ -1102,6 +1114,13 @@ open ContextFreeGrammarLL1View;;
               let gr = new GrammarView.model (JSon j) in
               createGRController gr true;
               !Ctrl.ctrlR#defineExample;
+              Cytoscape.fit !Ctrl.ctrlR#getCy_opt
+
+        | k when k = Transducer.kind ->
+              HtmlPageClient.clearBox2 ();
+              let fst = new TransducerView.model (JSon j) in
+              createTransducerController fst true;
+              !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
 
         | k when k = TuringMachine.kind ->

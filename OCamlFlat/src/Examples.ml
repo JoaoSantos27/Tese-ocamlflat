@@ -488,7 +488,24 @@ struct
 			acceptStates : [],
 			criteria : "true"
 		} |}
-		
+
+(*Finite State Transducers*)
+
+	let fst_1 = {| {
+    kind : "transducer",
+    description : "Identity transducer",
+    name : "fst1",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["c", "d"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S","a","c","S"],
+      ["S","b","d","S"]
+    ],
+    acceptStates : ["S"]
+  } |}
+
 (* Turing Machine *)
 
    (* AMD multifita test *)
@@ -1080,6 +1097,11 @@ struct
     ("pda_AABB", pda_AABB);
     ("pda_Explode", pda_Explode)
   ]);
+
+	("Finite State Transducers",
+	[
+		("fst_1", fst_1);
+	]);
 
   ("Turing Machine",
   [

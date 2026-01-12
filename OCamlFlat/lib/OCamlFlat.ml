@@ -2416,7 +2416,24 @@ struct
 			acceptStates : [],
 			criteria : "true"
 		} |}
-		
+
+(*Finite State Transducers*)
+
+	let fst_1 = {| {
+    kind : "transducer",
+    description : "Identity transducer",
+    name : "fst1",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["c", "d"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S","a","c","S"],
+      ["S","b","d","S"]
+    ],
+    acceptStates : ["S"]
+  } |}
+
 (* Turing Machine *)
 
    (* AMD multifita test *)
@@ -3008,6 +3025,11 @@ struct
     ("pda_AABB", pda_AABB);
     ("pda_Explode", pda_Explode)
   ]);
+
+	("Finite State Transducers",
+	[
+		("fst_1", fst_1);
+	]);
 
   ("Turing Machine",
   [
@@ -16394,80 +16416,80 @@ struct
 	*
 	*)
 	let toDeterministic (fst: t): t =
-	let has_bad_eps =
-		Set.exists (fun (_, b, c, _) -> b = epsilon && c <> epsilon) fst.transitions
-	in
-	if has_bad_eps then (
-		Error.error "toDeterministic"
-		"The FST has ε-transitions that emit output, cannot determinize." ();
-		fst
-	) else
-	let dfaStates : states Set.t ref = ref Set.empty in
-	let newTransitions : (state * symbol * symbol * state) Set.t ref = ref Set.empty in
-
-	let move (sts: states) (sy: symbol) (ts: transitions4) : states * symbols =
-		let relevant =
-		Set.filter (fun (a,b,_,_) -> Set.belongs a sts && b = sy) ts
+		let has_bad_eps =
+			Set.exists (fun (_, b, c, _) -> b = epsilon && c <> epsilon) fst.transitions
 		in
-		let next = Set.map (fun (_,_,_,d) -> d) relevant in
-		let outs = Set.map (fun (_,_,c,_) -> c) relevant in
-		(next, outs)
-	in
+		if has_bad_eps then (
+			Error.error "toDeterministic"
+			"The FST has ε-transitions that emit output, cannot determinize." ();
+			fst
+		) else
+		let dfaStates : states Set.t ref = ref Set.empty in
+		let newTransitions : (state * symbol * symbol * state) Set.t ref = ref Set.empty in
 
-	let startSet = closeEmpty (Set.make [fst.initialState]) fst.transitions in
-	let worklist = ref [startSet] in
-	dfaStates := Set.add startSet !dfaStates;
+		let move (sts: states) (sy: symbol) (ts: transitions4) : states * symbols =
+			let relevant =
+			Set.filter (fun (a,b,_,_) -> Set.belongs a sts && b = sy) ts
+			in
+			let next = Set.map (fun (_,_,_,d) -> d) relevant in
+			let outs = Set.map (fun (_,_,c,_) -> c) relevant in
+			(next, outs)
+		in
 
-	while !worklist <> [] do
-		let current = List.hd !worklist in
-		worklist := List.tl !worklist;
-		let srcName = fusedfstState (Set.map (fun s -> (s, [])) current) in
+		let startSet = closeEmpty (Set.make [fst.initialState]) fst.transitions in
+		let worklist = ref [startSet] in
+		dfaStates := Set.add startSet !dfaStates;
 
-		Set.iter (fun sy ->
-		if sy <> epsilon then (
-			let nextSts, outs = move current sy fst.transitions in
-			if not (Set.isEmpty nextSts) then
-			let closedNext = closeEmpty nextSts fst.transitions in
-			let destName = fusedfstState (Set.map (fun s -> (s, [])) closedNext) in
+		while !worklist <> [] do
+			let current = List.hd !worklist in
+			worklist := List.tl !worklist;
+			let srcName = fusedfstState (Set.map (fun s -> (s, [])) current) in
 
-			if Set.size outs > 1 then (
-				Error.error "toDeterministic"
-				"Multiple distinct outputs found for same (state,input), cannot determinize." ();
-				()
-			) else (
-				let outSymbol =
-				if Set.isEmpty outs then epsilon
-				else List.hd (Set.toList outs)
-				in
+			Set.iter (fun sy ->
+			if sy <> epsilon then (
+				let nextSts, outs = move current sy fst.transitions in
+				if not (Set.isEmpty nextSts) then
+				let closedNext = closeEmpty nextSts fst.transitions in
+				let destName = fusedfstState (Set.map (fun s -> (s, [])) closedNext) in
 
-				newTransitions := Set.add (srcName, sy, outSymbol, destName) !newTransitions;
+				if Set.size outs > 1 then (
+					Error.error "toDeterministic"
+					"Multiple distinct outputs found for same (state,input), cannot determinize." ();
+					()
+				) else (
+					let outSymbol =
+					if Set.isEmpty outs then epsilon
+					else List.hd (Set.toList outs)
+					in
 
-				if not (Set.belongs closedNext !dfaStates) then (
-				dfaStates := Set.add closedNext !dfaStates;
-				worklist := closedNext :: !worklist
+					newTransitions := Set.add (srcName, sy, outSymbol, destName) !newTransitions;
+
+					if not (Set.belongs closedNext !dfaStates) then (
+					dfaStates := Set.add closedNext !dfaStates;
+					worklist := closedNext :: !worklist
+					)
 				)
 			)
-		)
-		) fst.inAlphabet
-	done;
+			) fst.inAlphabet
+		done;
 
-	let newStates = Set.map (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset)) !dfaStates in
-	let newAccepts =
-		Set.filter (fun sname ->
-		let compSet = Set.find (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset) = sname) !dfaStates in
-		Set.exists (fun st -> Set.belongs st fst.acceptStates) compSet
-		) newStates
-	in
-	let newOutAlf = Set.map (fun (_,_,c,_) -> c) !newTransitions in
+		let newStates = Set.map (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset)) !dfaStates in
+		let newAccepts =
+			Set.filter (fun sname ->
+			let compSet = Set.find (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset) = sname) !dfaStates in
+			Set.exists (fun st -> Set.belongs st fst.acceptStates) compSet
+			) newStates
+		in
+		let newOutAlf = Set.map (fun (_,_,c,_) -> c) !newTransitions in
 
-	{
-		inAlphabet = fst.inAlphabet;
-		outAlphabet = Set.diff newOutAlf (Set.make [epsilon]);
-		states = newStates;
-		initialState = fusedfstState (Set.map (fun s -> (s, [])) startSet);
-		transitions = !newTransitions;
-		acceptStates = newAccepts;
-	}
+		{
+			inAlphabet = fst.inAlphabet;
+			outAlphabet = Set.diff newOutAlf (Set.make [epsilon]);
+			states = newStates;
+			initialState = fusedfstState (Set.map (fun s -> (s, [])) startSet);
+			transitions = !newTransitions;
+			acceptStates = newAccepts;
+		}
 
 	let isComplete (fst: t): bool =
 		Set.for_all
@@ -16555,90 +16577,89 @@ struct
 	* signatures of outgoing transitions: (input, output, destination block).
 	*)
 	let minimize (transducer: t): t =
-	(* Ensure DFST and remove dead/unreachable *)
-	let fst_det = toDeterministic transducer in
-	let fst_clean = cleanUselessStates fst_det in
+		(* Ensure DFST and remove dead/unreachable *)
+		let fst_det = toDeterministic transducer in
+		let fst_clean = cleanUselessStates fst_det in
 
-	(* Initial partition: finals vs nonfinals *)
-	let finals, nonfinals =
-		Set.partition (fun st -> Set.belongs st fst_clean.acceptStates) fst_clean.states
-	in
-	let init_partition =
-		Set.filter (fun b -> Set.size b > 0) (Set.make [finals; nonfinals])
-	in
+		(* Initial partition: finals vs nonfinals *)
+		let finals, nonfinals =
+			Set.partition (fun st -> Set.belongs st fst_clean.acceptStates) fst_clean.states
+		in
+		let init_partition =
+			Set.filter (fun b -> Set.size b > 0) (Set.make [finals; nonfinals])
+		in
 
-	(* Find the block in a partition that contains a given state *)
-	let block_of (partition: states Set.t) (st: state) : states =
-		Set.find (fun b -> Set.belongs st b) partition
-	in
+		(* Find the block in a partition that contains a given state *)
+		let block_of (partition: states Set.t) (st: state) : states =
+			Set.find (fun b -> Set.belongs st b) partition
+		in
 
-	(* Compute a state's signature relative to a partition:
+		(* Compute a state's signature relative to a partition:
 		the set of (input, output, destBlock) for all outgoing transitions *)
-	let signature (partition: states Set.t) (st: state) =
-		let outgoing = Set.filter (fun (a,_,_,_) -> a = st) fst_clean.transitions in
-		Set.map
-		(fun (_, inp, out, dst) -> (inp, out, block_of partition dst))
-		outgoing
-	in
-
-	(* Refine one block into groups of states with identical signatures *)
-	let refine_block (partition: states Set.t) (block: states) : states list =
-		let pairs =
-		Set.map (fun st -> (st, signature partition st)) block |> Set.toList
+		let signature (partition: states Set.t) (st: state) =
+			let outgoing = Set.filter (fun (a,_,_,_) -> a = st) fst_clean.transitions in
+			Set.map
+			(fun (_, inp, out, dst) -> (inp, out, block_of partition dst))
+			outgoing
 		in
-		let rec group acc = function
-		| [] -> acc
-		| (s, sigs) :: rest ->
-			let same, diff =
-				List.partition (fun (_, sigs2) -> sigs2 = sigs) rest
+
+		(* Refine one block into groups of states with identical signatures *)
+		let refine_block (partition: states Set.t) (block: states) : states list =
+			let pairs =
+			Set.map (fun st -> (st, signature partition st)) block |> Set.toList
 			in
-			(* Use Pervasives.fst or a lambda to avoid shadowing if we hadn't renamed *)
-			let new_block = Set.make (s :: List.map (fun (x, _) -> x) same) in
-			group (new_block :: acc) diff
+			let rec group acc = function
+			| [] -> acc
+			| (s, sigs) :: rest ->
+				let same, diff =
+					List.partition (fun (_, sigs2) -> sigs2 = sigs) rest
+				in
+				let new_block = Set.make (s :: List.map (fun (x, _) -> x) same) in
+				group (new_block :: acc) diff
 
+			in
+			group [] pairs
 		in
-		group [] pairs
-	in
 
-	(* Refine all blocks until fixpoint *)
-	let rec refine (partition: states Set.t) : states Set.t =
-		let refined =
-		Set.flatMap
-			(fun block -> Set.make (refine_block partition block))
-			partition
+		(* Refine all blocks until fixpoint *)
+		let rec refine (partition: states Set.t) : states Set.t =
+			let refined =
+			Set.flatMap
+				(fun block -> Set.make (refine_block partition block))
+				partition
+			in
+			if Set.equals refined partition then partition else refine refined
 		in
-		if Set.equals refined partition then partition else refine refined
-	in
 
-	let final_partition = refine init_partition in
+		let final_partition = refine init_partition in
 
-	(* Choose a representative per block and a translator *)
-	let representative (block: states) : state = List.hd (Set.toList block) in
-	let translate (st: state) : state =
-		representative (block_of final_partition st)
-	in
+		(* Choose a representative per block and a translator *)
+		let representative (block: states) : state = List.hd (Set.toList block) in
+		let translate (st: state) : state =
+			representative (block_of final_partition st)
+		in
 
-	(* Rebuild minimized machine *)
-	let new_states   = Set.map representative final_partition in
-	let new_init     = translate fst_clean.initialState in
-	let new_accepts  =
-		Set.map representative
-		(Set.filter
-			(fun blk -> Set.exists (fun st -> Set.belongs st fst_clean.acceptStates) blk)
-			final_partition)
-	in
-	let new_trans =
-		Set.map (fun (a,b,c,d) -> (translate a, b, c, translate d)) fst_clean.transitions
-	in
+		(* Rebuild minimized machine *)
+		let new_states   = Set.map representative final_partition in
+		let new_init     = translate fst_clean.initialState in
+		let new_accepts  =
+			Set.map representative
+			(Set.filter
+				(fun blk -> Set.exists (fun st -> Set.belongs st fst_clean.acceptStates) blk)
+				final_partition)
+		in
+		let new_trans =
+			Set.map (fun (a,b,c,d) -> (translate a, b, c, translate d)) fst_clean.transitions
+		in
 
-	{
-		inAlphabet   = fst_clean.inAlphabet;
-		outAlphabet  = fst_clean.outAlphabet;
-		states       = new_states;
-		initialState = new_init;
-		transitions  = new_trans;
-		acceptStates = new_accepts;
-	}
+		{
+			inAlphabet   = fst_clean.inAlphabet;
+			outAlphabet  = fst_clean.outAlphabet;
+			states       = new_states;
+			initialState = new_init;
+			transitions  = new_trans;
+			acceptStates = new_accepts;
+		}
 		
 	(**
 	* This function verifies if the fst is minimal
@@ -16647,7 +16668,7 @@ struct
 		let min = minimize fst in
 			Set.size fst.states = Set.size min.states
    
-	(**
+   (**
    * Converts a Finite-State Transducer (FST) into an equivalent
    * 2-tape Turing Machine (TM).
    *
@@ -16659,12 +16680,8 @@ struct
     let tm_states = Set.add tm_accept_state fst.states in
     let tm_in_alphabet = fst.inAlphabet in
     
-    (*
-     * Use 'empty' from BasicTypes, as TuringMachine.blank does not exist.
-     *)
     let tm_empty = empty in
     
-    (* TM tape alphabet must include input, output, and empty symbol *)
     let tm_tape_alphabet =
       Set.union (Set.union fst.inAlphabet fst.outAlphabet) (Set.make [tm_empty])
     in
@@ -16672,7 +16689,7 @@ struct
     let tm_initial_state = fst.initialState in
     let tm_accept_states = Set.make [tm_accept_state] in
     
-    (* --- 1. Handle transitions that consume input --- *)
+    (* Handle transitions that consume input *)
     let input_consuming_trs = Set.filter (fun (_, inp, _, _) -> inp <> epsilon) fst.transitions in
     let tm_trs_1 = Set.map (fun (q1, a, b_out, q2) ->
       (*
@@ -16682,16 +16699,15 @@ struct
        * Move Tape 1 Right, Tape 2 Right/Stay
        *)
       let (write_b, move_b) =
-        if b_out = epsilon then (tm_empty, S) (* Write nothing, stay *)
-        else (b_out, R) (* Write symbol, move right *)
+        if b_out = epsilon then (tm_empty, S)
+        else (b_out, R) 
       in
       (q1, [a; tm_empty], q2, [a; write_b], [R; move_b])
     ) input_consuming_trs in
 
-    (* --- 2. Handle transitions that do NOT consume input (epsilon-input) --- *)
+    (* Handle transitions that do NOT consume input (epsilon-input) *)
     let epsilon_consuming_trs = Set.filter (fun (_, inp, _, _) -> inp = epsilon) fst.transitions in
     
-    (* We must "stutter" for every possible symbol on the input tape *)
     let all_input_symbols_and_empty = Set.add tm_empty fst.inAlphabet in
 
     let tm_trs_2 = Set.flatMap (fun (q1, _, b_out, q2) ->
@@ -16703,16 +16719,15 @@ struct
        * Move Tape 1 Stay, Tape 2 Right/Stay
        *)
       let (write_b, move_b) =
-        if b_out = epsilon then (tm_empty, S) (* Write nothing, stay *)
-        else (b_out, R) (* Write symbol, move right *)
+        if b_out = epsilon then (tm_empty, S) 
+        else (b_out, R) 
       in
       Set.map (fun s ->
         (q1, [s; tm_empty], q2, [s; write_b], [S; move_b])
       ) all_input_symbols_and_empty
     ) epsilon_consuming_trs in
 
-    (* --- 3. Handle transitions to the final accept state --- *)
-    (* When an FST accept state is reached AND the input tape is exhausted (reads empty) *)
+    (* Handle transitions to the final accept state *)
     let tm_trs_3 = Set.map (fun q_f ->
       (*
        * FST: state q_f is accepting
@@ -16723,10 +16738,6 @@ struct
 
     let all_tm_trs = Set.union (Set.union tm_trs_1 tm_trs_2) tm_trs_3 in
 
-    (*
-     * Build the TM using its constructor.
-     * We pass an Arg.Representation record, which matches the expected structure.
-     *)
     let tm_data = {
       states = tm_states;
       entryAlphabet = tm_in_alphabet;
@@ -16737,13 +16748,11 @@ struct
       acceptStates = tm_accept_states;
       criteria = true;
       lbMarkers = [];
-	  _nTapes = 2 (* Added the missing field based on the error message *)
+	  _nTapes = 2 
     } in
     
-    (* make comes from opened TuringMachine module *)
     (TuringMachine.make (Arg.Representation tm_data) : TuringMachine.t)
-
-			
+	
 end
 
 (* * 
@@ -16762,16 +16771,10 @@ struct
    * T1: A -> B
    * T2: B -> C
    * T = T1 o T2: A -> C
-   *
    *)
   let compose (fst1: t) (fst2: t): t =
 	
 		let new_in_alphabet = fst1.inAlphabet in
-		(*
-		* The new output alphabet is T2's output alphabet.
-		* We also need to add any outputs from T2's epsilon transitions
-		* that might be generated.
-		*)
 		let tr2_eps_outputs =
 			Set.map (fun (_, _, c, _) -> c)
 			(Set.filter (fun (_, a, _, _) -> a = epsilon) fst2.transitions)
@@ -16796,7 +16799,6 @@ struct
 			worklist := Set.remove (q1, q2) !worklist;
 			
 			let fused_src = fuse_states q1 q2 in
-
 			(*
 			* Case 1: Lock-step (T1 consumes input 'a' != eps, T2 consumes T1's output 'b')
 			* T1: q1 --a/b--> q1' (a != epsilon)
@@ -16883,7 +16885,7 @@ struct
 			acceptStates = !new_accept_states
 		}
 
-(*
+   (*
    * Union
    *)
   let union (fst1: t) (fst2: t): t =
@@ -17037,7 +17039,7 @@ struct
 			acceptStates = !new_accept_states
 		}
 
-	(*
+   (*
    * Inverse
    * Creates a new transducer T' that inverts the input/output
    * relationship of T.
@@ -17073,7 +17075,6 @@ struct
 			(rename_state suffix a, b, c, rename_state suffix d)
 		in
 		
-		(* Rename all states and transitions *)
 		let sts1 = Set.map (rename_state s1_suffix) fst1.states in
 		let sts2 = Set.map (rename_state s2_suffix) fst2.states in
 		let new_states = Set.union sts1 sts2 in
@@ -17081,7 +17082,6 @@ struct
 		let trs1 = Set.map (rename_trans s1_suffix) fst1.transitions in
 		let trs2 = Set.map (rename_trans s2_suffix) fst2.transitions in
 		
-		(* Add new epsilon-transitions from fst1's accept states to fst2's start state *)
 		let connect_trs =
 			Set.map (fun acc_st1 ->
 			(rename_state s1_suffix acc_st1, epsilon, epsilon, rename_state s2_suffix fst2.initialState)
@@ -17124,6 +17124,8 @@ struct
 			| "complete" -> isComplete fst
 			| "moore" -> isMooreMachine fst
 			| "mealy" -> isMealyMachine fst
+			| "minimal" -> isMinimized fst
+			| "clean" -> isClean fst
 			| "transducer" -> true
 			| "finite-state transducer" -> true
 			| _ -> Model.checkProperty prop
@@ -17136,6 +17138,8 @@ struct
 	let acceptFull = acceptFull
 	let generate = generate	
 	let asFiniteAutomaton = asFiniteAutomaton
+	let reachable = reachable
+	let productive = productive
 	let isDeterministic = isDeterministic
 	let toDeterministic = toDeterministic
 	let minimize = minimize

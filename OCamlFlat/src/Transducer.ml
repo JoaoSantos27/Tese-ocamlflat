@@ -1346,6 +1346,8 @@ struct
 	let acceptFull = acceptFull
 	let generate = generate	
 	let asFiniteAutomaton = asFiniteAutomaton
+	let reachable = reachable
+	let productive = productive
 	let isDeterministic = isDeterministic
 	let toDeterministic = toDeterministic
 	let minimize = minimize

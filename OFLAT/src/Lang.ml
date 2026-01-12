@@ -122,12 +122,14 @@ module Lang =
   let i18nselectFA () = 
     i18n ["Finite Automaton"; "Autómato Finito"; "Automate Fini"]
 
+  let i18nselectFST () = 
+    i18n ["Finite State Transducer"; "Transdutor de Estado Finito"; "Transducteur d'État Fini"]
+
   let i18nselectPDA () = 
     i18n ["Pushdown Automaton"; "Autómato de Pilha"; "Automate à Pile"]
 
   let i18nselectCFG () = 
     i18n ["Context Free Grammar"; "Linguagem Livre de Contexto"; "Angages Hors-Contexte"]
-
 
   let i18nselectGR () = 
       i18n ["Grammar"; "Gramática"; "Grammaire"]
@@ -186,13 +188,14 @@ let i18nMainTitle4 () =
 let i18nMainTitle5 () =
   i18n ["Grammars"; "Gramáticas Gerais"; "Grammaires Générales"]
 
-
 let i18nMainTitleTM () = (* carolina *)
   i18n ["Turing Machine"; "Máquina de Turing"; "Machine de Turing"]
 
-
 let i18nMainTitlePDA () = 
   i18n ["Pushdown Automata"; "Autómatos de Pilha"; "Automate à Pile"]
+
+let i18nMainTitleFST () = 
+  i18n ["Finite State Transducer"; "Transdutor de Estado Finito"; "Transducteur d'État Fini"]
 
 let i18nMainTitleComp () = (* carolina *)
   i18n ["Composition"; "Composição"; "Composition"]
@@ -1064,6 +1067,11 @@ let i18nPropertyFiniteAutomaton () =
   i18n ["The solution must be a finite automaton";
   "A solução deve ser um autómato finito";
   "La solution doit être un automate fini"]
+
+let i18PropertyFiniteStateTransducer () =
+  i18n ["The solution must be a finite state transducer";
+  "A solução deve ser um transdutor de estados finitos";
+  "La solution doit être un transducteur à états finis"]
 
 let i18nPropertyRegularExpression () =
   i18n ["The solution must be a regular expression";

@@ -16,7 +16,7 @@ OCAMLFLAT_BASE = ../$(OCAMLFLAT)
 OCAMLFLAT_LIB = $(OCAMLFLAT_BASE)/lib/$(OCAMLFLAT).ml
 NAMES = OCamlFlat Lang JS ViewUtil Listeners Cytoscape				\
 		AutomatonView												\
-		FiniteAutomatonView RegularExpressionView 					\
+		FiniteAutomatonView RegularExpressionView TransducerView	\
 		StateVariables												\
 		ContextFreeGrammarBasicView ContextFreeGrammarLL1View		\
 		ContextFreeGrammarLRView ContextFreeGrammarView				\
@@ -25,7 +25,7 @@ NAMES = OCamlFlat Lang JS ViewUtil Listeners Cytoscape				\
 		HtmlPageClient												\
 		Controller AutomatonController								\
 		FiniteAutomatonController RegularExpressionController		\
-		ContextFreeGrammarController PushdownAutomatonController	\
+		TransducerController ContextFreeGrammarController PushdownAutomatonController	\
 		TuringMachineController ExerciseController					\
 		GrammarController 											\
 		CompositionController ControllerListeners Calling
