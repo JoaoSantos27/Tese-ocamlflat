@@ -711,6 +711,8 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       Dom.appendChild divButtons3 clearAuto;
     let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
         Dom.appendChild clearAuto tool
+
+    (*TODO add more buttons (table, outputs)*)
     
   let putCyREButtons() =
     putCyButtons();
@@ -723,7 +725,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     let tool = div2 "tooltipDirection" "tooltiptext3" (Lang.i18nTooltipDirection ()) in
       Dom.appendChild direction tool
 
-    let putCyCFGButtons () =
+  let putCyCFGButtons () =
       putCyButtons();
       let buttonBox = Dom_html.getElementById "buttonBox" in
       let row1 = div "row1" in
@@ -1341,6 +1343,16 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     let info = if min then Lang.i18nIsMinimal () else Lang.i18nNotMinimal () in
       let minimal = span "isminimal" info in 
         Dom.appendChild infoBox minimal
+  
+  let getMealy isMealy infoBox = 
+    let info = if isMealy then Lang.i18nIsMealy () else Lang.i18nIsNotMealy () in
+      let sp = span "isMealy" info in 
+        Dom.appendChild infoBox sp
+
+  let getMoore isMoore infoBox = 
+    let info = if isMoore then Lang.i18nIsMoore () else Lang.i18nIsNotMoore () in
+      let sp = span "isMoore" info in 
+        Dom.appendChild infoBox sp
         
   let getHasUselessStates use uStates infoBox = 
     if use then 

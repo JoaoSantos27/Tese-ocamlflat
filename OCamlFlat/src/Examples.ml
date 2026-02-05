@@ -506,6 +506,42 @@ struct
     acceptStates : ["S"]
   } |}
 
+	let fst_ND = {| {
+    kind : "transducer",
+    description : "Nondeterministic  (2 transitions with same input)",
+    name : "fst3",
+    inAlphabet : ["a"],
+    outAlphabet : ["x","y"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S","a","x","S"],
+      ["S","a","y","S"]
+    ],
+    acceptStates : ["S"]
+  } |}
+
+	let fst_NM = {| {
+    kind : "transducer",
+    description : "Minimizable: A and B are equivalent)",
+    name : "fst_min_merge_AB",
+    inAlphabet : ["a","b"],
+    outAlphabet : ["x","y"],
+    states : ["S","A","B"],
+    initialState : "S",
+    transitions : [
+      ["S","a","x","A"],
+      ["S","b","y","B"],
+
+      ["A","a","x","A"],
+      ["A","b","y","B"],
+
+      ["B","a","x","A"],
+      ["B","b","y","B"]
+    ],
+    acceptStates : ["A","B"]
+  } |}
+		
 (* Turing Machine *)
 
    (* AMD multifita test *)
@@ -1101,6 +1137,8 @@ struct
 	("Finite State Transducers",
 	[
 		("fst_1", fst_1);
+		("fst_ND", fst_ND);
+		("fst_NM", fst_NM);
 	]);
 
   ("Turing Machine",

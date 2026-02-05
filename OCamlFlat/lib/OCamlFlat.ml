@@ -2434,6 +2434,42 @@ struct
     acceptStates : ["S"]
   } |}
 
+	let fst_ND = {| {
+    kind : "transducer",
+    description : "Nondeterministic  (2 transitions with same input)",
+    name : "fst3",
+    inAlphabet : ["a"],
+    outAlphabet : ["x","y"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S","a","x","S"],
+      ["S","a","y","S"]
+    ],
+    acceptStates : ["S"]
+  } |}
+
+	let fst_NM = {| {
+    kind : "transducer",
+    description : "Minimizable: A and B are equivalent)",
+    name : "fst_min_merge_AB",
+    inAlphabet : ["a","b"],
+    outAlphabet : ["x","y"],
+    states : ["S","A","B"],
+    initialState : "S",
+    transitions : [
+      ["S","a","x","A"],
+      ["S","b","y","B"],
+
+      ["A","a","x","A"],
+      ["A","b","y","B"],
+
+      ["B","a","x","A"],
+      ["B","b","y","B"]
+    ],
+    acceptStates : ["A","B"]
+  } |}
+		
 (* Turing Machine *)
 
    (* AMD multifita test *)
@@ -3029,6 +3065,8 @@ struct
 	("Finite State Transducers",
 	[
 		("fst_1", fst_1);
+		("fst_ND", fst_ND);
+		("fst_NM", fst_NM);
 	]);
 
   ("Turing Machine",
@@ -15912,6 +15950,8 @@ struct
 	open TuringMachine
 	open TransducerSupport
 
+	exception DeterminizationFailed
+
 	(* get start state, start symbol, end symbol, or end state of all transitions in set *)
 	let transitionsGetS trns = Set.map ( fun (a,_,_,_) -> a ) trns
 	let transitionsGetSS trns = Set.map ( fun (_,b,_,_) -> b ) trns
@@ -16423,7 +16463,7 @@ struct
 			Error.error "toDeterministic"
 			"The FST has ε-transitions that emit output, cannot determinize." ();
 			fst
-		) else
+		) else try
 		let dfaStates : states Set.t ref = ref Set.empty in
 		let newTransitions : (state * symbol * symbol * state) Set.t ref = ref Set.empty in
 
@@ -16455,7 +16495,7 @@ struct
 				if Set.size outs > 1 then (
 					Error.error "toDeterministic"
 					"Multiple distinct outputs found for same (state,input), cannot determinize." ();
-					()
+					raise DeterminizationFailed
 				) else (
 					let outSymbol =
 					if Set.isEmpty outs then epsilon
@@ -16490,6 +16530,7 @@ struct
 			transitions = !newTransitions;
 			acceptStates = newAccepts;
 		}
+	with DeterminizationFailed -> fst
 
 	let isComplete (fst: t): bool =
 		Set.for_all
@@ -16665,7 +16706,10 @@ struct
 	* This function verifies if the fst is minimal
 	*)
 	let isMinimized (fst: t): bool =
-		let min = minimize fst in
+		if not (isDeterministic fst) then 
+			false
+		else 
+			let min = minimize fst in
 			Set.size fst.states = Set.size min.states
    
    (**
@@ -17149,6 +17193,7 @@ struct
 	let isMooreMachine = isMooreMachine
 	let isMealyMachine = isMealyMachine
 	let isClean = isClean
+	let cleanUselessStates = cleanUselessStates
 	let compose = compose 
 	let union = union 
 	let intersection = intersection 

@@ -759,6 +759,25 @@ let i18nAlertTransitionExists() =
     "Cette transition existe déjà"
   ]
 
+let i18nIsMealy () = i18n[
+  "The automaton is a Mealy machine.";
+  "O automato é uma máquina de Mealy."
+]
+
+let i18nIsNotMealy () = i18n[
+  "The automaton is not a Mealy machine.";
+  "Não é uma máquina de Mealy."
+]
+
+let i18nIsMoore () = i18n[
+  "The automaton is a Moore machine.";
+  "É uma máquina de Moore."
+]
+
+let i18nIsNotMoore () = i18n[
+  "The automaton is not a Moore machine.";
+  "Não é uma máquina de Moore."
+]
 
 (** ---------------- Feedback ----------------- **)
 
@@ -1260,6 +1279,15 @@ let i18nTooltipToggleMode () =
   i18n ["Toggles between simple and traditional modes";
         "Alterna entre os modos simples e tradicional";
         "Bascule entre les modes simple et traditionnel"]
+
+let i18nMealy () = 
+  i18n [
+  "Mealy"; "Mealy"; "Mealy"
+]
+let i18nMoore () = 
+  i18n [
+  "Moore"; "Moore"; "Moore"
+]
 
 (** ----------------- Outros ------------------ **)
 let i18nSave () =

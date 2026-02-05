@@ -26,7 +26,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
     method getAutomaton: AutomatonView.model =
       (myFST :> AutomatonView.model)
 
-    method getFST = myFST (* Helper if needed, though strictly it's an FST *)
+    method getFST = myFST 
 
     method model: Model.model = 
       (myFST :> Model.model)
@@ -40,12 +40,28 @@ class fstController (fst : TransducerView.model) (s: bool) =
     method loadButtons = 
       HtmlPageClient.putCyTransducerButtons ()
 
+    method updateButtons =
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTM2TapesConvertButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyExpressionButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyGRConvertButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTMConvertButtons;
+      
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons
+
     method defineInformationBox =
       let infoBox = HtmlPageClient.defineInformationBox side in
       let deter = myFST#isDeterministic in 
         HtmlPageClient.getDeterminim deter infoBox;
-      let min = myFST#isMinimized in 
+      let min = if deter then myFST#isMinimized else false in
         HtmlPageClient.getMinimism min infoBox;
+      let mealy = myFST#isMealy in
+      HtmlPageClient.getMealy mealy infoBox;
+      let moore = myFST#isMoore in
+      HtmlPageClient.getMoore moore infoBox;
       let useful = myFST#areAllStatesUseful in
       let uStates = myFST#getUselessStates in 
         HtmlPageClient.getHasUselessStates useful uStates infoBox;
@@ -55,7 +71,6 @@ class fstController (fst : TransducerView.model) (s: bool) =
         HtmlPageClient.getNumberTransitions nTransitions infoBox;
       let _ = myFST#buildTable in () 
 
-    (* --- Node Editing Methods --- *)
 
     method addNode x y initial final : unit = 
       self#operationAutomaton "add Node";
@@ -136,8 +151,6 @@ class fstController (fst : TransducerView.model) (s: bool) =
                   Cytoscape.resetFaElems self#getCy;
                   self#defineExample
 
-    (* --- Transition Editing Methods --- *)
-
     method createTransition source target =
       self#operationAutomaton "add transition";
       let promptResult = (JS.prompt (Lang.i18nTextEnterTransition ()) "a,b") in
@@ -158,7 +171,6 @@ class fstController (fst : TransducerView.model) (s: bool) =
 
     method eliminateTransition (v1, label, v2) =
       self#operationAutomaton "erase transition";
-      (* Expect label format "input:output" *)
       let parts = String.split_on_char ':' label in
       match parts with
       | [input; output] -> 
@@ -172,12 +184,9 @@ class fstController (fst : TransducerView.model) (s: bool) =
             JS.alertStr ((Lang.i18nAlertTheTransition ()) ^ " does not exist")
       | _ -> JS.alertStr "Could not parse transition label to delete."
 
-    (* --- Other Methods --- *)
-
     method editModel = 
-      (* !ListenersFA.editModelListener(); *) (* You might need a specific Listener for Transducers *)
       ()
-
+      
     method replicateOnLeft =
       let c = new fstController self#getFST false in
       Ctrl.ctrlL := (c :> controller);

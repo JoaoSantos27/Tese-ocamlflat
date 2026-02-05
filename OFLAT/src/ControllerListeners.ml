@@ -432,6 +432,67 @@ module ControllerListeners = struct
             else 
               JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
 
+  ListenersFST.cleanUselessListener :=
+    fun () -> 
+      let fstView = !Ctrl.ctrlL#getFST in
+      if fstView#areAllStatesUseful then 
+        JS.alertStr (Lang.i18nAlertClean ())
+      else 
+        let new_rep = Transducer.cleanUselessStates fstView#representation in
+        let new_view = new TransducerView.model (Arg.Representation new_rep) in
+        CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+        createTransducerController new_view true;
+        !Ctrl.ctrlR#defineExample2;
+        Cytoscape.fit !Ctrl.ctrlR#getCy_opt;;
+
+  ListenersFST.getDeterministicListener :=
+    fun () -> 
+      let fstView = !Ctrl.ctrlL#getFST in
+      if fstView#isDeterministic then 
+        JS.alertStr (Lang.i18nAlertDeterministic ())
+      else 
+        let new_rep = Transducer.toDeterministic fstView#representation in
+        if Transducer.isDeterministic new_rep then (
+            let new_view = new TransducerView.model (Arg.Representation new_rep) in
+            CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+            createTransducerController new_view true;
+            !Ctrl.ctrlR#defineExample2;
+            Cytoscape.fit !Ctrl.ctrlR#getCy_opt
+        ) else (
+            ()
+        );;
+
+  ListenersFST.defineMinimizedListener :=
+    fun () -> 
+      let fstView = !Ctrl.ctrlL#getFST in
+      if fstView#isDeterministic then
+        if fstView#isMinimized then 
+          JS.alertStr (Lang.i18nAlertMinimum ())
+        else 
+          let new_rep = Transducer.minimize fstView#representation in
+          let new_view = new TransducerView.model (Arg.Representation new_rep) in
+          CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+          createTransducerController new_view true;
+          !Ctrl.ctrlR#defineExample2;
+          Cytoscape.fit !Ctrl.ctrlR#getCy_opt;
+      else 
+        JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
+        
+  ListenersFST.paintAllUsefulListener :=
+    fun () -> !Ctrl.ctrlL#resetStyle;
+    (!Ctrl.ctrlL#getFST)#usefulPainting !Ctrl.ctrlL#getCy;;
+
+  ListenersFST.paintAllProductivesListener :=
+    fun () -> (!Ctrl.ctrlL#resetStyle;
+    (!Ctrl.ctrlL#getFST)#productivePainting !Ctrl.ctrlL#getCy);;
+
+  ListenersFST.paintAllReachableListener := 
+    fun () -> !Ctrl.ctrlL#resetStyle;
+    (!Ctrl.ctrlL#getFST)#reachablePainting !Ctrl.ctrlL#getCy;;
+  
+  ListenersFST.clearAutoListener :=
+     fun () -> Cytoscape.resetStyle !Ctrl.ctrlL#getCy Cytoscape.faStyle;;
+
   ListenersPDA.cleanUselessListener :=
   fun () -> if ((!Ctrl.ctrlL#getPDA)#areAllStatesUseful) then 
               JS.alertStr (Lang.i18nAlertClean ())
@@ -687,6 +748,8 @@ open ContextFreeGrammarLL1View;;
         else if model = FiniteAutomaton.kind then
             JS.alert (Lang.i18nModelEditFA())
         else if model = PushdownAutomaton.kind then
+            JS.alert (Lang.i18nModelEditFA())
+        else if model = Transducer.kind then
             JS.alert (Lang.i18nModelEditFA())
         else if model = TuringMachine.kind then
             JS.alert (Lang.i18nModelEditFA())

@@ -120,6 +120,8 @@ struct
 	open TuringMachine
 	open TransducerSupport
 
+	exception DeterminizationFailed
+
 	(* get start state, start symbol, end symbol, or end state of all transitions in set *)
 	let transitionsGetS trns = Set.map ( fun (a,_,_,_) -> a ) trns
 	let transitionsGetSS trns = Set.map ( fun (_,b,_,_) -> b ) trns
@@ -631,7 +633,7 @@ struct
 			Error.error "toDeterministic"
 			"The FST has ε-transitions that emit output, cannot determinize." ();
 			fst
-		) else
+		) else try
 		let dfaStates : states Set.t ref = ref Set.empty in
 		let newTransitions : (state * symbol * symbol * state) Set.t ref = ref Set.empty in
 
@@ -663,7 +665,7 @@ struct
 				if Set.size outs > 1 then (
 					Error.error "toDeterministic"
 					"Multiple distinct outputs found for same (state,input), cannot determinize." ();
-					()
+					raise DeterminizationFailed
 				) else (
 					let outSymbol =
 					if Set.isEmpty outs then epsilon
@@ -698,6 +700,7 @@ struct
 			transitions = !newTransitions;
 			acceptStates = newAccepts;
 		}
+	with DeterminizationFailed -> fst
 
 	let isComplete (fst: t): bool =
 		Set.for_all
@@ -873,7 +876,10 @@ struct
 	* This function verifies if the fst is minimal
 	*)
 	let isMinimized (fst: t): bool =
-		let min = minimize fst in
+		if not (isDeterministic fst) then 
+			false
+		else 
+			let min = minimize fst in
 			Set.size fst.states = Set.size min.states
    
    (**
@@ -1357,6 +1363,7 @@ struct
 	let isMooreMachine = isMooreMachine
 	let isMealyMachine = isMealyMachine
 	let isClean = isClean
+	let cleanUselessStates = cleanUselessStates
 	let compose = compose 
 	let union = union 
 	let intersection = intersection 

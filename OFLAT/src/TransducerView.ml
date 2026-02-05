@@ -36,6 +36,10 @@ struct
         let useful = Set.inter self#productive self#reachableFromInitialState in
         Set.diff self#representation.states useful
 
+      method isMealy = Transducer.isMealyMachine self#representation
+      
+      method isMoore = Transducer.isMooreMachine self#representation
+
       method staticGenerate n = 
         super#generate n
 
@@ -141,7 +145,6 @@ struct
           acceptStates = new_accepts
         })
 
-      (* Draws edges with "input:output" labels *)
       method inputEdges (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) =
         let mapToCytoscapeEdge transitions =
             Set.map (fun (src, iSym, oSym, dst) ->
@@ -151,7 +154,6 @@ struct
         in
         Set.iter (Cytoscape.addEdge cy) (mapToCytoscapeEdge self#representation.transitions)
 
-      (* Overrides drawExample to ensure edges are drawn correctly *)
       method drawExample (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) = 
         self#inputNodes cy;
         self#inputEdges cy
