@@ -520,8 +520,27 @@ struct
     ],
     acceptStates : ["S"]
   } |}
+	
+	let fst_complex_ND = {| {
+    kind : "transducer",
+    description : "Complex ND FST: Ambiguous 'a' paths and epsilon-output conflict",
+    name : "complex_fst_nd",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["x", "y", "z"],
+    states : ["S", "A", "B", "C"],
+    initialState : "S",
+    transitions : [
+      ["S", "a", "x", "A"],
+      ["S", "a", "z", "B"],
+      ["A", "a", "x", "S"],
+      ["B", "b", "y", "S"],
+      ["S", "~", "z", "C"],
+      ["C", "a", "x", "S"]
+    ],
+    acceptStates : ["S", "A"]
+  } |}
 
-	let fst_NM = {| {
+	let fst_M = {| {
     kind : "transducer",
     description : "Minimizable: A and B are equivalent)",
     name : "fst_min_merge_AB",
@@ -540,6 +559,38 @@ struct
       ["B","b","y","B"]
     ],
     acceptStates : ["A","B"]
+  } |}
+
+	let fst_Moore = {| {
+    kind : "transducer",
+    description : "Moore",
+    name : "fst2",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["x", "y"],
+    states : ["S","A"],
+    initialState : "S",
+    transitions : [
+      ["S","a","x","A"],
+      ["S","b","x","A"],
+      ["A","a","y","S"],
+      ["A","b","y","S"]
+    ],
+    acceptStates : ["S","A"]
+  } |}
+
+	let fst_Mealy = {| {
+    kind : "transducer",
+    description : "Deterministic & complete but not Moore (output depends on input)",
+    name : "fst7",
+    inAlphabet : ["a","b"],
+    outAlphabet : ["x","y"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S","a","x","S"],
+      ["S","b","y","S"]
+    ],
+    acceptStates : ["S"]
   } |}
 		
 (* Turing Machine *)
@@ -1138,7 +1189,10 @@ struct
 	[
 		("fst_1", fst_1);
 		("fst_ND", fst_ND);
-		("fst_NM", fst_NM);
+		("fst_complex_ND", fst_complex_ND);
+		("fst_M", fst_M);
+		("fst_Moore", fst_Moore);
+		("fst_Mealy", fst_Mealy)
 	]);
 
   ("Turing Machine",

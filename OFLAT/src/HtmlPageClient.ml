@@ -710,7 +710,9 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     let clearAuto = button1 (Lang.i18nClearAuto ()) "clearAuto" "tooltip3" !ListenersFST.clearAutoListener in
       Dom.appendChild divButtons3 clearAuto;
     let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
-        Dom.appendChild clearAuto tool
+        Dom.appendChild clearAuto tool;
+    let tableView = button1 ("Show Table View") "showTable" "tooltip3" !ListenersAutomaton.showTable in
+      Dom.appendChild divButtons3 tableView
 
     (*TODO add more buttons (table, outputs)*)
     
@@ -1657,11 +1659,6 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     let changeButtonColor but color =
       let button = Dom_html.getElementById but in
         button##.style##.backgroundColor := Js.string color
-      
-    
-    
-
-      
       
     
   let changeLang () =

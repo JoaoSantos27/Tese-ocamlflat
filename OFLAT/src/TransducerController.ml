@@ -192,7 +192,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
       Ctrl.ctrlL := (c :> controller);
 
     method defineMinimize listColors number =
-      myFST#paintMinimization self#getCy listColors;
+      !Ctrl.ctrlL#getFST#paintMinimization !Ctrl.ctrlL#getCy listColors;
       myFST#drawMinimize self#getCy listColors number;
       Cytoscape.fit self#getCy_opt
 

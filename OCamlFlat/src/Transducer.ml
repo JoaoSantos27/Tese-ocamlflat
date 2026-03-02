@@ -782,17 +782,11 @@ struct
 		deterministic && complete && transition_output_ok
 
 	(**
-	* Minimizes a deterministic transducer.
-	* It first determinizes, cleans useless states,
-	* then partitions states by (final/nonfinal) and refines using
-	* signatures of outgoing transitions: (input, output, destination block).
+	* Computes the equivalence classes of states for a deterministic transducer.
 	*)
-	let minimize (transducer: t): t =
-		(* Ensure DFST and remove dead/unreachable *)
-		let fst_det = toDeterministic transducer in
-		let fst_clean = cleanUselessStates fst_det in
+	let equivalencePartition (transducer: t) : states Set.t =
+		let fst_clean = cleanUselessStates transducer in
 
-		(* Initial partition: finals vs nonfinals *)
 		let finals, nonfinals =
 			Set.partition (fun st -> Set.belongs st fst_clean.acceptStates) fst_clean.states
 		in
@@ -800,13 +794,10 @@ struct
 			Set.filter (fun b -> Set.size b > 0) (Set.make [finals; nonfinals])
 		in
 
-		(* Find the block in a partition that contains a given state *)
 		let block_of (partition: states Set.t) (st: state) : states =
 			Set.find (fun b -> Set.belongs st b) partition
 		in
 
-		(* Compute a state's signature relative to a partition:
-		the set of (input, output, destBlock) for all outgoing transitions *)
 		let signature (partition: states Set.t) (st: state) =
 			let outgoing = Set.filter (fun (a,_,_,_) -> a = st) fst_clean.transitions in
 			Set.map
@@ -814,50 +805,44 @@ struct
 			outgoing
 		in
 
-		(* Refine one block into groups of states with identical signatures *)
 		let refine_block (partition: states Set.t) (block: states) : states list =
-			let pairs =
-			Set.map (fun st -> (st, signature partition st)) block |> Set.toList
-			in
+			let pairs = Set.map (fun st -> (st, signature partition st)) block |> Set.toList in
 			let rec group acc = function
 			| [] -> acc
 			| (s, sigs) :: rest ->
-				let same, diff =
-					List.partition (fun (_, sigs2) -> sigs2 = sigs) rest
-				in
+				let same, diff = List.partition (fun (_, sigs2) -> sigs2 = sigs) rest in
 				let new_block = Set.make (s :: List.map (fun (x, _) -> x) same) in
 				group (new_block :: acc) diff
-
 			in
 			group [] pairs
 		in
 
-		(* Refine all blocks until fixpoint *)
 		let rec refine (partition: states Set.t) : states Set.t =
-			let refined =
-			Set.flatMap
-				(fun block -> Set.make (refine_block partition block))
-				partition
-			in
+			let refined = Set.flatMap (fun block -> Set.make (refine_block partition block)) partition in
 			if Set.equals refined partition then partition else refine refined
 		in
+		refine init_partition
 
-		let final_partition = refine init_partition in
+	(**
+	* Minimizes a deterministic transducer.
+	*)
+	let minimize (transducer: t): t =
+		let fst_clean = cleanUselessStates transducer in
+		let final_partition = equivalencePartition fst_clean in
 
-		(* Choose a representative per block and a translator *)
+		let block_of (partition: states Set.t) (st: state) : states =
+			Set.find (fun b -> Set.belongs st b) partition
+		in
 		let representative (block: states) : state = List.hd (Set.toList block) in
 		let translate (st: state) : state =
 			representative (block_of final_partition st)
 		in
 
-		(* Rebuild minimized machine *)
 		let new_states   = Set.map representative final_partition in
 		let new_init     = translate fst_clean.initialState in
 		let new_accepts  =
 			Set.map representative
-			(Set.filter
-				(fun blk -> Set.exists (fun st -> Set.belongs st fst_clean.acceptStates) blk)
-				final_partition)
+			(Set.filter (fun blk -> Set.exists (fun st -> Set.belongs st fst_clean.acceptStates) blk) final_partition)
 		in
 		let new_trans =
 			Set.map (fun (a,b,c,d) -> (translate a, b, c, translate d)) fst_clean.transitions
@@ -1356,6 +1341,7 @@ struct
 	let productive = productive
 	let isDeterministic = isDeterministic
 	let toDeterministic = toDeterministic
+	let equivalencePartition = equivalencePartition
 	let minimize = minimize
 	let isMinimized = isMinimized
 	let asTuringMachine = asTuringMachine
@@ -1387,6 +1373,7 @@ struct
 			method acceptFull (w: word) : bool * path * trail = acceptFull representation w
 			method generate (length: int): words = generate representation length
 			method isClean: bool = isClean representation
+			method equivalencePartition = equivalencePartition representation
 			method minimize: t = minimize representation
 			method isMinimized: bool = isMinimized representation
 			method toDeterministic: t = toDeterministic representation

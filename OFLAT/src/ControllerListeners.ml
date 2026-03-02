@@ -473,8 +473,9 @@ module ControllerListeners = struct
           let new_view = new TransducerView.model (Arg.Representation new_rep) in
           CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
           createTransducerController new_view true;
-          !Ctrl.ctrlR#defineExample2;
-          Cytoscape.fit !Ctrl.ctrlR#getCy_opt;
+          let number = fstView#getColors in
+          setColor number;
+          !Ctrl.ctrlR#defineMinimize !listColorsBig number;
       else 
         JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
         

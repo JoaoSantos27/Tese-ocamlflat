@@ -275,7 +275,21 @@ struct
   let makePDAStateRow st sa ia transitions : string list =
     (state2str st ^ ", " ^ symb2str sa) :: 
     (List.map (fun input -> makePDACell st sa input transitions) ia)
-
+  
+  (*makeStateRow para FSTs*)
+  let makeFSTStateRow (st: state) (alphabet: symbol list) (transitions: (state * symbol * symbol * state) Set.t) : string list =
+  let row = ref [state2str st] in
+  List.iter (fun sy ->
+    let matching_trans = Set.filter (fun (s, i, o, d) -> s = st && i = sy) transitions in
+    if Set.isEmpty matching_trans then
+      row := !row @ ["-"]
+    else
+      let content = String.concat ", " (Set.toList (Set.map (fun (_, _, o, d) -> 
+        (state2str d) ^ "/" ^ (symb2str o)) matching_trans)) 
+      in
+      row := !row @ [content]
+  ) alphabet;
+  !row
 
   (*TRACE*)
 
