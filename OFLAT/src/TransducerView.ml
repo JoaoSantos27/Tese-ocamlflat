@@ -145,6 +145,10 @@ struct
       
       method isMoore = Transducer.isMooreMachine self#representation
 
+      method asFiniteAutomaton = Transducer.asFiniteAutomaton self#representation
+
+      method asTuringMachine = Transducer.asTuringMachine self#representation
+
       method addNode node firstNode =
         if firstNode then
           (new model (Arg.Representation {
@@ -304,6 +308,25 @@ struct
       method private getWordFromConfig config =
         let (_, remainingWord, _) = config in
         remainingWord
+
+      method private changeSentence config =
+        newSentence := "";
+        let wordToConsume = self#getWordFromConfig config in
+        let (_, _, outputWord) = config in
+        let bar = '|' in
+        
+        for i = 0 to (List.length !sentence) - (List.length wordToConsume) - 1 do
+          newSentence := !newSentence ^ String.make 1 (List.nth !sentence i)
+        done;
+        
+        newSentence := !newSentence ^ String.make 1 bar;
+        
+        for i = 0 to (List.length wordToConsume) - 1 do
+          newSentence := !newSentence ^ symb2str (List.nth wordToConsume i)
+        done;
+        
+        newSentence := !newSentence ^ " → ";
+        newSentence := !newSentence ^ word2str outputWord
 
       method private getCurrConfigFromBestPath = 
         if bestPath <> [] && position < List.length bestPath then 

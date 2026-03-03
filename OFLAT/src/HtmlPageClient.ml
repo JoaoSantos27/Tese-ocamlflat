@@ -195,6 +195,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   let listOnlyGRConvertButtons = ["selectGR"]
   let listOnlyTMConvertButtons = ["selectTM"] (* carolina *)
   let listOnlyTM2TapesConvertButtons = ["selectTM2Tapes"]
+  let listOnlyFSTConvertButtons = ["selectRegex"; "selectFA"; "selectTM"]
   let listOnlyCFGButtons = ["testing"; "trace"; "generate"; "backwards"; "start"; "forward"]
   let listOnlyGRButtons = ["testing"; "trace"; "generate"]
   let listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"]
@@ -1667,7 +1668,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     putInnerHtml "version" (Lang.i18nVersion ());
     putInnerHtml "optionNewDefault" (Lang.i18nNewModel ());
     putInnerHtml "optionNewAutomatonFA" (Lang.i18nMainTitle1());
-    (*putInnerHtml "optionNewAutomatonFST" (Lang.i18nMainTitleFST());*)
+    putInnerHtml "optionNewTransducer" (Lang.i18nMainTitleFST());
     putInnerHtml "optionNewAutomatonPDA" (Lang.i18nMainTitlePDA());
     putInnerHtml "optionNewRegularExpression" (Lang.i18nMainTitle2());
     putInnerHtml "optionNewContextFreeGrammar" (Lang.i18nMainTitle4());
@@ -1686,7 +1687,6 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         
     putInnerHtml "selectRegex" (Lang.i18nSelectRegex ());
     putInnerHtml "selectFA" (Lang.i18nselectFA ());
-    (*putInnerHtml "selectFST" (Lang.i18nselectFST ());*)
     putInnerHtml "selectPDA" (Lang.i18nselectPDA ());
     putInnerHtml "selectCFG" (Lang.i18nselectCFG ());
 

@@ -703,6 +703,7 @@ open ContextFreeGrammarLL1View;;
       | "Comp" -> createModelPrep (Lang.i18nMainTitleComp()) "" (getDefault "[dfa_1]+[dfa_1]") (fun () -> !ListenersComp.createModelListener())
       | "CFG" -> createModelPrep (Lang.i18nMainTitle4()) (Lang.i18nInstructionsCFG()) (getDefault "S -> [ S ] | A\nA -> a") (fun () -> !ListenersCFG.createModelListener())
       | "GR" -> createModelPrep (Lang.i18nMainTitle5()) (Lang.i18nInstructionsGR()) (getDefault "S -> aBC | aSBC\nCB -> CZ\nCZ -> WZ\nWZ -> WC\nWC -> BC\naB -> ab\nbB -> bb\nbC -> bc\ncC -> cc") (fun () -> !ListenersGR.createModelListener())
+      | "FST" -> !ListenersFST.createModelListener()
       | _ -> ();;
   
     
@@ -718,6 +719,7 @@ open ContextFreeGrammarLL1View;;
             if value = "optionNewRegularExpression" then createModel "RE" () else
             if value = "optionNewContextFreeGrammar" then createModel "CFG" () else
             if value = "optionNewGrammar" then createModel "GR" () else
+            if value = "optionNewTransducer" then createModel "FST" () else
             if value = "optionNewTuringMachine" then createModel "TM" () else
             if value = "optionNewComposition" then createModel "Comp" ();
             select##.selectedIndex := 0;;
@@ -845,6 +847,21 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createPDAController defaultPDA false;
+      !Ctrl.ctrlL#defineExample;
+      setTitle();;
+
+    ListenersFST.createModelListener := fun () -> 
+      let defaultFST = new TransducerView.model (Representation {
+        inAlphabet = Set.empty;
+        outAlphabet = Set.empty;
+        states = Set.make ["START"]; 
+        initialState = "START";
+        transitions = Set.empty;
+        acceptStates = Set.empty
+      }) in
+      CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
+      HtmlPageClient.clearBox1();
+      createTransducerController defaultFST false;
       !Ctrl.ctrlL#defineExample;
       setTitle();;
 
