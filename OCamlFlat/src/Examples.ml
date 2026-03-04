@@ -1136,6 +1136,36 @@ struct
 			properties : ["finite automaton"]
 		} |}
 
+	let exer_fst_identity = {| {
+			kind : "exercise",
+			description : "FST: identity transducer over a and b",
+			name : "exer_fst_identity",
+			problem : "Create a deterministic FINITE STATE TRANSDUCER that reads any sequence of 'a's and 'b's and outputs the same sequence (identity transducer).",
+			inside : ["a", "b", "ab", "ba", "aab", "abb", "aabb"],
+			outside : [],
+			properties : ["transducer", "deterministic"]
+		} |}
+
+	let exer_fst_mealy = {| {
+			kind : "exercise",
+			description : "FST: Mealy machine swapping a and b",
+			name : "exer_fst_mealy",
+			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'b' for every 'a' it reads and 'a' for every 'b' it reads.",
+			inside : ["a", "b", "ab", "ba", "aab"],
+			outside : [],
+			properties : ["transducer", "deterministic", "mealy"]
+		} |}
+
+	let exer_fst_moore = {| {
+			kind : "exercise",
+			description : "FST: Moore machine outputting x on a and y on b",
+			name : "exer_fst_moore",
+			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' whenever it reads 'a' and 'y' whenever it reads 'b'.",
+			inside : ["a", "b", "ab", "ba", "aab", "abb"],
+			outside : [],
+			properties : ["transducer", "deterministic", "moore"]
+		} |}
+
   let examplesTable = [
   ("Finite Automata",
   [
@@ -1236,7 +1266,10 @@ struct
     ("exer_abcd", exer_abcd);
     ("exer_ab", exer_ab);
     ("exer_re2fa", exer_re2fa);
-    ("exer_readwrite", exer_readwrite)
+    ("exer_readwrite", exer_readwrite);
+    ("exer_fst_identity", exer_fst_identity);
+    ("exer_fst_mealy", exer_fst_mealy);
+    ("exer_fst_moore", exer_fst_moore)
   ])]
 
 	let examplesAll =
