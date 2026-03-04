@@ -6309,7 +6309,6 @@
     cst_convert_to_RE = "convert to RE",
     cst_convert_to_TM_dual_tape = "convert to TM dual tape",
     cst_convert_to_TM_single_tape = "convert to TM single tape",
-    cst_convert_to_regex = "convert to regex",
     cst_convertAcceptStates = "convertAcceptStates",
     cst_convertEmptyStackAccept = "convertEmptyStackAccept",
     cst_convertToCFG = "convertToCFG",
@@ -6432,7 +6431,6 @@
     cst_finish = "finish",
     cst_finite_automaton = "finite automaton",
     cst_finite_enumeration = "finite enumeration",
-    cst_finite_state_transducer = "finite state transducer",
     cst_finiteAutomaton = "finiteAutomaton",
     cst_first = "first",
     cst_first1 = "first1",
@@ -11441,22 +11439,7 @@
     cache_id$1774 = caml_oo_cache_id(),
     cache_id$1775 = caml_oo_cache_id(),
     cache_id$1776 = caml_oo_cache_id(),
-    cache_id$1777 = caml_oo_cache_id(),
-    cache_id$1778 = caml_oo_cache_id(),
-    cache_id$1779 = caml_oo_cache_id(),
-    cache_id$1780 = caml_oo_cache_id(),
-    cache_id$1781 = caml_oo_cache_id(),
-    cache_id$1782 = caml_oo_cache_id(),
-    cache_id$1783 = caml_oo_cache_id(),
-    cache_id$1784 = caml_oo_cache_id(),
-    cache_id$1785 = caml_oo_cache_id(),
-    cache_id$1786 = caml_oo_cache_id(),
-    cache_id$1787 = caml_oo_cache_id(),
-    cache_id$1788 = caml_oo_cache_id(),
-    cache_id$1789 = caml_oo_cache_id(),
-    cache_id$1790 = caml_oo_cache_id(),
-    cache_id$1791 = caml_oo_cache_id(),
-    cache_id$1792 = caml_oo_cache_id();
+    cache_id$1777 = caml_oo_cache_id();
    function erase_rel(param){
      /*<<camlinternalFormatBasics.ml:528:8>>*/ if(typeof param === "number")
       /*<<camlinternalFormatBasics.ml:562:20>>*/ return 0;
@@ -26206,7 +26189,7 @@
     agU = [0, cst_selectGR, 0],
     agV = [0, cst_selectTM, 0],
     agW = [0, cst_selectTM2Tapes, 0],
-    agX = [0, cst_selectRegex, [0, cst_selectFA, [0, cst_selectTM, 0]]],
+    agX = [0, cst_selectFA, [0, cst_selectTM, 0]],
     agY =
       [0,
        cst_testing,
@@ -26238,7 +26221,7 @@
     agJ = cst_defineExample,
     agI = "define Example cy 2",
     agH = cst_defineInformationBox,
-    agG = cst_convert_to_regex,
+    agG = "convert to regex",
     agF = cst_convert_to_FA,
     agE = "convert to FST",
     agD = cst_convert_to_CFG,
@@ -27035,23 +27018,23 @@
        cst_cy,
        cst_activeProm],
     aiX = cst_FST,
-    aiV = cst_add_Node,
-    aiW = cst_A,
-    aiU = cst_make_node_initial,
-    aiT = cst_add_final_node,
-    aiS = cst_make_node_final,
-    aiR = cst_make_node_not_final,
-    aiQ = cst_eliminate_node,
-    aiP = cst_rename_node,
-    aiL = cst_add_transition,
-    aiM = "a,b",
-    aiO = cst$12,
-    aiN = "Invalid format. Use 'input,output' (e.g., 'a,b')",
-    aiI = cst_erase_transition,
-    aiK = " does not exist",
-    aiJ = "Could not parse transition label to delete.",
-    aiH = cst_convert_to_FA,
-    aiG = cst_convert_to_regex,
+    aiW = cst_selectRegex,
+    aiU = cst_add_Node,
+    aiV = cst_A,
+    aiT = cst_make_node_initial,
+    aiS = cst_add_final_node,
+    aiR = cst_make_node_final,
+    aiQ = cst_make_node_not_final,
+    aiP = cst_eliminate_node,
+    aiO = cst_rename_node,
+    aiK = cst_add_transition,
+    aiL = "a,b",
+    aiN = cst$12,
+    aiM = "Invalid format. Use 'input,output' (e.g., 'a,b')",
+    aiH = cst_erase_transition,
+    aiJ = " does not exist",
+    aiI = "Could not parse transition label to delete.",
+    aiG = cst_convert_to_FA,
     aiF = cst_convert_to_TM_single_tape,
     aiE = cst$9,
     aiz =
@@ -68566,235 +68549,235 @@
     createModelListener$1 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:77:43>>*/ return 0;
-        /*<<Listeners.ml:77:45>>*/ }],
+         /*<<Listeners.ml:76:43>>*/ return 0;
+        /*<<Listeners.ml:76:45>>*/ }],
     getDeterministicListener$0 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:80:48>>*/ return 0;
-        /*<<Listeners.ml:80:50>>*/ }],
+         /*<<Listeners.ml:79:48>>*/ return 0;
+        /*<<Listeners.ml:79:50>>*/ }],
     defineMinimizedListener$0 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:81:47>>*/ return 0;
-        /*<<Listeners.ml:81:49>>*/ }],
+         /*<<Listeners.ml:80:47>>*/ return 0;
+        /*<<Listeners.ml:80:49>>*/ }],
     cleanUselessListener$0 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:82:44>>*/ return 0;
-        /*<<Listeners.ml:82:46>>*/ }],
+         /*<<Listeners.ml:81:44>>*/ return 0;
+        /*<<Listeners.ml:81:46>>*/ }],
     createModelListener$2 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:89:47>>*/ return 0;
-        /*<<Listeners.ml:89:49>>*/ }],
+         /*<<Listeners.ml:87:47>>*/ return 0;
+        /*<<Listeners.ml:87:49>>*/ }],
     createModelListener$3 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:102:42>>*/ return 0;
-        /*<<Listeners.ml:102:44>>*/ }],
+         /*<<Listeners.ml:100:42>>*/ return 0;
+        /*<<Listeners.ml:100:44>>*/ }],
     cleanUselessListener$1 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:103:43>>*/ return 0;
-        /*<<Listeners.ml:103:45>>*/ }],
+         /*<<Listeners.ml:101:43>>*/ return 0;
+        /*<<Listeners.ml:101:45>>*/ }],
     toggleAcceptanceCriteria =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:104:47>>*/ return 0;
-        /*<<Listeners.ml:104:49>>*/ }],
+         /*<<Listeners.ml:102:47>>*/ return 0;
+        /*<<Listeners.ml:102:49>>*/ }],
     changeInitialStackSymbol =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:105:47>>*/ return 0;
-        /*<<Listeners.ml:105:49>>*/ }],
+         /*<<Listeners.ml:103:47>>*/ return 0;
+        /*<<Listeners.ml:103:49>>*/ }],
     convertAcceptStates =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:106:42>>*/ return 0;
-        /*<<Listeners.ml:106:44>>*/ }],
+         /*<<Listeners.ml:104:42>>*/ return 0;
+        /*<<Listeners.ml:104:44>>*/ }],
     convertEmptyStackAccept =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:107:46>>*/ return 0;
-        /*<<Listeners.ml:107:48>>*/ }],
+         /*<<Listeners.ml:105:46>>*/ return 0;
+        /*<<Listeners.ml:105:48>>*/ }],
     createModelListener$4 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:113:42>>*/ return 0;
-        /*<<Listeners.ml:113:44>>*/ }],
+         /*<<Listeners.ml:111:42>>*/ return 0;
+        /*<<Listeners.ml:111:44>>*/ }],
     resultCountListener =
        /*<<Lang.ml:51:77>>*/ [0,
-       function(param){ /*<<Listeners.ml:114:44>>*/ }],
+       function(param){ /*<<Listeners.ml:112:44>>*/ }],
     previousTreeListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:115:43>>*/ return 0;
-        /*<<Listeners.ml:115:45>>*/ }],
+         /*<<Listeners.ml:113:43>>*/ return 0;
+        /*<<Listeners.ml:113:45>>*/ }],
     nextTreeListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:116:39>>*/ return 0;
-        /*<<Listeners.ml:116:41>>*/ }],
+         /*<<Listeners.ml:114:39>>*/ return 0;
+        /*<<Listeners.ml:114:41>>*/ }],
     defineNumberTreesListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:117:48>>*/ return 0;
-        /*<<Listeners.ml:117:50>>*/ }],
+         /*<<Listeners.ml:115:48>>*/ return 0;
+        /*<<Listeners.ml:115:50>>*/ }],
     changeDirectionListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:118:46>>*/ return 0;
-        /*<<Listeners.ml:118:48>>*/ }],
+         /*<<Listeners.ml:116:46>>*/ return 0;
+        /*<<Listeners.ml:116:48>>*/ }],
     editModelListener$1 =
        /*<<Lang.ml:51:77>>*/ [0,
-       function(param){ /*<<Listeners.ml:119:42>>*/ }],
+       function(param){ /*<<Listeners.ml:117:42>>*/ }],
     createModelListener$5 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:126:42>>*/ return 0;
-        /*<<Listeners.ml:126:44>>*/ }],
+         /*<<Listeners.ml:124:42>>*/ return 0;
+        /*<<Listeners.ml:124:44>>*/ }],
     cleanCFGListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:127:39>>*/ return 0;
-        /*<<Listeners.ml:127:41>>*/ }],
+         /*<<Listeners.ml:125:39>>*/ return 0;
+        /*<<Listeners.ml:125:41>>*/ }],
     removeLeftRecursionListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:128:50>>*/ return 0;
-        /*<<Listeners.ml:128:52>>*/ }],
+         /*<<Listeners.ml:126:50>>*/ return 0;
+        /*<<Listeners.ml:126:52>>*/ }],
     leftFactoringListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:129:44>>*/ return 0;
-        /*<<Listeners.ml:129:46>>*/ }],
+         /*<<Listeners.ml:127:44>>*/ return 0;
+        /*<<Listeners.ml:127:46>>*/ }],
     tablesListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:130:37>>*/ return 0;
-        /*<<Listeners.ml:130:39>>*/ }],
+         /*<<Listeners.ml:128:37>>*/ return 0;
+        /*<<Listeners.ml:128:39>>*/ }],
     recursiveDescedentParserListen =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:133:55>>*/ return 0;
-        /*<<Listeners.ml:133:57>>*/ }],
+         /*<<Listeners.ml:131:55>>*/ return 0;
+        /*<<Listeners.ml:131:57>>*/ }],
     simpleToggleListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:134:43>>*/ return 0;
-        /*<<Listeners.ml:134:45>>*/ }],
+         /*<<Listeners.ml:132:43>>*/ return 0;
+        /*<<Listeners.ml:132:45>>*/ }],
     removeEpsilonListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:135:44>>*/ return 0;
-        /*<<Listeners.ml:135:46>>*/ }],
+         /*<<Listeners.ml:133:44>>*/ return 0;
+        /*<<Listeners.ml:133:46>>*/ }],
     removeUnitListener =
+       /*<<Lang.ml:51:77>>*/ [0,
+       function(param){
+         /*<<Listeners.ml:134:41>>*/ return 0;
+        /*<<Listeners.ml:134:43>>*/ }],
+    previousNewCFGListener =
+       /*<<Lang.ml:51:77>>*/ [0,
+       function(param){
+         /*<<Listeners.ml:135:45>>*/ return 0;
+        /*<<Listeners.ml:135:47>>*/ }],
+    nextNewCFGListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
          /*<<Listeners.ml:136:41>>*/ return 0;
         /*<<Listeners.ml:136:43>>*/ }],
-    previousNewCFGListener =
-       /*<<Lang.ml:51:77>>*/ [0,
-       function(param){
-         /*<<Listeners.ml:137:45>>*/ return 0;
-        /*<<Listeners.ml:137:47>>*/ }],
-    nextNewCFGListener =
-       /*<<Lang.ml:51:77>>*/ [0,
-       function(param){
-         /*<<Listeners.ml:138:41>>*/ return 0;
-        /*<<Listeners.ml:138:43>>*/ }],
     transformLL1Listener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:139:43>>*/ return 0;
-        /*<<Listeners.ml:139:45>>*/ }],
+         /*<<Listeners.ml:137:43>>*/ return 0;
+        /*<<Listeners.ml:137:45>>*/ }],
     editModelListener$2 =
        /*<<Lang.ml:51:77>>*/ [0,
-       function(param){ /*<<Listeners.ml:140:42>>*/ }],
+       function(param){ /*<<Listeners.ml:138:42>>*/ }],
     createModelListener$6 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:147:43>>*/ return 0;
-        /*<<Listeners.ml:147:45>>*/ }],
+         /*<<Listeners.ml:145:43>>*/ return 0;
+        /*<<Listeners.ml:145:45>>*/ }],
     editModelListener$3 =
        /*<<Lang.ml:51:77>>*/ [0,
-       function(param){ /*<<Listeners.ml:151:45>>*/ }];
+       function(param){ /*<<Listeners.ml:149:45>>*/ }];
    function undefinedListener(param){
-     /*<<Listeners.ml:155:27>>*/ return alertStr(KI) /*<<Listeners.ml:155:62>>*/ ;
+     /*<<Listeners.ml:153:27>>*/ return alertStr(KI) /*<<Listeners.ml:153:62>>*/ ;
    }
    var
     buildLR0DiagramListener =  /*<<Lang.ml:51:77>>*/ [0, undefinedListener],
     buildSLR1DiagramListener =
       [0,
        function(param){
-         /*<<Listeners.ml:160:47>>*/ return 0;
-        /*<<Listeners.ml:160:49>>*/ }],
+         /*<<Listeners.ml:158:47>>*/ return 0;
+        /*<<Listeners.ml:158:49>>*/ }],
     buildLR1DiagramListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:161:46>>*/ return 0;
-        /*<<Listeners.ml:161:48>>*/ }],
+         /*<<Listeners.ml:159:46>>*/ return 0;
+        /*<<Listeners.ml:159:48>>*/ }],
     buildLALR1DiagramListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:162:48>>*/ return 0;
-        /*<<Listeners.ml:162:50>>*/ }],
+         /*<<Listeners.ml:160:48>>*/ return 0;
+        /*<<Listeners.ml:160:50>>*/ }],
     buildLR0TableListener =
+       /*<<Lang.ml:51:77>>*/ [0,
+       function(param){
+         /*<<Listeners.ml:161:44>>*/ return 0;
+        /*<<Listeners.ml:161:46>>*/ }],
+    buildSLR1TableListener =
+       /*<<Lang.ml:51:77>>*/ [0,
+       function(param){
+         /*<<Listeners.ml:162:45>>*/ return 0;
+        /*<<Listeners.ml:162:47>>*/ }],
+    buildLR1TableListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
          /*<<Listeners.ml:163:44>>*/ return 0;
         /*<<Listeners.ml:163:46>>*/ }],
-    buildSLR1TableListener =
-       /*<<Lang.ml:51:77>>*/ [0,
-       function(param){
-         /*<<Listeners.ml:164:45>>*/ return 0;
-        /*<<Listeners.ml:164:47>>*/ }],
-    buildLR1TableListener =
-       /*<<Lang.ml:51:77>>*/ [0,
-       function(param){
-         /*<<Listeners.ml:165:44>>*/ return 0;
-        /*<<Listeners.ml:165:46>>*/ }],
     buildLALR1TableListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:166:46>>*/ return 0;
-        /*<<Listeners.ml:166:48>>*/ }],
+         /*<<Listeners.ml:164:46>>*/ return 0;
+        /*<<Listeners.ml:164:48>>*/ }],
     acceptLR0Listener =
+       /*<<Lang.ml:51:77>>*/ [0,
+       function(param){
+         /*<<Listeners.ml:165:40>>*/ return 0;
+        /*<<Listeners.ml:165:42>>*/ }],
+    acceptSLR1Listener =
+       /*<<Lang.ml:51:77>>*/ [0,
+       function(param){
+         /*<<Listeners.ml:166:41>>*/ return 0;
+        /*<<Listeners.ml:166:43>>*/ }],
+    acceptLR1Listener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
          /*<<Listeners.ml:167:40>>*/ return 0;
         /*<<Listeners.ml:167:42>>*/ }],
-    acceptSLR1Listener =
-       /*<<Lang.ml:51:77>>*/ [0,
-       function(param){
-         /*<<Listeners.ml:168:41>>*/ return 0;
-        /*<<Listeners.ml:168:43>>*/ }],
-    acceptLR1Listener =
-       /*<<Lang.ml:51:77>>*/ [0,
-       function(param){
-         /*<<Listeners.ml:169:40>>*/ return 0;
-        /*<<Listeners.ml:169:42>>*/ }],
     acceptLALR1Listener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:170:42>>*/ return 0;
-        /*<<Listeners.ml:170:44>>*/ }],
+         /*<<Listeners.ml:168:42>>*/ return 0;
+        /*<<Listeners.ml:168:44>>*/ }],
     createModelListener$7 =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:176:42>>*/ return 0;
-        /*<<Listeners.ml:176:44>>*/ }],
+         /*<<Listeners.ml:174:42>>*/ return 0;
+        /*<<Listeners.ml:174:44>>*/ }],
     showTreeNode =
        /*<<Lang.ml:51:77>>*/ [0,
        function(model){
-         /*<<Listeners.ml:178:49>>*/ return 0;
-        /*<<Listeners.ml:178:51>>*/ }],
+         /*<<Listeners.ml:176:49>>*/ return 0;
+        /*<<Listeners.ml:176:51>>*/ }],
     checkExerciseListener =
        /*<<Lang.ml:51:77>>*/ [0,
        function(param){
-         /*<<Listeners.ml:185:44>>*/ return 0;
-        /*<<Listeners.ml:185:46>>*/ }],
+         /*<<Listeners.ml:183:44>>*/ return 0;
+        /*<<Listeners.ml:183:46>>*/ }],
     cytoscape_cs =  /*<<Cytoscape.ml:140:34>>*/ cytoscape,
     z =  /*<<Cytoscape.ml:140:68>>*/ [0, 0],
     A = [0, 0],
@@ -89608,20 +89591,20 @@
    }
    var button_type =  /*<<HtmlPageClient.ml:39:20>>*/ cst_button;
    function KD(param){
-     /*<<Listeners.ml:91:55>>*/ return 0;
-    /*<<Listeners.ml:91:57>>*/ }
+     /*<<Listeners.ml:89:55>>*/ return 0;
+    /*<<Listeners.ml:89:57>>*/ }
    function KE(param){
-     /*<<Listeners.ml:92:53>>*/ return 0;
-    /*<<Listeners.ml:92:55>>*/ }
+     /*<<Listeners.ml:90:53>>*/ return 0;
+    /*<<Listeners.ml:90:55>>*/ }
    function KF(param){
-     /*<<Listeners.ml:93:50>>*/ return 0;
-    /*<<Listeners.ml:93:52>>*/ }
+     /*<<Listeners.ml:91:50>>*/ return 0;
+    /*<<Listeners.ml:91:52>>*/ }
    function KG(param){
-     /*<<Listeners.ml:94:48>>*/ return 0;
-    /*<<Listeners.ml:94:50>>*/ }
+     /*<<Listeners.ml:92:48>>*/ return 0;
+    /*<<Listeners.ml:92:50>>*/ }
    function KH(param){
-     /*<<Listeners.ml:96:45>>*/ return 0;
-    /*<<Listeners.ml:96:47>>*/ }
+     /*<<Listeners.ml:94:45>>*/ return 0;
+    /*<<Listeners.ml:94:47>>*/ }
    function button(txt, idtxt, action){
     var
      b =
@@ -90155,7 +90138,7 @@
                         (caml_get_cached_method(x, 746263041, cache_id$971), x) /*<<HtmlPageClient.ml:207:23>>*/ ;
                })
             : type1
-              === cst_finite_state_transducer
+              === cst_transducer
               ?  /*<<HtmlPageClient.ml:209:63>>*/ function
                 (t101, t100, param){
                   /*<<?>>*/ return t101.innerHTML = t100;
@@ -90302,7 +90285,7 @@
                 },
                 listOnlyAutomataButtons))
             : type1
-              === cst_finite_state_transducer
+              === "finite state transducer"
               ? ( /*<<HtmlPageClient.ml:241:7>>*/ iter
                  (function(el){
                     /*<<HtmlPageClient.ml:241:28>>*/ return disableButton(el) /*<<HtmlPageClient.ml:241:44>>*/ ;
@@ -95960,83 +95943,87 @@
      y = b[53],
      z = b[54],
      A = b[55],
-     B = b[57],
-     C = b[61],
-     D = b[79],
-     E = b[80],
-     F = b[81],
+     B = b[61],
+     C = b[79],
+     D = b[80],
+     E = b[81],
      d = inherits(g, aiz, aiC, aiB, automatonController, 1),
-     H = d[16],
-     I = d[15],
-     J = d[14],
-     K = d[13],
-     L = d[12],
-     M = d[10],
-     N = d[9],
-     O = d[8],
-     P = d[5],
-     Q = d[4],
-     R = d[82],
-     G = d[1];
+     G = d[16],
+     H = d[15],
+     I = d[14],
+     J = d[13],
+     K = d[12],
+     L = d[10],
+     M = d[9],
+     N = d[8],
+     O = d[5],
+     P = d[4],
+     Q = d[82],
+     F = d[1];
     set_methods
      (g,
       [0,
        c,
        function(self_164, opName){
-         /*<<TransducerController.ml:25:8>>*/ return  /*<<TransducerController.ml:25:23>>*/ caml_call2
-                ( /*<<TransducerController.ml:25:8>>*/ caml_call1(R, self_164),
+         /*<<TransducerController.ml:24:8>>*/ return  /*<<TransducerController.ml:24:23>>*/ caml_call2
+                ( /*<<TransducerController.ml:24:8>>*/ caml_call1(Q, self_164),
                  opName,
-                 aiX) /*<<TransducerController.ml:25:36>>*/ ;
+                 aiX) /*<<TransducerController.ml:24:36>>*/ ;
        },
        t,
        function(self_164){
-         /*<<TransducerController.ml:28:7>>*/ return self_164[a + 1];
-        /*<<TransducerController.ml:28:12>>*/ },
+         /*<<TransducerController.ml:27:7>>*/ return self_164[a + 1];
+        /*<<TransducerController.ml:27:12>>*/ },
        h,
        function(self_164){
-         /*<<TransducerController.ml:30:20>>*/ return self_164[a + 1];
-        /*<<TransducerController.ml:30:25>>*/ },
+         /*<<TransducerController.ml:29:20>>*/ return self_164[a + 1];
+        /*<<TransducerController.ml:29:25>>*/ },
        r,
        function(self_164){
-         /*<<TransducerController.ml:33:7>>*/ return self_164[a + 1];
-        /*<<TransducerController.ml:33:12>>*/ },
+         /*<<TransducerController.ml:32:7>>*/ return self_164[a + 1];
+        /*<<TransducerController.ml:32:12>>*/ },
        l,
        function(self_164){
-         /*<<TransducerController.ml:36:22>>*/  /*<<TransducerController.ml:36:6>>*/ oneBox$0
-         ( /*<<TransducerController.ml:36:22>>*/ caml_call1
+         /*<<TransducerController.ml:35:22>>*/  /*<<TransducerController.ml:35:6>>*/ oneBox$0
+         ( /*<<TransducerController.ml:35:22>>*/ caml_call1
            (self_164[1][i + 1], self_164));
-         /*<<TransducerController.ml:36:36>>*/ return defineMainTitle(kind$8) /*<<TransducerController.ml:37:54>>*/ ;
+         /*<<TransducerController.ml:35:36>>*/ return defineMainTitle(kind$8) /*<<TransducerController.ml:36:52>>*/ ;
        },
        m,
        function(self_164){
-         /*<<TransducerController.ml:39:24>>*/ return kind$8;
-        /*<<TransducerController.ml:39:39>>*/ },
+         /*<<TransducerController.ml:38:24>>*/ return kind$8;
+        /*<<TransducerController.ml:38:39>>*/ },
        s,
        function(self_164){
-         /*<<TransducerController.ml:42:6>>*/ return putCyTransducerButtons(0) /*<<TransducerController.ml:42:46>>*/ ;
+         /*<<TransducerController.ml:41:6>>*/ return putCyTransducerButtons(0) /*<<TransducerController.ml:41:46>>*/ ;
        },
        j,
        function(self_164){
+         /*<<TransducerController.ml:44:6>>*/ iter
+         (function(el){
+            /*<<TransducerController.ml:44:27>>*/ return disableButton(el) /*<<TransducerController.ml:44:58>>*/ ;
+          },
+          self_164[J + 1]);
          /*<<TransducerController.ml:45:6>>*/ iter
          (function(el){
-            /*<<TransducerController.ml:45:27>>*/ return enableButton(el) /*<<TransducerController.ml:45:57>>*/ ;
+            /*<<TransducerController.ml:45:27>>*/ return disableButton(el) /*<<TransducerController.ml:45:58>>*/ ;
           },
-          self_164[L + 1]);
+          self_164[H + 1]);
          /*<<TransducerController.ml:46:6>>*/ iter
          (function(el){
-            /*<<TransducerController.ml:46:27>>*/ return enableButton(el) /*<<TransducerController.ml:46:57>>*/ ;
+            /*<<TransducerController.ml:46:27>>*/ return disableButton(el) /*<<TransducerController.ml:46:58>>*/ ;
           },
-          self_164[K + 1]);
+          self_164[L + 1]);
          /*<<TransducerController.ml:47:6>>*/ iter
          (function(el){
             /*<<TransducerController.ml:47:27>>*/ return disableButton(el) /*<<TransducerController.ml:47:58>>*/ ;
           },
-          self_164[I + 1]);
+          self_164[M + 1]);
          /*<<TransducerController.ml:48:6>>*/ iter
          (function(el){
             /*<<TransducerController.ml:48:27>>*/ return disableButton(el) /*<<TransducerController.ml:48:58>>*/ ;
           },
-          self_164[M + 1]);
+          self_164[I + 1]);
          /*<<TransducerController.ml:49:6>>*/ iter
          (function(el){
             /*<<TransducerController.ml:49:27>>*/ return disableButton(el) /*<<TransducerController.ml:49:58>>*/ ;
@@ -96044,628 +96031,599 @@
           self_164[N + 1]);
          /*<<TransducerController.ml:50:6>>*/ iter
          (function(el){
-            /*<<TransducerController.ml:50:27>>*/ return disableButton(el) /*<<TransducerController.ml:50:58>>*/ ;
+            /*<<TransducerController.ml:50:27>>*/ return enableButton(el) /*<<TransducerController.ml:50:57>>*/ ;
           },
-          self_164[J + 1]);
+          self_164[G + 1]);
          /*<<TransducerController.ml:51:6>>*/ iter
          (function(el){
-            /*<<TransducerController.ml:51:27>>*/ return disableButton(el) /*<<TransducerController.ml:51:58>>*/ ;
+            /*<<TransducerController.ml:51:27>>*/ return enableButton(el) /*<<TransducerController.ml:51:57>>*/ ;
           },
           self_164[O + 1]);
-         /*<<TransducerController.ml:53:6>>*/ iter
+         /*<<TransducerController.ml:52:6>>*/ iter
          (function(el){
-            /*<<TransducerController.ml:53:27>>*/ return enableButton(el) /*<<TransducerController.ml:53:57>>*/ ;
+            /*<<TransducerController.ml:52:27>>*/ return enableButton(el) /*<<TransducerController.ml:52:57>>*/ ;
           },
-          self_164[H + 1]);
-         /*<<TransducerController.ml:53:82>>*/ return iter
-                (function(el){
-                   /*<<TransducerController.ml:54:27>>*/ return enableButton
-                          (el) /*<<TransducerController.ml:54:57>>*/ ;
-                 },
-                 self_164[P + 1]) /*<<TransducerController.ml:54:75>>*/ ;
+          self_164[K + 1]);
+         /*<<TransducerController.ml:52:84>>*/ return disableButton(aiW) /*<<TransducerController.ml:53:48>>*/ ;
        },
        f,
        function(self_164){
         var
          infoBox =
-            /*<<TransducerController.ml:57:20>>*/ defineInformationBox
-            (self_164[Q + 1]),
-         b =  /*<<TransducerController.ml:58:6>>*/ self_164[a + 1],
+            /*<<TransducerController.ml:56:20>>*/ defineInformationBox
+            (self_164[P + 1]),
+         b =  /*<<TransducerController.ml:57:6>>*/ self_164[a + 1],
          deter =
-            /*<<TransducerController.ml:58:18>>*/ caml_call1
-            ( /*<<TransducerController.ml:58:6>>*/ caml_get_cached_method
-              (b, -572782712, cache_id$1211),
+            /*<<TransducerController.ml:57:18>>*/ caml_call1
+            ( /*<<TransducerController.ml:57:6>>*/ caml_get_cached_method
+              (b, -572782712, cache_id$1209),
              b);
-         /*<<TransducerController.ml:59:8>>*/ getDeterminim(deter, infoBox);
-         /*<<TransducerController.ml:59:50>>*/ if(deter)
+         /*<<TransducerController.ml:58:8>>*/ getDeterminim(deter, infoBox);
+         /*<<TransducerController.ml:58:50>>*/ if(deter)
          var
-          c =  /*<<TransducerController.ml:60:30>>*/ self_164[a + 1],
+          c =  /*<<TransducerController.ml:59:30>>*/ self_164[a + 1],
           min =
-             /*<<TransducerController.ml:60:47>>*/  /*<<TransducerController.ml:60:30>>*/ caml_call1
-             (caml_get_cached_method(c, 119452220, cache_id$1212), c);
+             /*<<TransducerController.ml:59:47>>*/  /*<<TransducerController.ml:59:30>>*/ caml_call1
+             (caml_get_cached_method(c, 119452220, cache_id$1210), c);
         else
-         var min =  /*<<TransducerController.ml:60:53>>*/ 0;
-         /*<<TransducerController.ml:61:8>>*/ getMinimism(min, infoBox);
+         var min =  /*<<TransducerController.ml:59:53>>*/ 0;
+         /*<<TransducerController.ml:60:8>>*/ getMinimism(min, infoBox);
         var
-         d =  /*<<TransducerController.ml:61:46>>*/ self_164[a + 1],
+         d =  /*<<TransducerController.ml:60:46>>*/ self_164[a + 1],
          mealy =
-            /*<<TransducerController.ml:62:18>>*/ caml_call1
-            ( /*<<TransducerController.ml:61:46>>*/ caml_get_cached_method
-              (d, 574579852, cache_id$1213),
+            /*<<TransducerController.ml:61:18>>*/ caml_call1
+            ( /*<<TransducerController.ml:60:46>>*/ caml_get_cached_method
+              (d, 574579852, cache_id$1211),
              d);
-         /*<<TransducerController.ml:63:6>>*/ getMealy(mealy, infoBox);
+         /*<<TransducerController.ml:62:6>>*/ getMealy(mealy, infoBox);
         var
-         e =  /*<<TransducerController.ml:63:43>>*/ self_164[a + 1],
+         e =  /*<<TransducerController.ml:62:43>>*/ self_164[a + 1],
          moore =
-            /*<<TransducerController.ml:64:18>>*/ caml_call1
-            ( /*<<TransducerController.ml:63:43>>*/ caml_get_cached_method
-              (e, 686173046, cache_id$1214),
+            /*<<TransducerController.ml:63:18>>*/ caml_call1
+            ( /*<<TransducerController.ml:62:43>>*/ caml_get_cached_method
+              (e, 686173046, cache_id$1212),
              e);
-         /*<<TransducerController.ml:65:6>>*/ getMoore(moore, infoBox);
+         /*<<TransducerController.ml:64:6>>*/ getMoore(moore, infoBox);
         var
-         f =  /*<<TransducerController.ml:65:43>>*/ self_164[a + 1],
+         f =  /*<<TransducerController.ml:64:43>>*/ self_164[a + 1],
          useful =
-            /*<<TransducerController.ml:66:19>>*/ caml_call1
-            ( /*<<TransducerController.ml:65:43>>*/ caml_get_cached_method
-              (f, 497232901, cache_id$1215),
+            /*<<TransducerController.ml:65:19>>*/ caml_call1
+            ( /*<<TransducerController.ml:64:43>>*/ caml_get_cached_method
+              (f, 497232901, cache_id$1213),
              f),
-         g =  /*<<TransducerController.ml:67:6>>*/ self_164[a + 1],
+         g =  /*<<TransducerController.ml:66:6>>*/ self_164[a + 1],
          uStates =
-            /*<<TransducerController.ml:67:20>>*/ caml_call1
-            ( /*<<TransducerController.ml:67:6>>*/ caml_get_cached_method
-              (g, 517963276, cache_id$1216),
+            /*<<TransducerController.ml:66:20>>*/ caml_call1
+            ( /*<<TransducerController.ml:66:6>>*/ caml_get_cached_method
+              (g, 517963276, cache_id$1214),
              g);
-         /*<<TransducerController.ml:68:8>>*/ getHasUselessStates
+         /*<<TransducerController.ml:67:8>>*/ getHasUselessStates
          (useful, uStates, infoBox);
         var
-         h =  /*<<TransducerController.ml:68:65>>*/ self_164[a + 1],
+         h =  /*<<TransducerController.ml:67:65>>*/ self_164[a + 1],
          nStates =
-            /*<<TransducerController.ml:69:20>>*/ caml_call1
-            ( /*<<TransducerController.ml:68:65>>*/ caml_get_cached_method
-              (h, 369987819, cache_id$1217),
+            /*<<TransducerController.ml:68:20>>*/ caml_call1
+            ( /*<<TransducerController.ml:67:65>>*/ caml_get_cached_method
+              (h, 369987819, cache_id$1215),
              h);
-         /*<<TransducerController.ml:70:8>>*/ getNumberStates
+         /*<<TransducerController.ml:69:8>>*/ getNumberStates
          (nStates, infoBox);
         var
-         i =  /*<<TransducerController.ml:70:54>>*/ self_164[a + 1],
+         i =  /*<<TransducerController.ml:69:54>>*/ self_164[a + 1],
          nTransitions =
-            /*<<TransducerController.ml:71:25>>*/ caml_call1
-            ( /*<<TransducerController.ml:70:54>>*/ caml_get_cached_method
-              (i, 882063605, cache_id$1218),
+            /*<<TransducerController.ml:70:25>>*/ caml_call1
+            ( /*<<TransducerController.ml:69:54>>*/ caml_get_cached_method
+              (i, 882063605, cache_id$1216),
              i);
-         /*<<TransducerController.ml:72:8>>*/ getNumberTransitions
+         /*<<TransducerController.ml:71:8>>*/ getNumberTransitions
          (nTransitions, infoBox);
-        var j =  /*<<TransducerController.ml:72:64>>*/ self_164[a + 1];
-         /*<<TransducerController.ml:73:14>>*/ caml_call1
-         ( /*<<TransducerController.ml:72:64>>*/ caml_get_cached_method
-           (j, 525796864, cache_id$1219),
+        var j =  /*<<TransducerController.ml:71:64>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:72:14>>*/ caml_call1
+         ( /*<<TransducerController.ml:71:64>>*/ caml_get_cached_method
+           (j, 525796864, cache_id$1217),
           j);
-         /*<<TransducerController.ml:73:30>>*/ return 0;
-        /*<<TransducerController.ml:73:36>>*/ },
-       D,
+         /*<<TransducerController.ml:72:30>>*/ return 0;
+        /*<<TransducerController.ml:72:36>>*/ },
+       C,
        function(self_164, x, y, initial, final){
-         /*<<TransducerController.ml:77:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiV);
+         /*<<TransducerController.ml:76:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiU);
         var
          promptResult =
-            /*<<TransducerController.ml:78:36>>*/  /*<<TransducerController.ml:78:25>>*/ prompt
-            ( /*<<TransducerController.ml:78:36>>*/ i18nTextEnterState(0),
-             aiW),
+            /*<<TransducerController.ml:77:36>>*/  /*<<TransducerController.ml:77:25>>*/ prompt
+            ( /*<<TransducerController.ml:77:36>>*/ i18nTextEnterState(0),
+             aiV),
          match =
-            /*<<TransducerController.ml:79:12>>*/ to_option(promptResult);
-         /*<<TransducerController.ml:79:41>>*/ if(! match)
-          /*<<TransducerController.ml:80:16>>*/ return 0;
+            /*<<TransducerController.ml:78:12>>*/ to_option(promptResult);
+         /*<<TransducerController.ml:78:41>>*/ if(! match)
+          /*<<TransducerController.ml:79:16>>*/ return 0;
         var
-         v =  /*<<TransducerController.ml:79:41>>*/ match[1],
+         v =  /*<<TransducerController.ml:78:41>>*/ match[1],
          st =
-            /*<<TransducerController.ml:82:19>>*/ caml_string_of_jsstring(v),
-         b =  /*<<TransducerController.ml:83:10>>*/ self_164[a + 1];
+            /*<<TransducerController.ml:81:19>>*/ caml_string_of_jsstring(v),
+         b =  /*<<TransducerController.ml:82:10>>*/ self_164[a + 1];
         if
-         ( /*<<TransducerController.ml:83:13>>*/ belongs
+         ( /*<<TransducerController.ml:82:13>>*/ belongs
            (st,
-             /*<<TransducerController.ml:83:29>>*/ caml_call1
-              ( /*<<TransducerController.ml:83:10>>*/ caml_get_cached_method
-                (b, -199176691, cache_id$1209),
+             /*<<TransducerController.ml:82:29>>*/ caml_call1
+              ( /*<<TransducerController.ml:82:10>>*/ caml_get_cached_method
+                (b, -199176691, cache_id$1207),
                b)
              [3]))
-          /*<<TransducerController.ml:84:25>>*/ return  /*<<TransducerController.ml:84:50>>*/ alertStr
-                 ( /*<<TransducerController.ml:84:25>>*/ i18nAlertExists(0)) /*<<TransducerController.ml:88:40>>*/ ;
-        var d =  /*<<TransducerController.ml:86:12>>*/ self_164[a + 1];
+          /*<<TransducerController.ml:83:25>>*/ return  /*<<TransducerController.ml:83:50>>*/ alertStr
+                 ( /*<<TransducerController.ml:83:25>>*/ i18nAlertExists(0)) /*<<TransducerController.ml:87:40>>*/ ;
+        var d =  /*<<TransducerController.ml:85:12>>*/ self_164[a + 1];
         self_164[a + 1] =
-          /*<<TransducerController.ml:86:22>>*/ caml_call3
-          ( /*<<TransducerController.ml:86:12>>*/ caml_get_cached_method
-            (d, 88558787, cache_id$1210),
+          /*<<TransducerController.ml:85:22>>*/ caml_call3
+          ( /*<<TransducerController.ml:85:12>>*/ caml_get_cached_method
+            (d, 88558787, cache_id$1208),
            d,
            st,
            0);
-         /*<<TransducerController.ml:87:31>>*/  /*<<TransducerController.ml:87:13>>*/ addNode$0
-         ( /*<<TransducerController.ml:87:31>>*/ caml_call1
+         /*<<TransducerController.ml:86:31>>*/  /*<<TransducerController.ml:86:13>>*/ addNode$0
+         ( /*<<TransducerController.ml:86:31>>*/ caml_call1
            (self_164[1][e + 1], self_164),
           st,
           [0, x],
           [0, y],
           initial,
           final);
-         /*<<TransducerController.ml:87:68>>*/ return caml_call1
-                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:88:40>>*/ ;
+         /*<<TransducerController.ml:86:68>>*/ return caml_call1
+                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:87:40>>*/ ;
        },
-       E,
+       D,
        function(self_164, node){
-         /*<<TransducerController.ml:91:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiU);
+         /*<<TransducerController.ml:90:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiT);
         var
-         b =  /*<<TransducerController.ml:91:49>>*/ self_164[a + 1],
+         b =  /*<<TransducerController.ml:90:49>>*/ self_164[a + 1],
          stateExists =
-            /*<<TransducerController.ml:92:24>>*/ belongs
+            /*<<TransducerController.ml:91:24>>*/ belongs
             (node,
-              /*<<TransducerController.ml:92:41>>*/ caml_call1
-               ( /*<<TransducerController.ml:91:49>>*/ caml_get_cached_method
-                 (b, -199176691, cache_id$1206),
+              /*<<TransducerController.ml:91:41>>*/ caml_call1
+               ( /*<<TransducerController.ml:90:49>>*/ caml_get_cached_method
+                 (b, -199176691, cache_id$1204),
                 b)
               [3]),
-         d =  /*<<TransducerController.ml:93:6>>*/ self_164[a + 1];
+         d =  /*<<TransducerController.ml:92:6>>*/ self_164[a + 1];
         self_164[a + 1] =
-          /*<<TransducerController.ml:93:15>>*/ caml_call4
-          ( /*<<TransducerController.ml:93:6>>*/ caml_get_cached_method
-            (d, 990240773, cache_id$1207),
+          /*<<TransducerController.ml:92:15>>*/ caml_call4
+          ( /*<<TransducerController.ml:92:6>>*/ caml_get_cached_method
+            (d, 990240773, cache_id$1205),
            d,
            node,
            0,
            stateExists);
         var
          cy =
-            /*<<TransducerController.ml:94:15>>*/ caml_call1
+            /*<<TransducerController.ml:93:15>>*/ caml_call1
             (self_164[1][e + 1], self_164);
-         /*<<TransducerController.ml:95:6>>*/ resetFaElems(cy);
-        var g =  /*<<TransducerController.ml:95:31>>*/ self_164[a + 1];
-         /*<<TransducerController.ml:96:6>>*/ caml_call2
-         ( /*<<TransducerController.ml:95:31>>*/ caml_get_cached_method
-           (g, -833401722, cache_id$1208),
+         /*<<TransducerController.ml:94:6>>*/ resetFaElems(cy);
+        var g =  /*<<TransducerController.ml:94:31>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:95:6>>*/ caml_call2
+         ( /*<<TransducerController.ml:94:31>>*/ caml_get_cached_method
+           (g, -833401722, cache_id$1206),
           g,
           cy);
-         /*<<TransducerController.ml:96:26>>*/ return caml_call1
-                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:97:32>>*/ ;
+         /*<<TransducerController.ml:95:26>>*/ return caml_call1
+                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:96:32>>*/ ;
        },
-       F,
+       E,
        function(self_164, x, y, node){
-         /*<<TransducerController.ml:100:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiT);
-        var b =  /*<<TransducerController.ml:100:46>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:99:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiS);
+        var b =  /*<<TransducerController.ml:99:46>>*/ self_164[a + 1];
         if
-         ( /*<<TransducerController.ml:101:9>>*/ belongs
+         ( /*<<TransducerController.ml:100:9>>*/ belongs
            (node,
-             /*<<TransducerController.ml:101:27>>*/ caml_call1
-              ( /*<<TransducerController.ml:100:46>>*/ caml_get_cached_method
-                (b, -199176691, cache_id$1204),
+             /*<<TransducerController.ml:100:27>>*/ caml_call1
+              ( /*<<TransducerController.ml:99:46>>*/ caml_get_cached_method
+                (b, -199176691, cache_id$1202),
                b)
              [3]))
-          /*<<TransducerController.ml:102:21>>*/ return  /*<<TransducerController.ml:102:46>>*/ alertStr
-                 ( /*<<TransducerController.ml:102:21>>*/ i18nAlertExists(0)) /*<<TransducerController.ml:107:7>>*/ ;
-        var d =  /*<<TransducerController.ml:103:11>>*/ self_164[a + 1];
+          /*<<TransducerController.ml:101:21>>*/ return  /*<<TransducerController.ml:101:46>>*/ alertStr
+                 ( /*<<TransducerController.ml:101:21>>*/ i18nAlertExists(0)) /*<<TransducerController.ml:106:7>>*/ ;
+        var d =  /*<<TransducerController.ml:102:11>>*/ self_164[a + 1];
         self_164[a + 1] =
-          /*<<TransducerController.ml:104:17>>*/ caml_call4
-          ( /*<<TransducerController.ml:103:11>>*/ caml_get_cached_method
-            (d, 188066359, cache_id$1205),
+          /*<<TransducerController.ml:103:17>>*/ caml_call4
+          ( /*<<TransducerController.ml:102:11>>*/ caml_get_cached_method
+            (d, 188066359, cache_id$1203),
            d,
            node,
            0,
            0);
-         /*<<TransducerController.ml:105:26>>*/  /*<<TransducerController.ml:105:8>>*/ addNode$0
-         ( /*<<TransducerController.ml:105:26>>*/ caml_call1
+         /*<<TransducerController.ml:104:26>>*/  /*<<TransducerController.ml:104:8>>*/ addNode$0
+         ( /*<<TransducerController.ml:104:26>>*/ caml_call1
            (self_164[1][e + 1], self_164),
           node,
           [0, x],
           [0, y],
           0,
           1);
-         /*<<TransducerController.ml:105:62>>*/ return caml_call1
-                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:107:7>>*/ ;
+         /*<<TransducerController.ml:104:62>>*/ return caml_call1
+                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:106:7>>*/ ;
        },
        k,
        function(self_164, node){
-         /*<<TransducerController.ml:110:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiS);
-        var b =  /*<<TransducerController.ml:110:47>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:109:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiR);
+        var b =  /*<<TransducerController.ml:109:47>>*/ self_164[a + 1];
         if
-         ( /*<<TransducerController.ml:111:9>>*/ belongs
+         ( /*<<TransducerController.ml:110:9>>*/ belongs
            (node,
-             /*<<TransducerController.ml:111:27>>*/ caml_call1
-              ( /*<<TransducerController.ml:110:47>>*/ caml_get_cached_method
-                (b, -199176691, cache_id$1202),
+             /*<<TransducerController.ml:110:27>>*/ caml_call1
+              ( /*<<TransducerController.ml:109:47>>*/ caml_get_cached_method
+                (b, -199176691, cache_id$1200),
                b)
              [6]))
-          /*<<TransducerController.ml:112:23>>*/  /*<<TransducerController.ml:112:10>>*/ alertStr
-          ( /*<<TransducerController.ml:112:23>>*/ i18nAlertAlreadyFinal(0));
+          /*<<TransducerController.ml:111:23>>*/  /*<<TransducerController.ml:111:10>>*/ alertStr
+          ( /*<<TransducerController.ml:111:23>>*/ i18nAlertAlreadyFinal(0));
         else{
-         var d =  /*<<TransducerController.ml:114:8>>*/ self_164[a + 1];
+         var d =  /*<<TransducerController.ml:113:8>>*/ self_164[a + 1];
          self_164[a + 1] =
-           /*<<TransducerController.ml:114:18>>*/ caml_call2
-           ( /*<<TransducerController.ml:114:8>>*/ caml_get_cached_method
-             (d, 770920555, cache_id$1203),
+           /*<<TransducerController.ml:113:18>>*/ caml_call2
+           ( /*<<TransducerController.ml:113:8>>*/ caml_get_cached_method
+             (d, 770920555, cache_id$1201),
             d,
             node);
-          /*<<TransducerController.ml:115:28>>*/  /*<<TransducerController.ml:115:8>>*/ turnFinal$0
-          ( /*<<TransducerController.ml:115:28>>*/ caml_call1
+          /*<<TransducerController.ml:114:28>>*/  /*<<TransducerController.ml:114:8>>*/ turnFinal$0
+          ( /*<<TransducerController.ml:114:28>>*/ caml_call1
             (self_164[1][e + 1], self_164),
            node);
         }
-         /*<<TransducerController.ml:116:8>>*/ return caml_call1
-                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:116:34>>*/ ;
+         /*<<TransducerController.ml:115:8>>*/ return caml_call1
+                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:115:34>>*/ ;
        },
        p,
        function(self_164, node){
-         /*<<TransducerController.ml:119:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiR);
-        var b =  /*<<TransducerController.ml:119:51>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:118:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiQ);
+        var b =  /*<<TransducerController.ml:118:51>>*/ self_164[a + 1];
         if
-         ( /*<<TransducerController.ml:120:9>>*/ belongs
+         ( /*<<TransducerController.ml:119:9>>*/ belongs
            (node,
-             /*<<TransducerController.ml:120:27>>*/ caml_call1
-              ( /*<<TransducerController.ml:119:51>>*/ caml_get_cached_method
-                (b, -199176691, cache_id$1200),
+             /*<<TransducerController.ml:119:27>>*/ caml_call1
+              ( /*<<TransducerController.ml:118:51>>*/ caml_get_cached_method
+                (b, -199176691, cache_id$1198),
                b)
              [6])){
-         var d =  /*<<TransducerController.ml:121:8>>*/ self_164[a + 1];
+         var d =  /*<<TransducerController.ml:120:8>>*/ self_164[a + 1];
          self_164[a + 1] =
-           /*<<TransducerController.ml:121:18>>*/ caml_call2
-           ( /*<<TransducerController.ml:121:8>>*/ caml_get_cached_method
-             (d, -20038510, cache_id$1201),
+           /*<<TransducerController.ml:120:18>>*/ caml_call2
+           ( /*<<TransducerController.ml:120:8>>*/ caml_get_cached_method
+             (d, -20038510, cache_id$1199),
             d,
             node);
-          /*<<TransducerController.ml:122:30>>*/  /*<<TransducerController.ml:122:8>>*/ removeFinal
-          ( /*<<TransducerController.ml:122:30>>*/ caml_call1
+          /*<<TransducerController.ml:121:30>>*/  /*<<TransducerController.ml:121:8>>*/ removeFinal
+          ( /*<<TransducerController.ml:121:30>>*/ caml_call1
             (self_164[1][e + 1], self_164),
            node);
         }
         else
-          /*<<TransducerController.ml:124:21>>*/  /*<<TransducerController.ml:124:8>>*/ alertStr
-          ( /*<<TransducerController.ml:124:21>>*/ i18nAlertNonFinal(0));
-         /*<<TransducerController.ml:125:8>>*/ return caml_call1
-                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:125:34>>*/ ;
+          /*<<TransducerController.ml:123:21>>*/  /*<<TransducerController.ml:123:8>>*/ alertStr
+          ( /*<<TransducerController.ml:123:21>>*/ i18nAlertNonFinal(0));
+         /*<<TransducerController.ml:124:8>>*/ return caml_call1
+                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:124:34>>*/ ;
        },
        v,
        function(self_164, node){
-         /*<<TransducerController.ml:128:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiQ);
+         /*<<TransducerController.ml:127:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiP);
         function eliminateNodeTransitions(param, node){
          var
-          d =  /*<<TransducerController.ml:129:35>>*/ param[4],
+          d =  /*<<TransducerController.ml:128:35>>*/ param[4],
           c = param[3],
           b = param[2],
           a$0 = param[1],
-          h =  /*<<TransducerController.ml:130:12>>*/ a$0 === node ? 1 : 0,
+          h =  /*<<TransducerController.ml:129:12>>*/ a$0 === node ? 1 : 0,
           e =
-             /*<<TransducerController.ml:130:20>>*/ h || (d === node ? 1 : 0);
+             /*<<TransducerController.ml:129:20>>*/ h || (d === node ? 1 : 0);
          if(! e) return e;
-         var g =  /*<<TransducerController.ml:131:10>>*/ self_164[a + 1];
+         var g =  /*<<TransducerController.ml:130:10>>*/ self_164[a + 1];
          self_164[a + 1] =
-           /*<<TransducerController.ml:131:20>>*/ caml_call2
-           ( /*<<TransducerController.ml:131:10>>*/ caml_get_cached_method
-             (g, -414130793, cache_id$1194),
+           /*<<TransducerController.ml:130:20>>*/ caml_call2
+           ( /*<<TransducerController.ml:130:10>>*/ caml_get_cached_method
+             (g, -414130793, cache_id$1192),
             g,
             [0, a$0, b, c, d]);
-          /*<<TransducerController.ml:132:11>>*/ return caml_call1
-                 (self_164[1][f + 1], self_164) /*<<TransducerController.ml:132:38>>*/ ;
+          /*<<TransducerController.ml:131:11>>*/ return caml_call1
+                 (self_164[1][f + 1], self_164) /*<<TransducerController.ml:131:38>>*/ ;
         }
-        var b =  /*<<TransducerController.ml:134:6>>*/ self_164[a + 1];
+        var b =  /*<<TransducerController.ml:133:6>>*/ self_164[a + 1];
         if
          (node
           ===
-            /*<<TransducerController.ml:134:17>>*/ caml_call1
-             ( /*<<TransducerController.ml:134:6>>*/ caml_get_cached_method
-               (b, -199176691, cache_id$1195),
+            /*<<TransducerController.ml:133:17>>*/ caml_call1
+             ( /*<<TransducerController.ml:133:6>>*/ caml_get_cached_method
+               (b, -199176691, cache_id$1193),
               b)
             [4])
-          /*<<TransducerController.ml:135:20>>*/ return  /*<<TransducerController.ml:135:45>>*/ alertStr
-                 ( /*<<TransducerController.ml:135:20>>*/ i18nAlertDelete(0)) /*<<TransducerController.ml:144:56>>*/ ;
-        var d =  /*<<TransducerController.ml:137:8>>*/ self_164[a + 1];
+          /*<<TransducerController.ml:134:20>>*/ return  /*<<TransducerController.ml:134:45>>*/ alertStr
+                 ( /*<<TransducerController.ml:134:20>>*/ i18nAlertDelete(0)) /*<<TransducerController.ml:143:56>>*/ ;
+        var d =  /*<<TransducerController.ml:136:8>>*/ self_164[a + 1];
         if
          (!
-           /*<<TransducerController.ml:137:11>>*/ belongs
+           /*<<TransducerController.ml:136:11>>*/ belongs
            (node,
-             /*<<TransducerController.ml:137:29>>*/ caml_call1
-              ( /*<<TransducerController.ml:137:8>>*/ caml_get_cached_method
-                (d, -199176691, cache_id$1196),
+             /*<<TransducerController.ml:136:29>>*/ caml_call1
+              ( /*<<TransducerController.ml:136:8>>*/ caml_get_cached_method
+                (d, -199176691, cache_id$1194),
                d)
              [3]))
-          /*<<TransducerController.ml:144:22>>*/ return  /*<<TransducerController.ml:144:56>>*/ alertStr
-                 ( /*<<TransducerController.ml:144:22>>*/ i18nAlertUnexistentState
-                   (0)) /*<<TransducerController.ml:144:56>>*/ ;
+          /*<<TransducerController.ml:143:22>>*/ return  /*<<TransducerController.ml:143:56>>*/ alertStr
+                 ( /*<<TransducerController.ml:143:22>>*/ i18nAlertUnexistentState
+                   (0)) /*<<TransducerController.ml:143:56>>*/ ;
         var
-         g =  /*<<TransducerController.ml:138:10>>*/ self_164[a + 1],
+         g =  /*<<TransducerController.ml:137:10>>*/ self_164[a + 1],
          isFinal =
-            /*<<TransducerController.ml:138:25>>*/ belongs
+            /*<<TransducerController.ml:137:25>>*/ belongs
             (node,
-              /*<<TransducerController.ml:138:42>>*/ caml_call1
-               ( /*<<TransducerController.ml:138:10>>*/ caml_get_cached_method
-                 (g, -199176691, cache_id$1197),
+              /*<<TransducerController.ml:137:42>>*/ caml_call1
+               ( /*<<TransducerController.ml:137:10>>*/ caml_get_cached_method
+                 (g, -199176691, cache_id$1195),
                 g)
               [6]),
-         h =  /*<<TransducerController.ml:139:11>>*/ self_164[a + 1];
+         h =  /*<<TransducerController.ml:138:11>>*/ self_164[a + 1];
         self_164[a + 1] =
-          /*<<TransducerController.ml:139:20>>*/ caml_call4
-          ( /*<<TransducerController.ml:139:11>>*/ caml_get_cached_method
-            (h, 330796164, cache_id$1198),
+          /*<<TransducerController.ml:138:20>>*/ caml_call4
+          ( /*<<TransducerController.ml:138:11>>*/ caml_get_cached_method
+            (h, 330796164, cache_id$1196),
            h,
            node,
            0,
            isFinal);
-        var i =  /*<<TransducerController.ml:140:11>>*/ self_164[a + 1];
+        var i =  /*<<TransducerController.ml:139:11>>*/ self_164[a + 1];
         iter
          (function(el){
-            /*<<TransducerController.ml:140:31>>*/ return eliminateNodeTransitions
-                   (el, node) /*<<TransducerController.ml:140:65>>*/ ;
+            /*<<TransducerController.ml:139:31>>*/ return eliminateNodeTransitions
+                   (el, node) /*<<TransducerController.ml:139:65>>*/ ;
           },
-           /*<<TransducerController.ml:140:67>>*/ caml_call1
-            ( /*<<TransducerController.ml:140:11>>*/ caml_get_cached_method
-              (i, -199176691, cache_id$1199),
+           /*<<TransducerController.ml:139:67>>*/ caml_call1
+            ( /*<<TransducerController.ml:139:11>>*/ caml_get_cached_method
+              (i, -199176691, cache_id$1197),
              i)
            [5]);
-         /*<<TransducerController.ml:141:32>>*/  /*<<TransducerController.ml:141:11>>*/ removeNode$0
-         ( /*<<TransducerController.ml:141:32>>*/ caml_call1
+         /*<<TransducerController.ml:140:32>>*/  /*<<TransducerController.ml:140:11>>*/ removeNode$0
+         ( /*<<TransducerController.ml:140:32>>*/ caml_call1
            (self_164[1][e + 1], self_164),
           node);
-         /*<<TransducerController.ml:141:47>>*/ return caml_call1
-                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:144:56>>*/ ;
+         /*<<TransducerController.ml:140:47>>*/ return caml_call1
+                (self_164[1][f + 1], self_164) /*<<TransducerController.ml:143:56>>*/ ;
        },
        o,
        function(self_164, state){
-         /*<<TransducerController.ml:147:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiP);
+         /*<<TransducerController.ml:146:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiO);
         var
          newName =
-            /*<<TransducerController.ml:148:30>>*/  /*<<TransducerController.ml:148:20>>*/ prompt
-            ( /*<<TransducerController.ml:148:30>>*/ i18nRenameStateQuestion
+            /*<<TransducerController.ml:147:30>>*/  /*<<TransducerController.ml:147:20>>*/ prompt
+            ( /*<<TransducerController.ml:147:30>>*/ i18nRenameStateQuestion
               (0),
              state),
-         match =  /*<<TransducerController.ml:149:12>>*/ to_option(newName);
-         /*<<TransducerController.ml:149:36>>*/ if(! match)
-          /*<<TransducerController.ml:150:16>>*/ return 0;
+         match =  /*<<TransducerController.ml:148:12>>*/ to_option(newName);
+         /*<<TransducerController.ml:148:36>>*/ if(! match)
+          /*<<TransducerController.ml:149:16>>*/ return 0;
         var
-         n =  /*<<TransducerController.ml:149:36>>*/ match[1],
-         b =  /*<<TransducerController.ml:151:67>>*/ self_164[a + 1];
-         /*<<TransducerController.ml:151:51>>*/ self_164[a + 1] =
-          /*<<TransducerController.ml:151:27>>*/ caml_call3
-          ( /*<<TransducerController.ml:151:67>>*/ caml_get_cached_method
-            (b, 1043157427, cache_id$1193),
+         n =  /*<<TransducerController.ml:148:36>>*/ match[1],
+         b =  /*<<TransducerController.ml:150:67>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:150:51>>*/ self_164[a + 1] =
+          /*<<TransducerController.ml:150:27>>*/ caml_call3
+          ( /*<<TransducerController.ml:150:67>>*/ caml_get_cached_method
+            (b, 1043157427, cache_id$1191),
            b,
            state,
-            /*<<TransducerController.ml:151:51>>*/ caml_string_of_jsstring(n));
-         /*<<TransducerController.ml:152:41>>*/  /*<<TransducerController.ml:152:18>>*/ resetFaElems
-         ( /*<<TransducerController.ml:152:41>>*/ caml_call1
+            /*<<TransducerController.ml:150:51>>*/ caml_string_of_jsstring(n));
+         /*<<TransducerController.ml:151:41>>*/  /*<<TransducerController.ml:151:18>>*/ resetFaElems
+         ( /*<<TransducerController.ml:151:41>>*/ caml_call1
            (self_164[1][e + 1], self_164));
-         /*<<TransducerController.ml:152:51>>*/ return caml_call1
-                (self_164[1][y + 1], self_164) /*<<TransducerController.ml:153:36>>*/ ;
+         /*<<TransducerController.ml:151:51>>*/ return caml_call1
+                (self_164[1][y + 1], self_164) /*<<TransducerController.ml:152:36>>*/ ;
        },
        z,
        function(self_164, source, target){
-         /*<<TransducerController.ml:156:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiL);
+         /*<<TransducerController.ml:155:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiK);
         var
          promptResult =
-            /*<<TransducerController.ml:157:36>>*/  /*<<TransducerController.ml:157:25>>*/ prompt
-            ( /*<<TransducerController.ml:157:36>>*/ i18nTextEnterTransition
+            /*<<TransducerController.ml:156:36>>*/  /*<<TransducerController.ml:156:25>>*/ prompt
+            ( /*<<TransducerController.ml:156:36>>*/ i18nTextEnterTransition
               (0),
-             aiM),
+             aiL),
          match =
-            /*<<TransducerController.ml:158:12>>*/ to_option(promptResult);
-         /*<<TransducerController.ml:158:41>>*/ if(! match)
-          /*<<TransducerController.ml:159:16>>*/ return 0;
+            /*<<TransducerController.ml:157:12>>*/ to_option(promptResult);
+         /*<<TransducerController.ml:157:41>>*/ if(! match)
+          /*<<TransducerController.ml:158:16>>*/ return 0;
         var
-         v =  /*<<TransducerController.ml:158:41>>*/ match[1],
+         v =  /*<<TransducerController.ml:157:41>>*/ match[1],
          str =
-            /*<<TransducerController.ml:161:18>>*/ caml_string_of_jsstring(v),
+            /*<<TransducerController.ml:160:18>>*/ caml_string_of_jsstring(v),
          parts =
-            /*<<TransducerController.ml:162:20>>*/ split_on_char(44, str);
-         /*<<TransducerController.ml:163:8>>*/ if(parts){
+            /*<<TransducerController.ml:161:20>>*/ split_on_char(44, str);
+         /*<<TransducerController.ml:162:8>>*/ if(parts){
          var b = parts[2];
          if(b && ! b[2]){
           var
            output = b[1],
            input = parts[1],
-           iSym =  /*<<TransducerController.ml:165:23>>*/ symb(input),
-           oSym =  /*<<TransducerController.ml:166:23>>*/ symb(output),
-           d =  /*<<TransducerController.ml:167:12>>*/ self_164[a + 1];
+           iSym =  /*<<TransducerController.ml:164:23>>*/ symb(input),
+           oSym =  /*<<TransducerController.ml:165:23>>*/ symb(output),
+           d =  /*<<TransducerController.ml:166:12>>*/ self_164[a + 1];
           self_164[a + 1] =
-            /*<<TransducerController.ml:167:21>>*/ caml_call2
-            ( /*<<TransducerController.ml:167:12>>*/ caml_get_cached_method
-              (d, 536910357, cache_id$1192),
+            /*<<TransducerController.ml:166:21>>*/ caml_call2
+            ( /*<<TransducerController.ml:166:12>>*/ caml_get_cached_method
+              (d, 536910357, cache_id$1190),
              d,
              [0, source, iSym, oSym, target]);
           var
            g =
-              /*<<TransducerController.ml:168:74>>*/  /*<<TransducerController.ml:168:68>>*/ symbol_concat
-              (aiO,  /*<<TransducerController.ml:168:74>>*/ symb2str(oSym)),
+              /*<<TransducerController.ml:167:74>>*/  /*<<TransducerController.ml:167:68>>*/ symbol_concat
+              (aiN,  /*<<TransducerController.ml:167:74>>*/ symb2str(oSym)),
            h =
-              /*<<TransducerController.ml:168:50>>*/ [0,
+              /*<<TransducerController.ml:167:50>>*/ [0,
               source,
               symbol_concat(symb2str(iSym), g),
               target];
-           /*<<TransducerController.ml:168:30>>*/  /*<<TransducerController.ml:168:12>>*/ addEdge
-           ( /*<<TransducerController.ml:168:30>>*/ caml_call1
+           /*<<TransducerController.ml:167:30>>*/  /*<<TransducerController.ml:167:12>>*/ addEdge
+           ( /*<<TransducerController.ml:167:30>>*/ caml_call1
              (self_164[1][e + 1], self_164),
             h);
-           /*<<TransducerController.ml:168:98>>*/ return caml_call1
-                  (self_164[1][f + 1], self_164) /*<<TransducerController.ml:171:74>>*/ ;
+           /*<<TransducerController.ml:167:98>>*/ return caml_call1
+                  (self_164[1][f + 1], self_164) /*<<TransducerController.ml:170:74>>*/ ;
          }
         }
-         /*<<TransducerController.ml:171:12>>*/ return alertStr(aiN) /*<<TransducerController.ml:171:74>>*/ ;
+         /*<<TransducerController.ml:170:12>>*/ return alertStr(aiM) /*<<TransducerController.ml:170:74>>*/ ;
        },
        u,
        function(self_164, param){
         var
-         v2 =  /*<<TransducerController.ml:173:31>>*/ param[3],
+         v2 =  /*<<TransducerController.ml:172:31>>*/ param[3],
          label = param[2],
          v1 = param[1];
-         /*<<TransducerController.ml:174:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiI);
+         /*<<TransducerController.ml:173:6>>*/ caml_call2
+         (self_164[1][c + 1], self_164, aiH);
         var
          parts =
-            /*<<TransducerController.ml:175:18>>*/ split_on_char(58, label);
-         /*<<TransducerController.ml:176:6>>*/ if(parts){
+            /*<<TransducerController.ml:174:18>>*/ split_on_char(58, label);
+         /*<<TransducerController.ml:175:6>>*/ if(parts){
          var b = parts[2];
          if(b && ! b[2]){
           var
            output = b[1],
            input = parts[1],
-           iSym =  /*<<TransducerController.ml:178:21>>*/ symb(input),
-           oSym =  /*<<TransducerController.ml:179:21>>*/ symb(output),
-           d =  /*<<TransducerController.ml:180:10>>*/ self_164[a + 1];
+           iSym =  /*<<TransducerController.ml:177:21>>*/ symb(input),
+           oSym =  /*<<TransducerController.ml:178:21>>*/ symb(output),
+           d =  /*<<TransducerController.ml:179:10>>*/ self_164[a + 1];
           if
            (!
-             /*<<TransducerController.ml:180:13>>*/ belongs
+             /*<<TransducerController.ml:179:13>>*/ belongs
              ([0, v1, iSym, oSym, v2],
-               /*<<TransducerController.ml:180:47>>*/ caml_call1
-                ( /*<<TransducerController.ml:180:10>>*/ caml_get_cached_method
-                  (d, -199176691, cache_id$1190),
+               /*<<TransducerController.ml:179:47>>*/ caml_call1
+                ( /*<<TransducerController.ml:179:10>>*/ caml_get_cached_method
+                  (d, -199176691, cache_id$1188),
                  d)
                [5]))
-            /*<<TransducerController.ml:185:25>>*/ return  /*<<TransducerController.ml:185:78>>*/ alertStr
-                   ( /*<<TransducerController.ml:185:24>>*/ symbol_concat
-                     ( /*<<TransducerController.ml:185:25>>*/ i18nAlertTheTransition
+            /*<<TransducerController.ml:184:25>>*/ return  /*<<TransducerController.ml:184:78>>*/ alertStr
+                   ( /*<<TransducerController.ml:184:24>>*/ symbol_concat
+                     ( /*<<TransducerController.ml:184:25>>*/ i18nAlertTheTransition
                        (0),
-                      aiK)) /*<<TransducerController.ml:186:70>>*/ ;
-          var g =  /*<<TransducerController.ml:181:12>>*/ self_164[a + 1];
+                      aiJ)) /*<<TransducerController.ml:185:70>>*/ ;
+          var g =  /*<<TransducerController.ml:180:12>>*/ self_164[a + 1];
           self_164[a + 1] =
-            /*<<TransducerController.ml:181:22>>*/ caml_call2
-            ( /*<<TransducerController.ml:181:12>>*/ caml_get_cached_method
-              (g, -414130793, cache_id$1191),
+            /*<<TransducerController.ml:180:22>>*/ caml_call2
+            ( /*<<TransducerController.ml:180:12>>*/ caml_get_cached_method
+              (g, -414130793, cache_id$1189),
              g,
              [0, v1, iSym, oSym, v2]);
-           /*<<TransducerController.ml:182:34>>*/  /*<<TransducerController.ml:182:13>>*/ removeEdge
-           ( /*<<TransducerController.ml:182:34>>*/ caml_call1
+           /*<<TransducerController.ml:181:34>>*/  /*<<TransducerController.ml:181:13>>*/ removeEdge
+           ( /*<<TransducerController.ml:181:34>>*/ caml_call1
              (self_164[1][e + 1], self_164),
             v1,
             label,
             v2);
-           /*<<TransducerController.ml:182:56>>*/ return caml_call1
-                  (self_164[1][f + 1], self_164) /*<<TransducerController.ml:186:70>>*/ ;
+           /*<<TransducerController.ml:181:56>>*/ return caml_call1
+                  (self_164[1][f + 1], self_164) /*<<TransducerController.ml:185:70>>*/ ;
          }
         }
-         /*<<TransducerController.ml:186:13>>*/ return alertStr(aiJ) /*<<TransducerController.ml:186:70>>*/ ;
+         /*<<TransducerController.ml:185:13>>*/ return alertStr(aiI) /*<<TransducerController.ml:185:70>>*/ ;
        },
        w,
        function(self_164){
-         /*<<TransducerController.ml:189:6>>*/ return 0;
-        /*<<TransducerController.ml:189:8>>*/ },
+         /*<<TransducerController.ml:188:6>>*/ return 0;
+        /*<<TransducerController.ml:188:8>>*/ },
        n,
        function(self_164){
         var
          a =
-            /*<<TransducerController.ml:192:32>>*/ caml_call1
+            /*<<TransducerController.ml:191:32>>*/ caml_call1
             (self_164[1][h + 1], self_164),
          c =
-            /*<<TransducerController.ml:192:14>>*/ caml_call3
+            /*<<TransducerController.ml:191:14>>*/ caml_call3
             (fstController[1], 0, a, 0);
-         /*<<TransducerController.ml:193:6>>*/ ctrlL[1] = c;
+         /*<<TransducerController.ml:192:6>>*/ ctrlL[1] = c;
         return 0;
-        /*<<TransducerController.ml:193:38>>*/ },
+        /*<<TransducerController.ml:192:38>>*/ },
        x,
        function(self_164, listColors, number){
         var
-         b =  /*<<TransducerController.ml:196:6>>*/ ctrlL[1],
+         b =  /*<<TransducerController.ml:195:6>>*/ ctrlL[1],
          g =
-            /*<<TransducerController.ml:196:43>>*/ caml_call1
-            ( /*<<TransducerController.ml:196:6>>*/ caml_get_cached_method
-              (b, 291540204, cache_id$1186),
+            /*<<TransducerController.ml:195:43>>*/ caml_call1
+            ( /*<<TransducerController.ml:195:6>>*/ caml_get_cached_method
+              (b, 291540204, cache_id$1184),
              b),
-         c =  /*<<TransducerController.ml:196:60>>*/ ctrlL[1],
+         c =  /*<<TransducerController.ml:195:60>>*/ ctrlL[1],
          d =
-            /*<<TransducerController.ml:196:6>>*/ caml_call1
-            ( /*<<TransducerController.ml:196:60>>*/ caml_get_cached_method
-              (c, 589096849, cache_id$1187),
+            /*<<TransducerController.ml:195:6>>*/ caml_call1
+            ( /*<<TransducerController.ml:195:60>>*/ caml_get_cached_method
+              (c, 589096849, cache_id$1185),
              c);
-         /*<<TransducerController.ml:196:24>>*/  /*<<TransducerController.ml:196:6>>*/ caml_call3
-         ( /*<<TransducerController.ml:196:24>>*/ caml_get_cached_method
-           (d, 1053924012, cache_id$1188),
+         /*<<TransducerController.ml:195:24>>*/  /*<<TransducerController.ml:195:6>>*/ caml_call3
+         ( /*<<TransducerController.ml:195:24>>*/ caml_get_cached_method
+           (d, 1053924012, cache_id$1186),
           d,
           g,
           listColors);
         var
          h =
-            /*<<TransducerController.ml:197:25>>*/ caml_call1
+            /*<<TransducerController.ml:196:25>>*/ caml_call1
             (self_164[1][e + 1], self_164),
-         f =  /*<<TransducerController.ml:197:35>>*/ self_164[a + 1];
-         /*<<TransducerController.ml:197:6>>*/ caml_call4
-         ( /*<<TransducerController.ml:197:35>>*/ caml_get_cached_method
-           (f, -143865022, cache_id$1189),
+         f =  /*<<TransducerController.ml:196:35>>*/ self_164[a + 1];
+         /*<<TransducerController.ml:196:6>>*/ caml_call4
+         ( /*<<TransducerController.ml:196:35>>*/ caml_get_cached_method
+           (f, -143865022, cache_id$1187),
           f,
           h,
           listColors,
           number);
-         /*<<TransducerController.ml:198:20>>*/ return  /*<<TransducerController.ml:198:34>>*/ fit
-                ( /*<<TransducerController.ml:198:20>>*/ caml_call1
-                  (self_164[1][i + 1], self_164)) /*<<TransducerController.ml:198:34>>*/ ;
-       },
-       C,
-       function(self_164){
-         /*<<TransducerController.ml:202:6>>*/ caml_call2
-         (self_164[1][c + 1], self_164, aiH);
-        var
-         b =  /*<<TransducerController.ml:202:45>>*/ self_164[a + 1],
-         fa =
-            /*<<TransducerController.ml:203:15>>*/ caml_call1
-            ( /*<<TransducerController.ml:202:45>>*/ caml_get_cached_method
-              (b, -786319889, cache_id$1185),
-             b);
-         /*<<TransducerController.ml:204:6>>*/ return caml_call2
-                (model$13[1], 0, [4, fa]) /*<<TransducerController.ml:204:55>>*/ ;
+         /*<<TransducerController.ml:197:20>>*/ return  /*<<TransducerController.ml:197:34>>*/ fit
+                ( /*<<TransducerController.ml:197:20>>*/ caml_call1
+                  (self_164[1][i + 1], self_164)) /*<<TransducerController.ml:197:34>>*/ ;
        },
        B,
        function(self_164){
-         /*<<TransducerController.ml:208:6>>*/ caml_call2
+         /*<<TransducerController.ml:201:6>>*/ caml_call2
          (self_164[1][c + 1], self_164, aiG);
         var
-         b =  /*<<TransducerController.ml:208:48>>*/ self_164[a + 1],
+         b =  /*<<TransducerController.ml:201:45>>*/ self_164[a + 1],
          fa =
-            /*<<TransducerController.ml:209:15>>*/ caml_call1
-            ( /*<<TransducerController.ml:208:48>>*/ caml_get_cached_method
+            /*<<TransducerController.ml:202:15>>*/ caml_call1
+            ( /*<<TransducerController.ml:201:45>>*/ caml_get_cached_method
               (b, -786319889, cache_id$1183),
-             b),
-         fa_model =
-            /*<<TransducerController.ml:210:21>>*/ caml_call2
-            (model$13[1], 0, [4, fa]),
-         re =  /*<<TransducerController.ml:211:15>>*/ fa2re$0(fa_model),
-         d =
-            /*<<TransducerController.ml:212:6>>*/ [4,
-             /*<<TransducerController.ml:212:54>>*/ caml_call1
-             ( /*<<TransducerController.ml:212:6>>*/ caml_get_cached_method
-               (re, -199176691, cache_id$1184),
-              re)];
-         /*<<TransducerController.ml:212:71>>*/ return caml_call2
-                (model$14[1], 0, d) /*<<TransducerController.ml:212:72>>*/ ;
+             b);
+         /*<<TransducerController.ml:203:6>>*/ return caml_call2
+                (model$13[1], 0, [4, fa]) /*<<TransducerController.ml:203:55>>*/ ;
        },
        A,
        function(self_164){
-         /*<<TransducerController.ml:216:6>>*/ caml_call2
+         /*<<TransducerController.ml:207:6>>*/ caml_call2
          (self_164[1][c + 1], self_164, aiF);
         var
-         b =  /*<<TransducerController.ml:216:57>>*/ self_164[a + 1],
+         b =  /*<<TransducerController.ml:207:57>>*/ self_164[a + 1],
          tm =
-            /*<<TransducerController.ml:217:15>>*/ caml_call1
-            ( /*<<TransducerController.ml:216:57>>*/ caml_get_cached_method
+            /*<<TransducerController.ml:208:15>>*/ caml_call1
+            ( /*<<TransducerController.ml:207:57>>*/ caml_get_cached_method
               (b, -809198204, cache_id$1182),
              b);
-         /*<<TransducerController.ml:218:6>>*/ return caml_call2
-                (model$21[1], 0, [4, tm]) /*<<TransducerController.ml:218:53>>*/ ;
+         /*<<TransducerController.ml:209:6>>*/ return caml_call2
+                (model$21[1], 0, [4, tm]) /*<<TransducerController.ml:209:53>>*/ ;
        },
        q,
        function(self_164){
         var
-         b =  /*<<TransducerController.ml:221:10>>*/ self_164[a + 1],
+         b =  /*<<TransducerController.ml:212:10>>*/ self_164[a + 1],
          errors =
-            /*<<TransducerController.ml:221:23>>*/ caml_call1
-            ( /*<<TransducerController.ml:221:10>>*/ caml_get_cached_method
+            /*<<TransducerController.ml:212:23>>*/ caml_call1
+            ( /*<<TransducerController.ml:212:10>>*/ caml_get_cached_method
               (b, -781679701, cache_id$1181),
              b);
-         /*<<TransducerController.ml:222:12>>*/ return 0 === errors
+         /*<<TransducerController.ml:213:12>>*/ return 0 === errors
                 ? 0
-                :  /*<<TransducerController.ml:225:53>>*/ alertStr
-                  ( /*<<TransducerController.ml:225:26>>*/ concat(aiE, errors)) /*<<TransducerController.ml:225:53>>*/ ;
+                :  /*<<TransducerController.ml:216:53>>*/ alertStr
+                  ( /*<<TransducerController.ml:216:26>>*/ concat(aiE, errors)) /*<<TransducerController.ml:216:53>>*/ ;
        }]);
      /*<<?>>*/ return function(f, c, e, d){
      var b = create_object_opt(c, g);
-     caml_call2(G, b, d);
+     caml_call2(F, b, d);
      b[a + 1] = e;
      return run_initializers_opt(c, b, g);};
    }
@@ -96781,7 +96739,7 @@
            var
             a =  /*<<ContextFreeGrammarController.ml:43:6>>*/ self_165[b + 1];
            return caml_call2
-                   (caml_get_cached_method(a, 95338040, cache_id$1221), a, ai7) /*<<ContextFreeGrammarController.ml:43:38>>*/ ;
+                   (caml_get_cached_method(a, 95338040, cache_id$1219), a, ai7) /*<<ContextFreeGrammarController.ml:43:38>>*/ ;
           },
           g,
           function(self_165){
@@ -96809,7 +96767,7 @@
             a =  /*<<ContextFreeGrammarController.ml:57:32>>*/ self_165[b + 1];
             /*<<ContextFreeGrammarController.ml:58:6>>*/ caml_call2
             ( /*<<ContextFreeGrammarController.ml:57:32>>*/ caml_get_cached_method
-              (a, 758700942, cache_id$1220),
+              (a, 758700942, cache_id$1218),
              a,
              ai6);
             /*<<ContextFreeGrammarController.ml:58:37>>*/ return caml_call1
@@ -96893,7 +96851,7 @@
             ll1 =
                /*<<ContextFreeGrammarController.ml:68:16>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:68:6>>*/ caml_get_cached_method
-                 (b, -1051697145, cache_id$1245),
+                 (b, -1051697145, cache_id$1243),
                 b);
             /*<<ContextFreeGrammarController.ml:69:8>>*/ getIsLL1
             (ll1, infoBox);
@@ -96902,7 +96860,7 @@
             lr =
                /*<<ContextFreeGrammarController.ml:70:15>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:69:43>>*/ caml_get_cached_method
-                 (d, 501486625, cache_id$1246),
+                 (d, 501486625, cache_id$1244),
                 d);
             /*<<ContextFreeGrammarController.ml:71:8>>*/ getIsLeftRecursive
             (lr, infoBox);
@@ -96911,7 +96869,7 @@
             lf =
                /*<<ContextFreeGrammarController.ml:72:15>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:71:52>>*/ caml_get_cached_method
-                 (e, 881920034, cache_id$1247),
+                 (e, 881920034, cache_id$1245),
                 e);
             /*<<ContextFreeGrammarController.ml:73:8>>*/ getIsLeftFactoring
             (lf, infoBox);
@@ -96920,7 +96878,7 @@
             pConf =
                /*<<ContextFreeGrammarController.ml:74:18>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:73:52>>*/ caml_get_cached_method
-                 (f, 917288618, cache_id$1248),
+                 (f, 917288618, cache_id$1246),
                 f);
             /*<<ContextFreeGrammarController.ml:75:8>>*/ getHasParsingTableConflict
             (pConf, infoBox);
@@ -96929,19 +96887,19 @@
             c =
                /*<<ContextFreeGrammarController.ml:76:14>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:75:63>>*/ caml_get_cached_method
-                 (g, -455011009, cache_id$1249),
+                 (g, -455011009, cache_id$1247),
                 g),
             h =  /*<<ContextFreeGrammarController.ml:77:6>>*/ self_166[a + 1],
             prod =
                /*<<ContextFreeGrammarController.ml:77:17>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:77:6>>*/ caml_get_cached_method
-                 (h, 556914665, cache_id$1250),
+                 (h, 556914665, cache_id$1248),
                 h),
             i =  /*<<ContextFreeGrammarController.ml:78:6>>*/ self_166[a + 1],
             access =
                /*<<ContextFreeGrammarController.ml:78:19>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:78:6>>*/ caml_get_cached_method
-                 (i, -565205482, cache_id$1251),
+                 (i, -565205482, cache_id$1249),
                 i);
             /*<<ContextFreeGrammarController.ml:79:8>>*/ return getIsCFGClean
                    (c, prod, access, infoBox) /*<<ContextFreeGrammarController.ml:79:58>>*/ ;
@@ -96966,12 +96924,12 @@
             a =  /*<<ContextFreeGrammarController.ml:85:6>>*/ adjust$1(f[2]);
             /*<<ContextFreeGrammarController.ml:85:47>>*/  /*<<ContextFreeGrammarController.ml:85:6>>*/ caml_call2
             ( /*<<ContextFreeGrammarController.ml:85:47>>*/ caml_get_cached_method
-              (a, 758700942, cache_id$1243),
+              (a, 758700942, cache_id$1241),
              a,
              e);
            var b =  /*<<ContextFreeGrammarController.ml:85:120>>*/ ctrlR[1];
            return caml_call1
-                   (caml_get_cached_method(b, 398559386, cache_id$1244), b) /*<<ContextFreeGrammarController.ml:86:38>>*/ ;
+                   (caml_get_cached_method(b, 398559386, cache_id$1242), b) /*<<ContextFreeGrammarController.ml:86:38>>*/ ;
           },
           x,
           function(self_166, word){
@@ -96981,13 +96939,13 @@
             w =  /*<<ContextFreeGrammarController.ml:90:14>>*/ str2word(word),
             b =  /*<<ContextFreeGrammarController.ml:91:6>>*/ self_166[a + 1];
            caml_call2
-            (caml_get_cached_method(b, 695900758, cache_id$1241), b, w);
+            (caml_get_cached_method(b, 695900758, cache_id$1239), b, w);
            var
             c =  /*<<ContextFreeGrammarController.ml:91:26>>*/ self_166[a + 1],
             match =
                /*<<ContextFreeGrammarController.ml:92:45>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:91:26>>*/ caml_get_cached_method
-                 (c, 283657039, cache_id$1242),
+                 (c, 283657039, cache_id$1240),
                 c),
             time =  /*<<ContextFreeGrammarController.ml:92:62>>*/ match[4],
             exact = match[3],
@@ -97002,7 +96960,7 @@
             b =  /*<<ContextFreeGrammarController.ml:96:6>>*/ self_166[a + 1];
            return  /*<<ContextFreeGrammarController.ml:96:9>>*/ caml_call1
                     ( /*<<ContextFreeGrammarController.ml:96:6>>*/ caml_get_cached_method
-                      (b, -1051697145, cache_id$1240),
+                      (b, -1051697145, cache_id$1238),
                      b)
                    ? ( /*<<ContextFreeGrammarController.ml:97:12>>*/ caml_call1
                       (self_166[1][j + 1], self_166),
@@ -97022,7 +96980,7 @@
             steps =
                /*<<ContextFreeGrammarController.ml:102:18>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:101:21>>*/ caml_get_cached_method
-                 (b, 310221913, cache_id$1239),
+                 (b, 310221913, cache_id$1237),
                 b)
               - 1
               | 0;
@@ -97068,14 +97026,14 @@
             var$ =
                /*<<ContextFreeGrammarController.ml:118:16>>*/ caml_call2
                ( /*<<ContextFreeGrammarController.ml:117:40>>*/ caml_get_cached_method
-                 (b, 44127747, cache_id$1237),
+                 (b, 44127747, cache_id$1235),
                 b,
                 v),
             c =  /*<<ContextFreeGrammarController.ml:119:6>>*/ self_166[a + 1],
             match =
                /*<<ContextFreeGrammarController.ml:120:8>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:119:6>>*/ caml_get_cached_method
-                 (c, 283657039, cache_id$1238),
+                 (c, 283657039, cache_id$1236),
                 c),
             time =  /*<<ContextFreeGrammarController.ml:120:25>>*/ match[4],
             exact = match[3],
@@ -97109,14 +97067,14 @@
                /*<<ContextFreeGrammarController.ml:134:51>>*/ self_166[a + 1];
             /*<<ContextFreeGrammarController.ml:135:6>>*/ caml_call1
             ( /*<<ContextFreeGrammarController.ml:134:51>>*/ caml_get_cached_method
-              (b, 317509765, cache_id$1233),
+              (b, 317509765, cache_id$1231),
              b);
            var
             c =
                /*<<ContextFreeGrammarController.ml:135:41>>*/ self_166[a + 1];
             /*<<ContextFreeGrammarController.ml:136:6>>*/ caml_call1
             ( /*<<ContextFreeGrammarController.ml:135:41>>*/ caml_get_cached_method
-              (c, 441762149, cache_id$1234),
+              (c, 441762149, cache_id$1232),
              c);
            var
             e =
@@ -97125,7 +97083,7 @@
             (!
               /*<<ContextFreeGrammarController.ml:137:9>>*/ caml_call1
               ( /*<<ContextFreeGrammarController.ml:136:34>>*/ caml_get_cached_method
-                (e, -1051697145, cache_id$1235),
+                (e, -1051697145, cache_id$1233),
                e))
              /*<<ContextFreeGrammarController.ml:139:25>>*/ return  /*<<ContextFreeGrammarController.ml:139:46>>*/ alertStr
                     ( /*<<ContextFreeGrammarController.ml:139:25>>*/ i18nIsNotLL1
@@ -97138,7 +97096,7 @@
             h =
                /*<<ContextFreeGrammarController.ml:138:41>>*/ self_166[a + 1];
            return caml_call3
-                   (caml_get_cached_method(h, 49082634, cache_id$1236),
+                   (caml_get_cached_method(h, 49082634, cache_id$1234),
                     h,
                     k,
                     j) /*<<ContextFreeGrammarController.ml:139:46>>*/ ;
@@ -97156,7 +97114,7 @@
             b =
                /*<<ContextFreeGrammarController.ml:144:27>>*/ self_166[a + 1];
            return caml_call2
-                   (caml_get_cached_method(b, -922581773, cache_id$1232), b, c);
+                   (caml_get_cached_method(b, -922581773, cache_id$1230), b, c);
           },
           A,
           function(self_166){
@@ -97171,7 +97129,7 @@
             b =
                /*<<ContextFreeGrammarController.ml:149:27>>*/ self_166[a + 1];
            return caml_call2
-                   (caml_get_cached_method(b, -1055860185, cache_id$1231),
+                   (caml_get_cached_method(b, -1055860185, cache_id$1229),
                     b,
                     c);
           },
@@ -97248,12 +97206,12 @@
             b =
                /*<<ContextFreeGrammarController.ml:169:30>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:169:6>>*/ caml_get_cached_method
-                 (a, 588944750, cache_id$1229),
+                 (a, 588944750, cache_id$1227),
                 a),
             gr_representation =
                /*<<ContextFreeGrammarController.ml:169:48>>*/  /*<<ContextFreeGrammarController.ml:169:30>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:169:48>>*/ caml_get_cached_method
-                 (b, -199176691, cache_id$1230),
+                 (b, -199176691, cache_id$1228),
                 b);
             /*<<ContextFreeGrammarController.ml:170:6>>*/ return grammar2Str
                    (gr_representation) /*<<ContextFreeGrammarController.ml:170:35>>*/ ;
@@ -97270,7 +97228,7 @@
                /*<<ContextFreeGrammarController.ml:176:6>>*/ [4,
                 /*<<ContextFreeGrammarController.ml:176:54>>*/ caml_call1
                 ( /*<<ContextFreeGrammarController.ml:176:6>>*/ caml_get_cached_method
-                  (pda, -199176691, cache_id$1228),
+                  (pda, -199176691, cache_id$1226),
                  pda)];
             /*<<ContextFreeGrammarController.ml:176:74>>*/ return caml_call2
                    (model$20[1], 0, b) /*<<ContextFreeGrammarController.ml:176:75>>*/ ;
@@ -97287,7 +97245,7 @@
                /*<<ContextFreeGrammarController.ml:182:6>>*/ [4,
                 /*<<ContextFreeGrammarController.ml:182:44>>*/ caml_call1
                 ( /*<<ContextFreeGrammarController.ml:182:6>>*/ caml_get_cached_method
-                  (gr, -199176691, cache_id$1227),
+                  (gr, -199176691, cache_id$1225),
                  gr)];
             /*<<ContextFreeGrammarController.ml:182:63>>*/ return caml_call2
                    (model$23[1], 0, b) /*<<ContextFreeGrammarController.ml:182:64>>*/ ;
@@ -97304,7 +97262,7 @@
                /*<<ContextFreeGrammarController.ml:188:6>>*/ [4,
                 /*<<ContextFreeGrammarController.ml:188:50>>*/ caml_call1
                 ( /*<<ContextFreeGrammarController.ml:188:6>>*/ caml_get_cached_method
-                  (tm, -199176691, cache_id$1226),
+                  (tm, -199176691, cache_id$1224),
                  tm)];
             /*<<ContextFreeGrammarController.ml:188:69>>*/ return caml_call2
                    (model$21[1], 0, b) /*<<ContextFreeGrammarController.ml:188:70>>*/ ;
@@ -97321,7 +97279,7 @@
                /*<<ContextFreeGrammarController.ml:194:6>>*/ [4,
                 /*<<ContextFreeGrammarController.ml:194:50>>*/ caml_call1
                 ( /*<<ContextFreeGrammarController.ml:194:6>>*/ caml_get_cached_method
-                  (tm, -199176691, cache_id$1225),
+                  (tm, -199176691, cache_id$1223),
                  tm)];
             /*<<ContextFreeGrammarController.ml:194:69>>*/ return caml_call2
                    (model$21[1], 0, b) /*<<ContextFreeGrammarController.ml:194:70>>*/ ;
@@ -97334,14 +97292,14 @@
             w =  /*<<ContextFreeGrammarController.ml:199:14>>*/ str2word(word),
             b =  /*<<ContextFreeGrammarController.ml:200:6>>*/ self_166[a + 1];
            caml_call2
-            (caml_get_cached_method(b, -689728763, cache_id$1222), b, w);
+            (caml_get_cached_method(b, -689728763, cache_id$1220), b, w);
            var
             c =
                /*<<ContextFreeGrammarController.ml:200:30>>*/ self_166[a + 1],
             match =
                /*<<ContextFreeGrammarController.ml:201:45>>*/ caml_call1
                ( /*<<ContextFreeGrammarController.ml:200:30>>*/ caml_get_cached_method
-                 (c, 283657039, cache_id$1223),
+                 (c, 283657039, cache_id$1221),
                 c),
             time =  /*<<ContextFreeGrammarController.ml:201:62>>*/ match[4],
             exact = match[3],
@@ -97353,7 +97311,7 @@
             e =
                /*<<ContextFreeGrammarController.ml:202:67>>*/ self_166[a + 1];
            return caml_call1
-                   (caml_get_cached_method(e, 578315491, cache_id$1224), e) /*<<ContextFreeGrammarController.ml:203:24>>*/ ;
+                   (caml_get_cached_method(e, 578315491, cache_id$1222), e) /*<<ContextFreeGrammarController.ml:203:24>>*/ ;
           }]);
         /*<<?>>*/ return function(f, b, d, c){
         var a = create_object_opt(b, e);
@@ -97416,7 +97374,7 @@
         if
          ( /*<<ContextFreeGrammarController.ml:236:5>>*/ caml_call1
            ( /*<<ContextFreeGrammarController.ml:230:28>>*/ caml_get_cached_method
-             (a, -1051695808, cache_id$1254),
+             (a, -1051695808, cache_id$1252),
             a))
           /*<<ContextFreeGrammarController.ml:236:24>>*/ return getIsLR0
                  (1, infoBox) /*<<ContextFreeGrammarController.ml:240:45>>*/ ;
@@ -97425,7 +97383,7 @@
         if
          ( /*<<ContextFreeGrammarController.ml:237:10>>*/ caml_call1
            ( /*<<ContextFreeGrammarController.ml:237:8>>*/ caml_get_cached_method
-             (b, -375111326, cache_id$1255),
+             (b, -375111326, cache_id$1253),
             b))
           /*<<ContextFreeGrammarController.ml:237:30>>*/ return getIsSLR1
                  (1, infoBox) /*<<ContextFreeGrammarController.ml:240:45>>*/ ;
@@ -97434,7 +97392,7 @@
         if
          ( /*<<ContextFreeGrammarController.ml:238:10>>*/ caml_call1
            ( /*<<ContextFreeGrammarController.ml:238:8>>*/ caml_get_cached_method
-             (d, -151184532, cache_id$1256),
+             (d, -151184532, cache_id$1254),
             d))
           /*<<ContextFreeGrammarController.ml:238:31>>*/ return getIsLALR1
                  (1, infoBox) /*<<ContextFreeGrammarController.ml:240:45>>*/ ;
@@ -97442,7 +97400,7 @@
          f =  /*<<ContextFreeGrammarController.ml:239:8>>*/ self_167[c + 1];
         return  /*<<ContextFreeGrammarController.ml:239:10>>*/ caml_call1
                  ( /*<<ContextFreeGrammarController.ml:239:8>>*/ caml_get_cached_method
-                   (f, -1051695807, cache_id$1257),
+                   (f, -1051695807, cache_id$1255),
                   f)
                 ?  /*<<ContextFreeGrammarController.ml:239:29>>*/ getIsLR1
                   (1, infoBox)
@@ -97466,12 +97424,12 @@
          a =  /*<<ContextFreeGrammarController.ml:251:84>>*/ self_167[c + 1];
          /*<<ContextFreeGrammarController.ml:251:6>>*/ caml_call2
          ( /*<<ContextFreeGrammarController.ml:251:84>>*/ caml_get_cached_method
-           (a, 758700942, cache_id$1252),
+           (a, 758700942, cache_id$1250),
           a,
           d);
         var b = ctrlR[1];
         return caml_call1
-                (caml_get_cached_method(b, 398559386, cache_id$1253), b) /*<<ContextFreeGrammarController.ml:252:38>>*/ ;
+                (caml_get_cached_method(b, 398559386, cache_id$1251), b) /*<<ContextFreeGrammarController.ml:252:38>>*/ ;
        },
        h,
        function(self_167){
@@ -97655,7 +97613,7 @@
        function(self_169){
         var b =  /*<<PushdownAutomatonController.ml:34:6>>*/ self_169[a + 1];
         return caml_call2
-                (caml_get_cached_method(b, 95338040, cache_id$1299), b, aj0) /*<<PushdownAutomatonController.ml:34:38>>*/ ;
+                (caml_get_cached_method(b, 95338040, cache_id$1297), b, aj0) /*<<PushdownAutomatonController.ml:34:38>>*/ ;
        },
        m,
        function(self_169){
@@ -97738,7 +97696,7 @@
          deter =
             /*<<PushdownAutomatonController.ml:59:18>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:59:6>>*/ caml_get_cached_method
-              (b, -572782712, cache_id$1292),
+              (b, -572782712, cache_id$1290),
              b);
          /*<<PushdownAutomatonController.ml:60:8>>*/ getDeterminim
          (deter, infoBox);
@@ -97747,13 +97705,13 @@
          useful =
             /*<<PushdownAutomatonController.ml:61:19>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:60:50>>*/ caml_get_cached_method
-              (c, 497232901, cache_id$1293),
+              (c, 497232901, cache_id$1291),
              c),
          d =  /*<<PushdownAutomatonController.ml:62:6>>*/ self_169[a + 1],
          uStates =
             /*<<PushdownAutomatonController.ml:62:20>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:62:6>>*/ caml_get_cached_method
-              (d, 517963276, cache_id$1294),
+              (d, 517963276, cache_id$1292),
              d);
          /*<<PushdownAutomatonController.ml:63:8>>*/ getHasUselessStates
          (useful, uStates, infoBox);
@@ -97762,7 +97720,7 @@
          isEquivalentFA =
             /*<<PushdownAutomatonController.ml:64:27>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:63:65>>*/ caml_get_cached_method
-              (e, -390052361, cache_id$1295),
+              (e, -390052361, cache_id$1293),
              e);
          /*<<PushdownAutomatonController.ml:65:8>>*/ getIsEquivalentFA
          (isEquivalentFA, infoBox);
@@ -97771,7 +97729,7 @@
          nStates =
             /*<<PushdownAutomatonController.ml:66:20>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:65:63>>*/ caml_get_cached_method
-              (f, 369987819, cache_id$1296),
+              (f, 369987819, cache_id$1294),
              f);
          /*<<PushdownAutomatonController.ml:67:8>>*/ getNumberStates
          (nStates, infoBox);
@@ -97780,14 +97738,14 @@
          nTransitions =
             /*<<PushdownAutomatonController.ml:68:25>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:67:54>>*/ caml_get_cached_method
-              (g, 882063605, cache_id$1297),
+              (g, 882063605, cache_id$1295),
              g);
          /*<<PushdownAutomatonController.ml:69:8>>*/ getNumberTransitions
          (nTransitions, infoBox);
         var h =  /*<<PushdownAutomatonController.ml:69:64>>*/ self_169[a + 1];
          /*<<PushdownAutomatonController.ml:70:14>>*/ caml_call1
          ( /*<<PushdownAutomatonController.ml:69:64>>*/ caml_get_cached_method
-           (h, 525796864, cache_id$1298),
+           (h, 525796864, cache_id$1296),
           h);
          /*<<PushdownAutomatonController.ml:70:30>>*/ return 0;
         /*<<PushdownAutomatonController.ml:70:36>>*/ },
@@ -97801,7 +97759,7 @@
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:75:15>>*/ caml_call1
           ( /*<<PushdownAutomatonController.ml:74:32>>*/ caml_get_cached_method
-            (b, 339875466, cache_id$1289),
+            (b, 339875466, cache_id$1287),
            b);
         var
          toggleButton =
@@ -97809,13 +97767,13 @@
          e =  /*<<PushdownAutomatonController.ml:77:8>>*/ self_169[a + 1];
         function f(x){
          return caml_call1
-                 (caml_get_cached_method(x, 746263041, cache_id$1290), x) /*<<PushdownAutomatonController.ml:77:32>>*/ ;
+                 (caml_get_cached_method(x, 746263041, cache_id$1288), x) /*<<PushdownAutomatonController.ml:77:32>>*/ ;
         }
         var
          g =
             /*<<PushdownAutomatonController.ml:77:8>>*/  /*<<PushdownAutomatonController.ml:78:13>>*/ caml_call1
               ( /*<<PushdownAutomatonController.ml:77:8>>*/ caml_get_cached_method
-                (e, -199176691, cache_id$1291),
+                (e, -199176691, cache_id$1289),
                e)
              [8]
             ?  /*<<PushdownAutomatonController.ml:79:12>>*/ i18nTogleAcceptCriteriaState
@@ -97869,7 +97827,7 @@
          self_169[a + 1] =
            /*<<PushdownAutomatonController.ml:96:23>>*/ caml_call2
            ( /*<<PushdownAutomatonController.ml:96:76>>*/ caml_get_cached_method
-             (b, -793374676, cache_id$1287),
+             (b, -793374676, cache_id$1285),
             b,
             e);
          var
@@ -97887,7 +97845,7 @@
                 initStackSymbol)),
             function(x){
               /*<<PushdownAutomatonController.ml:98:14>>*/ return caml_call1
-                     (caml_get_cached_method(x, 746263041, cache_id$1288), x) /*<<PushdownAutomatonController.ml:98:32>>*/ ;
+                     (caml_get_cached_method(x, 746263041, cache_id$1286), x) /*<<PushdownAutomatonController.ml:98:32>>*/ ;
             }));
         }
          /*<<PushdownAutomatonController.ml:100:6>>*/ return caml_call1
@@ -97899,7 +97857,7 @@
         if
          ( /*<<PushdownAutomatonController.ml:103:13>>*/ caml_call1
            ( /*<<PushdownAutomatonController.ml:103:6>>*/ caml_get_cached_method
-             (b, -770548331, cache_id$1284),
+             (b, -770548331, cache_id$1282),
             b))
           /*<<PushdownAutomatonController.ml:106:11>>*/ return 0;
         var
@@ -97907,13 +97865,13 @@
          convertedPDA =
             /*<<PushdownAutomatonController.ml:104:27>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:104:8>>*/ caml_get_cached_method
-              (c, 468130374, cache_id$1285),
+              (c, 468130374, cache_id$1283),
              c),
          d =
             /*<<PushdownAutomatonController.ml:105:8>>*/ [4,
              /*<<PushdownAutomatonController.ml:105:62>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:105:8>>*/ caml_get_cached_method
-               (convertedPDA, -199176691, cache_id$1286),
+               (convertedPDA, -199176691, cache_id$1284),
               convertedPDA)];
          /*<<PushdownAutomatonController.ml:105:13>>*/ return [0,
                 caml_call2(model$20[1], 0, d)] /*<<PushdownAutomatonController.ml:105:91>>*/ ;
@@ -97925,7 +97883,7 @@
          (!
            /*<<PushdownAutomatonController.ml:109:9>>*/ caml_call1
            ( /*<<PushdownAutomatonController.ml:109:6>>*/ caml_get_cached_method
-             (b, -770548331, cache_id$1281),
+             (b, -770548331, cache_id$1279),
             b))
           /*<<PushdownAutomatonController.ml:112:11>>*/ return 0;
         var
@@ -97933,13 +97891,13 @@
          convertedPDA =
             /*<<PushdownAutomatonController.ml:110:27>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:110:8>>*/ caml_get_cached_method
-              (c, -988262273, cache_id$1282),
+              (c, -988262273, cache_id$1280),
              c),
          d =
             /*<<PushdownAutomatonController.ml:111:8>>*/ [4,
              /*<<PushdownAutomatonController.ml:111:62>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:111:8>>*/ caml_get_cached_method
-               (convertedPDA, -199176691, cache_id$1283),
+               (convertedPDA, -199176691, cache_id$1281),
               convertedPDA)];
          /*<<PushdownAutomatonController.ml:111:13>>*/ return [0,
                 caml_call2(model$20[1], 0, d)] /*<<PushdownAutomatonController.ml:111:91>>*/ ;
@@ -97968,7 +97926,7 @@
         log
          ( /*<<PushdownAutomatonController.ml:132:25>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:132:18>>*/ caml_get_cached_method
-              (b, -199176691, cache_id$1278),
+              (b, -199176691, cache_id$1276),
              b)
            [3]);
         var
@@ -97978,7 +97936,7 @@
            (st,
              /*<<PushdownAutomatonController.ml:133:37>>*/ caml_call1
               ( /*<<PushdownAutomatonController.ml:132:52>>*/ caml_get_cached_method
-                (e, -199176691, cache_id$1279),
+                (e, -199176691, cache_id$1277),
                e)
              [3]))
           /*<<PushdownAutomatonController.ml:134:18>>*/  /*<<PushdownAutomatonController.ml:134:6>>*/ alertStr
@@ -97989,7 +97947,7 @@
          self_169[a + 1] =
            /*<<PushdownAutomatonController.ml:137:16>>*/ caml_call2
            ( /*<<PushdownAutomatonController.ml:136:5>>*/ caml_get_cached_method
-             (g, -43475920, cache_id$1280),
+             (g, -43475920, cache_id$1278),
             g,
             st);
           /*<<PushdownAutomatonController.ml:138:25>>*/  /*<<PushdownAutomatonController.ml:138:7>>*/ addNode$0
@@ -98028,7 +97986,7 @@
           self_169[a + 1] =
             /*<<PushdownAutomatonController.ml:146:20>>*/ caml_call2
             ( /*<<PushdownAutomatonController.ml:146:10>>*/ caml_get_cached_method
-              (c, 307800825, cache_id$1274),
+              (c, 307800825, cache_id$1272),
              c,
              [0, fromNode, st, is, toNode, ts]);
           var d =  /*<<PushdownAutomatonController.ml:146:69>>*/ 0;
@@ -98043,7 +98001,7 @@
           ===
             /*<<PushdownAutomatonController.ml:148:19>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:148:8>>*/ caml_get_cached_method
-               (b, -199176691, cache_id$1275),
+               (b, -199176691, cache_id$1273),
               b)
             [4])
           /*<<PushdownAutomatonController.ml:149:22>>*/  /*<<PushdownAutomatonController.ml:149:10>>*/ alertStr
@@ -98054,7 +98012,7 @@
          self_169[a + 1] =
            /*<<PushdownAutomatonController.ml:151:20>>*/ caml_call2
            ( /*<<PushdownAutomatonController.ml:151:10>>*/ caml_get_cached_method
-             (e, 37704493, cache_id$1276),
+             (e, 37704493, cache_id$1274),
             e,
             node);
          var
@@ -98066,7 +98024,7 @@
            },
             /*<<PushdownAutomatonController.ml:152:48>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:152:10>>*/ caml_get_cached_method
-               (g, -199176691, cache_id$1277),
+               (g, -199176691, cache_id$1275),
               g)
             [6]);
           /*<<PushdownAutomatonController.ml:153:31>>*/  /*<<PushdownAutomatonController.ml:153:10>>*/ removeNode$0
@@ -98086,14 +98044,14 @@
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:159:15>>*/ caml_call2
           ( /*<<PushdownAutomatonController.ml:158:49>>*/ caml_get_cached_method
-            (b, -43475920, cache_id$1271),
+            (b, -43475920, cache_id$1269),
            b,
            node);
         var e =  /*<<PushdownAutomatonController.ml:160:6>>*/ self_169[a + 1];
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:160:15>>*/ caml_call2
           ( /*<<PushdownAutomatonController.ml:160:6>>*/ caml_get_cached_method
-            (e, -1071074666, cache_id$1272),
+            (e, -1071074666, cache_id$1270),
            e,
            node);
         var
@@ -98105,7 +98063,7 @@
          g =  /*<<PushdownAutomatonController.ml:162:31>>*/ self_169[a + 1];
          /*<<PushdownAutomatonController.ml:163:6>>*/ caml_call2
          ( /*<<PushdownAutomatonController.ml:162:31>>*/ caml_get_cached_method
-           (g, -833401722, cache_id$1273),
+           (g, -833401722, cache_id$1271),
           g,
           cy);
          /*<<PushdownAutomatonController.ml:163:26>>*/ return caml_call1
@@ -98120,7 +98078,7 @@
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:169:15>>*/ caml_call2
           ( /*<<PushdownAutomatonController.ml:168:46>>*/ caml_get_cached_method
-            (b, 355425608, cache_id$1270),
+            (b, 355425608, cache_id$1268),
            b,
            node);
          /*<<PushdownAutomatonController.ml:170:24>>*/  /*<<PushdownAutomatonController.ml:170:6>>*/ addNode$0
@@ -98143,7 +98101,7 @@
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:175:15>>*/ caml_call2
           ( /*<<PushdownAutomatonController.ml:174:47>>*/ caml_get_cached_method
-            (b, 355425608, cache_id$1269),
+            (b, 355425608, cache_id$1267),
            b,
            node);
          /*<<PushdownAutomatonController.ml:176:26>>*/  /*<<PushdownAutomatonController.ml:176:6>>*/ turnFinal$0
@@ -98162,7 +98120,7 @@
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:181:15>>*/ caml_call2
           ( /*<<PushdownAutomatonController.ml:180:51>>*/ caml_get_cached_method
-            (b, 967372805, cache_id$1268),
+            (b, 967372805, cache_id$1266),
            b,
            node);
          /*<<PushdownAutomatonController.ml:182:28>>*/  /*<<PushdownAutomatonController.ml:182:6>>*/ removeFinal
@@ -98212,7 +98170,7 @@
          self_169[a + 1] =
            /*<<PushdownAutomatonController.ml:195:21>>*/ caml_call2
            ( /*<<PushdownAutomatonController.ml:195:12>>*/ caml_get_cached_method
-             (b, -1023879402, cache_id$1267),
+             (b, -1023879402, cache_id$1265),
             b,
             transition);
          var
@@ -98257,7 +98215,7 @@
             (transition,
               /*<<PushdownAutomatonController.ml:206:35>>*/ caml_call1
                ( /*<<PushdownAutomatonController.ml:206:8>>*/ caml_get_cached_method
-                 (b, -199176691, cache_id$1265),
+                 (b, -199176691, cache_id$1263),
                 b)
               [6])){
           var
@@ -98265,7 +98223,7 @@
           self_169[a + 1] =
             /*<<PushdownAutomatonController.ml:208:21>>*/ caml_call2
             ( /*<<PushdownAutomatonController.ml:207:10>>*/ caml_get_cached_method
-              (e, 307800825, cache_id$1266),
+              (e, 307800825, cache_id$1264),
              e,
              transition);
            /*<<PushdownAutomatonController.ml:209:33>>*/  /*<<PushdownAutomatonController.ml:209:12>>*/ removeEdge
@@ -98334,7 +98292,7 @@
         self_169[a + 1] =
           /*<<PushdownAutomatonController.ml:224:21>>*/ caml_call3
           ( /*<<PushdownAutomatonController.ml:224:61>>*/ caml_get_cached_method
-            (d, 1043157427, cache_id$1264),
+            (d, 1043157427, cache_id$1262),
            d,
            node,
            e);
@@ -98368,7 +98326,7 @@
             /*<<PushdownAutomatonController.ml:237:6>>*/ [4,
              /*<<PushdownAutomatonController.ml:237:52>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:237:6>>*/ caml_get_cached_method
-               (fa, -199176691, cache_id$1263),
+               (fa, -199176691, cache_id$1261),
               fa)];
          /*<<PushdownAutomatonController.ml:237:71>>*/ return caml_call2
                 (model$13[1], 0, b) /*<<PushdownAutomatonController.ml:237:72>>*/ ;
@@ -98383,7 +98341,7 @@
             /*<<PushdownAutomatonController.ml:242:6>>*/ [4,
              /*<<PushdownAutomatonController.ml:242:55>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:242:6>>*/ caml_get_cached_method
-               (cfg, -199176691, cache_id$1262),
+               (cfg, -199176691, cache_id$1260),
               cfg)];
          /*<<PushdownAutomatonController.ml:242:75>>*/ return caml_call2
                 (model$19[1], 0, b) /*<<PushdownAutomatonController.ml:242:76>>*/ ;
@@ -98400,7 +98358,7 @@
             /*<<PushdownAutomatonController.ml:249:6>>*/ [4,
              /*<<PushdownAutomatonController.ml:249:50>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:249:6>>*/ caml_get_cached_method
-               (tm, -199176691, cache_id$1261),
+               (tm, -199176691, cache_id$1259),
               tm)];
          /*<<PushdownAutomatonController.ml:249:69>>*/ return caml_call2
                 (model$21[1], 0, b) /*<<PushdownAutomatonController.ml:249:70>>*/ ;
@@ -98417,7 +98375,7 @@
             /*<<PushdownAutomatonController.ml:255:6>>*/ [4,
              /*<<PushdownAutomatonController.ml:255:50>>*/ caml_call1
              ( /*<<PushdownAutomatonController.ml:255:6>>*/ caml_get_cached_method
-               (tm, -199176691, cache_id$1260),
+               (tm, -199176691, cache_id$1258),
               tm)];
          /*<<PushdownAutomatonController.ml:255:69>>*/ return caml_call2
                 (model$21[1], 0, b) /*<<PushdownAutomatonController.ml:255:70>>*/ ;
@@ -98433,12 +98391,12 @@
          r =
             /*<<PushdownAutomatonController.ml:261:6>>*/  /*<<PushdownAutomatonController.ml:261:14>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:261:6>>*/ caml_get_cached_method
-              (reg, 426858249, cache_id$1258),
+              (reg, 426858249, cache_id$1256),
              reg),
          rep =
             /*<<PushdownAutomatonController.ml:262:6>>*/  /*<<PushdownAutomatonController.ml:262:16>>*/ caml_call1
             ( /*<<PushdownAutomatonController.ml:262:6>>*/ caml_get_cached_method
-              (r, -199176691, cache_id$1259),
+              (r, -199176691, cache_id$1257),
              r);
          /*<<PushdownAutomatonController.ml:263:6>>*/ return caml_call2
                 (model$14[1], 0, [4, rep]) /*<<PushdownAutomatonController.ml:263:60>>*/ ;
@@ -98559,7 +98517,7 @@
        function(self_170){
         var b =  /*<<TuringMachineController.ml:38:6>>*/ self_170[a + 1];
         return caml_call2
-                (caml_get_cached_method(b, 95338040, cache_id$1350), b, akA) /*<<TuringMachineController.ml:38:37>>*/ ;
+                (caml_get_cached_method(b, 95338040, cache_id$1348), b, akA) /*<<TuringMachineController.ml:38:37>>*/ ;
        },
        y,
        function(self_170){
@@ -98593,7 +98551,7 @@
          b =  /*<<TuringMachineController.ml:53:33>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:53:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:53:33>>*/ caml_get_cached_method
-           (b, -833401722, cache_id$1349),
+           (b, -833401722, cache_id$1347),
           b,
           f);
          /*<<TuringMachineController.ml:54:6>>*/ caml_call1
@@ -98611,7 +98569,7 @@
          b =  /*<<TuringMachineController.ml:58:33>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:58:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:58:33>>*/ caml_get_cached_method
-           (b, -833401722, cache_id$1348),
+           (b, -833401722, cache_id$1346),
           b,
           c);
         return caml_call1(self_170[1][e + 1], self_170) /*<<TuringMachineController.ml:59:32>>*/ ;
@@ -98626,7 +98584,7 @@
          deter =
             /*<<TuringMachineController.ml:63:18>>*/ caml_call1
             ( /*<<TuringMachineController.ml:63:6>>*/ caml_get_cached_method
-              (b, -572782712, cache_id$1342),
+              (b, -572782712, cache_id$1340),
              b);
          /*<<TuringMachineController.ml:64:8>>*/ getDeterminim(deter, infoBox);
         var
@@ -98634,13 +98592,13 @@
          useful =
             /*<<TuringMachineController.ml:65:19>>*/ caml_call1
             ( /*<<TuringMachineController.ml:64:50>>*/ caml_get_cached_method
-              (c, 497232901, cache_id$1343),
+              (c, 497232901, cache_id$1341),
              c),
          d =  /*<<TuringMachineController.ml:66:6>>*/ self_170[a + 1],
          uStates =
             /*<<TuringMachineController.ml:66:20>>*/ caml_call1
             ( /*<<TuringMachineController.ml:66:6>>*/ caml_get_cached_method
-              (d, 517963276, cache_id$1344),
+              (d, 517963276, cache_id$1342),
              d);
          /*<<TuringMachineController.ml:67:8>>*/ getHasUselessStates
          (useful, uStates, infoBox);
@@ -98649,7 +98607,7 @@
          nStates =
             /*<<TuringMachineController.ml:68:20>>*/ caml_call1
             ( /*<<TuringMachineController.ml:67:65>>*/ caml_get_cached_method
-              (e, 369987819, cache_id$1345),
+              (e, 369987819, cache_id$1343),
              e);
          /*<<TuringMachineController.ml:69:8>>*/ getNumberStates
          (nStates, infoBox);
@@ -98658,7 +98616,7 @@
          nTransitions =
             /*<<TuringMachineController.ml:70:25>>*/ caml_call1
             ( /*<<TuringMachineController.ml:69:54>>*/ caml_get_cached_method
-              (f, 882063605, cache_id$1346),
+              (f, 882063605, cache_id$1344),
              f);
          /*<<TuringMachineController.ml:71:8>>*/ getNumberTransitions
          (nTransitions, infoBox);
@@ -98667,7 +98625,7 @@
          isLB =
             /*<<TuringMachineController.ml:72:17>>*/ caml_call1
             ( /*<<TuringMachineController.ml:71:64>>*/ caml_get_cached_method
-              (g, -977343264, cache_id$1347),
+              (g, -977343264, cache_id$1345),
              g);
          /*<<TuringMachineController.ml:73:8>>*/ return getIsLinearBounded
                 (isLB, infoBox) /*<<TuringMachineController.ml:73:55>>*/ ;
@@ -98721,7 +98679,7 @@
          c =
             /*<<TuringMachineController.ml:92:9>>*/ caml_call1
             ( /*<<TuringMachineController.ml:91:75>>*/ caml_get_cached_method
-              (b, -572782712, cache_id$1341),
+              (b, -572782712, cache_id$1339),
              b);
          /*<<TuringMachineController.ml:92:29>>*/ return c
                 ?  /*<<TuringMachineController.ml:92:35>>*/ iter
@@ -98743,7 +98701,7 @@
             /*<<TuringMachineController.ml:102:6>>*/ [4,
              /*<<TuringMachineController.ml:102:44>>*/ caml_call1
              ( /*<<TuringMachineController.ml:102:6>>*/ caml_get_cached_method
-               (gr, -199176691, cache_id$1340),
+               (gr, -199176691, cache_id$1338),
               gr)];
          /*<<TuringMachineController.ml:102:63>>*/ return caml_call2
                 (model$23[1], 0, b) /*<<TuringMachineController.ml:102:64>>*/ ;
@@ -98756,7 +98714,7 @@
             (self_170[1][l + 1], self_170);
          /*<<TuringMachineController.ml:105:19>>*/ return  /*<<TuringMachineController.ml:105:9>>*/ caml_call1
                  ( /*<<TuringMachineController.ml:105:19>>*/ caml_get_cached_method
-                   (a, -372835733, cache_id$1339),
+                   (a, -372835733, cache_id$1337),
                   a)
                 ?  /*<<TuringMachineController.ml:107:55>>*/ confirm
                   ( /*<<TuringMachineController.ml:107:21>>*/ i18nLeaveSimulationToEdit
@@ -98773,7 +98731,7 @@
         var b =  /*<<TuringMachineController.ml:116:31>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:117:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:116:31>>*/ caml_get_cached_method
-           (b, -833401722, cache_id$1338),
+           (b, -833401722, cache_id$1336),
           b,
           cy);
          /*<<TuringMachineController.ml:117:25>>*/ return caml_call1
@@ -98809,7 +98767,7 @@
             /*<<TuringMachineController.ml:131:9>>*/ caml_equal
             (caml_call1
               ( /*<<TuringMachineController.ml:131:6>>*/ caml_get_cached_method
-                (a, -500156007, cache_id$1337),
+                (a, -500156007, cache_id$1335),
                a),
              aku);
          /*<<TuringMachineController.ml:131:57>>*/ return b
@@ -98824,7 +98782,7 @@
          errors =
             /*<<TuringMachineController.ml:135:19>>*/ caml_call1
             ( /*<<TuringMachineController.ml:135:6>>*/ caml_get_cached_method
-              (b, -781679701, cache_id$1336),
+              (b, -781679701, cache_id$1334),
              b);
          /*<<TuringMachineController.ml:136:8>>*/ return 0 === errors
                 ? 0
@@ -98838,7 +98796,7 @@
         return caml_jsstring_of_string
                 ( /*<<TuringMachineController.ml:158:16>>*/ caml_call1
                   ( /*<<TuringMachineController.ml:158:6>>*/ caml_get_cached_method
-                    (b, 535010734, cache_id$1335),
+                    (b, 535010734, cache_id$1333),
                    b)) /*<<TuringMachineController.ml:158:33>>*/ ;
        },
        i,
@@ -98856,7 +98814,7 @@
                  a,
                  function(x){
                   return caml_call1
-                          (caml_get_cached_method(x, 746263041, cache_id$1334), x) /*<<TuringMachineController.ml:161:52>>*/ ;
+                          (caml_get_cached_method(x, 746263041, cache_id$1332), x) /*<<TuringMachineController.ml:161:52>>*/ ;
                  }) /*<<TuringMachineController.ml:161:75>>*/ ;
        },
        h,
@@ -98870,7 +98828,7 @@
             (self_170[1][l + 1], self_170);
          /*<<TuringMachineController.ml:164:16>>*/  /*<<TuringMachineController.ml:164:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:164:16>>*/ caml_get_cached_method
-           (a, -336749001, cache_id$1333),
+           (a, -336749001, cache_id$1331),
           a,
           b);
          /*<<TuringMachineController.ml:164:49>>*/ return caml_call1
@@ -98886,7 +98844,7 @@
         var b =  /*<<TuringMachineController.ml:170:35>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:173:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:170:35>>*/ caml_get_cached_method
-           (b, 329573554, cache_id$1331),
+           (b, 329573554, cache_id$1329),
           b,
           word);
         var
@@ -98896,7 +98854,7 @@
          e =  /*<<TuringMachineController.ml:174:33>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:174:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:174:33>>*/ caml_get_cached_method
-           (e, 49082634, cache_id$1332),
+           (e, 49082634, cache_id$1330),
           e,
           f);
         return caml_call1(self_170[1][i + 1], self_170) /*<<TuringMachineController.ml:175:31>>*/ ;
@@ -98914,7 +98872,7 @@
          b =  /*<<TuringMachineController.ml:180:26>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:180:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:180:26>>*/ caml_get_cached_method
-           (b, -922581773, cache_id$1330),
+           (b, -922581773, cache_id$1328),
           b,
           e);
         return caml_call1(self_170[1][i + 1], self_170) /*<<TuringMachineController.ml:181:31>>*/ ;
@@ -98932,7 +98890,7 @@
          b =  /*<<TuringMachineController.ml:186:26>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:186:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:186:26>>*/ caml_get_cached_method
-           (b, -1055860185, cache_id$1329),
+           (b, -1055860185, cache_id$1327),
           b,
           e);
         return caml_call1(self_170[1][i + 1], self_170) /*<<TuringMachineController.ml:187:31>>*/ ;
@@ -98965,7 +98923,7 @@
         if
          ( /*<<TuringMachineController.ml:200:17>>*/ caml_call2
            ( /*<<TuringMachineController.ml:200:14>>*/ caml_get_cached_method
-             (b, 274972759, cache_id$1325),
+             (b, 274972759, cache_id$1323),
             b,
             node))
           /*<<TuringMachineController.ml:202:30>>*/ return  /*<<TuringMachineController.ml:202:55>>*/ alertStr
@@ -98978,7 +98936,7 @@
          self_170[a + 1] =
            /*<<TuringMachineController.ml:210:30>>*/ caml_call2
            ( /*<<TuringMachineController.ml:209:20>>*/ caml_get_cached_method
-             (f, 990240773, cache_id$1326),
+             (f, 990240773, cache_id$1324),
             f,
             node);
           /*<<TuringMachineController.ml:212:45>>*/  /*<<TuringMachineController.ml:212:22>>*/ resetFaElems
@@ -98994,7 +98952,7 @@
          self_170[a + 1] =
            /*<<TuringMachineController.ml:220:34>>*/ caml_call2
            ( /*<<TuringMachineController.ml:219:24>>*/ caml_get_cached_method
-             (i, 188066359, cache_id$1327),
+             (i, 188066359, cache_id$1325),
             i,
             node);
         }
@@ -99003,7 +98961,7 @@
          self_170[a + 1] =
            /*<<TuringMachineController.ml:224:34>>*/ caml_call2
            ( /*<<TuringMachineController.ml:223:24>>*/ caml_get_cached_method
-             (k, 88558787, cache_id$1328),
+             (k, 88558787, cache_id$1326),
             k,
             node);
         }
@@ -99033,7 +98991,7 @@
          (!
            /*<<TuringMachineController.ml:240:18>>*/ caml_call2
            ( /*<<TuringMachineController.ml:239:8>>*/ caml_get_cached_method
-             (b, 274972759, cache_id$1320),
+             (b, 274972759, cache_id$1318),
             b,
             node))
           /*<<TuringMachineController.ml:242:26>>*/ return  /*<<TuringMachineController.ml:242:60>>*/ alertStr
@@ -99043,7 +99001,7 @@
         if
          ( /*<<TuringMachineController.ml:244:18>>*/ caml_call2
            ( /*<<TuringMachineController.ml:244:15>>*/ caml_get_cached_method
-             (f, -811758150, cache_id$1321),
+             (f, -811758150, cache_id$1319),
             f,
             node))
           /*<<TuringMachineController.ml:246:26>>*/ return  /*<<TuringMachineController.ml:246:51>>*/ alertStr
@@ -99069,7 +99027,7 @@
         self_170[a + 1] =
           /*<<TuringMachineController.ml:259:22>>*/ caml_call2
           ( /*<<TuringMachineController.ml:259:14>>*/ caml_get_cached_method
-            (i, 330796164, cache_id$1322),
+            (i, 330796164, cache_id$1320),
            i,
            node);
         var j =  /*<<TuringMachineController.ml:260:14>>*/ self_170[a + 1];
@@ -99087,7 +99045,7 @@
                      a$0,
                       /*<<TuringMachineController.ml:261:33>>*/ caml_call4
                       ( /*<<TuringMachineController.ml:261:4>>*/ caml_get_cached_method
-                        (f, -1018723034, cache_id$1324),
+                        (f, -1018723034, cache_id$1322),
                        f,
                        b,
                        d,
@@ -99097,7 +99055,7 @@
           },
            /*<<TuringMachineController.ml:262:5>>*/ caml_call1
             ( /*<<TuringMachineController.ml:260:14>>*/ caml_get_cached_method
-              (j, -199176691, cache_id$1323),
+              (j, -199176691, cache_id$1321),
              j)
            [6]);
          /*<<TuringMachineController.ml:264:35>>*/  /*<<TuringMachineController.ml:264:14>>*/ removeNode$0
@@ -99121,7 +99079,7 @@
         if
          ( /*<<TuringMachineController.ml:276:13>>*/ caml_call2
            ( /*<<TuringMachineController.ml:275:8>>*/ caml_get_cached_method
-             (b, 488637228, cache_id$1318),
+             (b, 488637228, cache_id$1316),
             b,
             node))
           /*<<TuringMachineController.ml:278:26>>*/ return  /*<<TuringMachineController.ml:278:57>>*/ alertStr
@@ -99133,7 +99091,7 @@
         self_170[a + 1] =
           /*<<TuringMachineController.ml:284:22>>*/ caml_call2
           ( /*<<TuringMachineController.ml:282:35>>*/ caml_get_cached_method
-            (f, 770920555, cache_id$1319),
+            (f, 770920555, cache_id$1317),
            f,
            node);
          /*<<TuringMachineController.ml:286:34>>*/  /*<<TuringMachineController.ml:286:14>>*/ turnFinal$0
@@ -99157,7 +99115,7 @@
         if
          ( /*<<TuringMachineController.ml:298:13>>*/ caml_call2
            ( /*<<TuringMachineController.ml:297:8>>*/ caml_get_cached_method
-             (b, -811758150, cache_id$1316),
+             (b, -811758150, cache_id$1314),
             b,
             node))
           /*<<TuringMachineController.ml:300:26>>*/ return  /*<<TuringMachineController.ml:300:59>>*/ alertStr
@@ -99169,7 +99127,7 @@
         self_170[a + 1] =
           /*<<TuringMachineController.ml:306:22>>*/ caml_call2
           ( /*<<TuringMachineController.ml:304:35>>*/ caml_get_cached_method
-            (f, 990240773, cache_id$1317),
+            (f, 990240773, cache_id$1315),
            f,
            node);
          /*<<TuringMachineController.ml:308:37>>*/  /*<<TuringMachineController.ml:308:14>>*/ resetFaElems
@@ -99195,7 +99153,7 @@
          (!
            /*<<TuringMachineController.ml:321:18>>*/ caml_call2
            ( /*<<TuringMachineController.ml:320:8>>*/ caml_get_cached_method
-             (b, 488637228, cache_id$1314),
+             (b, 488637228, cache_id$1312),
             b,
             node))
           /*<<TuringMachineController.ml:323:26>>*/ return  /*<<TuringMachineController.ml:323:53>>*/ alertStr
@@ -99207,7 +99165,7 @@
         self_170[a + 1] =
           /*<<TuringMachineController.ml:329:22>>*/ caml_call2
           ( /*<<TuringMachineController.ml:327:35>>*/ caml_get_cached_method
-            (f, -20038510, cache_id$1315),
+            (f, -20038510, cache_id$1313),
            f,
            node);
          /*<<TuringMachineController.ml:331:36>>*/  /*<<TuringMachineController.ml:331:14>>*/ removeFinal
@@ -99246,7 +99204,7 @@
         if
          ( /*<<TuringMachineController.ml:348:19>>*/ caml_call2
            ( /*<<TuringMachineController.ml:348:16>>*/ caml_get_cached_method
-             (b, 274972759, cache_id$1312),
+             (b, 274972759, cache_id$1310),
             b,
             newName))
           /*<<TuringMachineController.ml:350:32>>*/ return  /*<<TuringMachineController.ml:350:57>>*/ alertStr
@@ -99258,7 +99216,7 @@
         self_170[a + 1] =
           /*<<TuringMachineController.ml:357:28>>*/ caml_call3
           ( /*<<TuringMachineController.ml:354:41>>*/ caml_get_cached_method
-            (f, 536410272, cache_id$1313),
+            (f, 536410272, cache_id$1311),
            f,
            state,
            newName);
@@ -99305,7 +99263,7 @@
          match$0 =
             /*<<TuringMachineController.ml:383:49>>*/ caml_call2
             ( /*<<TuringMachineController.ml:383:16>>*/ caml_get_cached_method
-              (b, -581464796, cache_id$1309),
+              (b, -581464796, cache_id$1307),
              b,
              v),
          dir =  /*<<TuringMachineController.ml:383:78>>*/ match$0[3],
@@ -99345,7 +99303,7 @@
         if
          ( /*<<TuringMachineController.ml:393:26>>*/ caml_call2
            ( /*<<TuringMachineController.ml:393:23>>*/ caml_get_cached_method
-             (f, -217692785, cache_id$1310),
+             (f, -217692785, cache_id$1308),
             f,
             newTrs))
           /*<<TuringMachineController.ml:395:35>>*/ return  /*<<TuringMachineController.ml:395:70>>*/ alertStr
@@ -99357,7 +99315,7 @@
         self_170[a + 1] =
           /*<<TuringMachineController.ml:401:30>>*/ caml_call2
           ( /*<<TuringMachineController.ml:399:43>>*/ caml_get_cached_method
-            (i, 536910357, cache_id$1311),
+            (i, 536910357, cache_id$1309),
            i,
            newTrs);
          /*<<TuringMachineController.ml:403:47>>*/  /*<<TuringMachineController.ml:403:22>>*/ addEdgeGeneral
@@ -99428,7 +99386,7 @@
         if
          ( /*<<TuringMachineController.ml:423:18>>*/ caml_call2
            ( /*<<TuringMachineController.ml:423:10>>*/ caml_get_cached_method
-             (l, -217692785, cache_id$1307),
+             (l, -217692785, cache_id$1305),
             l,
             trans)){
           /*<<TuringMachineController.ml:429:14>>*/ caml_call1
@@ -99437,7 +99395,7 @@
          self_170[a + 1] =
            /*<<TuringMachineController.ml:431:22>>*/ caml_call2
            ( /*<<TuringMachineController.ml:429:35>>*/ caml_get_cached_method
-             (m, -414130793, cache_id$1308),
+             (m, -414130793, cache_id$1306),
             m,
             trans);
           /*<<TuringMachineController.ml:433:35>>*/  /*<<TuringMachineController.ml:433:14>>*/ removeEdge
@@ -99482,7 +99440,7 @@
          var$ =
             /*<<TuringMachineController.ml:441:16>>*/ caml_call2
             ( /*<<TuringMachineController.ml:440:39>>*/ caml_get_cached_method
-              (b, -643670219, cache_id$1306),
+              (b, -643670219, cache_id$1304),
              b,
              v);
          /*<<TuringMachineController.ml:442:8>>*/ return putWords(var$) /*<<TuringMachineController.ml:442:35>>*/ ;
@@ -99494,14 +99452,14 @@
         var b =  /*<<TuringMachineController.ml:446:30>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:447:6>>*/ caml_call1
          ( /*<<TuringMachineController.ml:446:30>>*/ caml_get_cached_method
-           (b, -689728763, cache_id$1303),
+           (b, -689728763, cache_id$1301),
           b);
         var
          d =  /*<<TuringMachineController.ml:447:27>>*/ self_170[a + 1],
          match =
             /*<<TuringMachineController.ml:448:45>>*/ caml_call1
             ( /*<<TuringMachineController.ml:447:27>>*/ caml_get_cached_method
-              (d, 283657039, cache_id$1304),
+              (d, 283657039, cache_id$1302),
              d),
          time =  /*<<TuringMachineController.ml:448:61>>*/ match[4],
          exact = match[3],
@@ -99511,7 +99469,7 @@
          (accepted, configs, exact, time);
         var e =  /*<<TuringMachineController.ml:449:67>>*/ self_170[a + 1];
         return caml_call1
-                (caml_get_cached_method(e, 578315491, cache_id$1305), e) /*<<TuringMachineController.ml:450:24>>*/ ;
+                (caml_get_cached_method(e, 578315491, cache_id$1303), e) /*<<TuringMachineController.ml:450:24>>*/ ;
        },
        Q,
        function(self_170, word){
@@ -99520,20 +99478,20 @@
         var b =  /*<<TuringMachineController.ml:453:34>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:454:6>>*/ caml_call2
          ( /*<<TuringMachineController.ml:453:34>>*/ caml_get_cached_method
-           (b, 329573554, cache_id$1300),
+           (b, 329573554, cache_id$1298),
           b,
           word);
         var d =  /*<<TuringMachineController.ml:454:40>>*/ self_170[a + 1];
          /*<<TuringMachineController.ml:455:6>>*/ caml_call1
          ( /*<<TuringMachineController.ml:454:40>>*/ caml_get_cached_method
-           (d, 695900758, cache_id$1301),
+           (d, 695900758, cache_id$1299),
           d);
         var
          e =  /*<<TuringMachineController.ml:455:23>>*/ self_170[a + 1],
          match =
             /*<<TuringMachineController.ml:456:45>>*/ caml_call1
             ( /*<<TuringMachineController.ml:455:23>>*/ caml_get_cached_method
-              (e, 283657039, cache_id$1302),
+              (e, 283657039, cache_id$1300),
              e),
          time =  /*<<TuringMachineController.ml:456:61>>*/ match[4],
          exact = match[3],
@@ -99625,7 +99583,7 @@
               /*<<ExerciseController.ml:29:6>>*/ twoBoxes$0
               ( /*<<ExerciseController.ml:29:24>>*/ caml_call1
                 ( /*<<ExerciseController.ml:28:33>>*/ caml_get_cached_method
-                  (a, -62434272, cache_id$1354),
+                  (a, -62434272, cache_id$1352),
                  a));
               /*<<ExerciseController.ml:30:6>>*/ addEnumTitle(0);
              var
@@ -99633,7 +99591,7 @@
               prob =
                  /*<<ExerciseController.ml:31:17>>*/ caml_call1
                   ( /*<<ExerciseController.ml:30:35>>*/ caml_get_cached_method
-                    (c, -199176691, cache_id$1355),
+                    (c, -199176691, cache_id$1353),
                    c)
                  [1];
               /*<<ExerciseController.ml:32:8>>*/ defineEnumProblem(prob);
@@ -99646,7 +99604,7 @@
                },
                 /*<<ExerciseController.ml:34:89>>*/ caml_call1
                  ( /*<<ExerciseController.ml:33:40>>*/ caml_get_cached_method
-                   (e, -199176691, cache_id$1356),
+                   (e, -199176691, cache_id$1354),
                   e)
                 [4]);
               /*<<ExerciseController.ml:35:6>>*/ addAcceptedTitle(0);
@@ -99658,7 +99616,7 @@
                },
                 /*<<ExerciseController.ml:36:79>>*/ caml_call1
                  ( /*<<ExerciseController.ml:35:40>>*/ caml_get_cached_method
-                   (f, -199176691, cache_id$1357),
+                   (f, -199176691, cache_id$1355),
                   f)
                 [2]);
               /*<<ExerciseController.ml:37:6>>*/ addNonAcceptTitle(0);
@@ -99670,7 +99628,7 @@
                },
                 /*<<ExerciseController.ml:38:80>>*/ caml_call1
                  ( /*<<ExerciseController.ml:37:41>>*/ caml_get_cached_method
-                   (g, -199176691, cache_id$1358),
+                   (g, -199176691, cache_id$1356),
                   g)
                 [3]);
               /*<<ExerciseController.ml:38:108>>*/ return addEnumCheckButton
@@ -99697,7 +99655,7 @@
                },
                 /*<<ExerciseController.ml:46:80>>*/ caml_call1
                  ( /*<<ExerciseController.ml:43:44>>*/ caml_get_cached_method
-                   (a, -199176691, cache_id$1351),
+                   (a, -199176691, cache_id$1349),
                   a)
                 [4]);
              var c =  /*<<ExerciseController.ml:46:111>>*/ self_171[b + 1];
@@ -99712,7 +99670,7 @@
                },
                 /*<<ExerciseController.ml:49:70>>*/ caml_call1
                  ( /*<<ExerciseController.ml:46:111>>*/ caml_get_cached_method
-                   (c, -199176691, cache_id$1352),
+                   (c, -199176691, cache_id$1350),
                   c)
                 [2]);
              var e =  /*<<ExerciseController.ml:49:97>>*/ self_171[b + 1];
@@ -99727,7 +99685,7 @@
                       },
                        /*<<ExerciseController.ml:52:71>>*/ caml_call1
                         ( /*<<ExerciseController.ml:49:97>>*/ caml_get_cached_method
-                          (e, -199176691, cache_id$1353),
+                          (e, -199176691, cache_id$1351),
                          e)
                        [3]) /*<<ExerciseController.ml:52:99>>*/ ;
             }]);
@@ -99857,7 +99815,7 @@
        function(self_172){
         var b =  /*<<GrammarController.ml:47:6>>*/ self_172[a + 1];
         return caml_call2
-                (caml_get_cached_method(b, 95338040, cache_id$1395), b, aln) /*<<GrammarController.ml:47:37>>*/ ;
+                (caml_get_cached_method(b, 95338040, cache_id$1393), b, aln) /*<<GrammarController.ml:47:37>>*/ ;
        },
        o,
        function(self_172){
@@ -99883,7 +99841,7 @@
         var b =  /*<<GrammarController.ml:63:31>>*/ self_172[a + 1];
          /*<<GrammarController.ml:64:6>>*/ caml_call2
          ( /*<<GrammarController.ml:63:31>>*/ caml_get_cached_method
-           (b, 758700942, cache_id$1394),
+           (b, 758700942, cache_id$1392),
           b,
           alm);
          /*<<GrammarController.ml:64:36>>*/ return caml_call1
@@ -99903,12 +99861,12 @@
          b =  /*<<GrammarController.ml:71:69>>*/ self_172[a + 1];
          /*<<GrammarController.ml:71:6>>*/ caml_call2
          ( /*<<GrammarController.ml:71:69>>*/ caml_get_cached_method
-           (b, 758700942, cache_id$1392),
+           (b, 758700942, cache_id$1390),
           b,
           e);
         var c = ctrlR[1];
         return caml_call1
-                (caml_get_cached_method(c, 398559386, cache_id$1393), c) /*<<GrammarController.ml:72:38>>*/ ;
+                (caml_get_cached_method(c, 398559386, cache_id$1391), c) /*<<GrammarController.ml:72:38>>*/ ;
        },
        q,
        function(self_172){
@@ -99935,25 +99893,25 @@
          cfg =
             /*<<GrammarController.ml:81:16>>*/ caml_call1
             ( /*<<GrammarController.ml:81:6>>*/ caml_get_cached_method
-              (b, 664301750, cache_id$1382),
+              (b, 664301750, cache_id$1380),
              b),
          d =  /*<<GrammarController.ml:82:6>>*/ self_172[a + 1],
          csg =
             /*<<GrammarController.ml:82:16>>*/ caml_call1
             ( /*<<GrammarController.ml:82:6>>*/ caml_get_cached_method
-              (d, 226805494, cache_id$1383),
+              (d, 226805494, cache_id$1381),
              d),
          e =  /*<<GrammarController.ml:83:6>>*/ self_172[a + 1],
          mo =
             /*<<GrammarController.ml:83:15>>*/ caml_call1
             ( /*<<GrammarController.ml:83:6>>*/ caml_get_cached_method
-              (e, -199248345, cache_id$1384),
+              (e, -199248345, cache_id$1382),
              e),
          f =  /*<<GrammarController.ml:84:6>>*/ self_172[a + 1],
          ug =
             /*<<GrammarController.ml:84:15>>*/ caml_call1
             ( /*<<GrammarController.ml:84:6>>*/ caml_get_cached_method
-              (f, -868029047, cache_id$1385),
+              (f, -868029047, cache_id$1383),
              f);
          /*<<GrammarController.ml:85:6>>*/ if(cfg){
          var
@@ -99961,19 +99919,19 @@
           lg =
              /*<<GrammarController.ml:86:17>>*/ caml_call1
              ( /*<<GrammarController.ml:85:18>>*/ caml_get_cached_method
-               (g, 503173496, cache_id$1386),
+               (g, 503173496, cache_id$1384),
               g),
           i =  /*<<GrammarController.ml:87:8>>*/ self_172[a + 1],
           llg =
              /*<<GrammarController.ml:87:18>>*/ caml_call1
              ( /*<<GrammarController.ml:87:8>>*/ caml_get_cached_method
-               (i, -312708111, cache_id$1387),
+               (i, -312708111, cache_id$1385),
               i),
           j =  /*<<GrammarController.ml:88:8>>*/ self_172[a + 1],
           lrg =
              /*<<GrammarController.ml:88:18>>*/ caml_call1
              ( /*<<GrammarController.ml:88:8>>*/ caml_get_cached_method
-               (j, -834972464, cache_id$1388),
+               (j, -834972464, cache_id$1386),
               j);
           /*<<GrammarController.ml:89:8>>*/ if(lg){
            /*<<GrammarController.ml:90:10>>*/ getIsLG(lg, infoBox);
@@ -99995,19 +99953,19 @@
          c =
             /*<<GrammarController.ml:103:14>>*/ caml_call1
             ( /*<<GrammarController.ml:102:39>>*/ caml_get_cached_method
-              (k, -455011009, cache_id$1389),
+              (k, -455011009, cache_id$1387),
              k),
          l =  /*<<GrammarController.ml:104:6>>*/ self_172[a + 1],
          prod =
             /*<<GrammarController.ml:104:17>>*/ caml_call1
             ( /*<<GrammarController.ml:104:6>>*/ caml_get_cached_method
-              (l, -638408001, cache_id$1390),
+              (l, -638408001, cache_id$1388),
              l),
          m =  /*<<GrammarController.ml:105:6>>*/ self_172[a + 1],
          access =
             /*<<GrammarController.ml:105:19>>*/ caml_call1
             ( /*<<GrammarController.ml:105:6>>*/ caml_get_cached_method
-              (m, 386955500, cache_id$1391),
+              (m, 386955500, cache_id$1389),
              m);
          /*<<GrammarController.ml:106:6>>*/ getIsGRClean
          (c, prod, access, infoBox);
@@ -100027,12 +99985,12 @@
          a =  /*<<GrammarController.ml:113:6>>*/ adjust$2(g$0);
          /*<<GrammarController.ml:113:28>>*/  /*<<GrammarController.ml:113:6>>*/ caml_call2
          ( /*<<GrammarController.ml:113:28>>*/ caml_get_cached_method
-           (a, 758700942, cache_id$1380),
+           (a, 758700942, cache_id$1378),
           a,
           c);
         var b =  /*<<GrammarController.ml:113:87>>*/ ctrlR[1];
         return caml_call1
-                (caml_get_cached_method(b, 398559386, cache_id$1381), b) /*<<GrammarController.ml:114:38>>*/ ;
+                (caml_get_cached_method(b, 398559386, cache_id$1379), b) /*<<GrammarController.ml:114:38>>*/ ;
        },
        B,
        function(self_172, word){
@@ -100041,13 +99999,13 @@
         var
          w =  /*<<GrammarController.ml:118:14>>*/ str2word(word),
          b =  /*<<GrammarController.ml:119:6>>*/ self_172[a + 1];
-        caml_call2(caml_get_cached_method(b, 695900758, cache_id$1378), b, w);
+        caml_call2(caml_get_cached_method(b, 695900758, cache_id$1376), b, w);
         var
          c =  /*<<GrammarController.ml:119:25>>*/ self_172[a + 1],
          match =
             /*<<GrammarController.ml:120:45>>*/ caml_call1
             ( /*<<GrammarController.ml:119:25>>*/ caml_get_cached_method
-              (c, 283657039, cache_id$1379),
+              (c, 283657039, cache_id$1377),
              c),
          time =  /*<<GrammarController.ml:120:61>>*/ match[4],
          exact = match[3],
@@ -100065,14 +100023,14 @@
          var$ =
             /*<<GrammarController.ml:126:16>>*/ caml_call2
             ( /*<<GrammarController.ml:125:39>>*/ caml_get_cached_method
-              (b, 44127747, cache_id$1376),
+              (b, 44127747, cache_id$1374),
              b,
              v),
          c =  /*<<GrammarController.ml:127:6>>*/ self_172[a + 1],
          match =
             /*<<GrammarController.ml:128:8>>*/ caml_call1
             ( /*<<GrammarController.ml:127:6>>*/ caml_get_cached_method
-              (c, 283657039, cache_id$1377),
+              (c, 283657039, cache_id$1375),
              c),
          time =  /*<<GrammarController.ml:128:24>>*/ match[4],
          exact = match[3],
@@ -100130,7 +100088,7 @@
         if
          ( /*<<GrammarController.ml:147:9>>*/ caml_call1
            ( /*<<GrammarController.ml:145:78>>*/ caml_get_cached_method
-             (b, 664301750, cache_id$1375),
+             (b, 664301750, cache_id$1373),
             b)){
           /*<<GrammarController.ml:148:8>>*/ iter
           (function(el){
@@ -100164,7 +100122,7 @@
             /*<<GrammarController.ml:158:6>>*/ [4,
              /*<<GrammarController.ml:158:54>>*/ caml_call1
              ( /*<<GrammarController.ml:158:6>>*/ caml_get_cached_method
-               (pda, -199176691, cache_id$1374),
+               (pda, -199176691, cache_id$1372),
               pda)];
          /*<<GrammarController.ml:158:74>>*/ return caml_call2
                 (model$20[1], 0, b) /*<<GrammarController.ml:158:75>>*/ ;
@@ -100176,12 +100134,12 @@
          b =
             /*<<GrammarController.ml:161:30>>*/ caml_call1
             ( /*<<GrammarController.ml:161:6>>*/ caml_get_cached_method
-              (a, 291541057, cache_id$1372),
+              (a, 291541057, cache_id$1370),
              a),
          gr_representation =
             /*<<GrammarController.ml:161:47>>*/  /*<<GrammarController.ml:161:30>>*/ caml_call1
             ( /*<<GrammarController.ml:161:47>>*/ caml_get_cached_method
-              (b, -199176691, cache_id$1373),
+              (b, -199176691, cache_id$1371),
              b);
          /*<<GrammarController.ml:162:6>>*/ return grammar2Str$0
                 (gr_representation) /*<<GrammarController.ml:162:35>>*/ ;
@@ -100196,7 +100154,7 @@
             /*<<GrammarController.ml:169:6>>*/ [4,
              /*<<GrammarController.ml:169:55>>*/ caml_call1
              ( /*<<GrammarController.ml:169:6>>*/ caml_get_cached_method
-               (cfg, -199176691, cache_id$1371),
+               (cfg, -199176691, cache_id$1369),
               cfg)];
          /*<<GrammarController.ml:169:75>>*/ return caml_call2
                 (model$19[1], 0, b) /*<<GrammarController.ml:169:76>>*/ ;
@@ -100208,13 +100166,13 @@
         var
          w =  /*<<GrammarController.ml:173:14>>*/ str2word(word),
          b =  /*<<GrammarController.ml:174:6>>*/ self_172[a + 1];
-        caml_call2(caml_get_cached_method(b, -689728763, cache_id$1368), b, w);
+        caml_call2(caml_get_cached_method(b, -689728763, cache_id$1366), b, w);
         var
          c =  /*<<GrammarController.ml:174:29>>*/ self_172[a + 1],
          match =
             /*<<GrammarController.ml:175:45>>*/ caml_call1
             ( /*<<GrammarController.ml:174:29>>*/ caml_get_cached_method
-              (c, 283657039, cache_id$1369),
+              (c, 283657039, cache_id$1367),
              c),
          time =  /*<<GrammarController.ml:175:61>>*/ match[4],
          exact = match[3],
@@ -100224,7 +100182,7 @@
          (accepted, configs, exact, time);
         var e =  /*<<GrammarController.ml:176:67>>*/ self_172[a + 1];
         return caml_call1
-                (caml_get_cached_method(e, 578315491, cache_id$1370), e) /*<<GrammarController.ml:177:23>>*/ ;
+                (caml_get_cached_method(e, 578315491, cache_id$1368), e) /*<<GrammarController.ml:177:23>>*/ ;
        },
        t,
        function(self_172, operation){
@@ -100233,7 +100191,7 @@
          if
           ( /*<<GrammarController.ml:196:17>>*/ caml_call1
             ( /*<<GrammarController.ml:196:10>>*/ caml_get_cached_method
-              (k, -455011009, cache_id$1366),
+              (k, -455011009, cache_id$1364),
              k))
            /*<<GrammarController.ml:204:24>>*/ return  /*<<GrammarController.ml:204:49>>*/ alertStr
                   ( /*<<GrammarController.ml:204:24>>*/ i18nAlertIsClean(0)) /*<<GrammarController.ml:237:44>>*/ ;
@@ -100242,7 +100200,7 @@
           newGr$2 =
              /*<<GrammarController.ml:197:24>>*/ caml_call1
              ( /*<<GrammarController.ml:197:12>>*/ caml_get_cached_method
-               (l, -933531255, cache_id$1367),
+               (l, -933531255, cache_id$1365),
               l),
           gr$2 =  /*<<GrammarController.ml:199:21>>*/ adjust$2(newGr$2),
           c$2 =
@@ -100258,7 +100216,7 @@
           (!
             /*<<GrammarController.ml:206:13>>*/ caml_call1
             ( /*<<GrammarController.ml:206:10>>*/ caml_get_cached_method
-              (i, -199248345, cache_id$1364),
+              (i, -199248345, cache_id$1362),
              i))
            /*<<GrammarController.ml:214:24>>*/ return  /*<<GrammarController.ml:214:56>>*/ alertStr
                   ( /*<<GrammarController.ml:214:24>>*/ i18nAlertIsNotMonotonic
@@ -100268,7 +100226,7 @@
           newGr$1 =
              /*<<GrammarController.ml:207:24>>*/ caml_call1
              ( /*<<GrammarController.ml:207:12>>*/ caml_get_cached_method
-               (j, -239050972, cache_id$1365),
+               (j, -239050972, cache_id$1363),
               j),
           gr$1 =  /*<<GrammarController.ml:209:21>>*/ adjust$2(newGr$1),
           c$1 =
@@ -100287,7 +100245,7 @@
           (!
             /*<<GrammarController.ml:216:13>>*/ caml_call1
             ( /*<<GrammarController.ml:216:10>>*/ caml_get_cached_method
-              (b, -199248345, cache_id$1359),
+              (b, -199248345, cache_id$1357),
              b))
            /*<<GrammarController.ml:224:24>>*/ return  /*<<GrammarController.ml:224:56>>*/ alertStr
                   ( /*<<GrammarController.ml:224:24>>*/ i18nAlertIsNotMonotonic
@@ -100297,7 +100255,7 @@
           newGr =
              /*<<GrammarController.ml:217:24>>*/ caml_call1
              ( /*<<GrammarController.ml:217:12>>*/ caml_get_cached_method
-               (d, 777101921, cache_id$1360),
+               (d, 777101921, cache_id$1358),
               d),
           gr =  /*<<GrammarController.ml:219:21>>*/ adjust$2(newGr),
           c =
@@ -100311,7 +100269,7 @@
         if
          ( /*<<GrammarController.ml:226:13>>*/ caml_call1
            ( /*<<GrammarController.ml:226:10>>*/ caml_get_cached_method
-             (f, 226805494, cache_id$1361),
+             (f, 226805494, cache_id$1359),
             f))
           /*<<GrammarController.ml:227:24>>*/ return  /*<<GrammarController.ml:227:42>>*/ alertStr
                  ( /*<<GrammarController.ml:227:24>>*/ i18nIsCSG(0)) /*<<GrammarController.ml:237:44>>*/ ;
@@ -100320,7 +100278,7 @@
          (!
            /*<<GrammarController.ml:228:18>>*/ caml_call1
            ( /*<<GrammarController.ml:228:15>>*/ caml_get_cached_method
-             (g, -199248345, cache_id$1362),
+             (g, -199248345, cache_id$1360),
             g))
           /*<<GrammarController.ml:236:24>>*/ return  /*<<GrammarController.ml:236:56>>*/ alertStr
                  ( /*<<GrammarController.ml:236:24>>*/ i18nAlertIsNotMonotonic
@@ -100330,7 +100288,7 @@
          newGr$0 =
             /*<<GrammarController.ml:229:24>>*/ caml_call1
             ( /*<<GrammarController.ml:229:12>>*/ caml_get_cached_method
-              (h, 498804985, cache_id$1363),
+              (h, 498804985, cache_id$1361),
              h),
          gr$0 =  /*<<GrammarController.ml:231:21>>*/ adjust$2(newGr$0),
          c$0 =
@@ -100446,7 +100404,7 @@
        function(self_173){
         var a =  /*<<CompositionController.ml:42:6>>*/ self_173[b + 1];
         return caml_call2
-                (caml_get_cached_method(a, 95338040, cache_id$1414), a, alN) /*<<CompositionController.ml:42:38>>*/ ;
+                (caml_get_cached_method(a, 95338040, cache_id$1412), a, alN) /*<<CompositionController.ml:42:38>>*/ ;
        },
        p,
        function(self_173){
@@ -100566,7 +100524,7 @@
          c =
             /*<<CompositionController.ml:110:36>>*/ caml_call1
             ( /*<<CompositionController.ml:110:11>>*/ caml_get_cached_method
-              (a, -199176691, cache_id$1413),
+              (a, -199176691, cache_id$1411),
              a);
          /*<<CompositionController.ml:110:18>>*/ caml_call3
          (self_173[1][i + 1], self_173, cy, c);
@@ -100589,13 +100547,13 @@
             /*<<CompositionController.ml:118:17>>*/ toString$3
             ( /*<<CompositionController.ml:118:38>>*/ caml_call1
               ( /*<<CompositionController.ml:117:34>>*/ caml_get_cached_method
-                (a, -199176691, cache_id$1411),
+                (a, -199176691, cache_id$1409),
                a)),
          c =  /*<<CompositionController.ml:119:7>>*/ self_173[b + 1],
          e =
             /*<<CompositionController.ml:119:32>>*/ caml_call1
             ( /*<<CompositionController.ml:119:7>>*/ caml_get_cached_method
-              (c, -199176691, cache_id$1412),
+              (c, -199176691, cache_id$1410),
              c),
          i =
             /*<<CompositionController.ml:119:21>>*/ caml_call1
@@ -100615,13 +100573,13 @@
             /*<<CompositionController.ml:124:17>>*/ toString$3
             ( /*<<CompositionController.ml:124:38>>*/ caml_call1
               ( /*<<CompositionController.ml:123:35>>*/ caml_get_cached_method
-                (a, -199176691, cache_id$1409),
+                (a, -199176691, cache_id$1407),
                a)),
          c =  /*<<CompositionController.ml:125:8>>*/ self_173[b + 1],
          e =
             /*<<CompositionController.ml:125:33>>*/ caml_call1
             ( /*<<CompositionController.ml:125:8>>*/ caml_get_cached_method
-              (c, -199176691, cache_id$1410),
+              (c, -199176691, cache_id$1408),
              c),
          h =
             /*<<CompositionController.ml:125:22>>*/ caml_call1
@@ -100641,7 +100599,7 @@
          res =
             /*<<CompositionController.ml:130:16>>*/ caml_call2
             ( /*<<CompositionController.ml:130:44>>*/ caml_get_cached_method
-              (a, 184980232, cache_id$1408),
+              (a, 184980232, cache_id$1406),
              a,
              c);
          /*<<CompositionController.ml:131:6>>*/ return res
@@ -100655,13 +100613,13 @@
         var
          w =  /*<<CompositionController.ml:135:14>>*/ str2word(word),
          a =  /*<<CompositionController.ml:136:6>>*/ self_173[b + 1];
-        caml_call2(caml_get_cached_method(a, 695900758, cache_id$1406), a, w);
+        caml_call2(caml_get_cached_method(a, 695900758, cache_id$1404), a, w);
         var
          c =  /*<<CompositionController.ml:136:26>>*/ self_173[b + 1],
          match =
             /*<<CompositionController.ml:137:45>>*/ caml_call1
             ( /*<<CompositionController.ml:136:26>>*/ caml_get_cached_method
-              (c, 283657039, cache_id$1407),
+              (c, 283657039, cache_id$1405),
              c),
          time =  /*<<CompositionController.ml:137:62>>*/ match[4],
          exact = match[3],
@@ -100677,7 +100635,7 @@
          re =
             /*<<CompositionController.ml:167:15>>*/ caml_call1
             ( /*<<CompositionController.ml:166:6>>*/ caml_get_cached_method
-              (a, 331600463, cache_id$1405),
+              (a, 331600463, cache_id$1403),
              a);
          /*<<CompositionController.ml:168:8>>*/ return caml_call2
                 (model$14[1], 0, [4, re]) /*<<CompositionController.ml:168:59>>*/ ;
@@ -100689,7 +100647,7 @@
          fa =
             /*<<CompositionController.ml:172:15>>*/ caml_call1
             ( /*<<CompositionController.ml:171:6>>*/ caml_get_cached_method
-              (a, 331597783, cache_id$1404),
+              (a, 331597783, cache_id$1402),
              a);
          /*<<CompositionController.ml:173:8>>*/ return caml_call2
                 (model$13[1], 0, [4, fa]) /*<<CompositionController.ml:173:57>>*/ ;
@@ -100701,7 +100659,7 @@
          pda =
             /*<<CompositionController.ml:177:16>>*/ caml_call1
             ( /*<<CompositionController.ml:176:6>>*/ caml_get_cached_method
-              (a, 932359601, cache_id$1403),
+              (a, 932359601, cache_id$1401),
              a);
          /*<<CompositionController.ml:178:10>>*/ return caml_call2
                 (model$20[1], 0, [4, pda]) /*<<CompositionController.ml:178:62>>*/ ;
@@ -100713,7 +100671,7 @@
          cfg =
             /*<<CompositionController.ml:182:16>>*/ caml_call1
             ( /*<<CompositionController.ml:181:6>>*/ caml_get_cached_method
-              (a, 931713576, cache_id$1402),
+              (a, 931713576, cache_id$1400),
              a);
          /*<<CompositionController.ml:183:10>>*/ return caml_call2
                 (model$19[1], 0, [4, cfg]) /*<<CompositionController.ml:183:63>>*/ ;
@@ -100725,7 +100683,7 @@
          tm =
             /*<<CompositionController.ml:187:15>>*/ caml_call1
             ( /*<<CompositionController.ml:186:6>>*/ caml_get_cached_method
-              (a, 331600917, cache_id$1401),
+              (a, 331600917, cache_id$1399),
              a);
          /*<<CompositionController.ml:188:10>>*/ return caml_call2
                 (model$21[1], 0, [4, tm]) /*<<CompositionController.ml:188:57>>*/ ;
@@ -100737,7 +100695,7 @@
          gr =
             /*<<CompositionController.ml:192:15>>*/ caml_call1
             ( /*<<CompositionController.ml:191:6>>*/ caml_get_cached_method
-              (a, 331598023, cache_id$1400),
+              (a, 331598023, cache_id$1398),
              a);
          /*<<CompositionController.ml:193:10>>*/ return caml_call2
                 (model$23[1], 0, [4, gr]) /*<<CompositionController.ml:193:51>>*/ ;
@@ -100805,7 +100763,7 @@
          var$ =
             /*<<CompositionController.ml:210:18>>*/ caml_call2
             ( /*<<CompositionController.ml:209:41>>*/ caml_get_cached_method
-              (a, -643670219, cache_id$1399),
+              (a, -643670219, cache_id$1397),
              a,
              v);
          /*<<CompositionController.ml:211:10>>*/ return putWords(var$) /*<<CompositionController.ml:211:37>>*/ ;
@@ -100833,13 +100791,13 @@
          b =
             /*<<CompositionController.ml:223:48>>*/ caml_call1
             ( /*<<CompositionController.ml:223:6>>*/ caml_get_cached_method
-              (a, 340224197, cache_id$1397),
+              (a, 340224197, cache_id$1395),
              a);
          /*<<CompositionController.ml:223:67>>*/ return  /*<<CompositionController.ml:223:83>>*/ createModelPrepComp
                 ( /*<<CompositionController.ml:223:26>>*/ toString$3
                   ( /*<<CompositionController.ml:223:48>>*/ caml_call1
                     ( /*<<CompositionController.ml:223:67>>*/ caml_get_cached_method
-                      (b, -199176691, cache_id$1398),
+                      (b, -199176691, cache_id$1396),
                      b)),
                  function(param){
                    /*<<CompositionController.ml:223:95>>*/ return caml_call1
@@ -100865,7 +100823,7 @@
          errors =
             /*<<CompositionController.ml:232:19>>*/ caml_call1
             ( /*<<CompositionController.ml:232:6>>*/ caml_get_cached_method
-              (a, -781679701, cache_id$1396),
+              (a, -781679701, cache_id$1394),
              a);
          /*<<CompositionController.ml:233:8>>*/ return 0 === errors
                 ? 0
@@ -101111,13 +101069,13 @@
     if
      ( /*<<ControllerListeners.ml:120:7>>*/ caml_call1
        ( /*<<ControllerListeners.ml:120:4>>*/ caml_get_cached_method
-         (a, -641268470, cache_id$1415),
+         (a, -641268470, cache_id$1413),
         a)){
      var b =  /*<<ControllerListeners.ml:121:6>>*/ ctrlR[1];
-     return caml_call1(caml_get_cached_method(b, 510623382, cache_id$1416), b) /*<<ControllerListeners.ml:123:26>>*/ ;
+     return caml_call1(caml_get_cached_method(b, 510623382, cache_id$1414), b) /*<<ControllerListeners.ml:123:26>>*/ ;
     }
     var c =  /*<<ControllerListeners.ml:123:6>>*/ ctrlL[1];
-    return caml_call1(caml_get_cached_method(c, 510623382, cache_id$1417), c) /*<<ControllerListeners.ml:123:26>>*/ ;
+    return caml_call1(caml_get_cached_method(c, 510623382, cache_id$1415), c) /*<<ControllerListeners.ml:123:26>>*/ ;
    }
    function createController(c, lr){
      /*<<ControllerListeners.ml:126:4>>*/ if(lr){
@@ -101129,7 +101087,7 @@
    function createFAController(fa, lr){
      /*<<ControllerListeners.ml:134:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:134:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1418), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1416), a);
     }
     var
      c =
@@ -101140,7 +101098,7 @@
    function createPDAController(pda, lr){
      /*<<ControllerListeners.ml:139:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:139:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1419), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1417), a);
     }
     var
      c =
@@ -101151,7 +101109,7 @@
    function createREController(re, lr){
      /*<<ControllerListeners.ml:144:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:144:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1420), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1418), a);
     }
     var
      c =
@@ -101162,7 +101120,7 @@
    function createCFGController(cfg, lr){
      /*<<ControllerListeners.ml:149:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:149:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1421), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1419), a);
     }
     var
      c =
@@ -101173,7 +101131,7 @@
    function createCFGController2(cfg, lr){
      /*<<ControllerListeners.ml:154:6>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:154:21>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1422), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1420), a);
     }
     var cfg$0 =  /*<<ControllerListeners.ml:155:14>>*/ adjust$1(cfg);
      /*<<ControllerListeners.ml:156:4>>*/ return createCFGController
@@ -101182,7 +101140,7 @@
    function createGRController(gr, lr){
      /*<<ControllerListeners.ml:160:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:160:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1423), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1421), a);
     }
     var
      c =
@@ -101193,7 +101151,7 @@
    function createGRController2(gr, lr){
      /*<<ControllerListeners.ml:165:6>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:165:21>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1424), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1422), a);
     }
     var gr$0 =  /*<<ControllerListeners.ml:166:13>>*/ adjust$2(gr);
      /*<<ControllerListeners.ml:167:4>>*/ return createGRController(gr$0, lr) /*<<ControllerListeners.ml:167:28>>*/ ;
@@ -101201,7 +101159,7 @@
    function createTransducerController(fst, lr){
      /*<<ControllerListeners.ml:170:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:170:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1425), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1423), a);
     }
     var
      c =
@@ -101212,7 +101170,7 @@
    function createTMController(tm, lr){
      /*<<ControllerListeners.ml:175:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:175:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1426), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1424), a);
     }
     var
      c =
@@ -101223,7 +101181,7 @@
    function createCompController(comp, lr){
      /*<<ControllerListeners.ml:180:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:180:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1427), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1425), a);
     }
     var
      c =
@@ -101234,7 +101192,7 @@
    function createExerController(ex, lr, title){
      /*<<ControllerListeners.ml:185:4>>*/ if(! lr){
      var a =  /*<<ControllerListeners.ml:185:19>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1428), a);
+     caml_call1(caml_get_cached_method(a, 109002835, cache_id$1426), a);
     }
     var
      c =
@@ -101247,7 +101205,7 @@
     if
      ( /*<<ControllerListeners.ml:190:11>>*/ caml_call1
        ( /*<<ControllerListeners.ml:190:4>>*/ caml_get_cached_method
-         (a, -641268470, cache_id$1429),
+         (a, -641268470, cache_id$1427),
         a)){
       /*<<ControllerListeners.ml:197:6>>*/ clearBox1(0);
       /*<<ControllerListeners.ml:198:6>>*/ caml_call1
@@ -101258,22 +101216,22 @@
      var c =  /*<<ControllerListeners.ml:192:33>>*/ ctrlR[1];
       /*<<ControllerListeners.ml:193:6>>*/ caml_call1
       ( /*<<ControllerListeners.ml:192:33>>*/ caml_get_cached_method
-        (c, -24549553, cache_id$1431),
+        (c, -24549553, cache_id$1429),
        c);
      var d =  /*<<ControllerListeners.ml:193:33>>*/ ctrlL[1];
       /*<<ControllerListeners.ml:194:6>>*/ caml_call1
       ( /*<<ControllerListeners.ml:193:33>>*/ caml_get_cached_method
-        (d, -304119505, cache_id$1432),
+        (d, -304119505, cache_id$1430),
        d);
      var e =  /*<<ControllerListeners.ml:194:31>>*/ ctrlL[1];
       /*<<ControllerListeners.ml:195:6>>*/ oneBox$0
       ( /*<<ControllerListeners.ml:195:22>>*/ caml_call1
         ( /*<<ControllerListeners.ml:194:31>>*/ caml_get_cached_method
-          (e, -62434272, cache_id$1433),
+          (e, -62434272, cache_id$1431),
          e));
     }
     var b =  /*<<ControllerListeners.ml:199:4>>*/ ctrlL[1];
-    caml_call1(caml_get_cached_method(b, 367245112, cache_id$1430), b);
+    caml_call1(caml_get_cached_method(b, 367245112, cache_id$1428), b);
      /*<<ControllerListeners.ml:199:29>>*/ return setTitle(0) /*<<ControllerListeners.ml:200:14>>*/ ;
    }
    function conversionTo(n){
@@ -101281,7 +101239,7 @@
     twoBoxes$0
      ( /*<<ControllerListeners.ml:203:22>>*/ caml_call1
        ( /*<<ControllerListeners.ml:203:4>>*/ caml_get_cached_method
-         (b, -62434272, cache_id$1434),
+         (b, -62434272, cache_id$1432),
         b));
      /*<<ControllerListeners.ml:203:43>>*/ try{
      var switcher = n - 1 | 0;
@@ -101294,13 +101252,13 @@
          re =
             /*<<ControllerListeners.ml:207:23>>*/ caml_call1
             ( /*<<ControllerListeners.ml:207:14>>*/ caml_get_cached_method
-              (c, -585661289, cache_id$1435),
+              (c, -585661289, cache_id$1433),
              c),
          d =  /*<<ControllerListeners.ml:208:14>>*/ ctrlL[1];
         twoBoxes$0
          ( /*<<ControllerListeners.ml:208:32>>*/ caml_call1
            ( /*<<ControllerListeners.ml:208:14>>*/ caml_get_cached_method
-             (d, -62434272, cache_id$1436),
+             (d, -62434272, cache_id$1434),
             d));
          /*<<ControllerListeners.ml:209:14>>*/ createREController(re, 1);
         var
@@ -101308,7 +101266,7 @@
          a =
             /*<<ControllerListeners.ml:210:40>>*/  /*<<ControllerListeners.ml:210:14>>*/ caml_call1
             ( /*<<ControllerListeners.ml:209:40>>*/ caml_get_cached_method
-              (e, 900827171, cache_id$1437),
+              (e, 900827171, cache_id$1435),
              e);
         break;
        case 1:
@@ -101317,13 +101275,13 @@
          fa =
             /*<<ControllerListeners.ml:212:23>>*/ caml_call1
             ( /*<<ControllerListeners.ml:212:14>>*/ caml_get_cached_method
-              (f, 910546697, cache_id$1438),
+              (f, 910546697, cache_id$1436),
              f);
          /*<<ControllerListeners.ml:213:14>>*/ createFAController(fa, 1);
         var g =  /*<<ControllerListeners.ml:213:40>>*/ ctrlR[1];
          /*<<ControllerListeners.ml:214:14>>*/ caml_call1
          ( /*<<ControllerListeners.ml:213:40>>*/ caml_get_cached_method
-           (g, 900827171, cache_id$1439),
+           (g, 900827171, cache_id$1437),
           g);
         var
          h =  /*<<ControllerListeners.ml:214:40>>*/ ctrlR[1],
@@ -101331,7 +101289,7 @@
             /*<<ControllerListeners.ml:215:49>>*/  /*<<ControllerListeners.ml:215:14>>*/ fit
             ( /*<<ControllerListeners.ml:215:28>>*/ caml_call1
               ( /*<<ControllerListeners.ml:214:40>>*/ caml_get_cached_method
-                (h, -62434272, cache_id$1440),
+                (h, -62434272, cache_id$1438),
                h));
         break;
        case 2:
@@ -101340,13 +101298,13 @@
          cfg =
             /*<<ControllerListeners.ml:217:24>>*/ caml_call1
             ( /*<<ControllerListeners.ml:217:14>>*/ caml_get_cached_method
-              (i, -959181130, cache_id$1441),
+              (i, -959181130, cache_id$1439),
              i);
          /*<<ControllerListeners.ml:218:14>>*/ createCFGController(cfg, 1);
         var j =  /*<<ControllerListeners.ml:218:42>>*/ ctrlR[1];
          /*<<ControllerListeners.ml:219:14>>*/ caml_call1
          ( /*<<ControllerListeners.ml:218:42>>*/ caml_get_cached_method
-           (j, 900827171, cache_id$1442),
+           (j, 900827171, cache_id$1440),
           j);
         var
          k =  /*<<ControllerListeners.ml:219:40>>*/ ctrlR[1],
@@ -101354,7 +101312,7 @@
             /*<<ControllerListeners.ml:220:49>>*/  /*<<ControllerListeners.ml:220:14>>*/ fit
             ( /*<<ControllerListeners.ml:220:28>>*/ caml_call1
               ( /*<<ControllerListeners.ml:219:40>>*/ caml_get_cached_method
-                (k, -62434272, cache_id$1443),
+                (k, -62434272, cache_id$1441),
                k));
         break;
        case 3:
@@ -101363,13 +101321,13 @@
          gr =
             /*<<ControllerListeners.ml:222:23>>*/ caml_call1
             ( /*<<ControllerListeners.ml:222:14>>*/ caml_get_cached_method
-              (l, 910546937, cache_id$1444),
+              (l, 910546937, cache_id$1442),
              l);
          /*<<ControllerListeners.ml:223:14>>*/ createGRController(gr, 1);
         var m =  /*<<ControllerListeners.ml:223:40>>*/ ctrlR[1];
          /*<<ControllerListeners.ml:224:14>>*/ caml_call1
          ( /*<<ControllerListeners.ml:223:40>>*/ caml_get_cached_method
-           (m, 900827171, cache_id$1445),
+           (m, 900827171, cache_id$1443),
           m);
         var
          o =  /*<<ControllerListeners.ml:224:40>>*/ ctrlR[1],
@@ -101377,7 +101335,7 @@
             /*<<ControllerListeners.ml:225:49>>*/  /*<<ControllerListeners.ml:225:14>>*/ fit
             ( /*<<ControllerListeners.ml:225:28>>*/ caml_call1
               ( /*<<ControllerListeners.ml:224:40>>*/ caml_get_cached_method
-                (o, -62434272, cache_id$1446),
+                (o, -62434272, cache_id$1444),
                o));
         break;
        case 4:
@@ -101386,13 +101344,13 @@
          pda =
             /*<<ControllerListeners.ml:227:24>>*/ caml_call1
             ( /*<<ControllerListeners.ml:227:14>>*/ caml_get_cached_method
-              (p, -958535105, cache_id$1447),
+              (p, -958535105, cache_id$1445),
              p);
          /*<<ControllerListeners.ml:228:14>>*/ createPDAController(pda, 1);
         var q =  /*<<ControllerListeners.ml:228:42>>*/ ctrlR[1];
          /*<<ControllerListeners.ml:229:14>>*/ caml_call1
          ( /*<<ControllerListeners.ml:228:42>>*/ caml_get_cached_method
-           (q, 900827171, cache_id$1448),
+           (q, 900827171, cache_id$1446),
           q);
         var
          r =  /*<<ControllerListeners.ml:229:40>>*/ ctrlR[1],
@@ -101400,7 +101358,7 @@
             /*<<ControllerListeners.ml:230:49>>*/  /*<<ControllerListeners.ml:230:14>>*/ fit
             ( /*<<ControllerListeners.ml:230:28>>*/ caml_call1
               ( /*<<ControllerListeners.ml:229:40>>*/ caml_get_cached_method
-                (r, -62434272, cache_id$1449),
+                (r, -62434272, cache_id$1447),
                r));
         break;
        case 5:
@@ -101409,13 +101367,13 @@
          tm =
             /*<<ControllerListeners.ml:232:23>>*/ caml_call1
             ( /*<<ControllerListeners.ml:232:14>>*/ caml_get_cached_method
-              (s, 477915298, cache_id$1450),
+              (s, 477915298, cache_id$1448),
              s);
          /*<<ControllerListeners.ml:233:14>>*/ createTMController(tm, 1);
         var t =  /*<<ControllerListeners.ml:233:40>>*/ ctrlR[1];
          /*<<ControllerListeners.ml:234:14>>*/ caml_call1
          ( /*<<ControllerListeners.ml:233:40>>*/ caml_get_cached_method
-           (t, 900827171, cache_id$1451),
+           (t, 900827171, cache_id$1449),
           t);
         var
          u =  /*<<ControllerListeners.ml:234:40>>*/ ctrlR[1],
@@ -101423,7 +101381,7 @@
             /*<<ControllerListeners.ml:235:49>>*/  /*<<ControllerListeners.ml:235:14>>*/ fit
             ( /*<<ControllerListeners.ml:235:28>>*/ caml_call1
               ( /*<<ControllerListeners.ml:234:40>>*/ caml_get_cached_method
-                (u, -62434272, cache_id$1452),
+                (u, -62434272, cache_id$1450),
                u));
         break;
        default:
@@ -101432,13 +101390,13 @@
          tm$0 =
             /*<<ControllerListeners.ml:237:23>>*/ caml_call1
             ( /*<<ControllerListeners.ml:237:14>>*/ caml_get_cached_method
-              (v, -536012586, cache_id$1453),
+              (v, -536012586, cache_id$1451),
              v);
          /*<<ControllerListeners.ml:238:14>>*/ createTMController(tm$0, 1);
         var w =  /*<<ControllerListeners.ml:238:40>>*/ ctrlR[1];
          /*<<ControllerListeners.ml:239:14>>*/ caml_call1
          ( /*<<ControllerListeners.ml:238:40>>*/ caml_get_cached_method
-           (w, 900827171, cache_id$1454),
+           (w, 900827171, cache_id$1452),
           w);
         var
          x =  /*<<ControllerListeners.ml:239:40>>*/ ctrlR[1],
@@ -101446,7 +101404,7 @@
             /*<<ControllerListeners.ml:240:49>>*/  /*<<ControllerListeners.ml:240:14>>*/ fit
             ( /*<<ControllerListeners.ml:240:28>>*/ caml_call1
               ( /*<<ControllerListeners.ml:239:40>>*/ caml_get_cached_method
-                (x, -62434272, cache_id$1455),
+                (x, -62434272, cache_id$1453),
                x));
      }
      return a;
@@ -101474,7 +101432,7 @@
       var a =  /*<<ControllerListeners.ml:253:41>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:254:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:253:41>>*/ caml_get_cached_method
-         (a, -304119505, cache_id$1456),
+         (a, -304119505, cache_id$1454),
         a);
      }
      else if(kind === cst_regular_expression){
@@ -101487,7 +101445,7 @@
       var c =  /*<<ControllerListeners.ml:258:41>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:259:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:258:41>>*/ caml_get_cached_method
-         (c, -304119505, cache_id$1458),
+         (c, -304119505, cache_id$1456),
         c);
      }
      else if(kind === cst_pushdown_automaton){
@@ -101500,7 +101458,7 @@
       var d =  /*<<ControllerListeners.ml:263:43>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:264:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:263:43>>*/ caml_get_cached_method
-         (d, -304119505, cache_id$1459),
+         (d, -304119505, cache_id$1457),
         d);
      }
      else if(kind === cst_context_free_grammar){
@@ -101513,7 +101471,7 @@
       var e =  /*<<ControllerListeners.ml:268:43>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:269:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:268:43>>*/ caml_get_cached_method
-         (e, -304119505, cache_id$1460),
+         (e, -304119505, cache_id$1458),
         e);
      }
      else if(kind === cst_grammar){
@@ -101526,7 +101484,7 @@
       var f =  /*<<ControllerListeners.ml:274:41>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:275:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:274:41>>*/ caml_get_cached_method
-         (f, -304119505, cache_id$1461),
+         (f, -304119505, cache_id$1459),
         f);
      }
      else if(kind === cst_transducer){
@@ -101540,7 +101498,7 @@
       var g =  /*<<ControllerListeners.ml:280:50>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:281:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:280:50>>*/ caml_get_cached_method
-         (g, -304119505, cache_id$1462),
+         (g, -304119505, cache_id$1460),
         g);
      }
      else if(kind === cst_turing_machine){
@@ -101553,7 +101511,7 @@
       var h =  /*<<ControllerListeners.ml:286:41>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:287:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:286:41>>*/ caml_get_cached_method
-         (h, -304119505, cache_id$1463),
+         (h, -304119505, cache_id$1461),
         h);
      }
      else if(kind === cst_composition){
@@ -101566,7 +101524,7 @@
       var i =  /*<<ControllerListeners.ml:291:43>>*/ ctrlL[1];
        /*<<ControllerListeners.ml:292:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:291:43>>*/ caml_get_cached_method
-         (i, -304119505, cache_id$1464),
+         (i, -304119505, cache_id$1462),
         i);
      }
      else{
@@ -101579,104 +101537,104 @@
       var k =  /*<<ControllerListeners.ml:295:54>>*/ ctrlR[1];
        /*<<ControllerListeners.ml:296:14>>*/ caml_call1
        ( /*<<ControllerListeners.ml:295:54>>*/ caml_get_cached_method
-         (k, 900827171, cache_id$1465),
+         (k, 900827171, cache_id$1463),
         k);
      }
       /*<<ControllerListeners.ml:297:8>>*/ setTitle(0);
      var b =  /*<<ControllerListeners.ml:297:18>>*/ ctrlL[1];
      return caml_call1
-             (caml_get_cached_method(b, -119525448, cache_id$1457), b) /*<<ControllerListeners.ml:298:32>>*/ ;
+             (caml_get_cached_method(b, -119525448, cache_id$1455), b) /*<<ControllerListeners.ml:298:32>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ closeRightListener[1] =
     function(param){
      var a =  /*<<ControllerListeners.ml:301:14>>*/ ctrlR[1];
-     caml_call1(caml_get_cached_method(a, -185945126, cache_id$1466), a);
+     caml_call1(caml_get_cached_method(a, -185945126, cache_id$1464), a);
      var b =  /*<<ControllerListeners.ml:301:42>>*/ ctrlL[1];
       /*<<ControllerListeners.ml:302:14>>*/ caml_call1
       ( /*<<ControllerListeners.ml:301:42>>*/ caml_get_cached_method
-        (b, -323363614, cache_id$1467),
+        (b, -323363614, cache_id$1465),
        b);
      var c =  /*<<ControllerListeners.ml:302:36>>*/ ctrlL[1];
       /*<<ControllerListeners.ml:303:14>>*/ oneBox$0
       ( /*<<ControllerListeners.ml:303:30>>*/ caml_call1
         ( /*<<ControllerListeners.ml:302:36>>*/ caml_get_cached_method
-          (c, -62434272, cache_id$1468),
+          (c, -62434272, cache_id$1466),
          c));
       /*<<ControllerListeners.ml:303:53>>*/ return setTitle(0) /*<<ControllerListeners.ml:304:24>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ defineInformationBoxListener[1] =
     function(param){
      var a =  /*<<ControllerListeners.ml:307:14>>*/ ctrlL[1];
-     return caml_call1(caml_get_cached_method(a, 398559386, cache_id$1469), a) /*<<ControllerListeners.ml:307:46>>*/ ;
+     return caml_call1(caml_get_cached_method(a, 398559386, cache_id$1467), a) /*<<ControllerListeners.ml:307:46>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ paintAllUsefulListener[1] =
     function(param){
      var a =  /*<<ControllerListeners.ml:310:14>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, -323363614, cache_id$1470), a);
+     caml_call1(caml_get_cached_method(a, -323363614, cache_id$1468), a);
      var
       b =  /*<<ControllerListeners.ml:310:36>>*/ ctrlL[1],
       e =
          /*<<ControllerListeners.ml:311:46>>*/ caml_call1
          ( /*<<ControllerListeners.ml:310:36>>*/ caml_get_cached_method
-           (b, 291540204, cache_id$1471),
+           (b, 291540204, cache_id$1469),
           b),
       c =  /*<<ControllerListeners.ml:311:63>>*/ ctrlL[1],
       d =
          /*<<ControllerListeners.ml:311:4>>*/ caml_call1
          ( /*<<ControllerListeners.ml:311:63>>*/ caml_get_cached_method
-           (c, -581452166, cache_id$1472),
+           (c, -581452166, cache_id$1470),
           c);
       /*<<ControllerListeners.ml:311:30>>*/ return caml_call2
-             (caml_get_cached_method(d, 933540986, cache_id$1473), d, e) /*<<ControllerListeners.ml:311:63>>*/ ;
+             (caml_get_cached_method(d, 933540986, cache_id$1471), d, e) /*<<ControllerListeners.ml:311:63>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ paintAllProductivesListener[1] =
     function(param){
      var a =  /*<<ControllerListeners.ml:314:14>>*/ ctrlL[1];
       /*<<ControllerListeners.ml:314:15>>*/ caml_call1
       ( /*<<ControllerListeners.ml:314:14>>*/ caml_get_cached_method
-        (a, -323363614, cache_id$1474),
+        (a, -323363614, cache_id$1472),
        a);
      var
       b =  /*<<ControllerListeners.ml:314:37>>*/ ctrlL[1],
       e =
          /*<<ControllerListeners.ml:315:50>>*/ caml_call1
          ( /*<<ControllerListeners.ml:314:37>>*/ caml_get_cached_method
-           (b, 291540204, cache_id$1475),
+           (b, 291540204, cache_id$1473),
           b),
       c =  /*<<ControllerListeners.ml:315:67>>*/ ctrlL[1],
       d =
          /*<<ControllerListeners.ml:315:4>>*/ caml_call1
          ( /*<<ControllerListeners.ml:315:67>>*/ caml_get_cached_method
-           (c, -581452166, cache_id$1476),
+           (c, -581452166, cache_id$1474),
           c);
       /*<<ControllerListeners.ml:315:30>>*/ return caml_call2
-             (caml_get_cached_method(d, 546858285, cache_id$1477), d, e) /*<<ControllerListeners.ml:315:68>>*/ ;
+             (caml_get_cached_method(d, 546858285, cache_id$1475), d, e) /*<<ControllerListeners.ml:315:68>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ paintAllReachableListener[1] =
     function(param){
      var a =  /*<<ControllerListeners.ml:318:14>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, -323363614, cache_id$1478), a);
+     caml_call1(caml_get_cached_method(a, -323363614, cache_id$1476), a);
      var
       b =  /*<<ControllerListeners.ml:318:36>>*/ ctrlL[1],
       e =
          /*<<ControllerListeners.ml:319:49>>*/ caml_call1
          ( /*<<ControllerListeners.ml:318:36>>*/ caml_get_cached_method
-           (b, 291540204, cache_id$1479),
+           (b, 291540204, cache_id$1477),
           b),
       c =  /*<<ControllerListeners.ml:319:66>>*/ ctrlL[1],
       d =
          /*<<ControllerListeners.ml:319:4>>*/ caml_call1
          ( /*<<ControllerListeners.ml:319:66>>*/ caml_get_cached_method
-           (c, -581452166, cache_id$1480),
+           (c, -581452166, cache_id$1478),
           c);
       /*<<ControllerListeners.ml:319:30>>*/ return caml_call2
-             (caml_get_cached_method(d, -798277711, cache_id$1481), d, e) /*<<ControllerListeners.ml:319:66>>*/ ;
+             (caml_get_cached_method(d, -798277711, cache_id$1479), d, e) /*<<ControllerListeners.ml:319:66>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ addNode[1] =
     function(x, y){
      var a =  /*<<ControllerListeners.ml:322:43>>*/ ctrlL[1];
      return caml_call5
-             (caml_get_cached_method(a, 88558787, cache_id$1482),
+             (caml_get_cached_method(a, 88558787, cache_id$1480),
               a,
               x,
               y,
@@ -101687,7 +101645,7 @@
     function(x, y){
      var a =  /*<<ControllerListeners.ml:324:50>>*/ ctrlL[1];
      return caml_call5
-             (caml_get_cached_method(a, 88558787, cache_id$1483),
+             (caml_get_cached_method(a, 88558787, cache_id$1481),
               a,
               x,
               y,
@@ -101698,7 +101656,7 @@
     function(x, y){
      var a =  /*<<ControllerListeners.ml:326:48>>*/ ctrlL[1];
      return caml_call5
-             (caml_get_cached_method(a, 88558787, cache_id$1484),
+             (caml_get_cached_method(a, 88558787, cache_id$1482),
               a,
               x,
               y,
@@ -101709,31 +101667,31 @@
     function(node){
      var a =  /*<<ControllerListeners.ml:328:47>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(a, 330796164, cache_id$1485), a, node) /*<<ControllerListeners.ml:328:77>>*/ ;
+             (caml_get_cached_method(a, 330796164, cache_id$1483), a, node) /*<<ControllerListeners.ml:328:77>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ turnFinal[1] =
     function(node){
      var a =  /*<<ControllerListeners.ml:330:46>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(a, -663378597, cache_id$1486), a, node) /*<<ControllerListeners.ml:330:76>>*/ ;
+             (caml_get_cached_method(a, -663378597, cache_id$1484), a, node) /*<<ControllerListeners.ml:330:76>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ removeTypeFinal[1] =
     function(node){
      var a =  /*<<ControllerListeners.ml:355:52>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(a, -855628876, cache_id$1487), a, node) /*<<ControllerListeners.ml:355:84>>*/ ;
+             (caml_get_cached_method(a, -855628876, cache_id$1485), a, node) /*<<ControllerListeners.ml:355:84>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ turnNodeInitial[1] =
     function(node){
      var a =  /*<<ControllerListeners.ml:357:52>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(a, 990240773, cache_id$1488), a, node) /*<<ControllerListeners.ml:357:83>>*/ ;
+             (caml_get_cached_method(a, 990240773, cache_id$1486), a, node) /*<<ControllerListeners.ml:357:83>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ addTransition$0[1] =
     function(src, trg){
      var a =  /*<<ControllerListeners.ml:360:53>>*/ ctrlL[1];
      return caml_call3
-             (caml_get_cached_method(a, 232590257, cache_id$1489),
+             (caml_get_cached_method(a, 232590257, cache_id$1487),
               a,
               src,
               trg) /*<<ControllerListeners.ml:360:89>>*/ ;
@@ -101748,7 +101706,7 @@
            ( /*<<ControllerListeners.ml:364:31>>*/ regexp(alV), symbol))){
       var b =  /*<<ControllerListeners.ml:371:8>>*/ ctrlL[1];
       return caml_call2
-              (caml_get_cached_method(b, -414130793, cache_id$1491),
+              (caml_get_cached_method(b, -414130793, cache_id$1489),
                b,
                [0, srcId, symbol, trgId]) /*<<ControllerListeners.ml:371:63>>*/ ;
      }
@@ -101764,7 +101722,7 @@
       v =  /*<<ControllerListeners.ml:366:33>>*/ match[1],
       a =  /*<<ControllerListeners.ml:368:74>>*/ ctrlL[1];
       /*<<ControllerListeners.ml:368:58>>*/ return  /*<<ControllerListeners.ml:368:74>>*/ caml_call2
-             (caml_get_cached_method(a, -414130793, cache_id$1490),
+             (caml_get_cached_method(a, -414130793, cache_id$1488),
               a,
               [0,
                srcId,
@@ -101776,25 +101734,25 @@
     function(state){
      var a =  /*<<ControllerListeners.ml:374:19>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(a, 1043157427, cache_id$1492), a, state) /*<<ControllerListeners.ml:374:48>>*/ ;
+             (caml_get_cached_method(a, 1043157427, cache_id$1490), a, state) /*<<ControllerListeners.ml:374:48>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ showTable[1] =
     function(param){
      var a =  /*<<ControllerListeners.ml:378:14>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, 503711429, cache_id$1493), a);
+     caml_call1(caml_get_cached_method(a, 503711429, cache_id$1491), a);
      var
       b =  /*<<ControllerListeners.ml:378:35>>*/ ctrlL[1],
       flag =
          /*<<ControllerListeners.ml:379:25>>*/ caml_call1
          ( /*<<ControllerListeners.ml:378:35>>*/ caml_get_cached_method
-           (b, 589796191, cache_id$1494),
+           (b, 589796191, cache_id$1492),
           b);
       /*<<ControllerListeners.ml:380:14>>*/ toggleTab(flag);
      var c =  /*<<ControllerListeners.ml:380:43>>*/ ctrlL[1];
      return  /*<<ControllerListeners.ml:381:49>>*/ fit
              ( /*<<ControllerListeners.ml:381:28>>*/ caml_call1
                ( /*<<ControllerListeners.ml:380:43>>*/ caml_get_cached_method
-                 (c, -62434272, cache_id$1495),
+                 (c, -62434272, cache_id$1493),
                 c)) /*<<ControllerListeners.ml:381:49>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ cleanUselessListener[1] =
@@ -101804,12 +101762,12 @@
       b =
          /*<<ControllerListeners.ml:386:18>>*/ caml_call1
          ( /*<<ControllerListeners.ml:386:14>>*/ caml_get_cached_method
-           (a, 291540817, cache_id$1496),
+           (a, 291540817, cache_id$1494),
           a);
       /*<<ControllerListeners.ml:386:37>>*/ if
       ( /*<<ControllerListeners.ml:386:17>>*/ caml_call1
         ( /*<<ControllerListeners.ml:386:37>>*/ caml_get_cached_method
-          (b, 497232901, cache_id$1497),
+          (b, 497232901, cache_id$1495),
          b))
        /*<<ControllerListeners.ml:387:28>>*/ return  /*<<ControllerListeners.ml:387:52>>*/ alertStr
               ( /*<<ControllerListeners.ml:387:28>>*/ i18nAlertClean(0)) /*<<ControllerListeners.ml:393:53>>*/ ;
@@ -101818,37 +101776,37 @@
       i =
          /*<<ControllerListeners.ml:389:68>>*/ caml_call1
          ( /*<<ControllerListeners.ml:389:16>>*/ caml_get_cached_method
-           (c, 291540204, cache_id$1498),
+           (c, 291540204, cache_id$1496),
           c),
       d =  /*<<ControllerListeners.ml:389:85>>*/ ctrlL[1],
       e =
          /*<<ControllerListeners.ml:389:28>>*/ caml_call1
          ( /*<<ControllerListeners.ml:389:85>>*/ caml_get_cached_method
-           (d, 291540817, cache_id$1499),
+           (d, 291540817, cache_id$1497),
           d),
       auto =
          /*<<ControllerListeners.ml:389:47>>*/  /*<<ControllerListeners.ml:389:28>>*/ caml_call2
          ( /*<<ControllerListeners.ml:389:47>>*/ caml_get_cached_method
-           (e, -94871336, cache_id$1500),
+           (e, -94871336, cache_id$1498),
           e,
           i),
       f =  /*<<ControllerListeners.ml:390:16>>*/ ctrlL[1];
      twoBoxes$0
       ( /*<<ControllerListeners.ml:390:34>>*/ caml_call1
         ( /*<<ControllerListeners.ml:390:16>>*/ caml_get_cached_method
-          (f, -62434272, cache_id$1501),
+          (f, -62434272, cache_id$1499),
          f));
       /*<<ControllerListeners.ml:391:16>>*/ createFAController(auto, 1);
      var g =  /*<<ControllerListeners.ml:391:44>>*/ ctrlR[1];
       /*<<ControllerListeners.ml:392:16>>*/ caml_call1
       ( /*<<ControllerListeners.ml:391:44>>*/ caml_get_cached_method
-        (g, 900827171, cache_id$1502),
+        (g, 900827171, cache_id$1500),
        g);
      var h =  /*<<ControllerListeners.ml:392:42>>*/ ctrlR[1];
      return  /*<<ControllerListeners.ml:393:51>>*/ fit
              ( /*<<ControllerListeners.ml:393:30>>*/ caml_call1
                ( /*<<ControllerListeners.ml:392:42>>*/ caml_get_cached_method
-                 (h, -62434272, cache_id$1503),
+                 (h, -62434272, cache_id$1501),
                 h)) /*<<ControllerListeners.ml:393:53>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ getDeterministicListener[1] =
@@ -101858,12 +101816,12 @@
       b =
          /*<<ControllerListeners.ml:396:18>>*/ caml_call1
          ( /*<<ControllerListeners.ml:396:14>>*/ caml_get_cached_method
-           (a, 291540817, cache_id$1504),
+           (a, 291540817, cache_id$1502),
           a);
       /*<<ControllerListeners.ml:396:37>>*/ if
       ( /*<<ControllerListeners.ml:396:17>>*/ caml_call1
         ( /*<<ControllerListeners.ml:396:37>>*/ caml_get_cached_method
-          (b, -572782712, cache_id$1505),
+          (b, -572782712, cache_id$1503),
          b))
        /*<<ControllerListeners.ml:397:28>>*/ return  /*<<ControllerListeners.ml:397:60>>*/ alertStr
               ( /*<<ControllerListeners.ml:397:28>>*/ i18nAlertDeterministic
@@ -101873,30 +101831,30 @@
       d =
          /*<<ControllerListeners.ml:399:28>>*/ caml_call1
          ( /*<<ControllerListeners.ml:399:16>>*/ caml_get_cached_method
-           (c, 291540817, cache_id$1506),
+           (c, 291540817, cache_id$1504),
           c),
       auto =
          /*<<ControllerListeners.ml:399:47>>*/  /*<<ControllerListeners.ml:399:28>>*/ caml_call1
          ( /*<<ControllerListeners.ml:399:47>>*/ caml_get_cached_method
-           (d, -36842246, cache_id$1507),
+           (d, -36842246, cache_id$1505),
           d),
       e =  /*<<ControllerListeners.ml:400:16>>*/ ctrlL[1];
      twoBoxes$0
       ( /*<<ControllerListeners.ml:400:34>>*/ caml_call1
         ( /*<<ControllerListeners.ml:400:16>>*/ caml_get_cached_method
-          (e, -62434272, cache_id$1508),
+          (e, -62434272, cache_id$1506),
          e));
       /*<<ControllerListeners.ml:401:16>>*/ createFAController(auto, 1);
      var f =  /*<<ControllerListeners.ml:401:44>>*/ ctrlR[1];
       /*<<ControllerListeners.ml:402:16>>*/ caml_call1
       ( /*<<ControllerListeners.ml:401:44>>*/ caml_get_cached_method
-        (f, 900827171, cache_id$1509),
+        (f, 900827171, cache_id$1507),
        f);
      var g =  /*<<ControllerListeners.ml:402:42>>*/ ctrlR[1];
      return  /*<<ControllerListeners.ml:403:51>>*/ fit
              ( /*<<ControllerListeners.ml:403:30>>*/ caml_call1
                ( /*<<ControllerListeners.ml:402:42>>*/ caml_get_cached_method
-                 (g, -62434272, cache_id$1510),
+                 (g, -62434272, cache_id$1508),
                 g)) /*<<ControllerListeners.ml:403:52>>*/ ;
     };
    function getRandom(param){
@@ -101946,13 +101904,13 @@
       b =
          /*<<ControllerListeners.ml:422:16>>*/ caml_call1
          ( /*<<ControllerListeners.ml:422:12>>*/ caml_get_cached_method
-           (a, 291540817, cache_id$1511),
+           (a, 291540817, cache_id$1509),
           a);
       /*<<ControllerListeners.ml:422:35>>*/ if
       (!
         /*<<ControllerListeners.ml:422:15>>*/ caml_call1
         ( /*<<ControllerListeners.ml:422:35>>*/ caml_get_cached_method
-          (b, -572782712, cache_id$1512),
+          (b, -572782712, cache_id$1510),
          b))
        /*<<ControllerListeners.ml:433:26>>*/ return  /*<<ControllerListeners.ml:433:63>>*/ alertStr
               ( /*<<ControllerListeners.ml:433:26>>*/ i18nAlertNeedsDeterministic
@@ -101962,12 +101920,12 @@
       d =
          /*<<ControllerListeners.ml:423:18>>*/ caml_call1
          ( /*<<ControllerListeners.ml:423:14>>*/ caml_get_cached_method
-           (c, 291540817, cache_id$1513),
+           (c, 291540817, cache_id$1511),
           c);
       /*<<ControllerListeners.ml:423:37>>*/ if
       ( /*<<ControllerListeners.ml:423:17>>*/ caml_call1
         ( /*<<ControllerListeners.ml:423:37>>*/ caml_get_cached_method
-          (d, 119452220, cache_id$1514),
+          (d, 119452220, cache_id$1512),
          d))
        /*<<ControllerListeners.ml:424:28>>*/ return  /*<<ControllerListeners.ml:424:54>>*/ alertStr
               ( /*<<ControllerListeners.ml:424:28>>*/ i18nAlertMinimum(0)) /*<<ControllerListeners.ml:433:63>>*/ ;
@@ -101976,18 +101934,18 @@
       f =
          /*<<ControllerListeners.ml:426:28>>*/ caml_call1
          ( /*<<ControllerListeners.ml:426:16>>*/ caml_get_cached_method
-           (e, 291540817, cache_id$1515),
+           (e, 291540817, cache_id$1513),
           e),
       auto =
          /*<<ControllerListeners.ml:426:47>>*/  /*<<ControllerListeners.ml:426:28>>*/ caml_call1
          ( /*<<ControllerListeners.ml:426:47>>*/ caml_get_cached_method
-           (f, 681442131, cache_id$1516),
+           (f, 681442131, cache_id$1514),
           f),
       g =  /*<<ControllerListeners.ml:427:16>>*/ ctrlL[1];
      twoBoxes$0
       ( /*<<ControllerListeners.ml:427:34>>*/ caml_call1
         ( /*<<ControllerListeners.ml:427:16>>*/ caml_get_cached_method
-          (g, -62434272, cache_id$1517),
+          (g, -62434272, cache_id$1515),
          g));
       /*<<ControllerListeners.ml:428:16>>*/ createFAController(auto, 1);
      var
@@ -101995,17 +101953,17 @@
       i =
          /*<<ControllerListeners.ml:429:29>>*/ caml_call1
          ( /*<<ControllerListeners.ml:428:44>>*/ caml_get_cached_method
-           (h, 291540817, cache_id$1518),
+           (h, 291540817, cache_id$1516),
           h),
       number =
          /*<<ControllerListeners.ml:429:48>>*/  /*<<ControllerListeners.ml:429:29>>*/ caml_call1
          ( /*<<ControllerListeners.ml:429:48>>*/ caml_get_cached_method
-           (i, -1025683738, cache_id$1519),
+           (i, -1025683738, cache_id$1517),
           i);
       /*<<ControllerListeners.ml:430:16>>*/ setColor(number);
      var j =  /*<<ControllerListeners.ml:430:31>>*/ ctrlR[1];
      return caml_call3
-             (caml_get_cached_method(j, -225531271, cache_id$1520),
+             (caml_get_cached_method(j, -225531271, cache_id$1518),
               j,
               listColorsBig[1],
               number) /*<<ControllerListeners.ml:433:63>>*/ ;
@@ -102017,12 +101975,12 @@
       fstView =
          /*<<ControllerListeners.ml:437:20>>*/ caml_call1
          ( /*<<ControllerListeners.ml:437:6>>*/ caml_get_cached_method
-           (a, 589096849, cache_id$1521),
+           (a, 589096849, cache_id$1519),
           a);
       /*<<ControllerListeners.ml:438:6>>*/ if
       ( /*<<ControllerListeners.ml:438:9>>*/ caml_call1
         ( /*<<ControllerListeners.ml:438:6>>*/ caml_get_cached_method
-          (fstView, 497232901, cache_id$1522),
+          (fstView, 497232901, cache_id$1520),
          fstView))
        /*<<ControllerListeners.ml:439:20>>*/ return  /*<<ControllerListeners.ml:439:44>>*/ alertStr
               ( /*<<ControllerListeners.ml:439:20>>*/ i18nAlertClean(0)) /*<<ControllerListeners.ml:446:43>>*/ ;
@@ -102031,7 +101989,7 @@
          /*<<ControllerListeners.ml:441:8>>*/  /*<<ControllerListeners.ml:441:22>>*/ cleanUselessStates$2
          ( /*<<ControllerListeners.ml:441:52>>*/ caml_call1
            ( /*<<ControllerListeners.ml:441:8>>*/ caml_get_cached_method
-             (fstView, -199176691, cache_id$1523),
+             (fstView, -199176691, cache_id$1521),
             fstView)),
       new_view =
          /*<<ControllerListeners.ml:442:23>>*/ caml_call2
@@ -102040,20 +101998,20 @@
      twoBoxes$0
       ( /*<<ControllerListeners.ml:443:26>>*/ caml_call1
         ( /*<<ControllerListeners.ml:443:8>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1524),
+          (b, -62434272, cache_id$1522),
          b));
       /*<<ControllerListeners.ml:444:8>>*/ createTransducerController
       (new_view, 1);
      var c =  /*<<ControllerListeners.ml:444:48>>*/ ctrlR[1];
       /*<<ControllerListeners.ml:445:8>>*/ caml_call1
       ( /*<<ControllerListeners.ml:444:48>>*/ caml_get_cached_method
-        (c, 900827171, cache_id$1525),
+        (c, 900827171, cache_id$1523),
        c);
      var d =  /*<<ControllerListeners.ml:445:34>>*/ ctrlR[1];
      return  /*<<ControllerListeners.ml:446:43>>*/ fit
              ( /*<<ControllerListeners.ml:446:22>>*/ caml_call1
                ( /*<<ControllerListeners.ml:445:34>>*/ caml_get_cached_method
-                 (d, -62434272, cache_id$1526),
+                 (d, -62434272, cache_id$1524),
                 d)) /*<<ControllerListeners.ml:446:43>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ getDeterministicListener$0[1] =
@@ -102063,12 +102021,12 @@
       fstView =
          /*<<ControllerListeners.ml:450:20>>*/ caml_call1
          ( /*<<ControllerListeners.ml:450:6>>*/ caml_get_cached_method
-           (a, 589096849, cache_id$1527),
+           (a, 589096849, cache_id$1525),
           a);
       /*<<ControllerListeners.ml:451:6>>*/ if
       ( /*<<ControllerListeners.ml:451:9>>*/ caml_call1
         ( /*<<ControllerListeners.ml:451:6>>*/ caml_get_cached_method
-          (fstView, -572782712, cache_id$1528),
+          (fstView, -572782712, cache_id$1526),
          fstView))
        /*<<ControllerListeners.ml:452:20>>*/ return  /*<<ControllerListeners.ml:452:52>>*/ alertStr
               ( /*<<ControllerListeners.ml:452:20>>*/ i18nAlertDeterministic
@@ -102078,7 +102036,7 @@
          /*<<ControllerListeners.ml:454:8>>*/  /*<<ControllerListeners.ml:454:22>>*/ toDeterministic$0
          ( /*<<ControllerListeners.ml:454:49>>*/ caml_call1
            ( /*<<ControllerListeners.ml:454:8>>*/ caml_get_cached_method
-             (fstView, -199176691, cache_id$1529),
+             (fstView, -199176691, cache_id$1527),
             fstView));
       /*<<ControllerListeners.ml:455:11>>*/ if(! isDeterministic$2(new_rep))
        /*<<ControllerListeners.ml:461:15>>*/ return 0;
@@ -102090,20 +102048,20 @@
      twoBoxes$0
       ( /*<<ControllerListeners.ml:457:30>>*/ caml_call1
         ( /*<<ControllerListeners.ml:457:12>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1530),
+          (b, -62434272, cache_id$1528),
          b));
       /*<<ControllerListeners.ml:458:12>>*/ createTransducerController
       (new_view, 1);
      var c =  /*<<ControllerListeners.ml:458:52>>*/ ctrlR[1];
       /*<<ControllerListeners.ml:459:12>>*/ caml_call1
       ( /*<<ControllerListeners.ml:458:52>>*/ caml_get_cached_method
-        (c, 900827171, cache_id$1531),
+        (c, 900827171, cache_id$1529),
        c);
      var d =  /*<<ControllerListeners.ml:459:38>>*/ ctrlR[1];
      return  /*<<ControllerListeners.ml:460:47>>*/ fit
              ( /*<<ControllerListeners.ml:460:26>>*/ caml_call1
                ( /*<<ControllerListeners.ml:459:38>>*/ caml_get_cached_method
-                 (d, -62434272, cache_id$1532),
+                 (d, -62434272, cache_id$1530),
                 d)) /*<<ControllerListeners.ml:463:9>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ defineMinimizedListener$0[1] =
@@ -102113,13 +102071,13 @@
       fstView =
          /*<<ControllerListeners.ml:467:20>>*/ caml_call1
          ( /*<<ControllerListeners.ml:467:6>>*/ caml_get_cached_method
-           (a, 589096849, cache_id$1533),
+           (a, 589096849, cache_id$1531),
           a);
       /*<<ControllerListeners.ml:468:6>>*/ if
       (!
         /*<<ControllerListeners.ml:468:9>>*/ caml_call1
         ( /*<<ControllerListeners.ml:468:6>>*/ caml_get_cached_method
-          (fstView, -572782712, cache_id$1534),
+          (fstView, -572782712, cache_id$1532),
          fstView))
        /*<<ControllerListeners.ml:480:20>>*/ return  /*<<ControllerListeners.ml:480:57>>*/ alertStr
               ( /*<<ControllerListeners.ml:480:20>>*/ i18nAlertNeedsDeterministic
@@ -102127,7 +102085,7 @@
       /*<<ControllerListeners.ml:469:8>>*/ if
       ( /*<<ControllerListeners.ml:469:11>>*/ caml_call1
         ( /*<<ControllerListeners.ml:469:8>>*/ caml_get_cached_method
-          (fstView, 119452220, cache_id$1535),
+          (fstView, 119452220, cache_id$1533),
          fstView))
        /*<<ControllerListeners.ml:470:22>>*/ return  /*<<ControllerListeners.ml:470:48>>*/ alertStr
               ( /*<<ControllerListeners.ml:470:22>>*/ i18nAlertMinimum(0)) /*<<ControllerListeners.ml:480:57>>*/ ;
@@ -102136,7 +102094,7 @@
          /*<<ControllerListeners.ml:472:10>>*/  /*<<ControllerListeners.ml:472:24>>*/ minimize$0
          ( /*<<ControllerListeners.ml:472:44>>*/ caml_call1
            ( /*<<ControllerListeners.ml:472:10>>*/ caml_get_cached_method
-             (fstView, -199176691, cache_id$1536),
+             (fstView, -199176691, cache_id$1534),
             fstView)),
       new_view =
          /*<<ControllerListeners.ml:473:25>>*/ caml_call2
@@ -102145,7 +102103,7 @@
      twoBoxes$0
       ( /*<<ControllerListeners.ml:474:28>>*/ caml_call1
         ( /*<<ControllerListeners.ml:474:10>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1537),
+          (b, -62434272, cache_id$1535),
          b));
       /*<<ControllerListeners.ml:475:10>>*/ createTransducerController
       (new_view, 1);
@@ -102153,1023 +102111,950 @@
       number =
          /*<<ControllerListeners.ml:475:50>>*/  /*<<ControllerListeners.ml:476:23>>*/ caml_call1
          ( /*<<ControllerListeners.ml:475:50>>*/ caml_get_cached_method
-           (fstView, -1025683738, cache_id$1538),
+           (fstView, -1025683738, cache_id$1536),
           fstView);
       /*<<ControllerListeners.ml:477:10>>*/ setColor(number);
      var c =  /*<<ControllerListeners.ml:477:25>>*/ ctrlR[1];
      return caml_call3
-             (caml_get_cached_method(c, -225531271, cache_id$1539),
+             (caml_get_cached_method(c, -225531271, cache_id$1537),
               c,
               listColorsBig[1],
               number) /*<<ControllerListeners.ml:480:57>>*/ ;
     };
-    /*<<Controller.ml:296:37>>*/ paintAllUsefulListener[1] =
-    function(param){
-     var a =  /*<<ControllerListeners.ml:483:14>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, -323363614, cache_id$1540), a);
-     var
-      b =  /*<<ControllerListeners.ml:483:36>>*/ ctrlL[1],
-      e =
-         /*<<ControllerListeners.ml:484:40>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:483:36>>*/ caml_get_cached_method
-           (b, 291540204, cache_id$1541),
-          b),
-      c =  /*<<ControllerListeners.ml:484:57>>*/ ctrlL[1],
-      d =
-         /*<<ControllerListeners.ml:484:4>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:484:57>>*/ caml_get_cached_method
-           (c, 589096849, cache_id$1542),
-          c);
-      /*<<ControllerListeners.ml:484:24>>*/ return caml_call2
-             (caml_get_cached_method(d, 933540986, cache_id$1543), d, e) /*<<ControllerListeners.ml:484:57>>*/ ;
-    };
-    /*<<Controller.ml:296:37>>*/ paintAllProductivesListener[1] =
-    function(param){
-     var a =  /*<<ControllerListeners.ml:487:14>>*/ ctrlL[1];
-      /*<<ControllerListeners.ml:487:15>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:487:14>>*/ caml_get_cached_method
-        (a, -323363614, cache_id$1544),
-       a);
-     var
-      b =  /*<<ControllerListeners.ml:487:37>>*/ ctrlL[1],
-      e =
-         /*<<ControllerListeners.ml:488:44>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:487:37>>*/ caml_get_cached_method
-           (b, 291540204, cache_id$1545),
-          b),
-      c =  /*<<ControllerListeners.ml:488:61>>*/ ctrlL[1],
-      d =
-         /*<<ControllerListeners.ml:488:4>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:488:61>>*/ caml_get_cached_method
-           (c, 589096849, cache_id$1546),
-          c);
-      /*<<ControllerListeners.ml:488:24>>*/ return caml_call2
-             (caml_get_cached_method(d, 546858285, cache_id$1547), d, e) /*<<ControllerListeners.ml:488:62>>*/ ;
-    };
-    /*<<Controller.ml:296:37>>*/ paintAllReachableListener[1] =
-    function(param){
-     var a =  /*<<ControllerListeners.ml:491:14>>*/ ctrlL[1];
-     caml_call1(caml_get_cached_method(a, -323363614, cache_id$1548), a);
-     var
-      b =  /*<<ControllerListeners.ml:491:36>>*/ ctrlL[1],
-      e =
-         /*<<ControllerListeners.ml:492:43>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:491:36>>*/ caml_get_cached_method
-           (b, 291540204, cache_id$1549),
-          b),
-      c =  /*<<ControllerListeners.ml:492:60>>*/ ctrlL[1],
-      d =
-         /*<<ControllerListeners.ml:492:4>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:492:60>>*/ caml_get_cached_method
-           (c, 589096849, cache_id$1550),
-          c);
-      /*<<ControllerListeners.ml:492:24>>*/ return caml_call2
-             (caml_get_cached_method(d, -798277711, cache_id$1551), d, e) /*<<ControllerListeners.ml:492:60>>*/ ;
-    };
-    /*<<Controller.ml:296:37>>*/ clearAutoListener[1] =
-    function(param){
-     var a =  /*<<ControllerListeners.ml:495:15>>*/ ctrlL[1];
-     return  /*<<ControllerListeners.ml:495:53>>*/ resetStyle
-             ( /*<<ControllerListeners.ml:495:36>>*/ caml_call1
-               ( /*<<ControllerListeners.ml:495:15>>*/ caml_get_cached_method
-                 (a, 291540204, cache_id$1552),
-                a),
-              faStyle) /*<<ControllerListeners.ml:495:71>>*/ ;
-    };
     /*<<Controller.ml:296:37>>*/ cleanUselessListener$1[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:498:12>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:483:12>>*/ ctrlL[1],
       b =
-         /*<<ControllerListeners.ml:498:16>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:498:12>>*/ caml_get_cached_method
-           (a, 589590775, cache_id$1553),
+         /*<<ControllerListeners.ml:483:16>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:483:12>>*/ caml_get_cached_method
+           (a, 589590775, cache_id$1538),
           a);
-      /*<<ControllerListeners.ml:498:36>>*/ if
-      ( /*<<ControllerListeners.ml:498:15>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:498:36>>*/ caml_get_cached_method
-          (b, 497232901, cache_id$1554),
+      /*<<ControllerListeners.ml:483:36>>*/ if
+      ( /*<<ControllerListeners.ml:483:15>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:483:36>>*/ caml_get_cached_method
+          (b, 497232901, cache_id$1539),
          b))
-       /*<<ControllerListeners.ml:499:26>>*/ return  /*<<ControllerListeners.ml:499:50>>*/ alertStr
-              ( /*<<ControllerListeners.ml:499:26>>*/ i18nAlertClean(0)) /*<<ControllerListeners.ml:505:51>>*/ ;
+       /*<<ControllerListeners.ml:484:26>>*/ return  /*<<ControllerListeners.ml:484:50>>*/ alertStr
+              ( /*<<ControllerListeners.ml:484:26>>*/ i18nAlertClean(0)) /*<<ControllerListeners.ml:490:51>>*/ ;
      var
-      c =  /*<<ControllerListeners.ml:501:14>>*/ ctrlL[1],
+      c =  /*<<ControllerListeners.ml:486:14>>*/ ctrlL[1],
       i =
-         /*<<ControllerListeners.ml:501:72>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:501:14>>*/ caml_get_cached_method
-           (c, 291540204, cache_id$1555),
+         /*<<ControllerListeners.ml:486:72>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:486:14>>*/ caml_get_cached_method
+           (c, 291540204, cache_id$1540),
           c),
-      d =  /*<<ControllerListeners.ml:501:89>>*/ ctrlL[1],
+      d =  /*<<ControllerListeners.ml:486:89>>*/ ctrlL[1],
       e =
-         /*<<ControllerListeners.ml:501:31>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:501:89>>*/ caml_get_cached_method
-           (d, 589590775, cache_id$1556),
+         /*<<ControllerListeners.ml:486:31>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:486:89>>*/ caml_get_cached_method
+           (d, 589590775, cache_id$1541),
           d),
       automaton =
-         /*<<ControllerListeners.ml:501:51>>*/  /*<<ControllerListeners.ml:501:31>>*/ caml_call2
-         ( /*<<ControllerListeners.ml:501:51>>*/ caml_get_cached_method
-           (e, -94871336, cache_id$1557),
+         /*<<ControllerListeners.ml:486:51>>*/  /*<<ControllerListeners.ml:486:31>>*/ caml_call2
+         ( /*<<ControllerListeners.ml:486:51>>*/ caml_get_cached_method
+           (e, -94871336, cache_id$1542),
           e,
           i),
-      f =  /*<<ControllerListeners.ml:502:14>>*/ ctrlL[1];
+      f =  /*<<ControllerListeners.ml:487:14>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:502:32>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:502:14>>*/ caml_get_cached_method
-          (f, -62434272, cache_id$1558),
+      ( /*<<ControllerListeners.ml:487:32>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:487:14>>*/ caml_get_cached_method
+          (f, -62434272, cache_id$1543),
          f));
-      /*<<ControllerListeners.ml:503:14>>*/ createPDAController(automaton, 1);
-     var g =  /*<<ControllerListeners.ml:503:48>>*/ ctrlR[1];
-      /*<<ControllerListeners.ml:504:14>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:503:48>>*/ caml_get_cached_method
-        (g, 900827171, cache_id$1559),
+      /*<<ControllerListeners.ml:488:14>>*/ createPDAController(automaton, 1);
+     var g =  /*<<ControllerListeners.ml:488:48>>*/ ctrlR[1];
+      /*<<ControllerListeners.ml:489:14>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:488:48>>*/ caml_get_cached_method
+        (g, 900827171, cache_id$1544),
        g);
-     var h =  /*<<ControllerListeners.ml:504:40>>*/ ctrlR[1];
-     return  /*<<ControllerListeners.ml:505:49>>*/ fit
-             ( /*<<ControllerListeners.ml:505:28>>*/ caml_call1
-               ( /*<<ControllerListeners.ml:504:40>>*/ caml_get_cached_method
-                 (h, -62434272, cache_id$1560),
-                h)) /*<<ControllerListeners.ml:505:51>>*/ ;
+     var h =  /*<<ControllerListeners.ml:489:40>>*/ ctrlR[1];
+     return  /*<<ControllerListeners.ml:490:49>>*/ fit
+             ( /*<<ControllerListeners.ml:490:28>>*/ caml_call1
+               ( /*<<ControllerListeners.ml:489:40>>*/ caml_get_cached_method
+                 (h, -62434272, cache_id$1545),
+                h)) /*<<ControllerListeners.ml:490:51>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ closeLeftListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:509:5>>*/ closeLeftAction(0);
-      /*<<ControllerListeners.ml:509:23>>*/ return setTitle(0) /*<<ControllerListeners.ml:510:17>>*/ ;
+      /*<<ControllerListeners.ml:494:5>>*/ closeLeftAction(0);
+      /*<<ControllerListeners.ml:494:23>>*/ return setTitle(0) /*<<ControllerListeners.ml:495:17>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ showModelListener[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:513:14>>*/ ctrlL[1];
+     var a =  /*<<ControllerListeners.ml:498:14>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:513:32>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:513:14>>*/ caml_get_cached_method
-          (a, -62434272, cache_id$1561),
+      ( /*<<ControllerListeners.ml:498:32>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:498:14>>*/ caml_get_cached_method
+          (a, -62434272, cache_id$1546),
          a));
-      /*<<ControllerListeners.ml:514:14>>*/ caml_call1
+      /*<<ControllerListeners.ml:499:14>>*/ caml_call1
       (changeToControllerCtrlRight[1], 0);
-     var b =  /*<<ControllerListeners.ml:514:53>>*/ ctrlR[1];
-      /*<<ControllerListeners.ml:515:14>>*/ caml_call2
-      ( /*<<ControllerListeners.ml:514:53>>*/ caml_get_cached_method
-        (b, 657857445, cache_id$1562),
+     var b =  /*<<ControllerListeners.ml:499:53>>*/ ctrlR[1];
+      /*<<ControllerListeners.ml:500:14>>*/ caml_call2
+      ( /*<<ControllerListeners.ml:499:53>>*/ caml_get_cached_method
+        (b, 657857445, cache_id$1547),
        b,
        alX);
      var
-      c =  /*<<ControllerListeners.ml:515:55>>*/ ctrlL[1],
+      c =  /*<<ControllerListeners.ml:500:55>>*/ ctrlL[1],
       d =
-         /*<<ControllerListeners.ml:516:43>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:515:55>>*/ caml_get_cached_method
-           (c, 207102889, cache_id$1563),
+         /*<<ControllerListeners.ml:501:43>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:500:55>>*/ caml_get_cached_method
+           (c, 207102889, cache_id$1548),
           c),
       getInfo =
-         /*<<ControllerListeners.ml:516:62>>*/  /*<<ControllerListeners.ml:516:28>>*/ toString
-         ( /*<<ControllerListeners.ml:516:42>>*/ caml_call1
-           ( /*<<ControllerListeners.ml:516:62>>*/ caml_get_cached_method
-             (d, -66493149, cache_id$1564),
+         /*<<ControllerListeners.ml:501:62>>*/  /*<<ControllerListeners.ml:501:28>>*/ toString
+         ( /*<<ControllerListeners.ml:501:42>>*/ caml_call1
+           ( /*<<ControllerListeners.ml:501:62>>*/ caml_get_cached_method
+             (d, -66493149, cache_id$1549),
             d));
-      /*<<ControllerListeners.ml:517:14>>*/ return showModelInfo(getInfo) /*<<ControllerListeners.ml:517:50>>*/ ;
+      /*<<ControllerListeners.ml:502:14>>*/ return showModelInfo(getInfo) /*<<ControllerListeners.ml:502:50>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ resultCountListener[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:521:6>>*/ ctrlL[1];
+     var a =  /*<<ControllerListeners.ml:506:6>>*/ ctrlL[1];
      if
-      ( /*<<ControllerListeners.ml:521:9>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:521:6>>*/ caml_get_cached_method
-          (a, 448118033, cache_id$1565),
+      ( /*<<ControllerListeners.ml:506:9>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:506:6>>*/ caml_get_cached_method
+          (a, 448118033, cache_id$1550),
          a))
-       /*<<ControllerListeners.ml:522:37>>*/  /*<<ControllerListeners.ml:522:8>>*/ putTreeResult
-       ( /*<<ControllerListeners.ml:522:37>>*/ i18nWordAccepted(0));
+       /*<<ControllerListeners.ml:507:37>>*/  /*<<ControllerListeners.ml:507:8>>*/ putTreeResult
+       ( /*<<ControllerListeners.ml:507:37>>*/ i18nWordAccepted(0));
      else
-       /*<<ControllerListeners.ml:524:38>>*/  /*<<ControllerListeners.ml:524:8>>*/ putTreeResult
-       ( /*<<ControllerListeners.ml:524:38>>*/ i18nWordNotAccepted(0));
+       /*<<ControllerListeners.ml:509:38>>*/  /*<<ControllerListeners.ml:509:8>>*/ putTreeResult
+       ( /*<<ControllerListeners.ml:509:38>>*/ i18nWordNotAccepted(0));
      var
-      b =  /*<<ControllerListeners.ml:525:8>>*/ ctrlL[1],
+      b =  /*<<ControllerListeners.ml:510:8>>*/ ctrlL[1],
       blah =
-         /*<<ControllerListeners.ml:525:19>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:525:8>>*/ caml_get_cached_method
-           (b, 291543497, cache_id$1566),
+         /*<<ControllerListeners.ml:510:19>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:510:8>>*/ caml_get_cached_method
+           (b, 291543497, cache_id$1551),
           b),
-      c =  /*<<ControllerListeners.ml:526:8>>*/ ctrlL[1],
+      c =  /*<<ControllerListeners.ml:511:8>>*/ ctrlL[1],
       blah2 =
-         /*<<ControllerListeners.ml:526:20>>*/ caml_call2
-         ( /*<<ControllerListeners.ml:526:8>>*/ caml_get_cached_method
-           (c, -748076016, cache_id$1567),
+         /*<<ControllerListeners.ml:511:20>>*/ caml_call2
+         ( /*<<ControllerListeners.ml:511:8>>*/ caml_get_cached_method
+           (c, -748076016, cache_id$1552),
           c,
           0),
       match =
-         /*<<ControllerListeners.ml:527:8>>*/  /*<<ControllerListeners.ml:527:29>>*/ caml_call2
-         ( /*<<ControllerListeners.ml:527:8>>*/ caml_get_cached_method
-           (blah, 470909320, cache_id$1568),
+         /*<<ControllerListeners.ml:512:8>>*/  /*<<ControllerListeners.ml:512:29>>*/ caml_call2
+         ( /*<<ControllerListeners.ml:512:8>>*/ caml_get_cached_method
+           (blah, 470909320, cache_id$1553),
           blah,
           blah2),
-      wrong =  /*<<ControllerListeners.ml:527:55>>*/ match[2],
+      wrong =  /*<<ControllerListeners.ml:512:55>>*/ match[2],
       right = match[1],
-      d =  /*<<ControllerListeners.ml:528:71>>*/ i18nGoodDerivations(0),
+      d =  /*<<ControllerListeners.ml:513:71>>*/ i18nGoodDerivations(0),
       e =
-         /*<<ControllerListeners.ml:528:45>>*/ symbol_concat
+         /*<<ControllerListeners.ml:513:45>>*/ symbol_concat
          (string_of_int(right), d),
       textt =
-         /*<<ControllerListeners.ml:528:22>>*/ symbol_concat(i18nExists(0), e);
-      /*<<ControllerListeners.ml:529:12>>*/ putTreeGoodDerivations(textt);
+         /*<<ControllerListeners.ml:513:22>>*/ symbol_concat(i18nExists(0), e);
+      /*<<ControllerListeners.ml:514:12>>*/ putTreeGoodDerivations(textt);
      var
-      f =  /*<<ControllerListeners.ml:530:72>>*/ i18nBadDerivations(0),
+      f =  /*<<ControllerListeners.ml:515:72>>*/ i18nBadDerivations(0),
       g =
-         /*<<ControllerListeners.ml:530:46>>*/ symbol_concat
+         /*<<ControllerListeners.ml:515:46>>*/ symbol_concat
          (string_of_int(wrong), f),
       textt1 =
-         /*<<ControllerListeners.ml:530:23>>*/ symbol_concat(i18nExists(0), g);
-      /*<<ControllerListeners.ml:531:12>>*/ return putTreeBadDerivations
-             (textt1) /*<<ControllerListeners.ml:531:55>>*/ ;
+         /*<<ControllerListeners.ml:515:23>>*/ symbol_concat(i18nExists(0), g);
+      /*<<ControllerListeners.ml:516:12>>*/ return putTreeBadDerivations
+             (textt1) /*<<ControllerListeners.ml:516:55>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ defineNumberTreesListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:535:6>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:520:6>>*/ ctrlL[1],
       b =
-         /*<<ControllerListeners.ml:535:16>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:535:6>>*/ caml_get_cached_method
-           (a, 291543497, cache_id$1569),
+         /*<<ControllerListeners.ml:520:16>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:520:6>>*/ caml_get_cached_method
+           (a, 291543497, cache_id$1554),
           a),
       pos =
-         /*<<ControllerListeners.ml:535:35>>*/  /*<<ControllerListeners.ml:535:16>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:535:35>>*/ caml_get_cached_method
-           (b, -889544535, cache_id$1570),
+         /*<<ControllerListeners.ml:520:35>>*/  /*<<ControllerListeners.ml:520:16>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:520:35>>*/ caml_get_cached_method
+           (b, -889544535, cache_id$1555),
           b),
-      c =  /*<<ControllerListeners.ml:536:6>>*/ ctrlL[1],
+      c =  /*<<ControllerListeners.ml:521:6>>*/ ctrlL[1],
       d =
-         /*<<ControllerListeners.ml:536:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:536:6>>*/ caml_get_cached_method
-           (c, 291543497, cache_id$1571),
+         /*<<ControllerListeners.ml:521:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:521:6>>*/ caml_get_cached_method
+           (c, 291543497, cache_id$1556),
           c),
       leng =
-         /*<<ControllerListeners.ml:536:36>>*/  /*<<ControllerListeners.ml:536:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:536:36>>*/ caml_get_cached_method
-           (d, 520590566, cache_id$1572),
+         /*<<ControllerListeners.ml:521:36>>*/  /*<<ControllerListeners.ml:521:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:521:36>>*/ caml_get_cached_method
+           (d, 520590566, cache_id$1557),
           d),
-      e =  /*<<ControllerListeners.ml:537:61>>*/ string_of_int(leng),
-      f =  /*<<ControllerListeners.ml:537:42>>*/ symbol_concat(i18nBy(0), e),
+      e =  /*<<ControllerListeners.ml:522:61>>*/ string_of_int(leng),
+      f =  /*<<ControllerListeners.ml:522:42>>*/ symbol_concat(i18nBy(0), e),
       textt =
-         /*<<ControllerListeners.ml:537:18>>*/ symbol_concat
+         /*<<ControllerListeners.ml:522:18>>*/ symbol_concat
          (string_of_int(pos), f);
-      /*<<ControllerListeners.ml:538:8>>*/ return putTreeNumbers(textt) /*<<ControllerListeners.ml:538:43>>*/ ;
+      /*<<ControllerListeners.ml:523:8>>*/ return putTreeNumbers(textt) /*<<ControllerListeners.ml:523:43>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ previousTreeListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:542:6>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:527:6>>*/ ctrlL[1],
       b =
-         /*<<ControllerListeners.ml:542:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:542:6>>*/ caml_get_cached_method
-           (a, 291543497, cache_id$1573),
+         /*<<ControllerListeners.ml:527:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:527:6>>*/ caml_get_cached_method
+           (a, 291543497, cache_id$1558),
           a),
       back =
-         /*<<ControllerListeners.ml:542:36>>*/  /*<<ControllerListeners.ml:542:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:542:36>>*/ caml_get_cached_method
-           (b, -1055860185, cache_id$1574),
+         /*<<ControllerListeners.ml:527:36>>*/  /*<<ControllerListeners.ml:527:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:527:36>>*/ caml_get_cached_method
+           (b, -1055860185, cache_id$1559),
           b),
-      c =  /*<<ControllerListeners.ml:543:6>>*/ ctrlR[1],
+      c =  /*<<ControllerListeners.ml:528:6>>*/ ctrlR[1],
       cy =
-         /*<<ControllerListeners.ml:543:15>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:543:6>>*/ caml_get_cached_method
-           (c, 291540204, cache_id$1575),
+         /*<<ControllerListeners.ml:528:15>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:528:6>>*/ caml_get_cached_method
+           (c, 291540204, cache_id$1560),
           c);
-      /*<<ControllerListeners.ml:544:6>>*/ removeAllElements(cy);
+      /*<<ControllerListeners.ml:529:6>>*/ removeAllElements(cy);
      var
-      d =  /*<<ControllerListeners.ml:544:36>>*/ ctrlL[1],
+      d =  /*<<ControllerListeners.ml:529:36>>*/ ctrlL[1],
       e =
-         /*<<ControllerListeners.ml:545:14>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:544:36>>*/ caml_get_cached_method
-           (d, 291543497, cache_id$1576),
+         /*<<ControllerListeners.ml:530:14>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:529:36>>*/ caml_get_cached_method
+           (d, 291543497, cache_id$1561),
           d);
-      /*<<ControllerListeners.ml:545:33>>*/  /*<<ControllerListeners.ml:545:13>>*/ caml_call3
-      ( /*<<ControllerListeners.ml:545:33>>*/ caml_get_cached_method
-        (e, -839108565, cache_id$1577),
+      /*<<ControllerListeners.ml:530:33>>*/  /*<<ControllerListeners.ml:530:13>>*/ caml_call3
+      ( /*<<ControllerListeners.ml:530:33>>*/ caml_get_cached_method
+        (e, -839108565, cache_id$1562),
        e,
        back,
        cy);
-      /*<<ControllerListeners.ml:546:8>>*/ return caml_call1
-             (defineNumberTreesListener[1], 0) /*<<ControllerListeners.ml:546:49>>*/ ;
+      /*<<ControllerListeners.ml:531:8>>*/ return caml_call1
+             (defineNumberTreesListener[1], 0) /*<<ControllerListeners.ml:531:49>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ nextTreeListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:550:6>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:535:6>>*/ ctrlL[1],
       b =
-         /*<<ControllerListeners.ml:550:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:550:6>>*/ caml_get_cached_method
-           (a, 291543497, cache_id$1578),
+         /*<<ControllerListeners.ml:535:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:535:6>>*/ caml_get_cached_method
+           (a, 291543497, cache_id$1563),
           a),
       next =
-         /*<<ControllerListeners.ml:550:36>>*/  /*<<ControllerListeners.ml:550:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:550:36>>*/ caml_get_cached_method
-           (b, -922581773, cache_id$1579),
+         /*<<ControllerListeners.ml:535:36>>*/  /*<<ControllerListeners.ml:535:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:535:36>>*/ caml_get_cached_method
+           (b, -922581773, cache_id$1564),
           b),
-      c =  /*<<ControllerListeners.ml:551:6>>*/ ctrlR[1],
+      c =  /*<<ControllerListeners.ml:536:6>>*/ ctrlR[1],
       cy =
-         /*<<ControllerListeners.ml:551:15>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:551:6>>*/ caml_get_cached_method
-           (c, 291540204, cache_id$1580),
+         /*<<ControllerListeners.ml:536:15>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:536:6>>*/ caml_get_cached_method
+           (c, 291540204, cache_id$1565),
           c);
-      /*<<ControllerListeners.ml:552:6>>*/ removeAllElements(cy);
+      /*<<ControllerListeners.ml:537:6>>*/ removeAllElements(cy);
      var
-      d =  /*<<ControllerListeners.ml:552:36>>*/ ctrlL[1],
+      d =  /*<<ControllerListeners.ml:537:36>>*/ ctrlL[1],
       e =
-         /*<<ControllerListeners.ml:553:14>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:552:36>>*/ caml_get_cached_method
-           (d, 291543497, cache_id$1581),
+         /*<<ControllerListeners.ml:538:14>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:537:36>>*/ caml_get_cached_method
+           (d, 291543497, cache_id$1566),
           d);
-      /*<<ControllerListeners.ml:553:33>>*/  /*<<ControllerListeners.ml:553:13>>*/ caml_call3
-      ( /*<<ControllerListeners.ml:553:33>>*/ caml_get_cached_method
-        (e, -839108565, cache_id$1582),
+      /*<<ControllerListeners.ml:538:33>>*/  /*<<ControllerListeners.ml:538:13>>*/ caml_call3
+      ( /*<<ControllerListeners.ml:538:33>>*/ caml_get_cached_method
+        (e, -839108565, cache_id$1567),
        e,
        next,
        cy);
-      /*<<ControllerListeners.ml:554:8>>*/ return caml_call1
-             (defineNumberTreesListener[1], 0) /*<<ControllerListeners.ml:554:49>>*/ ;
+      /*<<ControllerListeners.ml:539:8>>*/ return caml_call1
+             (defineNumberTreesListener[1], 0) /*<<ControllerListeners.ml:539:49>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ checkExerciseListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:557:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:542:14>>*/ ctrlL[1],
       model =
-         /*<<ControllerListeners.ml:558:20>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:557:14>>*/ caml_get_cached_method
-           (a, 207102889, cache_id$1583),
+         /*<<ControllerListeners.ml:543:20>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:542:14>>*/ caml_get_cached_method
+           (a, 207102889, cache_id$1568),
           a),
-      b =  /*<<ControllerListeners.ml:559:8>>*/ ctrlR[1],
+      b =  /*<<ControllerListeners.ml:544:8>>*/ ctrlR[1],
       result =
-         /*<<ControllerListeners.ml:559:21>>*/ caml_call2
-         ( /*<<ControllerListeners.ml:559:66>>*/ caml_get_cached_method
-           (model, 1053479232, cache_id$1585),
+         /*<<ControllerListeners.ml:544:21>>*/ caml_call2
+         ( /*<<ControllerListeners.ml:544:66>>*/ caml_get_cached_method
+           (model, 1053479232, cache_id$1570),
           model,
-           /*<<ControllerListeners.ml:559:41>>*/ caml_call1
-           ( /*<<ControllerListeners.ml:559:8>>*/ caml_get_cached_method
-             (b, -60541170, cache_id$1584),
+           /*<<ControllerListeners.ml:544:41>>*/ caml_call1
+           ( /*<<ControllerListeners.ml:544:8>>*/ caml_get_cached_method
+             (b, -60541170, cache_id$1569),
             b)),
-      c =  /*<<ControllerListeners.ml:560:8>>*/ ctrlR[1],
+      c =  /*<<ControllerListeners.ml:545:8>>*/ ctrlR[1],
       match =
-         /*<<ControllerListeners.ml:560:56>>*/ caml_call2
-         ( /*<<ControllerListeners.ml:560:109>>*/ caml_get_cached_method
-           (model, -910713271, cache_id$1587),
+         /*<<ControllerListeners.ml:545:56>>*/ caml_call2
+         ( /*<<ControllerListeners.ml:545:109>>*/ caml_get_cached_method
+           (model, -910713271, cache_id$1572),
           model,
-           /*<<ControllerListeners.ml:560:84>>*/ caml_call1
-           ( /*<<ControllerListeners.ml:560:8>>*/ caml_get_cached_method
-             (c, -60541170, cache_id$1586),
+           /*<<ControllerListeners.ml:545:84>>*/ caml_call1
+           ( /*<<ControllerListeners.ml:545:8>>*/ caml_get_cached_method
+             (c, -60541170, cache_id$1571),
             c)),
-      properties =  /*<<ControllerListeners.ml:560:109>>*/ match[3],
+      properties =  /*<<ControllerListeners.ml:545:109>>*/ match[3],
       outsideErrors = match[2],
       insideErrors = match[1],
-      d =  /*<<ControllerListeners.ml:561:10>>*/ ctrlR[1];
+      d =  /*<<ControllerListeners.ml:546:10>>*/ ctrlR[1];
      return caml_call3
-             (caml_get_cached_method(d, -429895594, cache_id$1588),
+             (caml_get_cached_method(d, -429895594, cache_id$1573),
               d,
               result,
-              [0, insideErrors, outsideErrors, properties]) /*<<ControllerListeners.ml:562:5>>*/ ;
+              [0, insideErrors, outsideErrors, properties]) /*<<ControllerListeners.ml:547:5>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ changeDirectionListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:574:4>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:559:4>>*/ ctrlL[1],
       d =
-         /*<<ControllerListeners.ml:574:62>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:574:4>>*/ caml_get_cached_method
-           (a, -313464499, cache_id$1589),
+         /*<<ControllerListeners.ml:559:62>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:559:4>>*/ caml_get_cached_method
+           (a, -313464499, cache_id$1574),
           a),
-      b =  /*<<ControllerListeners.ml:574:86>>*/ ctrlL[1],
+      b =  /*<<ControllerListeners.ml:559:86>>*/ ctrlL[1],
       newDir =
-         /*<<ControllerListeners.ml:574:17>>*/ changeDirection
-         ( /*<<ControllerListeners.ml:574:44>>*/ caml_call1
-           ( /*<<ControllerListeners.ml:574:86>>*/ caml_get_cached_method
-             (b, 291540204, cache_id$1590),
+         /*<<ControllerListeners.ml:559:17>>*/ changeDirection
+         ( /*<<ControllerListeners.ml:559:44>>*/ caml_call1
+           ( /*<<ControllerListeners.ml:559:86>>*/ caml_get_cached_method
+             (b, 291540204, cache_id$1575),
             b),
           d),
-      c =  /*<<ControllerListeners.ml:575:2>>*/ ctrlL[1];
+      c =  /*<<ControllerListeners.ml:560:2>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(c, 412413235, cache_id$1591), c, newDir) /*<<ControllerListeners.ml:575:36>>*/ ;
+             (caml_get_cached_method(c, 412413235, cache_id$1576), c, newDir) /*<<ControllerListeners.ml:560:36>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ cleanCFGListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:578:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:563:14>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:578:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:578:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1592),
+         /*<<ControllerListeners.ml:563:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:563:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1577),
           a);
-      /*<<ControllerListeners.ml:579:14>>*/ if
-      ( /*<<ControllerListeners.ml:579:21>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:579:14>>*/ caml_get_cached_method
-          (cfg, -455011009, cache_id$1593),
+      /*<<ControllerListeners.ml:564:14>>*/ if
+      ( /*<<ControllerListeners.ml:564:21>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:564:14>>*/ caml_get_cached_method
+          (cfg, -455011009, cache_id$1578),
          cfg))
-       /*<<ControllerListeners.ml:584:16>>*/ return  /*<<ControllerListeners.ml:584:41>>*/ alertStr
-              ( /*<<ControllerListeners.ml:584:16>>*/ i18nAlertIsClean(0)) /*<<ControllerListeners.ml:584:41>>*/ ;
+       /*<<ControllerListeners.ml:569:16>>*/ return  /*<<ControllerListeners.ml:569:41>>*/ alertStr
+              ( /*<<ControllerListeners.ml:569:16>>*/ i18nAlertIsClean(0)) /*<<ControllerListeners.ml:569:41>>*/ ;
      var
       newCfg =
-         /*<<ControllerListeners.ml:580:4>>*/  /*<<ControllerListeners.ml:580:17>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:580:4>>*/ caml_get_cached_method
-           (cfg, 128444040, cache_id$1594),
+         /*<<ControllerListeners.ml:565:4>>*/  /*<<ControllerListeners.ml:565:17>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:565:4>>*/ caml_get_cached_method
+           (cfg, 128444040, cache_id$1579),
           cfg);
-      /*<<ControllerListeners.ml:581:5>>*/ createCFGController2(newCfg[2], 1);
-     var b =  /*<<ControllerListeners.ml:581:45>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:566:5>>*/ createCFGController2(newCfg[2], 1);
+     var b =  /*<<ControllerListeners.ml:566:45>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(b, 975901306, cache_id$1595), b, newCfg) /*<<ControllerListeners.ml:584:41>>*/ ;
+             (caml_get_cached_method(b, 975901306, cache_id$1580), b, newCfg) /*<<ControllerListeners.ml:569:41>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ previousNewCFGListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:587:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:572:14>>*/ ctrlL[1],
       b =
-         /*<<ControllerListeners.ml:587:27>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:587:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1596),
+         /*<<ControllerListeners.ml:572:27>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:572:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1581),
           a),
       newCFG =
-         /*<<ControllerListeners.ml:587:47>>*/  /*<<ControllerListeners.ml:587:27>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:587:47>>*/ caml_get_cached_method
-           (b, 1040584414, cache_id$1597),
+         /*<<ControllerListeners.ml:572:47>>*/  /*<<ControllerListeners.ml:572:27>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:572:47>>*/ caml_get_cached_method
+           (b, 1040584414, cache_id$1582),
           b);
-      /*<<ControllerListeners.ml:588:14>>*/ createCFGController2(newCFG[2], 1);
-     var c =  /*<<ControllerListeners.ml:588:54>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:573:14>>*/ createCFGController2(newCFG[2], 1);
+     var c =  /*<<ControllerListeners.ml:573:54>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(c, 975901306, cache_id$1598), c, newCFG) /*<<ControllerListeners.ml:589:44>>*/ ;
+             (caml_get_cached_method(c, 975901306, cache_id$1583), c, newCFG) /*<<ControllerListeners.ml:574:44>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ nextNewCFGListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:592:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:577:14>>*/ ctrlL[1],
       b =
-         /*<<ControllerListeners.ml:592:27>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:592:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1599),
+         /*<<ControllerListeners.ml:577:27>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:577:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1584),
           a),
       newCFG =
-         /*<<ControllerListeners.ml:592:47>>*/  /*<<ControllerListeners.ml:592:27>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:592:47>>*/ caml_get_cached_method
-           (b, 423361186, cache_id$1600),
+         /*<<ControllerListeners.ml:577:47>>*/  /*<<ControllerListeners.ml:577:27>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:577:47>>*/ caml_get_cached_method
+           (b, 423361186, cache_id$1585),
           b);
-      /*<<ControllerListeners.ml:593:14>>*/ createCFGController2(newCFG[2], 1);
-     var c =  /*<<ControllerListeners.ml:593:54>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:578:14>>*/ createCFGController2(newCFG[2], 1);
+     var c =  /*<<ControllerListeners.ml:578:54>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(c, 975901306, cache_id$1601), c, newCFG) /*<<ControllerListeners.ml:594:44>>*/ ;
+             (caml_get_cached_method(c, 975901306, cache_id$1586), c, newCFG) /*<<ControllerListeners.ml:579:44>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ removeLeftRecursionListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:597:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:582:14>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:597:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:597:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1602),
+         /*<<ControllerListeners.ml:582:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:582:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1587),
           a);
-      /*<<ControllerListeners.ml:598:14>>*/ if
+      /*<<ControllerListeners.ml:583:14>>*/ if
       (!
-        /*<<ControllerListeners.ml:598:17>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:598:14>>*/ caml_get_cached_method
-          (cfg, 501486625, cache_id$1603),
+        /*<<ControllerListeners.ml:583:17>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:583:14>>*/ caml_get_cached_method
+          (cfg, 501486625, cache_id$1588),
          cfg))
-       /*<<ControllerListeners.ml:602:31>>*/ return  /*<<ControllerListeners.ml:602:65>>*/ alertStr
-              ( /*<<ControllerListeners.ml:602:31>>*/ i18nAlertNotLeftRecursive
-                (0)) /*<<ControllerListeners.ml:602:65>>*/ ;
+       /*<<ControllerListeners.ml:587:31>>*/ return  /*<<ControllerListeners.ml:587:65>>*/ alertStr
+              ( /*<<ControllerListeners.ml:587:31>>*/ i18nAlertNotLeftRecursive
+                (0)) /*<<ControllerListeners.ml:587:65>>*/ ;
      var
       newCfg =
-         /*<<ControllerListeners.ml:599:19>>*/  /*<<ControllerListeners.ml:599:34>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:599:19>>*/ caml_get_cached_method
-           (cfg, 882289370, cache_id$1604),
+         /*<<ControllerListeners.ml:584:19>>*/  /*<<ControllerListeners.ml:584:34>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:584:19>>*/ caml_get_cached_method
+           (cfg, 882289370, cache_id$1589),
           cfg);
-      /*<<ControllerListeners.ml:600:16>>*/ createCFGController2(newCfg[2], 1);
-     var b =  /*<<ControllerListeners.ml:600:56>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:585:16>>*/ createCFGController2(newCfg[2], 1);
+     var b =  /*<<ControllerListeners.ml:585:56>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(b, 975901306, cache_id$1605), b, newCfg) /*<<ControllerListeners.ml:602:65>>*/ ;
+             (caml_get_cached_method(b, 975901306, cache_id$1590), b, newCfg) /*<<ControllerListeners.ml:587:65>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ leftFactoringListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:605:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:590:14>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:605:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:605:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1606),
+         /*<<ControllerListeners.ml:590:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:590:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1591),
           a);
-      /*<<ControllerListeners.ml:606:14>>*/ if
+      /*<<ControllerListeners.ml:591:14>>*/ if
       (!
-        /*<<ControllerListeners.ml:606:17>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:606:14>>*/ caml_get_cached_method
-          (cfg, 881920034, cache_id$1607),
+        /*<<ControllerListeners.ml:591:17>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:591:14>>*/ caml_get_cached_method
+          (cfg, 881920034, cache_id$1592),
          cfg))
-       /*<<ControllerListeners.ml:610:31>>*/ return  /*<<ControllerListeners.ml:610:65>>*/ alertStr
-              ( /*<<ControllerListeners.ml:610:31>>*/ i18nAlertNotLeftFactoring
-                (0)) /*<<ControllerListeners.ml:610:65>>*/ ;
+       /*<<ControllerListeners.ml:595:31>>*/ return  /*<<ControllerListeners.ml:595:65>>*/ alertStr
+              ( /*<<ControllerListeners.ml:595:31>>*/ i18nAlertNotLeftFactoring
+                (0)) /*<<ControllerListeners.ml:595:65>>*/ ;
      var
       newCfg =
-         /*<<ControllerListeners.ml:607:19>>*/  /*<<ControllerListeners.ml:607:34>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:607:19>>*/ caml_get_cached_method
-           (cfg, 3596357, cache_id$1608),
+         /*<<ControllerListeners.ml:592:19>>*/  /*<<ControllerListeners.ml:592:34>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:592:19>>*/ caml_get_cached_method
+           (cfg, 3596357, cache_id$1593),
           cfg);
-      /*<<ControllerListeners.ml:608:16>>*/ createCFGController2(newCfg[2], 1);
-     var b =  /*<<ControllerListeners.ml:608:56>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:593:16>>*/ createCFGController2(newCfg[2], 1);
+     var b =  /*<<ControllerListeners.ml:593:56>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(b, 975901306, cache_id$1609), b, newCfg) /*<<ControllerListeners.ml:610:65>>*/ ;
+             (caml_get_cached_method(b, 975901306, cache_id$1594), b, newCfg) /*<<ControllerListeners.ml:595:65>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ removeEpsilonListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:613:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:598:14>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:613:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:613:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1610),
+         /*<<ControllerListeners.ml:598:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:598:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1595),
           a);
-      /*<<ControllerListeners.ml:614:14>>*/ if
+      /*<<ControllerListeners.ml:599:14>>*/ if
       (!
-        /*<<ControllerListeners.ml:614:17>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:614:14>>*/ caml_get_cached_method
-          (cfg, 776118855, cache_id$1611),
+        /*<<ControllerListeners.ml:599:17>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:599:14>>*/ caml_get_cached_method
+          (cfg, 776118855, cache_id$1596),
          cfg))
-       /*<<ControllerListeners.ml:618:31>>*/ return  /*<<ControllerListeners.ml:618:67>>*/ alertStr
-              ( /*<<ControllerListeners.ml:618:31>>*/ i18nAlertNoEmptyProductions
-                (0)) /*<<ControllerListeners.ml:618:67>>*/ ;
+       /*<<ControllerListeners.ml:603:31>>*/ return  /*<<ControllerListeners.ml:603:67>>*/ alertStr
+              ( /*<<ControllerListeners.ml:603:31>>*/ i18nAlertNoEmptyProductions
+                (0)) /*<<ControllerListeners.ml:603:67>>*/ ;
      var
       newCfg =
-         /*<<ControllerListeners.ml:615:19>>*/  /*<<ControllerListeners.ml:615:34>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:615:19>>*/ caml_get_cached_method
-           (cfg, 820172768, cache_id$1612),
+         /*<<ControllerListeners.ml:600:19>>*/  /*<<ControllerListeners.ml:600:34>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:600:19>>*/ caml_get_cached_method
+           (cfg, 820172768, cache_id$1597),
           cfg);
-      /*<<ControllerListeners.ml:616:16>>*/ createCFGController2(newCfg[2], 1);
-     var b =  /*<<ControllerListeners.ml:616:56>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:601:16>>*/ createCFGController2(newCfg[2], 1);
+     var b =  /*<<ControllerListeners.ml:601:56>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(b, 975901306, cache_id$1613), b, newCfg) /*<<ControllerListeners.ml:618:67>>*/ ;
+             (caml_get_cached_method(b, 975901306, cache_id$1598), b, newCfg) /*<<ControllerListeners.ml:603:67>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ removeUnitListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:621:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:606:14>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:621:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:621:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1614),
+         /*<<ControllerListeners.ml:606:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:606:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1599),
           a);
-      /*<<ControllerListeners.ml:622:14>>*/ if
+      /*<<ControllerListeners.ml:607:14>>*/ if
       (!
-        /*<<ControllerListeners.ml:622:17>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:622:14>>*/ caml_get_cached_method
-          (cfg, -230922756, cache_id$1615),
+        /*<<ControllerListeners.ml:607:17>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:607:14>>*/ caml_get_cached_method
+          (cfg, -230922756, cache_id$1600),
          cfg))
-       /*<<ControllerListeners.ml:626:31>>*/ return  /*<<ControllerListeners.ml:626:66>>*/ alertStr
-              ( /*<<ControllerListeners.ml:626:31>>*/ i18nAlertNoUnitProductions
-                (0)) /*<<ControllerListeners.ml:626:66>>*/ ;
+       /*<<ControllerListeners.ml:611:31>>*/ return  /*<<ControllerListeners.ml:611:66>>*/ alertStr
+              ( /*<<ControllerListeners.ml:611:31>>*/ i18nAlertNoUnitProductions
+                (0)) /*<<ControllerListeners.ml:611:66>>*/ ;
      var
       newCfg =
-         /*<<ControllerListeners.ml:623:19>>*/  /*<<ControllerListeners.ml:623:34>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:623:19>>*/ caml_get_cached_method
-           (cfg, 455878559, cache_id$1616),
+         /*<<ControllerListeners.ml:608:19>>*/  /*<<ControllerListeners.ml:608:34>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:608:19>>*/ caml_get_cached_method
+           (cfg, 455878559, cache_id$1601),
           cfg);
-      /*<<ControllerListeners.ml:624:16>>*/ createCFGController2(newCfg[2], 1);
-     var b =  /*<<ControllerListeners.ml:624:56>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:609:16>>*/ createCFGController2(newCfg[2], 1);
+     var b =  /*<<ControllerListeners.ml:609:56>>*/ ctrlL[1];
      return caml_call2
-             (caml_get_cached_method(b, 975901306, cache_id$1617), b, newCfg) /*<<ControllerListeners.ml:626:66>>*/ ;
+             (caml_get_cached_method(b, 975901306, cache_id$1602), b, newCfg) /*<<ControllerListeners.ml:611:66>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ transformLL1Listener[1] =
+    function(param){
+     var
+      a =  /*<<ControllerListeners.ml:614:14>>*/ ctrlL[1],
+      cfg =
+         /*<<ControllerListeners.ml:614:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:614:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1603),
+          a);
+      /*<<ControllerListeners.ml:615:14>>*/ if
+      ( /*<<ControllerListeners.ml:615:21>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:615:14>>*/ caml_get_cached_method
+          (cfg, -1051697145, cache_id$1604),
+         cfg))
+       /*<<ControllerListeners.ml:619:31>>*/ return  /*<<ControllerListeners.ml:619:54>>*/ alertStr
+              ( /*<<ControllerListeners.ml:619:31>>*/ i18nAlertIsLL1(0)) /*<<ControllerListeners.ml:619:54>>*/ ;
+     var
+      newCfg =
+         /*<<ControllerListeners.ml:616:19>>*/  /*<<ControllerListeners.ml:616:34>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:616:19>>*/ caml_get_cached_method
+           (cfg, 950781710, cache_id$1605),
+          cfg);
+      /*<<ControllerListeners.ml:617:16>>*/ createCFGController2(newCfg[2], 1);
+     var b =  /*<<ControllerListeners.ml:617:56>>*/ ctrlL[1];
+     return caml_call2
+             (caml_get_cached_method(b, 975901306, cache_id$1606), b, newCfg) /*<<ControllerListeners.ml:619:54>>*/ ;
+    };
+    /*<<Controller.ml:296:37>>*/ tablesListener[1] =
+    function(param){
+     var
+      a =  /*<<ControllerListeners.ml:622:14>>*/ ctrlL[1],
+      cfg =
+         /*<<ControllerListeners.ml:622:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:622:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1607),
+          a),
+      b =  /*<<ControllerListeners.ml:623:14>>*/ ctrlL[1];
+     twoBoxes$0
+      ( /*<<ControllerListeners.ml:623:32>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:623:14>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1608),
+         b));
+      /*<<ControllerListeners.ml:624:14>>*/ prepareCFG2Tables(0);
+      /*<<ControllerListeners.ml:624:49>>*/  /*<<ControllerListeners.ml:625:14>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:624:49>>*/ caml_get_cached_method
+        (cfg, 317509765, cache_id$1609),
+       cfg);
+      /*<<ControllerListeners.ml:625:47>>*/ return caml_call1
+             (caml_get_cached_method(cfg, 441762149, cache_id$1610), cfg) /*<<ControllerListeners.ml:626:40>>*/ ;
+    };
+    /*<<Controller.ml:296:37>>*/ recursiveDescedentParserListen[1] =
     function(param){
      var
       a =  /*<<ControllerListeners.ml:629:14>>*/ ctrlL[1],
       cfg =
          /*<<ControllerListeners.ml:629:24>>*/ caml_call1
          ( /*<<ControllerListeners.ml:629:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1618),
+           (a, 588944750, cache_id$1611),
           a);
       /*<<ControllerListeners.ml:630:14>>*/ if
-      ( /*<<ControllerListeners.ml:630:21>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:630:14>>*/ caml_get_cached_method
-          (cfg, -1051697145, cache_id$1619),
-         cfg))
-       /*<<ControllerListeners.ml:634:31>>*/ return  /*<<ControllerListeners.ml:634:54>>*/ alertStr
-              ( /*<<ControllerListeners.ml:634:31>>*/ i18nAlertIsLL1(0)) /*<<ControllerListeners.ml:634:54>>*/ ;
-     var
-      newCfg =
-         /*<<ControllerListeners.ml:631:19>>*/  /*<<ControllerListeners.ml:631:34>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:631:19>>*/ caml_get_cached_method
-           (cfg, 950781710, cache_id$1620),
-          cfg);
-      /*<<ControllerListeners.ml:632:16>>*/ createCFGController2(newCfg[2], 1);
-     var b =  /*<<ControllerListeners.ml:632:56>>*/ ctrlL[1];
-     return caml_call2
-             (caml_get_cached_method(b, 975901306, cache_id$1621), b, newCfg) /*<<ControllerListeners.ml:634:54>>*/ ;
-    };
-    /*<<Controller.ml:296:37>>*/ tablesListener[1] =
-    function(param){
-     var
-      a =  /*<<ControllerListeners.ml:637:14>>*/ ctrlL[1],
-      cfg =
-         /*<<ControllerListeners.ml:637:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:637:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1622),
-          a),
-      b =  /*<<ControllerListeners.ml:638:14>>*/ ctrlL[1];
-     twoBoxes$0
-      ( /*<<ControllerListeners.ml:638:32>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:638:14>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1623),
-         b));
-      /*<<ControllerListeners.ml:639:14>>*/ prepareCFG2Tables(0);
-      /*<<ControllerListeners.ml:639:49>>*/  /*<<ControllerListeners.ml:640:14>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:639:49>>*/ caml_get_cached_method
-        (cfg, 317509765, cache_id$1624),
-       cfg);
-      /*<<ControllerListeners.ml:640:47>>*/ return caml_call1
-             (caml_get_cached_method(cfg, 441762149, cache_id$1625), cfg) /*<<ControllerListeners.ml:641:40>>*/ ;
-    };
-    /*<<Controller.ml:296:37>>*/ recursiveDescedentParserListen[1] =
-    function(param){
-     var
-      a =  /*<<ControllerListeners.ml:644:14>>*/ ctrlL[1],
-      cfg =
-         /*<<ControllerListeners.ml:644:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:644:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1626),
-          a);
-      /*<<ControllerListeners.ml:645:14>>*/ if
       (!
-        /*<<ControllerListeners.ml:645:21>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:645:14>>*/ caml_get_cached_method
-          (cfg, -1051697145, cache_id$1627),
+        /*<<ControllerListeners.ml:630:21>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:630:14>>*/ caml_get_cached_method
+          (cfg, -1051697145, cache_id$1612),
          cfg))
-       /*<<ControllerListeners.ml:646:31>>*/ return  /*<<ControllerListeners.ml:646:52>>*/ alertStr
-              ( /*<<ControllerListeners.ml:646:31>>*/ i18nIsNotLL1(0)) /*<<ControllerListeners.ml:650:131>>*/ ;
-     var b =  /*<<ControllerListeners.ml:647:20>>*/ ctrlL[1];
-      /*<<ControllerListeners.ml:648:16>>*/ twoBoxes$0
-      ( /*<<ControllerListeners.ml:648:34>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:647:20>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1628),
+       /*<<ControllerListeners.ml:631:31>>*/ return  /*<<ControllerListeners.ml:631:52>>*/ alertStr
+              ( /*<<ControllerListeners.ml:631:31>>*/ i18nIsNotLL1(0)) /*<<ControllerListeners.ml:635:131>>*/ ;
+     var b =  /*<<ControllerListeners.ml:632:20>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:633:16>>*/ twoBoxes$0
+      ( /*<<ControllerListeners.ml:633:34>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:632:20>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1613),
          b));
      var
       optsList =
-         /*<<ControllerListeners.ml:648:55>>*/  /*<<ControllerListeners.ml:649:31>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:648:55>>*/ caml_get_cached_method
-           (cfg, 219147153, cache_id$1629),
+         /*<<ControllerListeners.ml:633:55>>*/  /*<<ControllerListeners.ml:634:31>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:633:55>>*/ caml_get_cached_method
+           (cfg, 219147153, cache_id$1614),
           cfg),
-      c =  /*<<ControllerListeners.ml:650:16>>*/ ctrlL[1],
+      c =  /*<<ControllerListeners.ml:635:16>>*/ ctrlL[1],
       d =
-         /*<<ControllerListeners.ml:650:77>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:650:16>>*/ caml_get_cached_method
-           (c, 588944750, cache_id$1630),
+         /*<<ControllerListeners.ml:635:77>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:635:16>>*/ caml_get_cached_method
+           (c, 588944750, cache_id$1615),
           c);
-      /*<<ControllerListeners.ml:650:95>>*/ return  /*<<ControllerListeners.ml:650:130>>*/ prepareCFG2RecursiveDescedentP
+      /*<<ControllerListeners.ml:635:95>>*/ return  /*<<ControllerListeners.ml:635:130>>*/ prepareCFG2RecursiveDescedentP
              (optsList,
-               /*<<ControllerListeners.ml:650:76>>*/ caml_call1
-               ( /*<<ControllerListeners.ml:650:95>>*/ caml_get_cached_method
-                 (d, -235530403, cache_id$1631),
-                d)) /*<<ControllerListeners.ml:650:131>>*/ ;
+               /*<<ControllerListeners.ml:635:76>>*/ caml_call1
+               ( /*<<ControllerListeners.ml:635:95>>*/ caml_get_cached_method
+                 (d, -235530403, cache_id$1616),
+                d)) /*<<ControllerListeners.ml:635:131>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$6[1] =
     function(param){
-      /*<<ControllerListeners.ml:662:4>>*/ try{
+      /*<<ControllerListeners.ml:647:4>>*/ try{
       var
        str =
-          /*<<ControllerListeners.ml:663:16>>*/ extractStringFromTextArea(0),
-       grModel =  /*<<ControllerListeners.ml:664:20>>*/ grStr2Model(str);
-       /*<<ControllerListeners.ml:665:6>>*/ hideModalWindow(0);
-      var a =  /*<<ControllerListeners.ml:665:38>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:666:6>>*/ oneBox$0
-       ( /*<<ControllerListeners.ml:666:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:665:38>>*/ caml_get_cached_method
-           (a, -62434272, cache_id$1632),
+          /*<<ControllerListeners.ml:648:16>>*/ extractStringFromTextArea(0),
+       grModel =  /*<<ControllerListeners.ml:649:20>>*/ grStr2Model(str);
+       /*<<ControllerListeners.ml:650:6>>*/ hideModalWindow(0);
+      var a =  /*<<ControllerListeners.ml:650:38>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:651:6>>*/ oneBox$0
+       ( /*<<ControllerListeners.ml:651:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:650:38>>*/ caml_get_cached_method
+           (a, -62434272, cache_id$1617),
           a));
-       /*<<ControllerListeners.ml:667:6>>*/ clearBox1(0);
-       /*<<ControllerListeners.ml:668:6>>*/ createGRController2(grModel, 0);
-      var b =  /*<<ControllerListeners.ml:668:39>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:669:6>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:668:39>>*/ caml_get_cached_method
-         (b, -304119505, cache_id$1633),
+       /*<<ControllerListeners.ml:652:6>>*/ clearBox1(0);
+       /*<<ControllerListeners.ml:653:6>>*/ createGRController2(grModel, 0);
+      var b =  /*<<ControllerListeners.ml:653:39>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:654:6>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:653:39>>*/ caml_get_cached_method
+         (b, -304119505, cache_id$1618),
         b);
-      var c =  /*<<ControllerListeners.ml:670:6>>*/ setTitle(0);
+      var c =  /*<<ControllerListeners.ml:655:6>>*/ setTitle(0);
       return c;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:672:20>>*/ return  /*<<ControllerListeners.ml:672:45>>*/ alert
-              ( /*<<ControllerListeners.ml:672:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:672:45>>*/ ;
+       /*<<ControllerListeners.ml:657:20>>*/ return  /*<<ControllerListeners.ml:657:45>>*/ alert
+              ( /*<<ControllerListeners.ml:657:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:657:45>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ simpleToggleListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:678:14>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:663:14>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:678:24>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:678:14>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1634),
+         /*<<ControllerListeners.ml:663:24>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:663:14>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1619),
           a);
-      /*<<ControllerListeners.ml:679:14>>*/ caml_call1
-      (caml_get_cached_method(cfg, 603956300, cache_id$1635), cfg);
+      /*<<ControllerListeners.ml:664:14>>*/ caml_call1
+      (caml_get_cached_method(cfg, 603956300, cache_id$1620), cfg);
      var
       elem =
-         /*<<ControllerListeners.ml:680:53>>*/  /*<<ControllerListeners.ml:680:25>>*/ getElementById_opt
-         ( /*<<ControllerListeners.ml:680:53>>*/ firstFollowTableId(0));
-      /*<<ControllerListeners.ml:681:14>>*/ if(! elem)
-       /*<<ControllerListeners.ml:682:24>>*/ return 0;
+         /*<<ControllerListeners.ml:665:53>>*/  /*<<ControllerListeners.ml:665:25>>*/ getElementById_opt
+         ( /*<<ControllerListeners.ml:665:53>>*/ firstFollowTableId(0));
+      /*<<ControllerListeners.ml:666:14>>*/ if(! elem)
+       /*<<ControllerListeners.ml:667:24>>*/ return 0;
      var
-      e =  /*<<ControllerListeners.ml:681:14>>*/ elem[1],
+      e =  /*<<ControllerListeners.ml:666:14>>*/ elem[1],
       otherE =
-         /*<<ControllerListeners.ml:683:63>>*/  /*<<ControllerListeners.ml:683:39>>*/ getElementById
-         ( /*<<ControllerListeners.ml:683:63>>*/ parsingTableId(0));
-      /*<<ControllerListeners.ml:684:26>>*/ (function(t3, t2, param){
+         /*<<ControllerListeners.ml:668:63>>*/  /*<<ControllerListeners.ml:668:39>>*/ getElementById
+         ( /*<<ControllerListeners.ml:668:63>>*/ parsingTableId(0));
+      /*<<ControllerListeners.ml:669:26>>*/ (function(t3, t2, param){
          /*<<?>>*/ t3.innerHTML = t2;
        }
-        /*<<ControllerListeners.ml:684:26>>*/ (e,
+        /*<<ControllerListeners.ml:669:26>>*/ (e,
         cst$1,
         function(x){
          return caml_call1
-                 (caml_get_cached_method(x, 746263041, cache_id$1636), x) /*<<ControllerListeners.ml:684:39>>*/ ;
+                 (caml_get_cached_method(x, 746263041, cache_id$1621), x) /*<<ControllerListeners.ml:669:39>>*/ ;
         }));
-      /*<<ControllerListeners.ml:685:26>>*/ (function(t5, t4, param){
+      /*<<ControllerListeners.ml:670:26>>*/ (function(t5, t4, param){
          /*<<?>>*/ t5.innerHTML = t4;
        }
-        /*<<ControllerListeners.ml:685:26>>*/ (otherE,
+        /*<<ControllerListeners.ml:670:26>>*/ (otherE,
         cst$1,
         function(x){
          return caml_call1
-                 (caml_get_cached_method(x, 746263041, cache_id$1637), x) /*<<ControllerListeners.ml:685:44>>*/ ;
+                 (caml_get_cached_method(x, 746263041, cache_id$1622), x) /*<<ControllerListeners.ml:670:44>>*/ ;
         }));
-      /*<<ControllerListeners.ml:685:60>>*/  /*<<ControllerListeners.ml:686:26>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:685:60>>*/ caml_get_cached_method
-        (cfg, 317509765, cache_id$1638),
+      /*<<ControllerListeners.ml:670:60>>*/  /*<<ControllerListeners.ml:671:26>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:670:60>>*/ caml_get_cached_method
+        (cfg, 317509765, cache_id$1623),
        cfg);
-      /*<<ControllerListeners.ml:686:59>>*/ return caml_call1
-             (caml_get_cached_method(cfg, 441762149, cache_id$1639), cfg) /*<<ControllerListeners.ml:687:52>>*/ ;
+      /*<<ControllerListeners.ml:671:59>>*/ return caml_call1
+             (caml_get_cached_method(cfg, 441762149, cache_id$1624), cfg) /*<<ControllerListeners.ml:672:52>>*/ ;
     };
    function createModelPrep(titleTxt, otherTxt, textAreaString, okAction){
     var
      modelContent =
-        /*<<ControllerListeners.ml:691:25>>*/ editModelContent
+        /*<<ControllerListeners.ml:676:25>>*/ editModelContent
         (titleTxt, otherTxt, textAreaString, okAction);
-     /*<<ControllerListeners.ml:692:6>>*/ setModal(modelContent);
-     /*<<ControllerListeners.ml:692:61>>*/ return showModalWindow(0) /*<<ControllerListeners.ml:693:39>>*/ ;
+     /*<<ControllerListeners.ml:677:6>>*/ setModal(modelContent);
+     /*<<ControllerListeners.ml:677:61>>*/ return showModalWindow(0) /*<<ControllerListeners.ml:678:39>>*/ ;
    }
    function createModel(modelType, opt, param){
-     /*<<ControllerListeners.ml:697:6>>*/ if(opt)
+     /*<<ControllerListeners.ml:682:6>>*/ if(opt)
      var
       sth = opt[1],
-      customString =  /*<<ControllerListeners.ml:696:45>>*/ sth;
+      customString =  /*<<ControllerListeners.ml:681:45>>*/ sth;
     else
-     var customString =  /*<<ControllerListeners.ml:697:6>>*/ al4;
+     var customString =  /*<<ControllerListeners.ml:682:6>>*/ al4;
     function getDefault(default$){
-      /*<<ControllerListeners.ml:697:51>>*/ return customString === cst$1
+      /*<<ControllerListeners.ml:682:51>>*/ return customString === cst$1
              ? default$
-             : customString /*<<ControllerListeners.ml:697:82>>*/ ;
+             : customString /*<<ControllerListeners.ml:682:82>>*/ ;
     }
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType === cst_CFG){
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType === cst_CFG){
      var
-      e =  /*<<ControllerListeners.ml:704:86>>*/ getDefault(al3),
-      f =  /*<<ControllerListeners.ml:704:57>>*/ i18nInstructionsCFG(0);
-      /*<<ControllerListeners.ml:704:33>>*/ return  /*<<ControllerListeners.ml:704:56>>*/ createModelPrep
-             ( /*<<ControllerListeners.ml:704:33>>*/ i18nMainTitle4(0),
+      e =  /*<<ControllerListeners.ml:689:86>>*/ getDefault(al3),
+      f =  /*<<ControllerListeners.ml:689:57>>*/ i18nInstructionsCFG(0);
+      /*<<ControllerListeners.ml:689:33>>*/ return  /*<<ControllerListeners.ml:689:56>>*/ createModelPrep
+             ( /*<<ControllerListeners.ml:689:33>>*/ i18nMainTitle4(0),
               f,
               e,
               function(param){
-                /*<<ControllerListeners.ml:704:135>>*/ return caml_call1
-                       (createModelListener$5[1], 0) /*<<ControllerListeners.ml:704:170>>*/ ;
-              }) /*<<ControllerListeners.ml:707:15>>*/ ;
+                /*<<ControllerListeners.ml:689:135>>*/ return caml_call1
+                       (createModelListener$5[1], 0) /*<<ControllerListeners.ml:689:170>>*/ ;
+              }) /*<<ControllerListeners.ml:692:15>>*/ ;
     }
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType === cst_Comp){
-     var d =  /*<<ControllerListeners.ml:703:64>>*/ getDefault(al1);
-      /*<<ControllerListeners.ml:703:34>>*/ return  /*<<ControllerListeners.ml:703:60>>*/ createModelPrep
-             ( /*<<ControllerListeners.ml:703:34>>*/ i18nMainTitleComp(0),
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType === cst_Comp){
+     var d =  /*<<ControllerListeners.ml:688:64>>*/ getDefault(al1);
+      /*<<ControllerListeners.ml:688:34>>*/ return  /*<<ControllerListeners.ml:688:60>>*/ createModelPrep
+             ( /*<<ControllerListeners.ml:688:34>>*/ i18nMainTitleComp(0),
               al2,
               d,
               function(param){
-                /*<<ControllerListeners.ml:703:106>>*/ return caml_call1
-                       (createModelListener$7[1], 0) /*<<ControllerListeners.ml:703:142>>*/ ;
-              }) /*<<ControllerListeners.ml:707:15>>*/ ;
+                /*<<ControllerListeners.ml:688:106>>*/ return caml_call1
+                       (createModelListener$7[1], 0) /*<<ControllerListeners.ml:688:142>>*/ ;
+              }) /*<<ControllerListeners.ml:692:15>>*/ ;
     }
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType === cst_FA)
-      /*<<ControllerListeners.ml:699:16>>*/ return caml_call1
-             (createModelListener$0[1], 0) /*<<ControllerListeners.ml:707:15>>*/ ;
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType === cst_FST)
-      /*<<ControllerListeners.ml:706:17>>*/ return caml_call1
-             (createModelListener$1[1], 0) /*<<ControllerListeners.ml:707:15>>*/ ;
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType === cst_GR){
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType === cst_FA)
+      /*<<ControllerListeners.ml:684:16>>*/ return caml_call1
+             (createModelListener$0[1], 0) /*<<ControllerListeners.ml:692:15>>*/ ;
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType === cst_FST)
+      /*<<ControllerListeners.ml:691:17>>*/ return caml_call1
+             (createModelListener$1[1], 0) /*<<ControllerListeners.ml:692:15>>*/ ;
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType === cst_GR){
      var
-      b =  /*<<ControllerListeners.ml:705:84>>*/ getDefault(al0),
-      c =  /*<<ControllerListeners.ml:705:56>>*/ i18nInstructionsGR(0);
-      /*<<ControllerListeners.ml:705:32>>*/ return  /*<<ControllerListeners.ml:705:55>>*/ createModelPrep
-             ( /*<<ControllerListeners.ml:705:32>>*/ i18nMainTitle5(0),
+      b =  /*<<ControllerListeners.ml:690:84>>*/ getDefault(al0),
+      c =  /*<<ControllerListeners.ml:690:56>>*/ i18nInstructionsGR(0);
+      /*<<ControllerListeners.ml:690:32>>*/ return  /*<<ControllerListeners.ml:690:55>>*/ createModelPrep
+             ( /*<<ControllerListeners.ml:690:32>>*/ i18nMainTitle5(0),
               c,
               b,
               function(param){
-                /*<<ControllerListeners.ml:705:206>>*/ return caml_call1
-                       (createModelListener$6[1], 0) /*<<ControllerListeners.ml:705:240>>*/ ;
-              }) /*<<ControllerListeners.ml:707:15>>*/ ;
+                /*<<ControllerListeners.ml:690:206>>*/ return caml_call1
+                       (createModelListener$6[1], 0) /*<<ControllerListeners.ml:690:240>>*/ ;
+              }) /*<<ControllerListeners.ml:692:15>>*/ ;
     }
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType === cst_PDA)
-      /*<<ControllerListeners.ml:700:17>>*/ return caml_call1
-             (createModelListener$3[1], 0) /*<<ControllerListeners.ml:707:15>>*/ ;
-     /*<<ControllerListeners.ml:698:6>>*/ if(modelType !== cst_RE)
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType === cst_PDA)
+      /*<<ControllerListeners.ml:685:17>>*/ return caml_call1
+             (createModelListener$3[1], 0) /*<<ControllerListeners.ml:692:15>>*/ ;
+     /*<<ControllerListeners.ml:683:6>>*/ if(modelType !== cst_RE)
      return modelType !== cst_TM
              ? 0
-             :  /*<<ControllerListeners.ml:701:16>>*/ caml_call1
-               (createModelListener$2[1], 0) /*<<ControllerListeners.ml:707:15>>*/ ;
-    var a =  /*<<ControllerListeners.ml:702:59>>*/ getDefault(alY);
-     /*<<ControllerListeners.ml:702:32>>*/ return  /*<<ControllerListeners.ml:702:55>>*/ createModelPrep
-            ( /*<<ControllerListeners.ml:702:32>>*/ i18nMainTitle2(0),
+             :  /*<<ControllerListeners.ml:686:16>>*/ caml_call1
+               (createModelListener$2[1], 0) /*<<ControllerListeners.ml:692:15>>*/ ;
+    var a =  /*<<ControllerListeners.ml:687:59>>*/ getDefault(alY);
+     /*<<ControllerListeners.ml:687:32>>*/ return  /*<<ControllerListeners.ml:687:55>>*/ createModelPrep
+            ( /*<<ControllerListeners.ml:687:32>>*/ i18nMainTitle2(0),
              alZ,
              a,
              function(param){
-               /*<<ControllerListeners.ml:702:88>>*/ return caml_call1
-                      (createModelListener$4[1], 0) /*<<ControllerListeners.ml:702:122>>*/ ;
-             }) /*<<ControllerListeners.ml:707:15>>*/ ;
+               /*<<ControllerListeners.ml:687:88>>*/ return caml_call1
+                      (createModelListener$4[1], 0) /*<<ControllerListeners.ml:687:122>>*/ ;
+             }) /*<<ControllerListeners.ml:692:15>>*/ ;
    }
     /*<<Controller.ml:296:37>>*/ createModelListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:712:49>>*/  /*<<ControllerListeners.ml:712:8>>*/ putInnerHtml
-      (al5,  /*<<ControllerListeners.ml:712:49>>*/ i18nSelectConv(0));
+      /*<<ControllerListeners.ml:697:49>>*/  /*<<ControllerListeners.ml:697:8>>*/ putInnerHtml
+      (al5,  /*<<ControllerListeners.ml:697:49>>*/ i18nSelectConv(0));
      var
       match =
-         /*<<ControllerListeners.ml:713:14>>*/ getElementById_coerce
+         /*<<ControllerListeners.ml:698:14>>*/ getElementById_coerce
          (al6, select);
-      /*<<ControllerListeners.ml:713:86>>*/ if(! match)
-       /*<<ControllerListeners.ml:714:18>>*/ return 0;
+      /*<<ControllerListeners.ml:698:86>>*/ if(! match)
+       /*<<ControllerListeners.ml:699:18>>*/ return 0;
      var
-      select$0 =  /*<<ControllerListeners.ml:713:86>>*/ match[1],
+      select$0 =  /*<<ControllerListeners.ml:698:86>>*/ match[1],
       value =
-         /*<<ControllerListeners.ml:716:37>>*/  /*<<ControllerListeners.ml:716:24>>*/ caml_string_of_jsstring
-         ( /*<<ControllerListeners.ml:716:37>>*/ function(t6, param){
+         /*<<ControllerListeners.ml:701:37>>*/  /*<<ControllerListeners.ml:701:24>>*/ caml_string_of_jsstring
+         ( /*<<ControllerListeners.ml:701:37>>*/ function(t6, param){
              /*<<?>>*/ return t6.value;
            }
-            /*<<ControllerListeners.ml:716:37>>*/ (select$0,
+            /*<<ControllerListeners.ml:701:37>>*/ (select$0,
             function(x){
-              /*<<ControllerListeners.ml:716:46>>*/ return caml_call1
-                     (caml_get_cached_method(x, 834174833, cache_id$1640), x) /*<<ControllerListeners.ml:716:51>>*/ ;
+              /*<<ControllerListeners.ml:701:46>>*/ return caml_call1
+                     (caml_get_cached_method(x, 834174833, cache_id$1625), x) /*<<ControllerListeners.ml:701:51>>*/ ;
             }));
-      /*<<ControllerListeners.ml:717:45>>*/ if
+      /*<<ControllerListeners.ml:702:45>>*/ if
       (value === cst_optionNewAutomatonFA)
-       /*<<ControllerListeners.ml:717:51>>*/ createModel(al7, 0, 0);
+       /*<<ControllerListeners.ml:702:51>>*/ createModel(al7, 0, 0);
      else if(value === cst_optionNewAutomatonPDA)
-       /*<<ControllerListeners.ml:718:52>>*/ createModel(al8, 0, 0);
+       /*<<ControllerListeners.ml:703:52>>*/ createModel(al8, 0, 0);
      else if(value === cst_optionNewRegularExpression)
-       /*<<ControllerListeners.ml:719:57>>*/ createModel(al9, 0, 0);
+       /*<<ControllerListeners.ml:704:57>>*/ createModel(al9, 0, 0);
      else if(value === cst_optionNewContextFreeGramma)
-       /*<<ControllerListeners.ml:720:58>>*/ createModel(al_, 0, 0);
+       /*<<ControllerListeners.ml:705:58>>*/ createModel(al_, 0, 0);
      else if(value === cst_optionNewGrammar)
-       /*<<ControllerListeners.ml:721:47>>*/ createModel(al$, 0, 0);
+       /*<<ControllerListeners.ml:706:47>>*/ createModel(al$, 0, 0);
      else if(value === cst_optionNewTransducer)
-       /*<<ControllerListeners.ml:722:50>>*/ createModel(ama, 0, 0);
+       /*<<ControllerListeners.ml:707:50>>*/ createModel(ama, 0, 0);
      else if(value === cst_optionNewTuringMachine)
-       /*<<ControllerListeners.ml:723:53>>*/ createModel(amb, 0, 0);
+       /*<<ControllerListeners.ml:708:53>>*/ createModel(amb, 0, 0);
      else if(value === cst_optionNewComposition)
-       /*<<ControllerListeners.ml:724:51>>*/ createModel(amc, 0, 0);
-      /*<<ControllerListeners.ml:725:12>>*/ return function(t8, t7, param){
+       /*<<ControllerListeners.ml:709:51>>*/ createModel(amc, 0, 0);
+      /*<<ControllerListeners.ml:710:12>>*/ return function(t8, t7, param){
                /*<<?>>*/ return t8.selectedIndex = t7;
              }
-              /*<<ControllerListeners.ml:725:12>>*/ (select$0,
+              /*<<ControllerListeners.ml:710:12>>*/ (select$0,
               0,
               function(x){
                return caml_call1
-                       (caml_get_cached_method(x, 878081719, cache_id$1641), x) /*<<ControllerListeners.ml:725:34>>*/ ;
-              }) /*<<ControllerListeners.ml:725:39>>*/ ;
+                       (caml_get_cached_method(x, 878081719, cache_id$1626), x) /*<<ControllerListeners.ml:710:34>>*/ ;
+              }) /*<<ControllerListeners.ml:710:39>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ editModelListener$0[1] =
     function(param){
-      /*<<ControllerListeners.ml:729:15>>*/  /*<<ControllerListeners.ml:729:6>>*/ alert
-      ( /*<<ControllerListeners.ml:729:15>>*/ i18nModelEditFA(0));
-     var a =  /*<<ControllerListeners.ml:729:39>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:714:15>>*/  /*<<ControllerListeners.ml:714:6>>*/ alert
+      ( /*<<ControllerListeners.ml:714:15>>*/ i18nModelEditFA(0));
+     var a =  /*<<ControllerListeners.ml:714:39>>*/ ctrlL[1];
      return caml_call1
-             (caml_get_cached_method(a, -336749001, cache_id$1642), a) /*<<ControllerListeners.ml:730:39>>*/ ;
+             (caml_get_cached_method(a, -336749001, cache_id$1627), a) /*<<ControllerListeners.ml:715:39>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ editModelListener$1[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:733:16>>*/ ctrlL[1];
-     return  /*<<ControllerListeners.ml:733:70>>*/ createModel
+     var a =  /*<<ControllerListeners.ml:718:16>>*/ ctrlL[1];
+     return  /*<<ControllerListeners.ml:718:70>>*/ createModel
              (amd,
               [0,
-                /*<<ControllerListeners.ml:733:47>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:733:16>>*/ caml_get_cached_method
-                  (a, 246003656, cache_id$1643),
+                /*<<ControllerListeners.ml:718:47>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:718:16>>*/ caml_get_cached_method
+                  (a, 246003656, cache_id$1628),
                  a)],
-              0) /*<<ControllerListeners.ml:733:73>>*/ ;
+              0) /*<<ControllerListeners.ml:718:73>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ editModelListener$2[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:736:16>>*/ ctrlL[1];
-     return  /*<<ControllerListeners.ml:736:71>>*/ createModel
+     var a =  /*<<ControllerListeners.ml:721:16>>*/ ctrlL[1];
+     return  /*<<ControllerListeners.ml:721:71>>*/ createModel
              (ame,
               [0,
-                /*<<ControllerListeners.ml:736:48>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:736:16>>*/ caml_get_cached_method
-                  (a, 246003656, cache_id$1644),
+                /*<<ControllerListeners.ml:721:48>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:721:16>>*/ caml_get_cached_method
+                  (a, 246003656, cache_id$1629),
                  a)],
-              0) /*<<ControllerListeners.ml:736:74>>*/ ;
+              0) /*<<ControllerListeners.ml:721:74>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ editModelListener$3[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:739:16>>*/ ctrlL[1];
-     return  /*<<ControllerListeners.ml:739:70>>*/ createModel
+     var a =  /*<<ControllerListeners.ml:724:16>>*/ ctrlL[1];
+     return  /*<<ControllerListeners.ml:724:70>>*/ createModel
              (amf,
               [0,
-                /*<<ControllerListeners.ml:739:47>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:739:16>>*/ caml_get_cached_method
-                  (a, 246003656, cache_id$1645),
+                /*<<ControllerListeners.ml:724:47>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:724:16>>*/ caml_get_cached_method
+                  (a, 246003656, cache_id$1630),
                  a)],
-              0) /*<<ControllerListeners.ml:739:73>>*/ ;
+              0) /*<<ControllerListeners.ml:724:73>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ editModelListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:743:49>>*/  /*<<ControllerListeners.ml:743:8>>*/ putInnerHtml
-      (amg,  /*<<ControllerListeners.ml:743:49>>*/ i18nSelectConv(0));
+      /*<<ControllerListeners.ml:728:49>>*/  /*<<ControllerListeners.ml:728:8>>*/ putInnerHtml
+      (amg,  /*<<ControllerListeners.ml:728:49>>*/ i18nSelectConv(0));
      var
-      a =  /*<<ControllerListeners.ml:743:73>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:728:73>>*/ ctrlL[1],
       model =
-         /*<<ControllerListeners.ml:744:20>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:743:73>>*/ caml_get_cached_method
-           (a, -382215286, cache_id$1646),
+         /*<<ControllerListeners.ml:729:20>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:728:73>>*/ caml_get_cached_method
+           (a, -382215286, cache_id$1631),
           a);
-      /*<<ControllerListeners.ml:745:41>>*/ if
+      /*<<ControllerListeners.ml:730:41>>*/ if
       (model === cst_regular_expression){
-      var b =  /*<<ControllerListeners.ml:746:12>>*/ ctrlL[1];
+      var b =  /*<<ControllerListeners.ml:731:12>>*/ ctrlL[1];
       createModel
        (amh,
         [0,
-          /*<<ControllerListeners.ml:746:43>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:746:12>>*/ caml_get_cached_method
-            (b, 246003656, cache_id$1647),
+          /*<<ControllerListeners.ml:731:43>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:731:12>>*/ caml_get_cached_method
+            (b, 246003656, cache_id$1632),
            b)],
         0);
      }
      else if(model === cst_context_free_grammar){
-      var c =  /*<<ControllerListeners.ml:748:12>>*/ ctrlL[1];
+      var c =  /*<<ControllerListeners.ml:733:12>>*/ ctrlL[1];
       createModel
        (amj,
         [0,
-          /*<<ControllerListeners.ml:748:44>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:748:12>>*/ caml_get_cached_method
-            (c, 246003656, cache_id$1649),
+          /*<<ControllerListeners.ml:733:44>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:733:12>>*/ caml_get_cached_method
+            (c, 246003656, cache_id$1634),
            c)],
         0);
      }
      else if(model === cst_grammar){
-      var d =  /*<<ControllerListeners.ml:750:12>>*/ ctrlL[1];
+      var d =  /*<<ControllerListeners.ml:735:12>>*/ ctrlL[1];
       createModel
        (amk,
         [0,
-          /*<<ControllerListeners.ml:750:43>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:750:12>>*/ caml_get_cached_method
-            (d, 246003656, cache_id$1650),
+          /*<<ControllerListeners.ml:735:43>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:735:12>>*/ caml_get_cached_method
+            (d, 246003656, cache_id$1635),
            d)],
         0);
      }
      else if(model === cst_finite_automaton)
-       /*<<ControllerListeners.ml:752:21>>*/  /*<<ControllerListeners.ml:752:12>>*/ alert
-       ( /*<<ControllerListeners.ml:752:21>>*/ i18nModelEditFA(0));
+       /*<<ControllerListeners.ml:737:21>>*/  /*<<ControllerListeners.ml:737:12>>*/ alert
+       ( /*<<ControllerListeners.ml:737:21>>*/ i18nModelEditFA(0));
      else if(model === cst_pushdown_automaton)
-       /*<<ControllerListeners.ml:754:21>>*/  /*<<ControllerListeners.ml:754:12>>*/ alert
-       ( /*<<ControllerListeners.ml:754:21>>*/ i18nModelEditFA(0));
+       /*<<ControllerListeners.ml:739:21>>*/  /*<<ControllerListeners.ml:739:12>>*/ alert
+       ( /*<<ControllerListeners.ml:739:21>>*/ i18nModelEditFA(0));
      else if(model === cst_transducer)
-       /*<<ControllerListeners.ml:756:21>>*/  /*<<ControllerListeners.ml:756:12>>*/ alert
-       ( /*<<ControllerListeners.ml:756:21>>*/ i18nModelEditFA(0));
+       /*<<ControllerListeners.ml:741:21>>*/  /*<<ControllerListeners.ml:741:12>>*/ alert
+       ( /*<<ControllerListeners.ml:741:21>>*/ i18nModelEditFA(0));
      else if(model === cst_turing_machine)
-       /*<<ControllerListeners.ml:758:21>>*/  /*<<ControllerListeners.ml:758:12>>*/ alert
-       ( /*<<ControllerListeners.ml:758:21>>*/ i18nModelEditFA(0));
+       /*<<ControllerListeners.ml:743:21>>*/  /*<<ControllerListeners.ml:743:12>>*/ alert
+       ( /*<<ControllerListeners.ml:743:21>>*/ i18nModelEditFA(0));
      var
       match =
-         /*<<ControllerListeners.ml:760:14>>*/ getElementById_coerce
+         /*<<ControllerListeners.ml:745:14>>*/ getElementById_coerce
          (ami, select);
-      /*<<ControllerListeners.ml:760:86>>*/ if(! match)
-       /*<<ControllerListeners.ml:761:18>>*/ return 0;
-     var select$0 =  /*<<ControllerListeners.ml:760:86>>*/ match[1];
-      /*<<ControllerListeners.ml:762:25>>*/ return function(t10, t9, param){
+      /*<<ControllerListeners.ml:745:86>>*/ if(! match)
+       /*<<ControllerListeners.ml:746:18>>*/ return 0;
+     var select$0 =  /*<<ControllerListeners.ml:745:86>>*/ match[1];
+      /*<<ControllerListeners.ml:747:25>>*/ return function(t10, t9, param){
                /*<<?>>*/ return t10.selectedIndex = t9;
              }
-              /*<<ControllerListeners.ml:762:25>>*/ (select$0,
+              /*<<ControllerListeners.ml:747:25>>*/ (select$0,
               0,
               function(x){
                return caml_call1
-                       (caml_get_cached_method(x, 878081719, cache_id$1648), x) /*<<ControllerListeners.ml:762:47>>*/ ;
-              }) /*<<ControllerListeners.ml:762:52>>*/ ;
+                       (caml_get_cached_method(x, 878081719, cache_id$1633), x) /*<<ControllerListeners.ml:747:47>>*/ ;
+              }) /*<<ControllerListeners.ml:747:52>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$0[1] =
     function(param){
      var
       c =
-         /*<<ControllerListeners.ml:825:15>>*/ [4,
+         /*<<ControllerListeners.ml:810:15>>*/ [4,
          [0, fe_zero, make$10(amm), aml, fe_zero, fe_zero]],
       defaultFA =
-         /*<<ControllerListeners.ml:823:20>>*/ caml_call2(model$13[1], 0, c),
-      a =  /*<<ControllerListeners.ml:830:6>>*/ ctrlL[1];
+         /*<<ControllerListeners.ml:808:20>>*/ caml_call2(model$13[1], 0, c),
+      a =  /*<<ControllerListeners.ml:815:6>>*/ ctrlL[1];
      oneBox$0
-      ( /*<<ControllerListeners.ml:830:22>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:830:6>>*/ caml_get_cached_method
-          (a, -62434272, cache_id$1651),
+      ( /*<<ControllerListeners.ml:815:22>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:815:6>>*/ caml_get_cached_method
+          (a, -62434272, cache_id$1636),
          a));
-      /*<<ControllerListeners.ml:831:6>>*/ clearBox1(0);
-      /*<<ControllerListeners.ml:832:6>>*/ createFAController(defaultFA, 0);
-     var b =  /*<<ControllerListeners.ml:832:40>>*/ ctrlL[1];
-      /*<<ControllerListeners.ml:833:6>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:832:40>>*/ caml_get_cached_method
-        (b, -304119505, cache_id$1652),
+      /*<<ControllerListeners.ml:816:6>>*/ clearBox1(0);
+      /*<<ControllerListeners.ml:817:6>>*/ createFAController(defaultFA, 0);
+     var b =  /*<<ControllerListeners.ml:817:40>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:818:6>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:817:40>>*/ caml_get_cached_method
+        (b, -304119505, cache_id$1637),
        b);
-      /*<<ControllerListeners.ml:833:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:834:16>>*/ ;
+      /*<<ControllerListeners.ml:818:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:819:16>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$3[1] =
     function(param){
      var
-      c =  /*<<ControllerListeners.ml:840:17>>*/ make$10(amo),
+      c =  /*<<ControllerListeners.ml:825:17>>*/ make$10(amo),
       d =
-         /*<<ControllerListeners.ml:839:24>>*/ [4,
+         /*<<ControllerListeners.ml:824:24>>*/ [4,
          [0,
           fe_zero,
           make$10([0, stackSpecialSymb, 0]),
@@ -103180,164 +103065,164 @@
           fe_zero,
           1]],
       defaultPDA =
-         /*<<ControllerListeners.ml:837:21>>*/ caml_call2(model$20[1], 0, d),
-      a =  /*<<ControllerListeners.ml:847:6>>*/ ctrlL[1];
+         /*<<ControllerListeners.ml:822:21>>*/ caml_call2(model$20[1], 0, d),
+      a =  /*<<ControllerListeners.ml:832:6>>*/ ctrlL[1];
      oneBox$0
-      ( /*<<ControllerListeners.ml:847:22>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:847:6>>*/ caml_get_cached_method
-          (a, -62434272, cache_id$1653),
+      ( /*<<ControllerListeners.ml:832:22>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:832:6>>*/ caml_get_cached_method
+          (a, -62434272, cache_id$1638),
          a));
-      /*<<ControllerListeners.ml:848:6>>*/ clearBox1(0);
-      /*<<ControllerListeners.ml:849:6>>*/ createPDAController(defaultPDA, 0);
-     var b =  /*<<ControllerListeners.ml:849:42>>*/ ctrlL[1];
-      /*<<ControllerListeners.ml:850:6>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:849:42>>*/ caml_get_cached_method
-        (b, -304119505, cache_id$1654),
+      /*<<ControllerListeners.ml:833:6>>*/ clearBox1(0);
+      /*<<ControllerListeners.ml:834:6>>*/ createPDAController(defaultPDA, 0);
+     var b =  /*<<ControllerListeners.ml:834:42>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:835:6>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:834:42>>*/ caml_get_cached_method
+        (b, -304119505, cache_id$1639),
        b);
-      /*<<ControllerListeners.ml:850:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:851:16>>*/ ;
+      /*<<ControllerListeners.ml:835:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:836:16>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$1[1] =
     function(param){
      var
       c =
-         /*<<ControllerListeners.ml:857:17>>*/ [4,
+         /*<<ControllerListeners.ml:842:17>>*/ [4,
          [0, fe_zero, fe_zero, make$10(amq), amp, fe_zero, fe_zero]],
       defaultFST =
-         /*<<ControllerListeners.ml:854:23>>*/ caml_call2(model$15[1], 0, c),
-      a =  /*<<ControllerListeners.ml:862:6>>*/ ctrlL[1];
+         /*<<ControllerListeners.ml:839:23>>*/ caml_call2(model$15[1], 0, c),
+      a =  /*<<ControllerListeners.ml:847:6>>*/ ctrlL[1];
      oneBox$0
-      ( /*<<ControllerListeners.ml:862:22>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:862:6>>*/ caml_get_cached_method
-          (a, -62434272, cache_id$1655),
+      ( /*<<ControllerListeners.ml:847:22>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:847:6>>*/ caml_get_cached_method
+          (a, -62434272, cache_id$1640),
          a));
-      /*<<ControllerListeners.ml:863:6>>*/ clearBox1(0);
-      /*<<ControllerListeners.ml:864:6>>*/ createTransducerController
+      /*<<ControllerListeners.ml:848:6>>*/ clearBox1(0);
+      /*<<ControllerListeners.ml:849:6>>*/ createTransducerController
       (defaultFST, 0);
-     var b =  /*<<ControllerListeners.ml:864:49>>*/ ctrlL[1];
-      /*<<ControllerListeners.ml:865:6>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:864:49>>*/ caml_get_cached_method
-        (b, -304119505, cache_id$1656),
+     var b =  /*<<ControllerListeners.ml:849:49>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:850:6>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:849:49>>*/ caml_get_cached_method
+        (b, -304119505, cache_id$1641),
        b);
-      /*<<ControllerListeners.ml:865:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:866:16>>*/ ;
+      /*<<ControllerListeners.ml:850:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:851:16>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$2[1] =
     function(param){
      var
-      c =  /*<<ControllerListeners.ml:873:14>>*/ tm_zero[10],
+      c =  /*<<ControllerListeners.ml:858:14>>*/ tm_zero[10],
       d = tm_zero[9],
       e = tm_zero[8],
       f = tm_zero[7],
       g = tm_zero[6],
       h = make$10(ams),
       defaultTM =
-         /*<<ControllerListeners.ml:870:2>>*/ caml_call2
+         /*<<ControllerListeners.ml:855:2>>*/ caml_call2
          (model$21[1],
           0,
           [4, [0, tm_zero[1], tm_zero[2], tm_zero[3], h, amr, g, f, e, d, c]]),
-      a =  /*<<ControllerListeners.ml:877:6>>*/ ctrlL[1];
+      a =  /*<<ControllerListeners.ml:862:6>>*/ ctrlL[1];
      oneBox$0
-      ( /*<<ControllerListeners.ml:877:22>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:877:6>>*/ caml_get_cached_method
-          (a, -62434272, cache_id$1657),
+      ( /*<<ControllerListeners.ml:862:22>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:862:6>>*/ caml_get_cached_method
+          (a, -62434272, cache_id$1642),
          a));
-      /*<<ControllerListeners.ml:878:6>>*/ clearBox1(0);
-      /*<<ControllerListeners.ml:879:6>>*/ createTMController(defaultTM, 0);
-     var b =  /*<<ControllerListeners.ml:879:40>>*/ ctrlL[1];
-      /*<<ControllerListeners.ml:880:6>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:879:40>>*/ caml_get_cached_method
-        (b, -304119505, cache_id$1658),
+      /*<<ControllerListeners.ml:863:6>>*/ clearBox1(0);
+      /*<<ControllerListeners.ml:864:6>>*/ createTMController(defaultTM, 0);
+     var b =  /*<<ControllerListeners.ml:864:40>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:865:6>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:864:40>>*/ caml_get_cached_method
+        (b, -304119505, cache_id$1643),
        b);
-      /*<<ControllerListeners.ml:880:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:881:16>>*/ ;
+      /*<<ControllerListeners.ml:865:31>>*/ return setTitle(0) /*<<ControllerListeners.ml:866:16>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$4[1] =
     function(param){
-      /*<<ControllerListeners.ml:884:4>>*/ try{
+      /*<<ControllerListeners.ml:869:4>>*/ try{
       var
        str =
-          /*<<ControllerListeners.ml:885:16>>*/ extractStringFromTextArea(0),
-       c =  /*<<ControllerListeners.ml:886:66>>*/ [4, parse$3(str)],
+          /*<<ControllerListeners.ml:870:16>>*/ extractStringFromTextArea(0),
+       c =  /*<<ControllerListeners.ml:871:66>>*/ [4, parse$3(str)],
        reStr =
-          /*<<ControllerListeners.ml:886:18>>*/ caml_call2(model$14[1], 0, c);
-       /*<<ControllerListeners.ml:887:6>>*/ hideModalWindow(0);
-      var a =  /*<<ControllerListeners.ml:887:38>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:888:6>>*/ oneBox$0
-       ( /*<<ControllerListeners.ml:888:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:887:38>>*/ caml_get_cached_method
-           (a, -62434272, cache_id$1659),
+          /*<<ControllerListeners.ml:871:18>>*/ caml_call2(model$14[1], 0, c);
+       /*<<ControllerListeners.ml:872:6>>*/ hideModalWindow(0);
+      var a =  /*<<ControllerListeners.ml:872:38>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:873:6>>*/ oneBox$0
+       ( /*<<ControllerListeners.ml:873:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:872:38>>*/ caml_get_cached_method
+           (a, -62434272, cache_id$1644),
           a));
-       /*<<ControllerListeners.ml:889:6>>*/ clearBox1(0);
-       /*<<ControllerListeners.ml:890:6>>*/ createREController(reStr, 0);
-      var b =  /*<<ControllerListeners.ml:890:36>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:891:6>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:890:36>>*/ caml_get_cached_method
-         (b, -304119505, cache_id$1660),
+       /*<<ControllerListeners.ml:874:6>>*/ clearBox1(0);
+       /*<<ControllerListeners.ml:875:6>>*/ createREController(reStr, 0);
+      var b =  /*<<ControllerListeners.ml:875:36>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:876:6>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:875:36>>*/ caml_get_cached_method
+         (b, -304119505, cache_id$1645),
         b);
-      var d =  /*<<ControllerListeners.ml:892:6>>*/ setTitle(0);
+      var d =  /*<<ControllerListeners.ml:877:6>>*/ setTitle(0);
       return d;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:894:20>>*/ return  /*<<ControllerListeners.ml:894:45>>*/ alert
-              ( /*<<ControllerListeners.ml:894:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:894:45>>*/ ;
+       /*<<ControllerListeners.ml:879:20>>*/ return  /*<<ControllerListeners.ml:879:45>>*/ alert
+              ( /*<<ControllerListeners.ml:879:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:879:45>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$7[1] =
     function(param){
-      /*<<ControllerListeners.ml:898:4>>*/ try{
+      /*<<ControllerListeners.ml:883:4>>*/ try{
       var
        str =
-          /*<<ControllerListeners.ml:899:16>>*/ extractStringFromTextArea(0),
-       c =  /*<<ControllerListeners.ml:900:62>>*/ [4, parse$7(str)],
+          /*<<ControllerListeners.ml:884:16>>*/ extractStringFromTextArea(0),
+       c =  /*<<ControllerListeners.ml:885:62>>*/ [4, parse$7(str)],
        compStr =
-          /*<<ControllerListeners.ml:900:20>>*/ caml_call2(model$22[1], 0, c);
-       /*<<ControllerListeners.ml:901:5>>*/ hideModalWindow(0);
-      var a =  /*<<ControllerListeners.ml:901:37>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:902:6>>*/ oneBox$0
-       ( /*<<ControllerListeners.ml:902:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:901:37>>*/ caml_get_cached_method
-           (a, -62434272, cache_id$1661),
+          /*<<ControllerListeners.ml:885:20>>*/ caml_call2(model$22[1], 0, c);
+       /*<<ControllerListeners.ml:886:5>>*/ hideModalWindow(0);
+      var a =  /*<<ControllerListeners.ml:886:37>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:887:6>>*/ oneBox$0
+       ( /*<<ControllerListeners.ml:887:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:886:37>>*/ caml_get_cached_method
+           (a, -62434272, cache_id$1646),
           a));
-       /*<<ControllerListeners.ml:903:6>>*/ clearBox1(0);
-       /*<<ControllerListeners.ml:904:6>>*/ createCompController(compStr, 0);
-      var b =  /*<<ControllerListeners.ml:904:40>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:905:5>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:904:40>>*/ caml_get_cached_method
-         (b, -304119505, cache_id$1662),
+       /*<<ControllerListeners.ml:888:6>>*/ clearBox1(0);
+       /*<<ControllerListeners.ml:889:6>>*/ createCompController(compStr, 0);
+      var b =  /*<<ControllerListeners.ml:889:40>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:890:5>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:889:40>>*/ caml_get_cached_method
+         (b, -304119505, cache_id$1647),
         b);
-      var d =  /*<<ControllerListeners.ml:906:5>>*/ setTitle(0);
+      var d =  /*<<ControllerListeners.ml:891:5>>*/ setTitle(0);
       return d;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:908:20>>*/ return  /*<<ControllerListeners.ml:908:45>>*/ alert
-              ( /*<<ControllerListeners.ml:908:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:908:45>>*/ ;
+       /*<<ControllerListeners.ml:893:20>>*/ return  /*<<ControllerListeners.ml:893:45>>*/ alert
+              ( /*<<ControllerListeners.ml:893:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:893:45>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ createModelListener$5[1] =
     function(param){
-      /*<<ControllerListeners.ml:912:4>>*/ try{
+      /*<<ControllerListeners.ml:897:4>>*/ try{
       var
        str =
-          /*<<ControllerListeners.ml:913:16>>*/ extractStringFromTextArea(0),
-       cfgModel =  /*<<ControllerListeners.ml:914:21>>*/ cfgStr2Model(str);
-       /*<<ControllerListeners.ml:915:6>>*/ hideModalWindow(0);
-      var a =  /*<<ControllerListeners.ml:915:38>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:916:6>>*/ oneBox$0
-       ( /*<<ControllerListeners.ml:916:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:915:38>>*/ caml_get_cached_method
-           (a, -62434272, cache_id$1663),
+          /*<<ControllerListeners.ml:898:16>>*/ extractStringFromTextArea(0),
+       cfgModel =  /*<<ControllerListeners.ml:899:21>>*/ cfgStr2Model(str);
+       /*<<ControllerListeners.ml:900:6>>*/ hideModalWindow(0);
+      var a =  /*<<ControllerListeners.ml:900:38>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:901:6>>*/ oneBox$0
+       ( /*<<ControllerListeners.ml:901:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:900:38>>*/ caml_get_cached_method
+           (a, -62434272, cache_id$1648),
           a));
-       /*<<ControllerListeners.ml:917:6>>*/ clearBox1(0);
-       /*<<ControllerListeners.ml:918:6>>*/ createCFGController2(cfgModel, 0);
-      var b =  /*<<ControllerListeners.ml:918:41>>*/ ctrlL[1];
-       /*<<ControllerListeners.ml:919:6>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:918:41>>*/ caml_get_cached_method
-         (b, -304119505, cache_id$1664),
+       /*<<ControllerListeners.ml:902:6>>*/ clearBox1(0);
+       /*<<ControllerListeners.ml:903:6>>*/ createCFGController2(cfgModel, 0);
+      var b =  /*<<ControllerListeners.ml:903:41>>*/ ctrlL[1];
+       /*<<ControllerListeners.ml:904:6>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:903:41>>*/ caml_get_cached_method
+         (b, -304119505, cache_id$1649),
         b);
-      var c =  /*<<ControllerListeners.ml:920:6>>*/ setTitle(0);
+      var c =  /*<<ControllerListeners.ml:905:6>>*/ setTitle(0);
       return c;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:922:20>>*/ return  /*<<ControllerListeners.ml:922:45>>*/ alert
-              ( /*<<ControllerListeners.ml:922:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:922:45>>*/ ;
+       /*<<ControllerListeners.ml:907:20>>*/ return  /*<<ControllerListeners.ml:907:45>>*/ alert
+              ( /*<<ControllerListeners.ml:907:20>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:907:45>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ save[1] =
@@ -103345,729 +103230,729 @@
      function createModelPrep(titleTxt, otherTxt, textAreaString, okAction){
       var
        modelContent =
-          /*<<ControllerListeners.ml:938:23>>*/ editModelContent
+          /*<<ControllerListeners.ml:923:23>>*/ editModelContent
           (titleTxt, otherTxt, textAreaString, okAction);
-       /*<<ControllerListeners.ml:939:4>>*/ setModal(modelContent);
-       /*<<ControllerListeners.ml:939:59>>*/ return showModalWindow(0) /*<<ControllerListeners.ml:940:37>>*/ ;
+       /*<<ControllerListeners.ml:924:4>>*/ setModal(modelContent);
+       /*<<ControllerListeners.ml:924:59>>*/ return showModalWindow(0) /*<<ControllerListeners.ml:925:37>>*/ ;
      }
      function createModelPrepSave(textAreaString, okAction){
-       /*<<ControllerListeners.ml:944:20>>*/ return  /*<<ControllerListeners.ml:944:41>>*/ createModelPrep
-              ( /*<<ControllerListeners.ml:944:20>>*/ i18nSaveText(0),
+       /*<<ControllerListeners.ml:929:20>>*/ return  /*<<ControllerListeners.ml:929:41>>*/ createModelPrep
+              ( /*<<ControllerListeners.ml:929:20>>*/ i18nSaveText(0),
                amt,
                textAreaString,
-               okAction) /*<<ControllerListeners.ml:944:68>>*/ ;
+               okAction) /*<<ControllerListeners.ml:929:68>>*/ ;
      }
-      /*<<ControllerListeners.ml:948:2>>*/ return createModelPrepSave
+      /*<<ControllerListeners.ml:933:2>>*/ return createModelPrepSave
              (amu,
               function(param){
-                /*<<ControllerListeners.ml:948:45>>*/ return caml_call1
-                       (saveModel[1], 0) /*<<ControllerListeners.ml:948:67>>*/ ;
-              }) /*<<ControllerListeners.ml:948:69>>*/ ;
+                /*<<ControllerListeners.ml:933:45>>*/ return caml_call1
+                       (saveModel[1], 0) /*<<ControllerListeners.ml:933:67>>*/ ;
+              }) /*<<ControllerListeners.ml:933:69>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ saveModel[1] =
     function(param){
      var
       str =
-         /*<<ControllerListeners.ml:954:16>>*/ extractStringFromTextArea(0),
-      a =  /*<<ControllerListeners.ml:955:6>>*/ ctrlL[1],
+         /*<<ControllerListeners.ml:939:16>>*/ extractStringFromTextArea(0),
+      a =  /*<<ControllerListeners.ml:940:6>>*/ ctrlL[1],
       m =
-         /*<<ControllerListeners.ml:955:15>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:955:6>>*/ caml_get_cached_method
-           (a, 207102889, cache_id$1665),
+         /*<<ControllerListeners.ml:940:15>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:940:6>>*/ caml_get_cached_method
+           (a, 207102889, cache_id$1650),
           a);
-      /*<<ControllerListeners.ml:957:6>>*/ log(m);
-     var b =  /*<<ControllerListeners.ml:958:6>>*/ ctrlL[1];
+      /*<<ControllerListeners.ml:942:6>>*/ log(m);
+     var b =  /*<<ControllerListeners.ml:943:6>>*/ ctrlL[1];
      updateModel
       (str,
-        /*<<ControllerListeners.ml:958:33>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:958:6>>*/ caml_get_cached_method
-          (b, 207102889, cache_id$1666),
+        /*<<ControllerListeners.ml:943:33>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:943:6>>*/ caml_get_cached_method
+          (b, 207102889, cache_id$1651),
          b));
-      /*<<ControllerListeners.ml:959:6>>*/ hideModalWindow(0);
-      /*<<ControllerListeners.ml:959:38>>*/ return putButton2(str) /*<<ControllerListeners.ml:960:35>>*/ ;
+      /*<<ControllerListeners.ml:944:6>>*/ hideModalWindow(0);
+      /*<<ControllerListeners.ml:944:38>>*/ return putButton2(str) /*<<ControllerListeners.ml:945:35>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ toggleAcceptanceCriteria[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:967:6>>*/ ctrlL[1];
-     return caml_call1(caml_get_cached_method(a, 339875466, cache_id$1667), a) /*<<ControllerListeners.ml:967:42>>*/ ;
+     var a =  /*<<ControllerListeners.ml:952:6>>*/ ctrlL[1];
+     return caml_call1(caml_get_cached_method(a, 339875466, cache_id$1652), a) /*<<ControllerListeners.ml:952:42>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ changeInitialStackSymbol[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:971:6>>*/ ctrlL[1];
+     var a =  /*<<ControllerListeners.ml:956:6>>*/ ctrlL[1];
      return caml_call1
-             (caml_get_cached_method(a, -793374676, cache_id$1668), a) /*<<ControllerListeners.ml:971:42>>*/ ;
+             (caml_get_cached_method(a, -793374676, cache_id$1653), a) /*<<ControllerListeners.ml:956:42>>*/ ;
     };
    function showPdaCtrlR(pda){
-    var a =  /*<<ControllerListeners.ml:974:4>>*/ ctrlL[1];
+    var a =  /*<<ControllerListeners.ml:959:4>>*/ ctrlL[1];
     twoBoxes$0
-     ( /*<<ControllerListeners.ml:974:22>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:974:4>>*/ caml_get_cached_method
-         (a, -62434272, cache_id$1669),
+     ( /*<<ControllerListeners.ml:959:22>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:959:4>>*/ caml_get_cached_method
+         (a, -62434272, cache_id$1654),
         a));
-     /*<<ControllerListeners.ml:975:4>>*/ createPDAController(pda, 1);
-    var b =  /*<<ControllerListeners.ml:975:32>>*/ ctrlR[1];
-     /*<<ControllerListeners.ml:976:4>>*/ caml_call1
-     ( /*<<ControllerListeners.ml:975:32>>*/ caml_get_cached_method
-       (b, 900827171, cache_id$1670),
+     /*<<ControllerListeners.ml:960:4>>*/ createPDAController(pda, 1);
+    var b =  /*<<ControllerListeners.ml:960:32>>*/ ctrlR[1];
+     /*<<ControllerListeners.ml:961:4>>*/ caml_call1
+     ( /*<<ControllerListeners.ml:960:32>>*/ caml_get_cached_method
+       (b, 900827171, cache_id$1655),
       b);
-    var c =  /*<<ControllerListeners.ml:976:30>>*/ ctrlR[1];
-    return  /*<<ControllerListeners.ml:977:39>>*/ fit
-            ( /*<<ControllerListeners.ml:977:18>>*/ caml_call1
-              ( /*<<ControllerListeners.ml:976:30>>*/ caml_get_cached_method
-                (c, -62434272, cache_id$1671),
-               c)) /*<<ControllerListeners.ml:977:39>>*/ ;
+    var c =  /*<<ControllerListeners.ml:961:30>>*/ ctrlR[1];
+    return  /*<<ControllerListeners.ml:962:39>>*/ fit
+            ( /*<<ControllerListeners.ml:962:18>>*/ caml_call1
+              ( /*<<ControllerListeners.ml:961:30>>*/ caml_get_cached_method
+                (c, -62434272, cache_id$1656),
+               c)) /*<<ControllerListeners.ml:962:39>>*/ ;
    }
     /*<<Controller.ml:296:37>>*/ convertAcceptStates[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:981:6>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:966:6>>*/ ctrlL[1],
       match =
-         /*<<ControllerListeners.ml:981:13>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:981:6>>*/ caml_get_cached_method
-           (a, -871513859, cache_id$1672),
+         /*<<ControllerListeners.ml:966:13>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:966:6>>*/ caml_get_cached_method
+           (a, -871513859, cache_id$1657),
           a);
-      /*<<ControllerListeners.ml:981:44>>*/ if(! match)
-       /*<<ControllerListeners.ml:982:28>>*/ return  /*<<ControllerListeners.ml:982:73>>*/ alertStr
-              ( /*<<ControllerListeners.ml:982:28>>*/ i18nAlreadyInAcceptanceModeByS
-                (0)) /*<<ControllerListeners.ml:983:55>>*/ ;
-     var pdaConverted =  /*<<ControllerListeners.ml:981:44>>*/ match[1];
-      /*<<ControllerListeners.ml:983:29>>*/ return showPdaCtrlR(pdaConverted) /*<<ControllerListeners.ml:983:55>>*/ ;
+      /*<<ControllerListeners.ml:966:44>>*/ if(! match)
+       /*<<ControllerListeners.ml:967:28>>*/ return  /*<<ControllerListeners.ml:967:73>>*/ alertStr
+              ( /*<<ControllerListeners.ml:967:28>>*/ i18nAlreadyInAcceptanceModeByS
+                (0)) /*<<ControllerListeners.ml:968:55>>*/ ;
+     var pdaConverted =  /*<<ControllerListeners.ml:966:44>>*/ match[1];
+      /*<<ControllerListeners.ml:968:29>>*/ return showPdaCtrlR(pdaConverted) /*<<ControllerListeners.ml:968:55>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ convertEmptyStackAccept[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:987:6>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:972:6>>*/ ctrlL[1],
       match =
-         /*<<ControllerListeners.ml:987:13>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:987:6>>*/ caml_get_cached_method
-           (a, -783006986, cache_id$1673),
+         /*<<ControllerListeners.ml:972:13>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:972:6>>*/ caml_get_cached_method
+           (a, -783006986, cache_id$1658),
           a);
-      /*<<ControllerListeners.ml:987:48>>*/ if(! match)
-       /*<<ControllerListeners.ml:988:28>>*/ return  /*<<ControllerListeners.ml:988:77>>*/ alertStr
-              ( /*<<ControllerListeners.ml:988:28>>*/ i18nAlreadyInAcceptanceModeByE
-                (0)) /*<<ControllerListeners.ml:989:55>>*/ ;
-     var pdaConverted =  /*<<ControllerListeners.ml:987:48>>*/ match[1];
-      /*<<ControllerListeners.ml:989:29>>*/ return showPdaCtrlR(pdaConverted) /*<<ControllerListeners.ml:989:55>>*/ ;
+      /*<<ControllerListeners.ml:972:48>>*/ if(! match)
+       /*<<ControllerListeners.ml:973:28>>*/ return  /*<<ControllerListeners.ml:973:77>>*/ alertStr
+              ( /*<<ControllerListeners.ml:973:28>>*/ i18nAlreadyInAcceptanceModeByE
+                (0)) /*<<ControllerListeners.ml:974:55>>*/ ;
+     var pdaConverted =  /*<<ControllerListeners.ml:972:48>>*/ match[1];
+      /*<<ControllerListeners.ml:974:29>>*/ return showPdaCtrlR(pdaConverted) /*<<ControllerListeners.ml:974:55>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ clearAutoListener[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:998:14>>*/ ctrlL[1];
-     return  /*<<ControllerListeners.ml:998:52>>*/ resetStyle
-             ( /*<<ControllerListeners.ml:998:35>>*/ caml_call1
-               ( /*<<ControllerListeners.ml:998:14>>*/ caml_get_cached_method
-                 (a, 291540204, cache_id$1674),
+     var a =  /*<<ControllerListeners.ml:983:14>>*/ ctrlL[1];
+     return  /*<<ControllerListeners.ml:983:52>>*/ resetStyle
+             ( /*<<ControllerListeners.ml:983:35>>*/ caml_call1
+               ( /*<<ControllerListeners.ml:983:14>>*/ caml_get_cached_method
+                 (a, 291540204, cache_id$1659),
                 a),
-              faStyle) /*<<ControllerListeners.ml:998:70>>*/ ;
+              faStyle) /*<<ControllerListeners.ml:983:70>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ updateRightListener[1] =
     function(param){
-     var a =  /*<<ControllerListeners.ml:1001:14>>*/ ctrlL[1];
+     var a =  /*<<ControllerListeners.ml:986:14>>*/ ctrlL[1];
      return caml_call1
-             (caml_get_cached_method(a, -822315757, cache_id$1675), a) /*<<ControllerListeners.ml:1001:37>>*/ ;
+             (caml_get_cached_method(a, -822315757, cache_id$1660), a) /*<<ControllerListeners.ml:986:37>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ buildLR0DiagramListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:1006:12>>*/ try{
+      /*<<ControllerListeners.ml:991:12>>*/ try{
       var a = ctrlL[1];
-       /*<<ControllerListeners.ml:1007:5>>*/ twoBoxes$0
-       ( /*<<ControllerListeners.ml:1007:23>>*/ caml_call1
-         (caml_get_cached_method(a, -62434272, cache_id$1676), a));
+       /*<<ControllerListeners.ml:992:5>>*/ twoBoxes$0
+       ( /*<<ControllerListeners.ml:992:23>>*/ caml_call1
+         (caml_get_cached_method(a, -62434272, cache_id$1661), a));
       var
-       b =  /*<<ControllerListeners.ml:1007:44>>*/ ctrlL[1],
+       b =  /*<<ControllerListeners.ml:992:44>>*/ ctrlL[1],
        cfg =
-          /*<<ControllerListeners.ml:1008:15>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1007:44>>*/ caml_get_cached_method
-            (b, 588944750, cache_id$1677),
+          /*<<ControllerListeners.ml:993:15>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:992:44>>*/ caml_get_cached_method
+            (b, 588944750, cache_id$1662),
            b);
-       /*<<ControllerListeners.ml:1010:5>>*/ caml_call1
+       /*<<ControllerListeners.ml:995:5>>*/ caml_call1
        (changeToControllerCtrlRight[1], 0);
       var
-       c =  /*<<ControllerListeners.ml:1010:44>>*/ ctrlR[1],
+       c =  /*<<ControllerListeners.ml:995:44>>*/ ctrlR[1],
        cy =
-          /*<<ControllerListeners.ml:1011:14>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1010:44>>*/ caml_get_cached_method
-            (c, 291540204, cache_id$1678),
+          /*<<ControllerListeners.ml:996:14>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:995:44>>*/ caml_get_cached_method
+            (c, 291540204, cache_id$1663),
            c);
-       /*<<ControllerListeners.ml:1014:5>>*/ defineCFG(0);
-       /*<<ControllerListeners.ml:1015:5>>*/ cfgBoxRegex(0);
-       /*<<ControllerListeners.ml:1015:33>>*/  /*<<ControllerListeners.ml:1017:5>>*/ caml_call2
-       ( /*<<ControllerListeners.ml:1015:33>>*/ caml_get_cached_method
-         (cfg, -898405427, cache_id$1679),
+       /*<<ControllerListeners.ml:999:5>>*/ defineCFG(0);
+       /*<<ControllerListeners.ml:1000:5>>*/ cfgBoxRegex(0);
+       /*<<ControllerListeners.ml:1000:33>>*/  /*<<ControllerListeners.ml:1002:5>>*/ caml_call2
+       ( /*<<ControllerListeners.ml:1000:33>>*/ caml_get_cached_method
+         (cfg, -898405427, cache_id$1664),
         cfg,
         cy);
-       /*<<ControllerListeners.ml:1020:5>>*/ (function(t11, param){
+       /*<<ControllerListeners.ml:1005:5>>*/ (function(t11, param){
           /*<<?>>*/ t11.resize();
         }
-         /*<<ControllerListeners.ml:1020:5>>*/ (cy,
+         /*<<ControllerListeners.ml:1005:5>>*/ (cy,
          function(x){
           return caml_call1
-                  (caml_get_cached_method(x, 142301684, cache_id$1680), x) /*<<ControllerListeners.ml:1020:15>>*/ ;
+                  (caml_get_cached_method(x, 142301684, cache_id$1665), x) /*<<ControllerListeners.ml:1005:15>>*/ ;
          }));
       var
        d =
-          /*<<ControllerListeners.ml:1021:5>>*/ function(t12, param){
+          /*<<ControllerListeners.ml:1006:5>>*/ function(t12, param){
             /*<<?>>*/ return t12.fit();
           }
-           /*<<ControllerListeners.ml:1021:5>>*/ (cy,
+           /*<<ControllerListeners.ml:1006:5>>*/ (cy,
            function(x){
             return caml_call1
-                    (caml_get_cached_method(x, 5095889, cache_id$1681), x) /*<<ControllerListeners.ml:1021:12>>*/ ;
+                    (caml_get_cached_method(x, 5095889, cache_id$1666), x) /*<<ControllerListeners.ml:1006:12>>*/ ;
            });
       return d;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:1024:32>>*/ return  /*<<ControllerListeners.ml:1024:57>>*/ alert
-              ( /*<<ControllerListeners.ml:1024:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1024:57>>*/ ;
+       /*<<ControllerListeners.ml:1009:32>>*/ return  /*<<ControllerListeners.ml:1009:57>>*/ alert
+              ( /*<<ControllerListeners.ml:1009:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1009:57>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ buildSLR1DiagramListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:1027:12>>*/ try{
+      /*<<ControllerListeners.ml:1012:12>>*/ try{
       var a = ctrlL[1];
-       /*<<ControllerListeners.ml:1028:5>>*/ twoBoxes$0
-       ( /*<<ControllerListeners.ml:1028:23>>*/ caml_call1
-         (caml_get_cached_method(a, -62434272, cache_id$1682), a));
+       /*<<ControllerListeners.ml:1013:5>>*/ twoBoxes$0
+       ( /*<<ControllerListeners.ml:1013:23>>*/ caml_call1
+         (caml_get_cached_method(a, -62434272, cache_id$1667), a));
       var
-       b =  /*<<ControllerListeners.ml:1028:44>>*/ ctrlL[1],
+       b =  /*<<ControllerListeners.ml:1013:44>>*/ ctrlL[1],
        cfg =
-          /*<<ControllerListeners.ml:1029:15>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1028:44>>*/ caml_get_cached_method
-            (b, 588944750, cache_id$1683),
+          /*<<ControllerListeners.ml:1014:15>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:1013:44>>*/ caml_get_cached_method
+            (b, 588944750, cache_id$1668),
            b);
-       /*<<ControllerListeners.ml:1031:5>>*/ caml_call1
+       /*<<ControllerListeners.ml:1016:5>>*/ caml_call1
        (changeToControllerCtrlRight[1], 0);
       var
-       c =  /*<<ControllerListeners.ml:1031:44>>*/ ctrlR[1],
+       c =  /*<<ControllerListeners.ml:1016:44>>*/ ctrlR[1],
        cy =
-          /*<<ControllerListeners.ml:1032:14>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1031:44>>*/ caml_get_cached_method
-            (c, 291540204, cache_id$1684),
+          /*<<ControllerListeners.ml:1017:14>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:1016:44>>*/ caml_get_cached_method
+            (c, 291540204, cache_id$1669),
            c);
-       /*<<ControllerListeners.ml:1035:5>>*/ defineCFG(0);
-       /*<<ControllerListeners.ml:1036:5>>*/ cfgBoxRegex(0);
-       /*<<ControllerListeners.ml:1036:33>>*/  /*<<ControllerListeners.ml:1038:5>>*/ caml_call2
-       ( /*<<ControllerListeners.ml:1036:33>>*/ caml_get_cached_method
-         (cfg, -657243529, cache_id$1685),
+       /*<<ControllerListeners.ml:1020:5>>*/ defineCFG(0);
+       /*<<ControllerListeners.ml:1021:5>>*/ cfgBoxRegex(0);
+       /*<<ControllerListeners.ml:1021:33>>*/  /*<<ControllerListeners.ml:1023:5>>*/ caml_call2
+       ( /*<<ControllerListeners.ml:1021:33>>*/ caml_get_cached_method
+         (cfg, -657243529, cache_id$1670),
         cfg,
         cy);
-       /*<<ControllerListeners.ml:1041:5>>*/ (function(t13, param){
+       /*<<ControllerListeners.ml:1026:5>>*/ (function(t13, param){
           /*<<?>>*/ t13.resize();
         }
-         /*<<ControllerListeners.ml:1041:5>>*/ (cy,
+         /*<<ControllerListeners.ml:1026:5>>*/ (cy,
          function(x){
           return caml_call1
-                  (caml_get_cached_method(x, 142301684, cache_id$1686), x) /*<<ControllerListeners.ml:1041:15>>*/ ;
+                  (caml_get_cached_method(x, 142301684, cache_id$1671), x) /*<<ControllerListeners.ml:1026:15>>*/ ;
          }));
       var
        d =
-          /*<<ControllerListeners.ml:1042:5>>*/ function(t14, param){
+          /*<<ControllerListeners.ml:1027:5>>*/ function(t14, param){
             /*<<?>>*/ return t14.fit();
           }
-           /*<<ControllerListeners.ml:1042:5>>*/ (cy,
+           /*<<ControllerListeners.ml:1027:5>>*/ (cy,
            function(x){
             return caml_call1
-                    (caml_get_cached_method(x, 5095889, cache_id$1687), x) /*<<ControllerListeners.ml:1042:12>>*/ ;
+                    (caml_get_cached_method(x, 5095889, cache_id$1672), x) /*<<ControllerListeners.ml:1027:12>>*/ ;
            });
       return d;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:1045:32>>*/ return  /*<<ControllerListeners.ml:1045:57>>*/ alert
-              ( /*<<ControllerListeners.ml:1045:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1045:57>>*/ ;
+       /*<<ControllerListeners.ml:1030:32>>*/ return  /*<<ControllerListeners.ml:1030:57>>*/ alert
+              ( /*<<ControllerListeners.ml:1030:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1030:57>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ buildLR1DiagramListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:1048:12>>*/ try{
+      /*<<ControllerListeners.ml:1033:12>>*/ try{
       var a = ctrlL[1];
-       /*<<ControllerListeners.ml:1049:5>>*/ twoBoxes$0
-       ( /*<<ControllerListeners.ml:1049:23>>*/ caml_call1
-         (caml_get_cached_method(a, -62434272, cache_id$1688), a));
+       /*<<ControllerListeners.ml:1034:5>>*/ twoBoxes$0
+       ( /*<<ControllerListeners.ml:1034:23>>*/ caml_call1
+         (caml_get_cached_method(a, -62434272, cache_id$1673), a));
       var
-       b =  /*<<ControllerListeners.ml:1049:44>>*/ ctrlL[1],
+       b =  /*<<ControllerListeners.ml:1034:44>>*/ ctrlL[1],
        cfg =
-          /*<<ControllerListeners.ml:1050:15>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1049:44>>*/ caml_get_cached_method
-            (b, 588944750, cache_id$1689),
+          /*<<ControllerListeners.ml:1035:15>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:1034:44>>*/ caml_get_cached_method
+            (b, 588944750, cache_id$1674),
            b);
-       /*<<ControllerListeners.ml:1052:5>>*/ caml_call1
+       /*<<ControllerListeners.ml:1037:5>>*/ caml_call1
        (changeToControllerCtrlRight[1], 0);
       var
-       c =  /*<<ControllerListeners.ml:1052:44>>*/ ctrlR[1],
+       c =  /*<<ControllerListeners.ml:1037:44>>*/ ctrlR[1],
        cy =
-          /*<<ControllerListeners.ml:1053:14>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1052:44>>*/ caml_get_cached_method
-            (c, 291540204, cache_id$1690),
+          /*<<ControllerListeners.ml:1038:14>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:1037:44>>*/ caml_get_cached_method
+            (c, 291540204, cache_id$1675),
            c);
-       /*<<ControllerListeners.ml:1055:5>>*/ defineCFG(0);
-       /*<<ControllerListeners.ml:1056:5>>*/ cfgBoxRegex(0);
-       /*<<ControllerListeners.ml:1056:33>>*/  /*<<ControllerListeners.ml:1058:5>>*/ caml_call2
-       ( /*<<ControllerListeners.ml:1056:33>>*/ caml_get_cached_method
-         (cfg, 61201900, cache_id$1691),
+       /*<<ControllerListeners.ml:1040:5>>*/ defineCFG(0);
+       /*<<ControllerListeners.ml:1041:5>>*/ cfgBoxRegex(0);
+       /*<<ControllerListeners.ml:1041:33>>*/  /*<<ControllerListeners.ml:1043:5>>*/ caml_call2
+       ( /*<<ControllerListeners.ml:1041:33>>*/ caml_get_cached_method
+         (cfg, 61201900, cache_id$1676),
         cfg,
         cy);
-       /*<<ControllerListeners.ml:1061:5>>*/ (function(t15, param){
+       /*<<ControllerListeners.ml:1046:5>>*/ (function(t15, param){
           /*<<?>>*/ t15.resize();
         }
-         /*<<ControllerListeners.ml:1061:5>>*/ (cy,
+         /*<<ControllerListeners.ml:1046:5>>*/ (cy,
          function(x){
           return caml_call1
-                  (caml_get_cached_method(x, 142301684, cache_id$1692), x) /*<<ControllerListeners.ml:1061:15>>*/ ;
+                  (caml_get_cached_method(x, 142301684, cache_id$1677), x) /*<<ControllerListeners.ml:1046:15>>*/ ;
          }));
       var
        d =
-          /*<<ControllerListeners.ml:1062:5>>*/ function(t16, param){
+          /*<<ControllerListeners.ml:1047:5>>*/ function(t16, param){
             /*<<?>>*/ return t16.fit();
           }
-           /*<<ControllerListeners.ml:1062:5>>*/ (cy,
+           /*<<ControllerListeners.ml:1047:5>>*/ (cy,
            function(x){
             return caml_call1
-                    (caml_get_cached_method(x, 5095889, cache_id$1693), x) /*<<ControllerListeners.ml:1062:12>>*/ ;
+                    (caml_get_cached_method(x, 5095889, cache_id$1678), x) /*<<ControllerListeners.ml:1047:12>>*/ ;
            });
       return d;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:1065:32>>*/ return  /*<<ControllerListeners.ml:1065:57>>*/ alert
-              ( /*<<ControllerListeners.ml:1065:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1065:57>>*/ ;
+       /*<<ControllerListeners.ml:1050:32>>*/ return  /*<<ControllerListeners.ml:1050:57>>*/ alert
+              ( /*<<ControllerListeners.ml:1050:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1050:57>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ buildLALR1DiagramListener[1] =
     function(param){
-      /*<<ControllerListeners.ml:1068:12>>*/ try{
+      /*<<ControllerListeners.ml:1053:12>>*/ try{
       var a = ctrlL[1];
-       /*<<ControllerListeners.ml:1069:5>>*/ twoBoxes$0
-       ( /*<<ControllerListeners.ml:1069:23>>*/ caml_call1
-         (caml_get_cached_method(a, -62434272, cache_id$1694), a));
+       /*<<ControllerListeners.ml:1054:5>>*/ twoBoxes$0
+       ( /*<<ControllerListeners.ml:1054:23>>*/ caml_call1
+         (caml_get_cached_method(a, -62434272, cache_id$1679), a));
       var
-       b =  /*<<ControllerListeners.ml:1069:44>>*/ ctrlL[1],
+       b =  /*<<ControllerListeners.ml:1054:44>>*/ ctrlL[1],
        cfg =
-          /*<<ControllerListeners.ml:1070:15>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1069:44>>*/ caml_get_cached_method
-            (b, 588944750, cache_id$1695),
+          /*<<ControllerListeners.ml:1055:15>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:1054:44>>*/ caml_get_cached_method
+            (b, 588944750, cache_id$1680),
            b);
-       /*<<ControllerListeners.ml:1072:5>>*/ caml_call1
+       /*<<ControllerListeners.ml:1057:5>>*/ caml_call1
        (changeToControllerCtrlRight[1], 0);
       var
-       c =  /*<<ControllerListeners.ml:1072:44>>*/ ctrlR[1],
+       c =  /*<<ControllerListeners.ml:1057:44>>*/ ctrlR[1],
        cy =
-          /*<<ControllerListeners.ml:1073:14>>*/ caml_call1
-          ( /*<<ControllerListeners.ml:1072:44>>*/ caml_get_cached_method
-            (c, 291540204, cache_id$1696),
+          /*<<ControllerListeners.ml:1058:14>>*/ caml_call1
+          ( /*<<ControllerListeners.ml:1057:44>>*/ caml_get_cached_method
+            (c, 291540204, cache_id$1681),
            c);
-       /*<<ControllerListeners.ml:1075:5>>*/ defineCFG(0);
-       /*<<ControllerListeners.ml:1076:5>>*/ cfgBoxRegex(0);
-       /*<<ControllerListeners.ml:1076:33>>*/  /*<<ControllerListeners.ml:1078:5>>*/ caml_call2
-       ( /*<<ControllerListeners.ml:1076:33>>*/ caml_get_cached_method
-         (cfg, 796806561, cache_id$1697),
+       /*<<ControllerListeners.ml:1060:5>>*/ defineCFG(0);
+       /*<<ControllerListeners.ml:1061:5>>*/ cfgBoxRegex(0);
+       /*<<ControllerListeners.ml:1061:33>>*/  /*<<ControllerListeners.ml:1063:5>>*/ caml_call2
+       ( /*<<ControllerListeners.ml:1061:33>>*/ caml_get_cached_method
+         (cfg, 796806561, cache_id$1682),
         cfg,
         cy);
-       /*<<ControllerListeners.ml:1081:5>>*/ (function(t17, param){
+       /*<<ControllerListeners.ml:1066:5>>*/ (function(t17, param){
           /*<<?>>*/ t17.resize();
         }
-         /*<<ControllerListeners.ml:1081:5>>*/ (cy,
+         /*<<ControllerListeners.ml:1066:5>>*/ (cy,
          function(x){
           return caml_call1
-                  (caml_get_cached_method(x, 142301684, cache_id$1698), x) /*<<ControllerListeners.ml:1081:15>>*/ ;
+                  (caml_get_cached_method(x, 142301684, cache_id$1683), x) /*<<ControllerListeners.ml:1066:15>>*/ ;
          }));
       var
        d =
-          /*<<ControllerListeners.ml:1082:5>>*/ function(t18, param){
+          /*<<ControllerListeners.ml:1067:5>>*/ function(t18, param){
             /*<<?>>*/ return t18.fit();
           }
-           /*<<ControllerListeners.ml:1082:5>>*/ (cy,
+           /*<<ControllerListeners.ml:1067:5>>*/ (cy,
            function(x){
             return caml_call1
-                    (caml_get_cached_method(x, 5095889, cache_id$1699), x) /*<<ControllerListeners.ml:1082:12>>*/ ;
+                    (caml_get_cached_method(x, 5095889, cache_id$1684), x) /*<<ControllerListeners.ml:1067:12>>*/ ;
            });
       return d;
      }
      catch(exn){
-       /*<<ControllerListeners.ml:1085:32>>*/ return  /*<<ControllerListeners.ml:1085:57>>*/ alert
-              ( /*<<ControllerListeners.ml:1085:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1085:57>>*/ ;
+       /*<<ControllerListeners.ml:1070:32>>*/ return  /*<<ControllerListeners.ml:1070:57>>*/ alert
+              ( /*<<ControllerListeners.ml:1070:32>>*/ i18nErrorParsing(0)) /*<<ControllerListeners.ml:1070:57>>*/ ;
      }
     };
     /*<<Controller.ml:296:37>>*/ buildLR0TableListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:1089:4>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:1074:4>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1089:14>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1089:4>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1700),
+         /*<<ControllerListeners.ml:1074:14>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1074:4>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1685),
           a),
-      b =  /*<<ControllerListeners.ml:1090:16>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1075:16>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1090:34>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1090:16>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1701),
+      ( /*<<ControllerListeners.ml:1075:34>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1075:16>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1686),
          b));
-      /*<<ControllerListeners.ml:1091:16>>*/ prepareCFG2Tables(0);
-      /*<<ControllerListeners.ml:1091:51>>*/  /*<<ControllerListeners.ml:1092:16>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:1091:51>>*/ caml_get_cached_method
-        (cfg, 317509765, cache_id$1702),
+      /*<<ControllerListeners.ml:1076:16>>*/ prepareCFG2Tables(0);
+      /*<<ControllerListeners.ml:1076:51>>*/  /*<<ControllerListeners.ml:1077:16>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:1076:51>>*/ caml_get_cached_method
+        (cfg, 317509765, cache_id$1687),
        cfg);
-      /*<<ControllerListeners.ml:1092:49>>*/ return caml_call1
-             (caml_get_cached_method(cfg, -1037242409, cache_id$1703), cfg) /*<<ControllerListeners.ml:1093:45>>*/ ;
+      /*<<ControllerListeners.ml:1077:49>>*/ return caml_call1
+             (caml_get_cached_method(cfg, -1037242409, cache_id$1688), cfg) /*<<ControllerListeners.ml:1078:45>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ buildSLR1TableListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:1096:12>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:1081:12>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1096:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1096:12>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1704),
+         /*<<ControllerListeners.ml:1081:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1081:12>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1689),
           a),
-      b =  /*<<ControllerListeners.ml:1097:16>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1082:16>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1097:34>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1097:16>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1705),
+      ( /*<<ControllerListeners.ml:1082:34>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1082:16>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1690),
          b));
-      /*<<ControllerListeners.ml:1098:16>>*/ prepareCFG2Tables(0);
-      /*<<ControllerListeners.ml:1098:51>>*/  /*<<ControllerListeners.ml:1099:16>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:1098:51>>*/ caml_get_cached_method
-        (cfg, 317509765, cache_id$1706),
+      /*<<ControllerListeners.ml:1083:16>>*/ prepareCFG2Tables(0);
+      /*<<ControllerListeners.ml:1083:51>>*/  /*<<ControllerListeners.ml:1084:16>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:1083:51>>*/ caml_get_cached_method
+        (cfg, 317509765, cache_id$1691),
        cfg);
-      /*<<ControllerListeners.ml:1099:49>>*/ return caml_call1
-             (caml_get_cached_method(cfg, 384239581, cache_id$1707), cfg) /*<<ControllerListeners.ml:1100:46>>*/ ;
+      /*<<ControllerListeners.ml:1084:49>>*/ return caml_call1
+             (caml_get_cached_method(cfg, 384239581, cache_id$1692), cfg) /*<<ControllerListeners.ml:1085:46>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ buildLR1TableListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:1103:12>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:1088:12>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1103:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1103:12>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1708),
+         /*<<ControllerListeners.ml:1088:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1088:12>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1693),
           a),
-      b =  /*<<ControllerListeners.ml:1104:16>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1089:16>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1104:34>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1104:16>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1709),
+      ( /*<<ControllerListeners.ml:1089:34>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1089:16>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1694),
          b));
-      /*<<ControllerListeners.ml:1105:16>>*/ prepareCFG2Tables(0);
-      /*<<ControllerListeners.ml:1105:51>>*/  /*<<ControllerListeners.ml:1106:16>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:1105:51>>*/ caml_get_cached_method
-        (cfg, 317509765, cache_id$1710),
+      /*<<ControllerListeners.ml:1090:16>>*/ prepareCFG2Tables(0);
+      /*<<ControllerListeners.ml:1090:51>>*/  /*<<ControllerListeners.ml:1091:16>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:1090:51>>*/ caml_get_cached_method
+        (cfg, 317509765, cache_id$1695),
        cfg);
-      /*<<ControllerListeners.ml:1106:49>>*/ return caml_call1
-             (caml_get_cached_method(cfg, -987708968, cache_id$1711), cfg) /*<<ControllerListeners.ml:1107:45>>*/ ;
+      /*<<ControllerListeners.ml:1091:49>>*/ return caml_call1
+             (caml_get_cached_method(cfg, -987708968, cache_id$1696), cfg) /*<<ControllerListeners.ml:1092:45>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ buildLALR1TableListener[1] =
     function(param){
      var
-      a =  /*<<ControllerListeners.ml:1110:12>>*/ ctrlL[1],
+      a =  /*<<ControllerListeners.ml:1095:12>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1110:22>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1110:12>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1712),
+         /*<<ControllerListeners.ml:1095:22>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1095:12>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1697),
           a),
-      b =  /*<<ControllerListeners.ml:1111:16>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1096:16>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1111:34>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1111:16>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1713),
+      ( /*<<ControllerListeners.ml:1096:34>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1096:16>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1698),
          b));
-      /*<<ControllerListeners.ml:1112:16>>*/ prepareCFG2Tables(0);
-      /*<<ControllerListeners.ml:1112:51>>*/  /*<<ControllerListeners.ml:1113:16>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:1112:51>>*/ caml_get_cached_method
-        (cfg, 317509765, cache_id$1714),
+      /*<<ControllerListeners.ml:1097:16>>*/ prepareCFG2Tables(0);
+      /*<<ControllerListeners.ml:1097:51>>*/  /*<<ControllerListeners.ml:1098:16>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:1097:51>>*/ caml_get_cached_method
+        (cfg, 317509765, cache_id$1699),
        cfg);
-      /*<<ControllerListeners.ml:1113:49>>*/ return caml_call1
-             (caml_get_cached_method(cfg, -1009080957, cache_id$1715), cfg) /*<<ControllerListeners.ml:1114:47>>*/ ;
+      /*<<ControllerListeners.ml:1098:49>>*/ return caml_call1
+             (caml_get_cached_method(cfg, -1009080957, cache_id$1700), cfg) /*<<ControllerListeners.ml:1099:47>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ acceptLR0Listener[1] =
     function(param){
      var
       text =
-         /*<<ControllerListeners.ml:1117:33>>*/  /*<<ControllerListeners.ml:1117:23>>*/ prompt
-         ( /*<<ControllerListeners.ml:1117:33>>*/ i18nPromptTextTestWord(0),
+         /*<<ControllerListeners.ml:1102:33>>*/  /*<<ControllerListeners.ml:1102:23>>*/ prompt
+         ( /*<<ControllerListeners.ml:1102:33>>*/ i18nPromptTextTestWord(0),
           amv),
-      match =  /*<<ControllerListeners.ml:1119:23>>*/ to_option(text);
-      /*<<ControllerListeners.ml:1119:44>>*/ if(! match)
-       /*<<ControllerListeners.ml:1120:26>>*/ return 0;
+      match =  /*<<ControllerListeners.ml:1104:23>>*/ to_option(text);
+      /*<<ControllerListeners.ml:1104:44>>*/ if(! match)
+       /*<<ControllerListeners.ml:1105:26>>*/ return 0;
      var
-      v =  /*<<ControllerListeners.ml:1119:44>>*/ match[1],
-      a =  /*<<ControllerListeners.ml:1121:16>>*/ ctrlL[1],
+      v =  /*<<ControllerListeners.ml:1104:44>>*/ match[1],
+      a =  /*<<ControllerListeners.ml:1106:16>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1121:26>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1121:16>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1716),
+         /*<<ControllerListeners.ml:1106:26>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1106:16>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1701),
           a),
-      b =  /*<<ControllerListeners.ml:1122:7>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1107:7>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1122:25>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1122:7>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1717),
+      ( /*<<ControllerListeners.ml:1107:25>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1107:7>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1702),
          b));
-      /*<<ControllerListeners.ml:1123:7>>*/ prepareAcceptTable(0);
-      /*<<ControllerListeners.ml:1124:38>>*/ return  /*<<ControllerListeners.ml:1124:54>>*/ caml_call2
-             (caml_get_cached_method(cfg, -243040129, cache_id$1718),
+      /*<<ControllerListeners.ml:1108:7>>*/ prepareAcceptTable(0);
+      /*<<ControllerListeners.ml:1109:38>>*/ return  /*<<ControllerListeners.ml:1109:54>>*/ caml_call2
+             (caml_get_cached_method(cfg, -243040129, cache_id$1703),
               cfg,
-               /*<<ControllerListeners.ml:1124:38>>*/ caml_string_of_jsstring
-               (v)) /*<<ControllerListeners.ml:1124:54>>*/ ;
+               /*<<ControllerListeners.ml:1109:38>>*/ caml_string_of_jsstring
+               (v)) /*<<ControllerListeners.ml:1109:54>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ acceptSLR1Listener[1] =
     function(param){
      var
       text =
-         /*<<ControllerListeners.ml:1128:33>>*/  /*<<ControllerListeners.ml:1128:23>>*/ prompt
-         ( /*<<ControllerListeners.ml:1128:33>>*/ i18nPromptTextTestWord(0),
+         /*<<ControllerListeners.ml:1113:33>>*/  /*<<ControllerListeners.ml:1113:23>>*/ prompt
+         ( /*<<ControllerListeners.ml:1113:33>>*/ i18nPromptTextTestWord(0),
           amw),
-      match =  /*<<ControllerListeners.ml:1129:22>>*/ to_option(text);
-      /*<<ControllerListeners.ml:1129:43>>*/ if(! match)
-       /*<<ControllerListeners.ml:1130:26>>*/ return 0;
+      match =  /*<<ControllerListeners.ml:1114:22>>*/ to_option(text);
+      /*<<ControllerListeners.ml:1114:43>>*/ if(! match)
+       /*<<ControllerListeners.ml:1115:26>>*/ return 0;
      var
-      v =  /*<<ControllerListeners.ml:1129:43>>*/ match[1],
-      a =  /*<<ControllerListeners.ml:1131:16>>*/ ctrlL[1],
+      v =  /*<<ControllerListeners.ml:1114:43>>*/ match[1],
+      a =  /*<<ControllerListeners.ml:1116:16>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1131:26>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1131:16>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1719),
+         /*<<ControllerListeners.ml:1116:26>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1116:16>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1704),
           a),
-      b =  /*<<ControllerListeners.ml:1132:7>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1117:7>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1132:25>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1132:7>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1720),
+      ( /*<<ControllerListeners.ml:1117:25>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1117:7>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1705),
          b));
-      /*<<ControllerListeners.ml:1133:7>>*/ prepareAcceptTable(0);
-      /*<<ControllerListeners.ml:1134:39>>*/ return  /*<<ControllerListeners.ml:1134:55>>*/ caml_call2
-             (caml_get_cached_method(cfg, 1067347385, cache_id$1721),
+      /*<<ControllerListeners.ml:1118:7>>*/ prepareAcceptTable(0);
+      /*<<ControllerListeners.ml:1119:39>>*/ return  /*<<ControllerListeners.ml:1119:55>>*/ caml_call2
+             (caml_get_cached_method(cfg, 1067347385, cache_id$1706),
               cfg,
-               /*<<ControllerListeners.ml:1134:39>>*/ caml_string_of_jsstring
-               (v)) /*<<ControllerListeners.ml:1134:55>>*/ ;
+               /*<<ControllerListeners.ml:1119:39>>*/ caml_string_of_jsstring
+               (v)) /*<<ControllerListeners.ml:1119:55>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ acceptLR1Listener[1] =
     function(param){
      var
       text =
-         /*<<ControllerListeners.ml:1137:33>>*/  /*<<ControllerListeners.ml:1137:23>>*/ prompt
-         ( /*<<ControllerListeners.ml:1137:33>>*/ i18nPromptTextTestWord(0),
+         /*<<ControllerListeners.ml:1122:33>>*/  /*<<ControllerListeners.ml:1122:23>>*/ prompt
+         ( /*<<ControllerListeners.ml:1122:33>>*/ i18nPromptTextTestWord(0),
           amx),
-      match =  /*<<ControllerListeners.ml:1138:23>>*/ to_option(text);
-      /*<<ControllerListeners.ml:1138:44>>*/ if(! match)
-       /*<<ControllerListeners.ml:1139:26>>*/ return 0;
+      match =  /*<<ControllerListeners.ml:1123:23>>*/ to_option(text);
+      /*<<ControllerListeners.ml:1123:44>>*/ if(! match)
+       /*<<ControllerListeners.ml:1124:26>>*/ return 0;
      var
-      v =  /*<<ControllerListeners.ml:1138:44>>*/ match[1],
-      a =  /*<<ControllerListeners.ml:1140:16>>*/ ctrlL[1],
+      v =  /*<<ControllerListeners.ml:1123:44>>*/ match[1],
+      a =  /*<<ControllerListeners.ml:1125:16>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1140:26>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1140:16>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1722),
+         /*<<ControllerListeners.ml:1125:26>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1125:16>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1707),
           a),
-      b =  /*<<ControllerListeners.ml:1141:7>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1126:7>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1141:25>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1141:7>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1723),
+      ( /*<<ControllerListeners.ml:1126:25>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1126:7>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1708),
          b));
-      /*<<ControllerListeners.ml:1142:7>>*/ prepareAcceptTable(0);
-      /*<<ControllerListeners.ml:1143:38>>*/ return  /*<<ControllerListeners.ml:1143:54>>*/ caml_call2
-             (caml_get_cached_method(cfg, 65498974, cache_id$1724),
+      /*<<ControllerListeners.ml:1127:7>>*/ prepareAcceptTable(0);
+      /*<<ControllerListeners.ml:1128:38>>*/ return  /*<<ControllerListeners.ml:1128:54>>*/ caml_call2
+             (caml_get_cached_method(cfg, 65498974, cache_id$1709),
               cfg,
-               /*<<ControllerListeners.ml:1143:38>>*/ caml_string_of_jsstring
-               (v)) /*<<ControllerListeners.ml:1143:54>>*/ ;
+               /*<<ControllerListeners.ml:1128:38>>*/ caml_string_of_jsstring
+               (v)) /*<<ControllerListeners.ml:1128:54>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ acceptLALR1Listener[1] =
     function(param){
      var
       text =
-         /*<<ControllerListeners.ml:1146:33>>*/  /*<<ControllerListeners.ml:1146:23>>*/ prompt
-         ( /*<<ControllerListeners.ml:1146:33>>*/ i18nPromptTextTestWord(0),
+         /*<<ControllerListeners.ml:1131:33>>*/  /*<<ControllerListeners.ml:1131:23>>*/ prompt
+         ( /*<<ControllerListeners.ml:1131:33>>*/ i18nPromptTextTestWord(0),
           amy),
-      match =  /*<<ControllerListeners.ml:1147:23>>*/ to_option(text);
-      /*<<ControllerListeners.ml:1147:44>>*/ if(! match)
-       /*<<ControllerListeners.ml:1148:26>>*/ return 0;
+      match =  /*<<ControllerListeners.ml:1132:23>>*/ to_option(text);
+      /*<<ControllerListeners.ml:1132:44>>*/ if(! match)
+       /*<<ControllerListeners.ml:1133:26>>*/ return 0;
      var
-      v =  /*<<ControllerListeners.ml:1147:44>>*/ match[1],
-      a =  /*<<ControllerListeners.ml:1149:16>>*/ ctrlL[1],
+      v =  /*<<ControllerListeners.ml:1132:44>>*/ match[1],
+      a =  /*<<ControllerListeners.ml:1134:16>>*/ ctrlL[1],
       cfg =
-         /*<<ControllerListeners.ml:1149:26>>*/ caml_call1
-         ( /*<<ControllerListeners.ml:1149:16>>*/ caml_get_cached_method
-           (a, 588944750, cache_id$1725),
+         /*<<ControllerListeners.ml:1134:26>>*/ caml_call1
+         ( /*<<ControllerListeners.ml:1134:16>>*/ caml_get_cached_method
+           (a, 588944750, cache_id$1710),
           a),
-      b =  /*<<ControllerListeners.ml:1150:7>>*/ ctrlL[1];
+      b =  /*<<ControllerListeners.ml:1135:7>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1150:25>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1150:7>>*/ caml_get_cached_method
-          (b, -62434272, cache_id$1726),
+      ( /*<<ControllerListeners.ml:1135:25>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1135:7>>*/ caml_get_cached_method
+          (b, -62434272, cache_id$1711),
          b));
-      /*<<ControllerListeners.ml:1151:7>>*/ prepareAcceptTable(0);
-      /*<<ControllerListeners.ml:1152:40>>*/ return  /*<<ControllerListeners.ml:1152:56>>*/ caml_call2
-             (caml_get_cached_method(cfg, -405487277, cache_id$1727),
+      /*<<ControllerListeners.ml:1136:7>>*/ prepareAcceptTable(0);
+      /*<<ControllerListeners.ml:1137:40>>*/ return  /*<<ControllerListeners.ml:1137:56>>*/ caml_call2
+             (caml_get_cached_method(cfg, -405487277, cache_id$1712),
               cfg,
-               /*<<ControllerListeners.ml:1152:40>>*/ caml_string_of_jsstring
-               (v)) /*<<ControllerListeners.ml:1152:56>>*/ ;
+               /*<<ControllerListeners.ml:1137:40>>*/ caml_string_of_jsstring
+               (v)) /*<<ControllerListeners.ml:1137:56>>*/ ;
     };
     /*<<Controller.ml:296:37>>*/ showTreeNode[1] =
     function(label){
      var
-      j =  /*<<ControllerListeners.ml:1160:14>>*/ getJSon(label),
-      kind =  /*<<ControllerListeners.ml:1161:19>>*/ fieldString(j, amz),
-      a =  /*<<ControllerListeners.ml:1162:8>>*/ ctrlL[1];
+      j =  /*<<ControllerListeners.ml:1145:14>>*/ getJSon(label),
+      kind =  /*<<ControllerListeners.ml:1146:19>>*/ fieldString(j, amz),
+      a =  /*<<ControllerListeners.ml:1147:8>>*/ ctrlL[1];
      twoBoxes$0
-      ( /*<<ControllerListeners.ml:1162:26>>*/ caml_call1
-        ( /*<<ControllerListeners.ml:1162:8>>*/ caml_get_cached_method
-          (a, -62434272, cache_id$1728),
+      ( /*<<ControllerListeners.ml:1147:26>>*/ caml_call1
+        ( /*<<ControllerListeners.ml:1147:8>>*/ caml_get_cached_method
+          (a, -62434272, cache_id$1713),
          a));
-      /*<<ControllerListeners.ml:1166:41>>*/ if(kind === cst_finite_automaton){
-       /*<<ControllerListeners.ml:1167:14>>*/ clearBox2(0);
+      /*<<ControllerListeners.ml:1151:41>>*/ if(kind === cst_finite_automaton){
+       /*<<ControllerListeners.ml:1152:14>>*/ clearBox2(0);
       var
        fa =
-          /*<<ControllerListeners.ml:1168:23>>*/ caml_call2
+          /*<<ControllerListeners.ml:1153:23>>*/ caml_call2
           (model$13[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1169:14>>*/ createFAController(fa, 1);
-      var b =  /*<<ControllerListeners.ml:1169:40>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1171:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1169:40>>*/ caml_get_cached_method
-         (b, 900827171, cache_id$1729),
+       /*<<ControllerListeners.ml:1154:14>>*/ createFAController(fa, 1);
+      var b =  /*<<ControllerListeners.ml:1154:40>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1156:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1154:40>>*/ caml_get_cached_method
+         (b, 900827171, cache_id$1714),
         b);
-      var c =  /*<<ControllerListeners.ml:1171:40>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1173:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1173:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1171:40>>*/ caml_get_cached_method
-                  (c, -62434272, cache_id$1730),
-                 c)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var c =  /*<<ControllerListeners.ml:1156:40>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1158:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1158:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1156:40>>*/ caml_get_cached_method
+                  (c, -62434272, cache_id$1715),
+                 c)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1174:43>>*/ if
+      /*<<ControllerListeners.ml:1159:43>>*/ if
       (kind === cst_regular_expression){
-       /*<<ControllerListeners.ml:1175:14>>*/ clearBox2(0);
+       /*<<ControllerListeners.ml:1160:14>>*/ clearBox2(0);
       var
        re =
-          /*<<ControllerListeners.ml:1176:23>>*/ caml_call2
+          /*<<ControllerListeners.ml:1161:23>>*/ caml_call2
           (model$14[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1177:14>>*/ createREController(re, 1);
-      var d =  /*<<ControllerListeners.ml:1177:40>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1178:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1177:40>>*/ caml_get_cached_method
-         (d, 900827171, cache_id$1731),
+       /*<<ControllerListeners.ml:1162:14>>*/ createREController(re, 1);
+      var d =  /*<<ControllerListeners.ml:1162:40>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1163:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1162:40>>*/ caml_get_cached_method
+         (d, 900827171, cache_id$1716),
         d);
-      var e =  /*<<ControllerListeners.ml:1178:40>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1179:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1179:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1178:40>>*/ caml_get_cached_method
-                  (e, -62434272, cache_id$1732),
-                 e)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var e =  /*<<ControllerListeners.ml:1163:40>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1164:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1164:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1163:40>>*/ caml_get_cached_method
+                  (e, -62434272, cache_id$1717),
+                 e)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1180:43>>*/ if
+      /*<<ControllerListeners.ml:1165:43>>*/ if
       (kind === cst_pushdown_automaton){
-       /*<<ControllerListeners.ml:1181:14>>*/ clearBox2(0);
+       /*<<ControllerListeners.ml:1166:14>>*/ clearBox2(0);
       var
        pda =
-          /*<<ControllerListeners.ml:1182:24>>*/ caml_call2
+          /*<<ControllerListeners.ml:1167:24>>*/ caml_call2
           (model$20[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1183:14>>*/ createPDAController(pda, 1);
-      var f =  /*<<ControllerListeners.ml:1183:42>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1184:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1183:42>>*/ caml_get_cached_method
-         (f, 900827171, cache_id$1733),
+       /*<<ControllerListeners.ml:1168:14>>*/ createPDAController(pda, 1);
+      var f =  /*<<ControllerListeners.ml:1168:42>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1169:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1168:42>>*/ caml_get_cached_method
+         (f, 900827171, cache_id$1718),
         f);
-      var g =  /*<<ControllerListeners.ml:1184:40>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1185:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1185:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1184:40>>*/ caml_get_cached_method
-                  (g, -62434272, cache_id$1734),
-                 g)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var g =  /*<<ControllerListeners.ml:1169:40>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1170:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1170:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1169:40>>*/ caml_get_cached_method
+                  (g, -62434272, cache_id$1719),
+                 g)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1186:44>>*/ if
+      /*<<ControllerListeners.ml:1171:44>>*/ if
       (kind === cst_context_free_grammar){
-       /*<<ControllerListeners.ml:1187:14>>*/ clearBox2(0);
+       /*<<ControllerListeners.ml:1172:14>>*/ clearBox2(0);
       var
        cfg =
-          /*<<ControllerListeners.ml:1188:24>>*/ caml_call2
+          /*<<ControllerListeners.ml:1173:24>>*/ caml_call2
           (model$19[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1189:14>>*/ createCFGController(cfg, 1);
-      var h =  /*<<ControllerListeners.ml:1189:42>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1190:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1189:42>>*/ caml_get_cached_method
-         (h, 900827171, cache_id$1735),
+       /*<<ControllerListeners.ml:1174:14>>*/ createCFGController(cfg, 1);
+      var h =  /*<<ControllerListeners.ml:1174:42>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1175:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1174:42>>*/ caml_get_cached_method
+         (h, 900827171, cache_id$1720),
         h);
-      var i =  /*<<ControllerListeners.ml:1190:40>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1191:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1191:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1190:40>>*/ caml_get_cached_method
-                  (i, -62434272, cache_id$1736),
-                 i)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var i =  /*<<ControllerListeners.ml:1175:40>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1176:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1176:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1175:40>>*/ caml_get_cached_method
+                  (i, -62434272, cache_id$1721),
+                 i)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1193:33>>*/ if(kind === cst_grammar){
-       /*<<ControllerListeners.ml:1194:14>>*/ clearBox2(0);
+      /*<<ControllerListeners.ml:1178:33>>*/ if(kind === cst_grammar){
+       /*<<ControllerListeners.ml:1179:14>>*/ clearBox2(0);
       var
        gr =
-          /*<<ControllerListeners.ml:1195:23>>*/ caml_call2
+          /*<<ControllerListeners.ml:1180:23>>*/ caml_call2
           (model$23[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1196:14>>*/ createGRController(gr, 1);
-      var k =  /*<<ControllerListeners.ml:1196:40>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1197:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1196:40>>*/ caml_get_cached_method
-         (k, -304119505, cache_id$1737),
+       /*<<ControllerListeners.ml:1181:14>>*/ createGRController(gr, 1);
+      var k =  /*<<ControllerListeners.ml:1181:40>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1182:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1181:40>>*/ caml_get_cached_method
+         (k, -304119505, cache_id$1722),
         k);
-      var l =  /*<<ControllerListeners.ml:1197:39>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1198:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1198:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1197:39>>*/ caml_get_cached_method
-                  (l, -62434272, cache_id$1738),
-                 l)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var l =  /*<<ControllerListeners.ml:1182:39>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1183:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1183:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1182:39>>*/ caml_get_cached_method
+                  (l, -62434272, cache_id$1723),
+                 l)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1200:36>>*/ if(kind === cst_transducer){
-       /*<<ControllerListeners.ml:1201:14>>*/ clearBox2(0);
+      /*<<ControllerListeners.ml:1185:36>>*/ if(kind === cst_transducer){
+       /*<<ControllerListeners.ml:1186:14>>*/ clearBox2(0);
       var
        fst =
-          /*<<ControllerListeners.ml:1202:24>>*/ caml_call2
+          /*<<ControllerListeners.ml:1187:24>>*/ caml_call2
           (model$15[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1203:14>>*/ createTransducerController
+       /*<<ControllerListeners.ml:1188:14>>*/ createTransducerController
        (fst, 1);
-      var m =  /*<<ControllerListeners.ml:1203:49>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1204:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1203:49>>*/ caml_get_cached_method
-         (m, 900827171, cache_id$1739),
+      var m =  /*<<ControllerListeners.ml:1188:49>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1189:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1188:49>>*/ caml_get_cached_method
+         (m, 900827171, cache_id$1724),
         m);
-      var n =  /*<<ControllerListeners.ml:1204:40>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1205:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1205:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1204:40>>*/ caml_get_cached_method
-                  (n, -62434272, cache_id$1740),
-                 n)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var n =  /*<<ControllerListeners.ml:1189:40>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1190:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1190:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1189:40>>*/ caml_get_cached_method
+                  (n, -62434272, cache_id$1725),
+                 n)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1207:39>>*/ if(kind === cst_turing_machine){
-       /*<<ControllerListeners.ml:1208:14>>*/ clearBox2(0);
+      /*<<ControllerListeners.ml:1192:39>>*/ if(kind === cst_turing_machine){
+       /*<<ControllerListeners.ml:1193:14>>*/ clearBox2(0);
       var
        tm =
-          /*<<ControllerListeners.ml:1209:23>>*/ caml_call2
+          /*<<ControllerListeners.ml:1194:23>>*/ caml_call2
           (model$21[1], 0, [0, j]);
-       /*<<ControllerListeners.ml:1210:14>>*/ createTMController(tm, 1);
-      var o =  /*<<ControllerListeners.ml:1210:40>>*/ ctrlR[1];
-       /*<<ControllerListeners.ml:1211:14>>*/ caml_call1
-       ( /*<<ControllerListeners.ml:1210:40>>*/ caml_get_cached_method
-         (o, 900827171, cache_id$1741),
+       /*<<ControllerListeners.ml:1195:14>>*/ createTMController(tm, 1);
+      var o =  /*<<ControllerListeners.ml:1195:40>>*/ ctrlR[1];
+       /*<<ControllerListeners.ml:1196:14>>*/ caml_call1
+       ( /*<<ControllerListeners.ml:1195:40>>*/ caml_get_cached_method
+         (o, 900827171, cache_id$1726),
         o);
-      var p =  /*<<ControllerListeners.ml:1211:40>>*/ ctrlR[1];
-      return  /*<<ControllerListeners.ml:1212:49>>*/ fit
-              ( /*<<ControllerListeners.ml:1212:28>>*/ caml_call1
-                ( /*<<ControllerListeners.ml:1211:40>>*/ caml_get_cached_method
-                  (p, -62434272, cache_id$1742),
-                 p)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+      var p =  /*<<ControllerListeners.ml:1196:40>>*/ ctrlR[1];
+      return  /*<<ControllerListeners.ml:1197:49>>*/ fit
+              ( /*<<ControllerListeners.ml:1197:28>>*/ caml_call1
+                ( /*<<ControllerListeners.ml:1196:40>>*/ caml_get_cached_method
+                  (p, -62434272, cache_id$1727),
+                 p)) /*<<ControllerListeners.ml:1205:7>>*/ ;
      }
-      /*<<ControllerListeners.ml:1213:37>>*/ if(kind !== cst_composition)
-       /*<<ControllerListeners.ml:1219:15>>*/ return fatal(amA) /*<<ControllerListeners.ml:1220:7>>*/ ;
-      /*<<ControllerListeners.ml:1214:14>>*/ clearBox2(0);
+      /*<<ControllerListeners.ml:1198:37>>*/ if(kind !== cst_composition)
+       /*<<ControllerListeners.ml:1204:15>>*/ return fatal(amA) /*<<ControllerListeners.ml:1205:7>>*/ ;
+      /*<<ControllerListeners.ml:1199:14>>*/ clearBox2(0);
      var
       comp =
-         /*<<ControllerListeners.ml:1215:25>>*/ caml_call2
+         /*<<ControllerListeners.ml:1200:25>>*/ caml_call2
          (model$22[1], 0, [0, j]);
-      /*<<ControllerListeners.ml:1216:14>>*/ createCompController(comp, 1);
-     var q =  /*<<ControllerListeners.ml:1216:44>>*/ ctrlR[1];
-      /*<<ControllerListeners.ml:1217:14>>*/ caml_call1
-      ( /*<<ControllerListeners.ml:1216:44>>*/ caml_get_cached_method
-        (q, 900827171, cache_id$1743),
+      /*<<ControllerListeners.ml:1201:14>>*/ createCompController(comp, 1);
+     var q =  /*<<ControllerListeners.ml:1201:44>>*/ ctrlR[1];
+      /*<<ControllerListeners.ml:1202:14>>*/ caml_call1
+      ( /*<<ControllerListeners.ml:1201:44>>*/ caml_get_cached_method
+        (q, 900827171, cache_id$1728),
        q);
-     var r =  /*<<ControllerListeners.ml:1217:40>>*/ ctrlR[1];
-     return  /*<<ControllerListeners.ml:1218:49>>*/ fit
-             ( /*<<ControllerListeners.ml:1218:28>>*/ caml_call1
-               ( /*<<ControllerListeners.ml:1217:40>>*/ caml_get_cached_method
-                 (r, -62434272, cache_id$1744),
-                r)) /*<<ControllerListeners.ml:1220:7>>*/ ;
+     var r =  /*<<ControllerListeners.ml:1202:40>>*/ ctrlR[1];
+     return  /*<<ControllerListeners.ml:1203:49>>*/ fit
+             ( /*<<ControllerListeners.ml:1203:28>>*/ caml_call1
+               ( /*<<ControllerListeners.ml:1202:40>>*/ caml_get_cached_method
+                 (r, -62434272, cache_id$1729),
+                r)) /*<<ControllerListeners.ml:1205:7>>*/ ;
     };
    function examplesDiv(param){
      /*<<Calling.ml:40:2>>*/ return getElementById(amC) /*<<Calling.ml:40:42>>*/ ;
@@ -104086,7 +103971,7 @@
         /*<<Calling.ml:44:26>>*/ caml_jsstring_of_string(title),
        function(x){
          /*<<Calling.ml:44:2>>*/ return caml_call1
-                (caml_get_cached_method(x, 746263041, cache_id$1745), x) /*<<Calling.ml:44:22>>*/ ;
+                (caml_get_cached_method(x, 746263041, cache_id$1730), x) /*<<Calling.ml:44:22>>*/ ;
        }));
      /*<<Calling.ml:45:2>>*/ (function(t4, t3, param){
         /*<<?>>*/ t4.cssText = t3;
@@ -104097,12 +103982,12 @@
          /*<<Calling.ml:45:2>>*/ (titleDiv,
          function(x){
            /*<<Calling.ml:45:13>>*/ return caml_call1
-                  (caml_get_cached_method(x, 69051697, cache_id$1747), x) /*<<Calling.ml:45:18>>*/ ;
+                  (caml_get_cached_method(x, 69051697, cache_id$1732), x) /*<<Calling.ml:45:18>>*/ ;
          }),
        "color: white; font-size: 11px; font-weight: bold; padding-left: 20px",
        function(x){
          /*<<Calling.ml:45:2>>*/ return caml_call1
-                (caml_get_cached_method(x, -21030384, cache_id$1746), x) /*<<Calling.ml:45:28>>*/ ;
+                (caml_get_cached_method(x, -21030384, cache_id$1731), x) /*<<Calling.ml:45:28>>*/ ;
        }));
      /*<<Calling.ml:46:18>>*/  /*<<Calling.ml:46:2>>*/ appendChild
      ( /*<<Calling.ml:46:18>>*/ examplesDiv(0), titleDiv);
@@ -104122,12 +104007,12 @@
          /*<<Calling.ml:50:2>>*/ (buttonsDiv,
          function(x){
            /*<<Calling.ml:50:15>>*/ return caml_call1
-                  (caml_get_cached_method(x, 69051697, cache_id$1749), x) /*<<Calling.ml:50:20>>*/ ;
+                  (caml_get_cached_method(x, 69051697, cache_id$1734), x) /*<<Calling.ml:50:20>>*/ ;
          }),
        "padding-top: 2px; padding-bottom: 20px;",
        function(x){
          /*<<Calling.ml:50:2>>*/ return caml_call1
-                (caml_get_cached_method(x, -21030384, cache_id$1748), x) /*<<Calling.ml:50:30>>*/ ;
+                (caml_get_cached_method(x, -21030384, cache_id$1733), x) /*<<Calling.ml:50:30>>*/ ;
        }));
      /*<<Calling.ml:51:2>>*/ iter
      (function(param){
@@ -104252,7 +104137,7 @@
           automaton =
              /*<<Calling.ml:124:19>>*/ caml_call1
              ( /*<<Calling.ml:124:3>>*/ caml_get_cached_method
-               (a, -332451021, cache_id$1792),
+               (a, -332451021, cache_id$1777),
               a);
           /*<<Calling.ml:125:3>>*/ return bcSend(automaton) /*<<Calling.ml:125:28>>*/ ;
         },
@@ -104261,7 +104146,7 @@
          return  /*<<Calling.ml:128:38>>*/ fit
                  ( /*<<Calling.ml:128:17>>*/ caml_call1
                    ( /*<<Calling.ml:128:3>>*/ caml_get_cached_method
-                     (a, -62434272, cache_id$1791),
+                     (a, -62434272, cache_id$1776),
                     a)) /*<<Calling.ml:128:38>>*/ ;
         },
         function(param){
@@ -104273,7 +104158,7 @@
          twoBoxes$0
           ( /*<<Calling.ml:132:21>>*/ caml_call1
             ( /*<<Calling.ml:132:3>>*/ caml_get_cached_method
-              (a, -62434272, cache_id$1789),
+              (a, -62434272, cache_id$1774),
              a));
           /*<<Calling.ml:133:3>>*/ caml_call1
           (changeToControllerCtrlRight[1], 0);
@@ -104287,21 +104172,21 @@
              ( /*<<Calling.ml:137:29>>*/ caml_string_of_jsstring(v)),
           b =  /*<<Calling.ml:138:6>>*/ ctrlL[1];
          return caml_call2
-                 (caml_get_cached_method(b, 775659251, cache_id$1790),
+                 (caml_get_cached_method(b, 775659251, cache_id$1775),
                   b,
                   size) /*<<Calling.ml:138:31>>*/ ;
         },
         function(param){
          var a =  /*<<Calling.ml:141:16>>*/ ctrlL[1];
          return caml_call1
-                 (caml_get_cached_method(a, -154033193, cache_id$1788), a) /*<<Calling.ml:141:38>>*/ ;
+                 (caml_get_cached_method(a, -154033193, cache_id$1773), a) /*<<Calling.ml:141:38>>*/ ;
         },
         function(param){
          var a =  /*<<Calling.ml:144:3>>*/ ctrlL[1];
          oneBox$0
           ( /*<<Calling.ml:144:19>>*/ caml_call1
             ( /*<<Calling.ml:144:3>>*/ caml_get_cached_method
-              (a, -62434272, cache_id$1786),
+              (a, -62434272, cache_id$1771),
              a));
          var
           text =
@@ -104314,7 +104199,7 @@
           v =  /*<<Calling.ml:146:30>>*/ match[1],
           b =  /*<<Calling.ml:148:66>>*/ ctrlL[1];
           /*<<Calling.ml:148:50>>*/ return  /*<<Calling.ml:148:66>>*/ caml_call2
-                 (caml_get_cached_method(b, 584895154, cache_id$1787),
+                 (caml_get_cached_method(b, 584895154, cache_id$1772),
                   b,
                    /*<<Calling.ml:148:50>>*/ caml_string_of_jsstring(v)) /*<<Calling.ml:148:66>>*/ ;
         },
@@ -104323,7 +104208,7 @@
          twoBoxes$0
           ( /*<<Calling.ml:151:34>>*/ caml_call1
             ( /*<<Calling.ml:151:16>>*/ caml_get_cached_method
-              (a, -62434272, cache_id$1784),
+              (a, -62434272, cache_id$1769),
              a));
          var
           text =
@@ -104336,7 +104221,7 @@
           v =  /*<<Calling.ml:153:43>>*/ match[1],
           b =  /*<<Calling.ml:155:66>>*/ ctrlL[1];
           /*<<Calling.ml:155:50>>*/ return  /*<<Calling.ml:155:66>>*/ caml_call2
-                 (caml_get_cached_method(b, -997985208, cache_id$1785),
+                 (caml_get_cached_method(b, -997985208, cache_id$1770),
                   b,
                    /*<<Calling.ml:155:50>>*/ caml_string_of_jsstring(v)) /*<<Calling.ml:155:66>>*/ ;
         },
@@ -104354,7 +104239,7 @@
             (am0,  /*<<Calling.ml:162:34>>*/ caml_string_of_jsstring(v)));
          var a =  /*<<Calling.ml:163:43>>*/ ctrlL[1];
           /*<<Calling.ml:163:27>>*/ return  /*<<Calling.ml:163:43>>*/ caml_call2
-                 (caml_get_cached_method(a, 89088206, cache_id$1783),
+                 (caml_get_cached_method(a, 89088206, cache_id$1768),
                   a,
                    /*<<Calling.ml:163:27>>*/ caml_string_of_jsstring(v)) /*<<Calling.ml:163:43>>*/ ;
         },
@@ -104362,13 +104247,13 @@
           /*<<Calling.ml:166:3>>*/ log(amY);
          var a =  /*<<Calling.ml:166:21>>*/ ctrlL[1];
          return caml_call1
-                 (caml_get_cached_method(a, 257658131, cache_id$1782), a) /*<<Calling.ml:167:23>>*/ ;
+                 (caml_get_cached_method(a, 257658131, cache_id$1767), a) /*<<Calling.ml:167:23>>*/ ;
         },
         function(param){
           /*<<Calling.ml:170:3>>*/ log(amX);
          var a =  /*<<Calling.ml:170:19>>*/ ctrlL[1];
          return caml_call1
-                 (caml_get_cached_method(a, -131559969, cache_id$1781), a) /*<<Calling.ml:171:23>>*/ ;
+                 (caml_get_cached_method(a, -131559969, cache_id$1766), a) /*<<Calling.ml:171:23>>*/ ;
         },
         function(param, n){
           /*<<Calling.ml:174:3>>*/ return conversionTo(n) /*<<Calling.ml:174:37>>*/ ;
@@ -104384,13 +104269,13 @@
           c =
              /*<<Calling.ml:181:29>>*/ caml_call1
              ( /*<<Calling.ml:181:3>>*/ caml_get_cached_method
-               (b, 207102889, cache_id$1767),
+               (b, 207102889, cache_id$1752),
               b),
           json =
              /*<<Calling.ml:181:48>>*/  /*<<Calling.ml:181:14>>*/ toString
              ( /*<<Calling.ml:181:28>>*/ caml_call1
                ( /*<<Calling.ml:181:48>>*/ caml_get_cached_method
-                 (c, -66493149, cache_id$1768),
+                 (c, -66493149, cache_id$1753),
                 c)),
           json$0 =
              /*<<Calling.ml:182:51>>*/  /*<<Calling.ml:182:14>>*/ caml_string_of_jsstring
@@ -104404,18 +104289,18 @@
               cst_a,
               function(x){
                return caml_call1
-                       (caml_get_cached_method(x, -292059360, cache_id$1769), x) /*<<Calling.ml:183:49>>*/ ;
+                       (caml_get_cached_method(x, -292059360, cache_id$1754), x) /*<<Calling.ml:183:49>>*/ ;
               }),
           d =  /*<<Calling.ml:184:3>>*/ ctrlL[1],
           e =
              /*<<Calling.ml:185:17>>*/ caml_call1
              ( /*<<Calling.ml:184:3>>*/ caml_get_cached_method
-               (d, 207102889, cache_id$1770),
+               (d, 207102889, cache_id$1755),
               d),
           a =
              /*<<Calling.ml:185:34>>*/  /*<<Calling.ml:185:17>>*/ caml_call1
               ( /*<<Calling.ml:185:34>>*/ caml_get_cached_method
-                (e, 23515, cache_id$1771),
+                (e, 23515, cache_id$1756),
                e)
              [3],
           a$0 =
@@ -104431,7 +104316,7 @@
              ( /*<<Calling.ml:190:55>>*/ symbol_concat(amW, json$0)),
             function(x){
               /*<<Calling.ml:190:3>>*/ return caml_call1
-                     (caml_get_cached_method(x, 524300314, cache_id$1772), x) /*<<Calling.ml:190:24>>*/ ;
+                     (caml_get_cached_method(x, 524300314, cache_id$1757), x) /*<<Calling.ml:190:24>>*/ ;
             }));
           /*<<Calling.ml:191:48>>*/ ( /*<<Calling.ml:191:3>>*/ function
            (t15, t16, t17, param){
@@ -104442,7 +104327,7 @@
              /*<<Calling.ml:191:48>>*/ caml_jsstring_of_string(modelName),
             function(x){
               /*<<Calling.ml:191:3>>*/ return caml_call1
-                     (caml_get_cached_method(x, 524300314, cache_id$1773), x) /*<<Calling.ml:191:24>>*/ ;
+                     (caml_get_cached_method(x, 524300314, cache_id$1758), x) /*<<Calling.ml:191:24>>*/ ;
             }));
           /*<<Calling.ml:192:3>>*/ (function(t20, t19, param){
              /*<<?>>*/ t20.display = t19;
@@ -104453,12 +104338,12 @@
               /*<<Calling.ml:192:3>>*/ (element,
               function(x){
                 /*<<Calling.ml:192:13>>*/ return caml_call1
-                       (caml_get_cached_method(x, 69051697, cache_id$1775), x) /*<<Calling.ml:192:18>>*/ ;
+                       (caml_get_cached_method(x, 69051697, cache_id$1760), x) /*<<Calling.ml:192:18>>*/ ;
               }),
             cst_none$0,
             function(x){
               /*<<Calling.ml:192:3>>*/ return caml_call1
-                     (caml_get_cached_method(x, 994716226, cache_id$1774), x) /*<<Calling.ml:192:28>>*/ ;
+                     (caml_get_cached_method(x, 994716226, cache_id$1759), x) /*<<Calling.ml:192:28>>*/ ;
             }));
          var
           node =
@@ -104471,12 +104356,12 @@
                 /*<<Calling.ml:193:14>>*/ (document,
                 function(x){
                   /*<<Calling.ml:193:34>>*/ return caml_call1
-                         (caml_get_cached_method(x, -1055163742, cache_id$1777), x) /*<<Calling.ml:193:38>>*/ ;
+                         (caml_get_cached_method(x, -1055163742, cache_id$1762), x) /*<<Calling.ml:193:38>>*/ ;
                 }),
               element,
               function(x){
                 /*<<Calling.ml:193:14>>*/ return caml_call1
-                       (caml_get_cached_method(x, 36716898, cache_id$1776), x) /*<<Calling.ml:193:51>>*/ ;
+                       (caml_get_cached_method(x, 36716898, cache_id$1761), x) /*<<Calling.ml:193:51>>*/ ;
               });
           /*<<Calling.ml:194:3>>*/ (function(t24, param){
              /*<<?>>*/ t24.click();
@@ -104484,7 +104369,7 @@
             /*<<Calling.ml:194:3>>*/ (element,
             function(x){
              return caml_call1
-                     (caml_get_cached_method(x, -933331896, cache_id$1778), x) /*<<Calling.ml:194:17>>*/ ;
+                     (caml_get_cached_method(x, -933331896, cache_id$1763), x) /*<<Calling.ml:194:17>>*/ ;
             }));
           /*<<Calling.ml:195:3>>*/ return  /*<<Calling.ml:195:27>>*/ function
                  (t26, t27, param){
@@ -104497,12 +104382,12 @@
                     /*<<Calling.ml:195:3>>*/ (document,
                     function(x){
                       /*<<Calling.ml:195:23>>*/ return caml_call1
-                             (caml_get_cached_method(x, -1055163742, cache_id$1780), x) /*<<Calling.ml:195:27>>*/ ;
+                             (caml_get_cached_method(x, -1055163742, cache_id$1765), x) /*<<Calling.ml:195:27>>*/ ;
                     }),
                   node,
                   function(x){
                     /*<<Calling.ml:195:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, -1007843656, cache_id$1779), x) /*<<Calling.ml:195:40>>*/ ;
+                           (caml_get_cached_method(x, -1007843656, cache_id$1764), x) /*<<Calling.ml:195:40>>*/ ;
                   }) /*<<Calling.ml:195:45>>*/ ;
         },
         function(param){
@@ -104511,7 +104396,7 @@
           (changeToControllerCtrlLeft[1], 0);
          var a =  /*<<Calling.ml:199:41>>*/ ctrlL[1];
          return caml_call1
-                 (caml_get_cached_method(a, -381706107, cache_id$1766), a) /*<<Calling.ml:200:23>>*/ ;
+                 (caml_get_cached_method(a, -381706107, cache_id$1751), a) /*<<Calling.ml:200:23>>*/ ;
         },
         function(param){
           /*<<Calling.ml:203:3>>*/ clearBox1(0);
@@ -104519,7 +104404,7 @@
           (changeToControllerCtrlLeft[1], 0);
          var a =  /*<<Calling.ml:204:41>>*/ ctrlL[1];
          return caml_call1
-                 (caml_get_cached_method(a, 452578893, cache_id$1765), a) /*<<Calling.ml:205:20>>*/ ;
+                 (caml_get_cached_method(a, 452578893, cache_id$1750), a) /*<<Calling.ml:205:20>>*/ ;
         },
         function(param){
           /*<<Calling.ml:208:14>>*/ return settings(0) /*<<Calling.ml:208:39>>*/ ;
@@ -104533,7 +104418,7 @@
                   "Change Settings",
                   function(x){
                     /*<<Calling.ml:212:16>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1764), x) /*<<Calling.ml:212:35>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1749), x) /*<<Calling.ml:212:35>>*/ ;
                   }) /*<<Calling.ml:212:66>>*/ ;
         },
         function(param){
@@ -104547,7 +104432,7 @@
                    ( /*<<Calling.ml:216:36>>*/ i18nTooltipNewModel(0)),
                   function(x){
                     /*<<Calling.ml:216:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1763), x) /*<<Calling.ml:216:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1748), x) /*<<Calling.ml:216:22>>*/ ;
                   }) /*<<Calling.ml:216:65>>*/ ;
         },
         function(param){
@@ -104561,7 +104446,7 @@
                    ( /*<<Calling.ml:220:36>>*/ i18nTooltipEditModel(0)),
                   function(x){
                     /*<<Calling.ml:220:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1762), x) /*<<Calling.ml:220:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1747), x) /*<<Calling.ml:220:22>>*/ ;
                   }) /*<<Calling.ml:220:66>>*/ ;
         },
         function(param){
@@ -104575,7 +104460,7 @@
                    ( /*<<Calling.ml:224:36>>*/ i18nTooltipFitGraph(0)),
                   function(x){
                     /*<<Calling.ml:224:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1761), x) /*<<Calling.ml:224:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1746), x) /*<<Calling.ml:224:22>>*/ ;
                   }) /*<<Calling.ml:224:65>>*/ ;
         },
         function(param){
@@ -104589,7 +104474,7 @@
                    ( /*<<Calling.ml:228:36>>*/ i18nTooltipGenerate(0)),
                   function(x){
                     /*<<Calling.ml:228:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1760), x) /*<<Calling.ml:228:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1745), x) /*<<Calling.ml:228:22>>*/ ;
                   }) /*<<Calling.ml:228:65>>*/ ;
         },
         function(param){
@@ -104603,7 +104488,7 @@
                    ( /*<<Calling.ml:232:36>>*/ i18nTooltipTest(0)),
                   function(x){
                     /*<<Calling.ml:232:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1759), x) /*<<Calling.ml:232:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1744), x) /*<<Calling.ml:232:22>>*/ ;
                   }) /*<<Calling.ml:232:61>>*/ ;
         },
         function(param){
@@ -104615,7 +104500,7 @@
                   "Show Acceptance Path",
                   function(x){
                     /*<<Calling.ml:236:16>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1758), x) /*<<Calling.ml:236:35>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1743), x) /*<<Calling.ml:236:35>>*/ ;
                   }) /*<<Calling.ml:236:73>>*/ ;
         },
         function(param){
@@ -104629,7 +104514,7 @@
                    ( /*<<Calling.ml:240:36>>*/ i18nTooltipStep(0)),
                   function(x){
                     /*<<Calling.ml:240:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1757), x) /*<<Calling.ml:240:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1742), x) /*<<Calling.ml:240:22>>*/ ;
                   }) /*<<Calling.ml:240:61>>*/ ;
         },
         function(param){
@@ -104643,7 +104528,7 @@
                    ( /*<<Calling.ml:244:36>>*/ i18nTooltipClear(0)),
                   function(x){
                     /*<<Calling.ml:244:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1756), x) /*<<Calling.ml:244:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1741), x) /*<<Calling.ml:244:22>>*/ ;
                   }) /*<<Calling.ml:244:62>>*/ ;
         },
         function(param){
@@ -104657,7 +104542,7 @@
                    ( /*<<Calling.ml:248:36>>*/ i18nTooltipConvert(0)),
                   function(x){
                     /*<<Calling.ml:248:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1755), x) /*<<Calling.ml:248:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1740), x) /*<<Calling.ml:248:22>>*/ ;
                   }) /*<<Calling.ml:248:64>>*/ ;
         },
         function(param){
@@ -104671,7 +104556,7 @@
                    ( /*<<Calling.ml:252:36>>*/ i18nTooltipFile(0)),
                   function(x){
                     /*<<Calling.ml:252:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1754), x) /*<<Calling.ml:252:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1739), x) /*<<Calling.ml:252:22>>*/ ;
                   }) /*<<Calling.ml:252:61>>*/ ;
         },
         function(param){
@@ -104685,7 +104570,7 @@
                    ( /*<<Calling.ml:256:36>>*/ i18nTooltipExportModel(0)),
                   function(x){
                     /*<<Calling.ml:256:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1753), x) /*<<Calling.ml:256:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1738), x) /*<<Calling.ml:256:22>>*/ ;
                   }) /*<<Calling.ml:256:68>>*/ ;
         },
         function(param){
@@ -104699,7 +104584,7 @@
                    ( /*<<Calling.ml:260:36>>*/ i18nTooltipAbout(0)),
                   function(x){
                     /*<<Calling.ml:260:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1752), x) /*<<Calling.ml:260:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1737), x) /*<<Calling.ml:260:22>>*/ ;
                   }) /*<<Calling.ml:260:62>>*/ ;
         },
         function(param){
@@ -104713,7 +104598,7 @@
                    ( /*<<Calling.ml:264:36>>*/ i18nTooltipFeedback(0)),
                   function(x){
                     /*<<Calling.ml:264:3>>*/ return caml_call1
-                           (caml_get_cached_method(x, 746263041, cache_id$1751), x) /*<<Calling.ml:264:22>>*/ ;
+                           (caml_get_cached_method(x, 746263041, cache_id$1736), x) /*<<Calling.ml:264:22>>*/ ;
                   }) /*<<Calling.ml:264:65>>*/ ;
         },
         function(param){
@@ -104968,7 +104853,7 @@
         }),
       function(x){
         /*<<Calling.ml:112:1>>*/ return caml_call1
-               (caml_get_cached_method(x, -626153866, cache_id$1750), x) /*<<Calling.ml:112:26>>*/ ;
+               (caml_get_cached_method(x, -626153866, cache_id$1735), x) /*<<Calling.ml:112:26>>*/ ;
       }));
     /*<<std_exit.ml:18:8>>*/ do_at_exit(0);
     /*<<std_exit.ml:18:20>>*/ return;

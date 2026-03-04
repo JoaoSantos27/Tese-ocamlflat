@@ -12,7 +12,6 @@ open JS
 open Controller
 open AutomatonController
 open AutomatonView
-open FiniteAutomatonView
 open TransducerView
 open Listeners
 
@@ -34,7 +33,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
 
     method setTitle = 
       CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (Transducer.kind)
+      HtmlPageClient.defineMainTitle Transducer.kind
 
     method returnType = Transducer.kind
 
@@ -42,16 +41,16 @@ class fstController (fst : TransducerView.model) (s: bool) =
       HtmlPageClient.putCyTransducerButtons ()
 
     method updateButtons =
-      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
-      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyExpressionButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyGRConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
-      
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyAutomataButtons;
-      List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
+      HtmlPageClient.disableButton "selectRegex"
 
     method defineInformationBox =
       let infoBox = HtmlPageClient.defineInformationBox side in
@@ -202,14 +201,6 @@ class fstController (fst : TransducerView.model) (s: bool) =
       self#operationAutomaton "convert to FA";
       let fa = myFST#asFiniteAutomaton in
       new FiniteAutomatonView.model (Representation fa)
-
-    method convertToRegExp =
-      let open RegularExpressionView in
-      self#operationAutomaton "convert to regex";
-      let fa = myFST#asFiniteAutomaton in
-      let fa_model = new FiniteAutomatonView.model (Representation fa) in
-      let re = PolyModel.fa2re fa_model in
-      new RegularExpressionView.model (Representation re#representation)
 
     method convertToTM_SingleTape =
       let open TuringMachineView in

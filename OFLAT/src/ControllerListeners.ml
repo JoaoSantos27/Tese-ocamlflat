@@ -478,21 +478,6 @@ module ControllerListeners = struct
           !Ctrl.ctrlR#defineMinimize !listColorsBig number;
       else 
         JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
-        
-  ListenersFST.paintAllUsefulListener :=
-    fun () -> !Ctrl.ctrlL#resetStyle;
-    (!Ctrl.ctrlL#getFST)#usefulPainting !Ctrl.ctrlL#getCy;;
-
-  ListenersFST.paintAllProductivesListener :=
-    fun () -> (!Ctrl.ctrlL#resetStyle;
-    (!Ctrl.ctrlL#getFST)#productivePainting !Ctrl.ctrlL#getCy);;
-
-  ListenersFST.paintAllReachableListener := 
-    fun () -> !Ctrl.ctrlL#resetStyle;
-    (!Ctrl.ctrlL#getFST)#reachablePainting !Ctrl.ctrlL#getCy;;
-  
-  ListenersFST.clearAutoListener :=
-     fun () -> Cytoscape.resetStyle !Ctrl.ctrlL#getCy Cytoscape.faStyle;;
 
   ListenersPDA.cleanUselessListener :=
   fun () -> if ((!Ctrl.ctrlL#getPDA)#areAllStatesUseful) then 

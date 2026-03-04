@@ -68,7 +68,6 @@ struct
 	let getDeterministicListener = ref (fun () -> ())
 	let defineMinimizedListener = ref (fun () -> ())
 	let cleanUselessListener = ref (fun () -> ())
-
 end
 
 module ListenersFST = 
@@ -80,7 +79,6 @@ module ListenersFST =
 		let getDeterministicListener = ref (fun () -> ())
 		let defineMinimizedListener = ref (fun () -> ())
 		let cleanUselessListener = ref (fun () -> ())
-
 	end
 
 module ListenersTM = 
