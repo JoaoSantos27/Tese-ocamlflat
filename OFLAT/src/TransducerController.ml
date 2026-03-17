@@ -215,5 +215,12 @@ class fstController (fst : TransducerView.model) (s: bool) =
             else
               JS.alertStr (String.concat "\n" errors)
 
+    method getWords v =
+      self#operationAutomaton "accepted words";
+      let pairs = myFST#staticGenerateWithOutput v in
+      let (_, visitedConfigs, exact, time) = myFST#returnStats in
+        HtmlPageClient.putWordsWithOutput pairs;
+        HtmlPageClient.displayGenStats visitedConfigs exact time
+
 end
 

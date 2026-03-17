@@ -523,7 +523,7 @@ struct
 	
 	let fst_complex_ND = {| {
     kind : "transducer",
-    description : "Complex ND FST: Ambiguous 'a' paths and epsilon-output conflict",
+    description : "ND FST: Ambiguous 'a' paths and epsilon-output conflict",
     name : "complex_fst_nd",
     inAlphabet : ["a", "b"],
     outAlphabet : ["x", "y", "z"],
@@ -538,6 +538,25 @@ struct
       ["C", "a", "x", "S"]
     ],
     acceptStates : ["S", "A"]
+  } |}
+
+	let fst_ND2 = {| {
+    kind : "transducer",
+    description : "dd",
+    name : "fst_ND2",
+    inAlphabet : ["a", "b", "c", "d", "e"],
+    outAlphabet : ["0", "1"],
+    states : ["START", "A", "AB", "SUCCESS", "UNREACHABLE", "UNPRODUCTIVE"],
+    initialState : "START",
+    transitions : [
+        ["START","a","0","A"], ["START","b","0","START"], ["START","c","0","START"], ["START","d","0","START"],
+        ["A","a","0","A"], ["A","b","0","AB"], ["A","c","0","START"], ["A","d","0","START"],
+        ["AB","a","0","A"], ["AB","b","0","START"], ["AB","c","1","SUCCESS"], ["AB","d","0","START"],
+        ["SUCCESS","a","1","SUCCESS"], ["SUCCESS","b","1","SUCCESS"], ["SUCCESS","c","1","SUCCESS"], ["SUCCESS","d","1","SUCCESS"], 
+        ["A","a","0","AB"], ["UNREACHABLE", "a", "1", "SUCCESS"],
+        ["SUCCESS", "e", "0", "UNPRODUCTIVE"], ["UNPRODUCTIVE", "a", "0", "UNPRODUCTIVE"]
+      ],
+    acceptStates : ["SUCCESS"]
   } |}
 
 	let fst_M = {| {
@@ -1140,30 +1159,33 @@ struct
 			kind : "exercise",
 			description : "FST: identity transducer over a and b",
 			name : "exer_fst_identity",
-			problem : "Create a deterministic FINITE STATE TRANSDUCER that reads any sequence of 'a's and 'b's and outputs the same sequence (identity transducer).",
+			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer). For example: 'a' -> 'a', 'ab' -> 'ab', 'ba' -> 'ba'.",
 			inside : ["a", "b", "ab", "ba", "aab", "abb", "aabb"],
 			outside : [],
-			properties : ["transducer", "deterministic"]
+			properties : ["transducer", "deterministic",
+				"output:a->a", "output:b->b", "output:ab->ab", "output:ba->ba", "output:aab->aab"]
 		} |}
 
 	let exer_fst_mealy = {| {
 			kind : "exercise",
 			description : "FST: Mealy machine swapping a and b",
 			name : "exer_fst_mealy",
-			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'b' for every 'a' it reads and 'a' for every 'b' it reads.",
+			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read. For example: 'a' -> 'b', 'ab' -> 'ba', 'aab' -> 'bba'.",
 			inside : ["a", "b", "ab", "ba", "aab"],
 			outside : [],
-			properties : ["transducer", "deterministic", "mealy"]
+			properties : ["transducer", "deterministic", "mealy",
+				"output:a->b", "output:b->a", "output:ab->ba", "output:ba->ab", "output:aab->bba"]
 		} |}
 
 	let exer_fst_moore = {| {
 			kind : "exercise",
 			description : "FST: Moore machine outputting x on a and y on b",
 			name : "exer_fst_moore",
-			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' whenever it reads 'a' and 'y' whenever it reads 'b'.",
+			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every 'a' read and 'y' for every 'b' read. For example: 'a' -> 'x', 'ab' -> 'xy', 'ba' -> 'yx', 'aab' -> 'xxy'.",
 			inside : ["a", "b", "ab", "ba", "aab", "abb"],
 			outside : [],
-			properties : ["transducer", "deterministic", "moore"]
+			properties : ["transducer", "deterministic", "moore",
+				"output:a->x", "output:b->y", "output:ab->xy", "output:ba->yx", "output:aab->xxy"]
 		} |}
 
   let examplesTable = [
@@ -1219,6 +1241,7 @@ struct
 	[
 		("fst_1", fst_1);
 		("fst_ND", fst_ND);
+		("fst_ND2", fst_ND2);
 		("fst_complex_ND", fst_complex_ND);
 		("fst_M", fst_M);
 		("fst_Moore", fst_Moore);

@@ -943,9 +943,9 @@ struct
       tapeAlphabet = tm_tape_alphabet;
       initialState = tm_initial_state;
       empty = tm_empty;
-      transitions = all_tm_trs;
-      acceptStates = tm_accept_states;
-      criteria = true;
+      (q1, [a; tm_empty], q2, [a; write_b], [R; move_b])
+    ) input_consuming_trs in
+
       lbMarkers = [];
 	  _nTapes = 2 
     } in
@@ -1327,7 +1327,26 @@ struct
 			| "clean" -> isClean fst
 			| "transducer" -> true
 			| "finite-state transducer" -> true
-			| _ -> Model.checkProperty prop
+			| _ ->
+				let split_output_clause rest =
+					match String.index_opt rest '-' with
+					| Some i when i + 1 < String.length rest && rest.[i + 1] = '>' ->
+						let inp = String.sub rest 0 i in
+						let out = String.sub rest (i + 2) (String.length rest - i - 2) in
+						Some (inp, out)
+					| _ -> None
+				in
+				if String.length prop > 7 && String.sub prop 0 7 = "output:" then
+					let rest = String.sub prop 7 (String.length prop - 7) in
+					(match split_output_clause rest with
+					| Some (inp, expected_out) ->
+						let inp_word = str2word inp in
+						let exp_word = str2word expected_out in
+						let (ok, actual_out) = acceptOut fst inp_word in
+						ok && actual_out = exp_word
+					| None -> Model.checkProperty prop)
+				else
+					Model.checkProperty prop
 	let checkExercise ex fst = Model.checkExercise ex (accept fst) (checkProperty fst)	
 	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (accept fst) (checkProperty fst)
 
@@ -1335,6 +1354,7 @@ struct
 	let stats = Model.stats
 	let accept = accept
 	let acceptFull = acceptFull
+	let acceptOut = acceptOut
 	let generate = generate	
 	let asFiniteAutomaton = asFiniteAutomaton
 	let reachable = reachable

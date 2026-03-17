@@ -1435,6 +1435,19 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
             let zz = textarea "textarea" 2 20 (Js.string res) in 
               Dom.appendChild textBox zz
 
+  let putWordsWithOutput (pairs: (word * word) list) =
+    putInnerHtml "textBox" "";
+    let textBox = Dom_html.getElementById "textBox" in
+    let title = div1 "generateWords" (Lang.i18nGenerateWords ()) in
+      Dom.appendChild textBox title;
+    let string_of_word w = if w = [] then "~" else String.concat "" (List.map symb2str w) in
+    let string_of_pair (inp, out) =
+      "' " ^ string_of_word inp ^ " ' \xe2\x86\x92 ' " ^ string_of_word out ^ " '"
+    in
+    let res = String.concat ", " (List.map string_of_pair pairs) in
+    let zz = textarea "textarea" 2 20 (Js.string res) in
+      Dom.appendChild textBox zz
+
   let putEnumButton () = 
     let buttonBox = Dom_html.getElementById "buttonBox1" in
       let clearButton = button "X" "clearEnum" !ListenersEXER.clearExerciseListener in      

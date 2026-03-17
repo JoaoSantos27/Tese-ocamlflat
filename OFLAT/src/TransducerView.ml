@@ -12,8 +12,8 @@ struct
 
   let htmlDelta = "ẟ"
 
-  (* --- Popper & Menu Helpers --- *)
   let __none__ = "__none__"
+  let bestStateColor = "DarkBlue"
 
   let optionsPopper = 
     Js.def (object%js 
@@ -290,7 +290,8 @@ struct
       method paintCurrentStates cy = 
         let currentConfigs = steps.(position) in
         let currentStates = self#getStatesFromConfigs currentConfigs in
-        self#paintStates cy currentStates (fun st -> Set.belongs st self#getAcceptStates)
+        self#paintStates cy currentStates (fun st -> Set.belongs st self#getAcceptStates);
+        self#paintBestCurrentStep cy
 
       method setInitialStep cy =
         self#staticAcceptFull;
@@ -332,6 +333,14 @@ struct
         if bestPath <> [] && position < List.length bestPath then 
           Some (List.nth bestPath position) 
         else None
+
+      method private paintBestCurrentStep cy =
+        match self#getCurrConfigFromBestPath with
+        | None -> ()
+        | Some (currBestState, _, _) ->
+            if position <> (List.length bestPath) - 1 then
+              Cytoscape.paintNode cy currBestState bestStateColor
+            else ()
 
       method buildTable =
         let makeFSTTable () : string list list =
@@ -436,6 +445,14 @@ struct
         else ()
 
       method staticGenerate n = super#generate n
+
+      method staticGenerateWithOutput n =
+        let words = super#generate n in
+        let pairs = List.filter_map (fun w ->
+          let (ok, out) = Transducer.acceptOut self#representation w in
+          if ok then Some (w, out) else None
+        ) (Set.toList words) in
+        pairs
 
       method errors = 
         let rep = self#representation in
