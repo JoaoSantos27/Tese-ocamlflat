@@ -599,15 +599,15 @@ struct
 
 	let fst_Mealy = {| {
     kind : "transducer",
-    description : "Deterministic & complete but not Moore (output depends on input)",
+    description : "Deterministic & complete Mealy (outputs match inputs; not Moore)",
     name : "fst7",
     inAlphabet : ["a","b"],
-    outAlphabet : ["x","y"],
+    outAlphabet : ["a","b"],
     states : ["S"],
     initialState : "S",
     transitions : [
-      ["S","a","x","S"],
-      ["S","b","y","S"]
+      ["S","a","a","S"],
+      ["S","b","b","S"]
     ],
     acceptStates : ["S"]
   } |}
@@ -1160,10 +1160,9 @@ struct
 			description : "FST: identity transducer over a and b",
 			name : "exer_fst_identity",
 			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer). For example: 'a' -> 'a', 'ab' -> 'ab', 'ba' -> 'ba'.",
-			inside : ["a", "b", "ab", "ba", "aab", "abb", "aabb"],
+			inside : ["a->a", "b->b", "ab->ab", "ba->ba", "aab->aab"],
 			outside : [],
-			properties : ["transducer", "deterministic",
-				"output:a->a", "output:b->b", "output:ab->ab", "output:ba->ba", "output:aab->aab"]
+			properties : ["transducer", "deterministic"]
 		} |}
 
 	let exer_fst_mealy = {| {
@@ -1171,10 +1170,9 @@ struct
 			description : "FST: Mealy machine swapping a and b",
 			name : "exer_fst_mealy",
 			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read. For example: 'a' -> 'b', 'ab' -> 'ba', 'aab' -> 'bba'.",
-			inside : ["a", "b", "ab", "ba", "aab"],
+			inside : ["a->b", "b->a", "ab->ba", "ba->ab", "aab->bba"],
 			outside : [],
-			properties : ["transducer", "deterministic", "mealy",
-				"output:a->b", "output:b->a", "output:ab->ba", "output:ba->ab", "output:aab->bba"]
+			properties : ["transducer", "deterministic", "mealy"]
 		} |}
 
 	let exer_fst_moore = {| {
@@ -1182,10 +1180,9 @@ struct
 			description : "FST: Moore machine outputting x on a and y on b",
 			name : "exer_fst_moore",
 			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every 'a' read and 'y' for every 'b' read. For example: 'a' -> 'x', 'ab' -> 'xy', 'ba' -> 'yx', 'aab' -> 'xxy'.",
-			inside : ["a", "b", "ab", "ba", "aab", "abb"],
+			inside : ["a->x", "b->y", "ab->xy", "ba->yx", "aab->xxy"],
 			outside : [],
-			properties : ["transducer", "deterministic", "moore",
-				"output:a->x", "output:b->y", "output:ab->xy", "output:ba->yx", "output:aab->xxy"]
+			properties : ["transducer", "deterministic", "moore"]
 		} |}
 
   let examplesTable = [
@@ -1245,7 +1242,8 @@ struct
 		("fst_complex_ND", fst_complex_ND);
 		("fst_M", fst_M);
 		("fst_Moore", fst_Moore);
-		("fst_Mealy", fst_Mealy)
+		("fst_Mealy", fst_Mealy);
+		("fst_branching", fst_branching)
 	]);
 
   ("Turing Machine",

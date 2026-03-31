@@ -81,7 +81,24 @@ struct
 		(ok, c)
 	else
 		(ok, [])
-	(*trail lista de outputs*)
+
+	let acceptCheckOutput (fst: t) (w: word) : bool =
+		ignore (Model.checkWord fst.inAlphabet w);
+		let (ok, out) = acceptOut fst w in
+		ok && Model.checkWord fst.outAlphabet out
+		
+    let acceptExpectedOutput (fst: t) (w: word) : bool =
+        let wstr = String.trim (word2str w) in
+        match String.index_opt wstr '-' with
+        | Some i when i + 1 < String.length wstr && wstr.[i + 1] = '>' ->
+            let inp = String.sub wstr 0 i |> String.trim |> str2word in
+						Util.println [("acceptExpectedOutput: input part extracted: " ^ (word2str inp))];
+            let out_exp = String.sub wstr (i + 2) (String.length wstr - i - 2) |> String.trim |> str2word in
+            let (ok, out_act) = acceptOut fst inp in
+            ok && out_act = out_exp && Model.checkWord fst.outAlphabet out_act
+        | _ ->
+            acceptCheckOutput fst w
+	
 
 end
 
@@ -943,11 +960,11 @@ struct
       tapeAlphabet = tm_tape_alphabet;
       initialState = tm_initial_state;
       empty = tm_empty;
-      (q1, [a; tm_empty], q2, [a; write_b], [R; move_b])
-    ) input_consuming_trs in
-
+      transitions = all_tm_trs;
+      acceptStates = tm_accept_states;
+      criteria = true;
       lbMarkers = [];
-	  _nTapes = 2 
+	  	_nTapes = 2 
     } in
     
     (TuringMachine.make (Arg.Representation tm_data) : TuringMachine.t)
@@ -1316,7 +1333,6 @@ struct
 	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
 	let make (arg: t Arg.alternatives): t = make arg validate
 
-	(* Exercices support *)
 	let checkProperty (fst: t) (prop: string) =
 		match prop with
 			| "deterministic" -> isDeterministic fst
@@ -1327,34 +1343,17 @@ struct
 			| "clean" -> isClean fst
 			| "transducer" -> true
 			| "finite-state transducer" -> true
-			| _ ->
-				let split_output_clause rest =
-					match String.index_opt rest '-' with
-					| Some i when i + 1 < String.length rest && rest.[i + 1] = '>' ->
-						let inp = String.sub rest 0 i in
-						let out = String.sub rest (i + 2) (String.length rest - i - 2) in
-						Some (inp, out)
-					| _ -> None
-				in
-				if String.length prop > 7 && String.sub prop 0 7 = "output:" then
-					let rest = String.sub prop 7 (String.length prop - 7) in
-					(match split_output_clause rest with
-					| Some (inp, expected_out) ->
-						let inp_word = str2word inp in
-						let exp_word = str2word expected_out in
-						let (ok, actual_out) = acceptOut fst inp_word in
-						ok && actual_out = exp_word
-					| None -> Model.checkProperty prop)
-				else
-					Model.checkProperty prop
-	let checkExercise ex fst = Model.checkExercise ex (accept fst) (checkProperty fst)	
-	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (accept fst) (checkProperty fst)
+			| _ -> Model.checkProperty prop
+	let checkExercise ex fst = Util.println ["transducer hit"]; Model.checkExercise ex (acceptExpectedOutput fst) (checkProperty fst)	
+	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (acceptExpectedOutput fst) (checkProperty fst)
 
 	(* Ops *)
 	let stats = Model.stats
 	let accept = accept
 	let acceptFull = acceptFull
 	let acceptOut = acceptOut
+	let acceptCheckOutput = acceptCheckOutput
+	let acceptExpectedOutput = acceptExpectedOutput
 	let generate = generate	
 	let asFiniteAutomaton = asFiniteAutomaton
 	let reachable = reachable
@@ -1388,9 +1387,10 @@ struct
 			method toJSon2: JSon.t = toJSon2 id representation
 			method show: unit = show representation
 			method show2: unit = show2 id representation
-		(* Ops *)
+		(* Ops *)			
 			method accept (w: word): bool = accept representation w
 			method acceptFull (w: word) : bool * path * trail = acceptFull representation w
+			method acceptExpectedOutput (w: word): bool = acceptExpectedOutput representation w
 			method generate (length: int): words = generate representation length
 			method isClean: bool = isClean representation
 			method equivalencePartition = equivalencePartition representation
@@ -1403,7 +1403,7 @@ struct
 			method inverse: t = inverse representation
 			method concatenate (fst: t): t = concatenate representation fst
 		(* Exercices support *)
-			method checkProperty (prop: string) = Util.println["WWW"]; checkProperty representation prop	
+			method checkProperty (prop: string) = checkProperty representation prop	
 		(* Learn-OCaml support *)
 			method moduleName = moduleName
 			method xTypeName = xTypeName
