@@ -21,13 +21,115 @@ body {
   height: 100%
 }
 
+.mainBody {
+  overflow: hidden;
+}
+
+.infoBox {
+  display: grid;
+  height: 380px;
+  width: 204px;
+  padding-left: 5px;
+  border: 1px solid black;
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  top: 300px;
+  margin-left: 5px;
+}
+
+.infoBox:empty {
+  display: none;
+}
+
+.pdaBox {
+  height: 420px;
+  top: 260px;
+}
+
+.reBox {
+  height: 90px;
+}
+
+.grammarBox {
+  height: 220px;
+}
+
+.cfgBox {
+  height: 155px;
+  top: 400px;
+}
+
+.compBox {
+  height: 90px;
+}
+
+.infoBox2 {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 375px;
+  width: 204px;
+  padding-left: 5px;
+  border: 1px solid black;
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  top: 300px;
+  margin-left: 5px;
+}
+
+.infoBox2:empty {
+  display: none;
+}
+
+#statsBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 165px;
+  width: 204px;
+  padding-left: 5px;
+  border: 1px solid black;
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  top: 687px;
+  margin-left: 5px;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  text-decoration: underline;
+  margin-left: -9px;
+  width: 0px;
+}
+
+.actionButton:empty {
+  cursor: default;
+}
+
+.helpBox {
+  height: 100%;
+  width: 100%;
+}
+
 .cxtmenu {
   font-size: 12px;
   width: 50px;
 }
 
-#help {
+#helpModel, 
+#helpAction,
+#helpAnimation {
   float: right;
+}
+
+.tab-pad {
+  height: 0px;
+  padding-bottom: 20px;
 }
 
 /* you can set the disabled style how you like on the text/icon */
@@ -80,6 +182,7 @@ body {
 
 #Box1 {
   width: 99%;
+  height: 800px;
   bottom: 0;
   right: 0;
   z-index: 999;
@@ -87,7 +190,11 @@ body {
   /* vertical-align: top; */
   border: 1px solid black;
   overflow: auto;
-
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  overflow-x: hidden;
   float: left;
   /*    transition: all 0.1s ease;*/
 }
@@ -97,25 +204,27 @@ body {
 }
 
 #cy {
-  height: 60vh;
+  height: 83.2%;
 }
 
 #Box2 {
   width: 0%;
-  height: inherit;
+  height: 800px;
   bottom: 0;
   right: 0;
   z-index: 999;
   display: block;
+  overflow: hidden;
   /* vertical-align: top; */
   border: 1px solid black;
   overflow: scroll;
   float: left;
+  overflow: hidden;
   /*    transition: all 0.1s ease;*/
 }
 
 #cy2 {
-  height: 60vh;
+  height: 100%;
   margin-top: 30px;
 }
 
@@ -288,6 +397,7 @@ div.content {
   font-size: 28px;
   /* Increased text to enable scrolling */
   padding: 0px 10px;
+  padding-top: 50px;
   width: 85%;
   height: 100vh;
 }
@@ -336,26 +446,6 @@ div.content {
   padding-top: 10px;
 }
 
-#infoBox {
-  width: 99%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 2px;
-  /*border: 1px solid black;*/
-  height: max(15vh, 10vw);
-  overflow: auto;
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
-  overflow-x: hidden;
-  padding-left: 10px;
-  padding-bottom: 20px;
-}
-
-
 #automataButtons {
   padding-left: 5%;
 }
@@ -370,27 +460,35 @@ div.content {
 }
 
 #isdeterministic,
+#getkind,
+#getname,
+#gethighlight, 
 #isminimal,
-#isMealy,
-#isMoore,
 #areuseful,
 #numbertransitions,
 #numberstates,
+#islinearbounded, 
 #wordTitle,
 #errorsInfo,
 #isLL1,
+#grammarType,
+#isMO,
+#isGRClean,
 #isLeftRecursive,
 #isLeftFactoring,
 #hasParsingTableConflict,
 #isCFGClean,
 #transformLabel,
 #accepted,
+#time,
 #configs,
 #exact,
+#cfgType,
+#transformLabel, 
 #time,
 #isEquivalentFA {
   font-size: 14px;
-  /* padding-top: 10px; */
+  padding-top: 10px;
 }
 
 #titleInfo {
@@ -520,6 +618,8 @@ hr {
 #generate,
 #importModel,
 #exportModel,
+#saveModel,
+#deleteModels, 
 #box,
 #server,
 #fitGraph,
@@ -548,7 +648,8 @@ hr {
 #clearAuto,
 #changeDirection,
 #convertAcceptStates,
-#convertEmptyStackAccept {
+#convertEmptyStackAccept,
+#refreshLayout {
   width: 30%;
   margin-left: 3px;
   margin-right: 0px;
@@ -1175,7 +1276,6 @@ hr {
 @media only screen and (max-width: 855px) {
   #regExp {
     font-size: 25px;
-    padding-top: 8px;
   }
 
   div#cfgGrammar2 {
@@ -1188,7 +1288,6 @@ hr {
 @media only screen and (max-height: 768px) {
   #regExp {
     font-size: 20px;
-    padding-top: 8px;
   }
 
   #title {
@@ -1205,7 +1304,6 @@ hr {
 @media only screen and (max-height: 404px) {
   #regExp {
     font-size: 18px;
-    padding-top: 8px;
   }
 
   #isdeterministic,
@@ -1613,7 +1711,9 @@ button#copyClipboardBtn {
 
 .display-config-class {
   text-align: center;
-  border: 1px thin #e6e6ee;
+  border: 1px #e6e6ee;
+  margin-left: 220px !important;
+  margin-top: 18px !important; 
 }
 
 .display-config-class thead tr {
@@ -1670,8 +1770,9 @@ button#copyClipboardBtn {
 }
 
 #selectEmpty,
-#selectLanguage {
-  margin-left: 2%;
+#selectLanguage,
+#selectLayout {
+  margin-left: 1%;
 }
 
 /* TRACE STUFF */

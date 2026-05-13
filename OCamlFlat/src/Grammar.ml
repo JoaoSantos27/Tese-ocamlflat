@@ -486,8 +486,8 @@ struct
 		close_out oc
 
 
-
-	let expand2 (gram: t) (sf,w) : configurations =
+	let expand2 (gram: t) ((sf: word), (w: word)) : configurations =
+		Util.printWord sf;
 		let rules = Set.filter (fun r -> containsSubSequence r.head sf) gram.rules in
 		(* Generate one configuration for each matching rule *)
 		Set.flatMap (fun rule ->
@@ -505,8 +505,12 @@ struct
 				Set.make (List.map (fun newSf -> (newSf, w)) newSfs)
 		) rules
 
+	let showSentencialForm fs =
+		()
+		
 	let nextConfigs2 (gram: t) (sf, w) : configurations =
 		(* showInFile("Starting nextConfigs for: " ^ word2str sf); *)
+		let _ = Util.printWord sf in
 		let configs = expand2 gram (sf, w) in
 		if isMonotonicGrammar gram then
 			let filtered = Set.filter (fun (sf', _) -> List.length sf' <= List.length w) configs in
@@ -598,6 +602,9 @@ struct
 			true
 		else
 			Model.accept processed_gram w initialConfig nextConfigs2 isAcceptingConfig
+
+	let accept3 (gram: t) (w: word) : bool =
+		Model.accept gram w initialConfig nextConfigs2 isAcceptingConfig
 
 	let acceptFull (gram: t) (w: word) : bool * path * trail =
 		if (generatesEmpty gram) && (w = [] || w = [epsilon]) then
@@ -1075,6 +1082,7 @@ struct
 		(* Acceptance *)
 		let accept = GrammarAccept.accept
 		let accept2 = GrammarAccept.accept2
+		let accept3 = GrammarAccept.accept3
 		let acceptFull = GrammarAccept.acceptFull
 		let find_applied_rules = GrammarAccept.find_applied_rules
 
@@ -1164,6 +1172,9 @@ struct
 	let stats () = RuntimeControl.stats ()
 
 	let g_accept gx w = accept (gI gx) (wordI w)
+	let g_accept2 gx w = accept2 (gI gx) (wordI w)
+	let g_accept3 gx w = accept3 (gI gx) (wordI w)
+			
 
 	let g_path gx w =
 		let (r,p,t) = acceptFull (gI gx) (wordI w) in
@@ -1180,6 +1191,20 @@ open GrammarTop
 
 
 (*
+	let g_balanced = {| {
+			kind : "grammar",
+			description : "CFG: Language of balanced square bracket parentheses",
+			name : "g_balanced",
+			alphabet : ["[", "]"],
+			variables : ["S"],
+			initial : "S",
+			rules : [ "S -> [S] | SS | ~"]
+		} |}
+
+let a = g_text g_balanced;;
+g_accept3 a "[[][][]]";;
+
+
 
 --------------------
 

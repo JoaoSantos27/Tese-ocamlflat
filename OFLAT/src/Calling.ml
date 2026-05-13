@@ -33,6 +33,7 @@ open FiniteAutomatonView
 open ContextFreeGrammarView
 open Lang
 open ControllerListeners
+open Settings
 
 module ExamplesView =
 struct
@@ -70,11 +71,11 @@ struct
 
 	let start () =
 		Error.setViewer errorViewer;
-		if (!Lang.lang <> "en" && !Lang.lang <> "pt" && !Lang.lang <> "fr") then
-			Lang.lang := "en";
-		HtmlPageClient.changeLang();
+		if (!Lang.lang <> "en" && !Lang.lang <> "pt" && !Lang.lang <> "fr") then Lang.lang := "en";
+		Settings.startup();
 		ExamplesView.examplesView ()
 	;;
+
 (*
 		let start _ =
 			Error.setViewer errorViewer;
@@ -117,8 +118,6 @@ struct
 		  
 		  method editModel =
 			!Listeners.editModelListener()
-					  	(* !Ctrl.ctrlL#editModel *)
-
 			
 		  method getModel =
 			let automaton = !Ctrl.ctrlL#getModel in
@@ -141,75 +140,96 @@ struct
                 !Ctrl.ctrlL#autoAccept
 		  
 		  method test =
-			CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
-			let text = JS.prompt (Lang.i18nPromptTextTestWord ()) "ab" in 
-			match Js.Opt.to_option text with
-                | None -> ()
-                | Some v -> !Ctrl.ctrlL#checkWord (Js.to_string v)
+				CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
+				let text = JS.prompt (Lang.i18nPromptTextTestWord ()) "ab" in 
+				match Js.Opt.to_option text with
+          | None -> ()
+          | Some v -> !Ctrl.ctrlL#checkWord (Js.to_string v)
 
-              method trace =
-                CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
-                let text = JS.prompt (Lang.i18nPromptTextTestWord ()) "ab" in 
-                match Js.Opt.to_option text with
-                | None -> ()
-                | Some v -> !Ctrl.ctrlL#showTrace (Js.to_string v)
+      method trace =
+        CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+        let text = JS.prompt (Lang.i18nPromptTextTestWord ()) "ab" in 
+        match Js.Opt.to_option text with
+	        | None -> ()
+	        | Some v -> !Ctrl.ctrlL#showTrace (Js.to_string v)
 			
 		  method stepbystep =
-			let text = JS.prompt (Lang.i18nPromptTextTestWord ()) "ab" in 
-			match Js.Opt.to_option text with
-			| None -> JS.log "No input provided"
-			| Some v -> 
-					JS.log ("Input provided: " ^ (Js.to_string v));
-					!Ctrl.ctrlL#startStep (Js.to_string v)
+				let text = JS.prompt (Lang.i18nPromptTextTestWord ()) "ab" in 
+				match Js.Opt.to_option text with
+					| None -> JS.log "No input provided"
+					| Some v -> 
+							JS.log ("Input provided: " ^ (Js.to_string v));
+							!Ctrl.ctrlL#startStep (Js.to_string v)
 
 		  method backwards =
-			JS.log "backwards";
-			!Ctrl.ctrlL#backStep
+				if !Ctrl.ctrlL#hasAcceptWord then !Ctrl.ctrlL#backStep
 		  
 		  method forward =
-			JS.log "forward";
-			!Ctrl.ctrlL#nextStep
+				if !Ctrl.ctrlL#hasAcceptWord then !Ctrl.ctrlL#nextStep
 
 		  method selectConversions n =
-			ControllerListeners.conversionTo n
+				ControllerListeners.conversionTo n
 
 		  method readFromFile n =
-			let str = Js.to_string n in 
-			!Listeners.openEntityListener str
+				let str = Js.to_string n in 
+				!Listeners.openEntityListener str
 
 		  method exportToFile =
-			let json = JSon.toString ((!Ctrl.ctrlL#model)#toJSon) in
-			let json = Js.to_string ((Js.encodeURIComponent (Js.string json))) in
-			let element = Dom_html.document##createElement (Js.string "a") in
-			let modelName = 
-			  begin match !Ctrl.ctrlL#model#id.name with
-			  | "_" | "" -> "oflatModel"
-			  | a -> a
-			  end ^ ".json"
-			in
-			element##setAttribute (Js.string "href") (Js.string ("data:application/json," ^ json));
-			element##setAttribute (Js.string "download") (Js.string modelName);
-			element##.style##.display := Js.string "none";
-			let node = Dom_html.document##.body##appendChild (Js.Unsafe.coerce element) in
-			element##click;
-			Dom_html.document##.body##removeChild node
+				let json = JSon.toString ((!Ctrl.ctrlL#model)#toJSon) in
+				let json = Js.to_string ((Js.encodeURIComponent (Js.string json))) in
+				let element = Dom_html.document##createElement (Js.string "a") in
+				let modelName = 
+				  begin match !Ctrl.ctrlL#model#id.name with
+				  | "_" | "" -> "oflatModel"
+				  | a -> a
+				  end ^ ".json"
+				in
+				element##setAttribute (Js.string "href") (Js.string ("data:application/json," ^ json));
+				element##setAttribute (Js.string "download") (Js.string modelName);
+				element##.style##.display := Js.string "none";
+				let node = Dom_html.document##.body##appendChild (Js.Unsafe.coerce element) in
+				element##click;
+				Dom_html.document##.body##removeChild node
+
+			method saveToRepository =
+				let open Js.Unsafe in
+		  	let open Repository in
+			  let modelContent = HtmlPageClient.editModelContent (Lang.i18nSaveText()) "" "Example" (fun () -> !Listeners.saveModel()) in
+			    HtmlPageClient.setModal (Js.Unsafe.coerce modelContent);
+			    HtmlPageClient.showModalWindow ()
+
+			method deleteModels =
+				let open Repository in
+				let numSaved = Repository.getSize () in
+					if numSaved > 0 then Settings.clearAllModels ()
 
 		  method feedback =
-			HtmlPageClient.clearBox1 ();
-			!CtrlUtil.changeToControllerCtrlLeft();
-			!Ctrl.ctrlL#feedback
+		  	!Listeners.clearBox ();
+		  	!CtrlUtil.savePreviousController ();
+				HtmlPageClient.clearBox1 ();
+				!CtrlUtil.changeToControllerCtrlLeft();
+				!Listeners.closeRightListener ();
+				!Ctrl.ctrlL#feedback
 		  
-		  method about  =
-			HtmlPageClient.clearBox1 ();
-			!CtrlUtil.changeToControllerCtrlLeft();
-			!Ctrl.ctrlL#about
+		  method about =
+		  	!Listeners.clearBox ();
+		  	!CtrlUtil.savePreviousController ();
+				HtmlPageClient.clearBox1 ();
+				!CtrlUtil.changeToControllerCtrlLeft();
+				!Listeners.closeRightListener ();
+				!Ctrl.ctrlL#about
 
-              method settings =
-              HtmlPageClient.settings()
+      method settings =
+      	!Listeners.clearBox ();
+      	!CtrlUtil.savePreviousController ();
+				HtmlPageClient.clearBox1 ();
+				!CtrlUtil.changeToControllerCtrlLeft();
+				!Listeners.closeRightListener ();
+      	Settings.openSettingsPage ()
 
-              method tooltipSettings =
-                let textBox = Dom_html.getElementById "tooltipSettings" in
-                textBox##.innerHTML := Js.string "Change Settings" (*TODO: LANG*)
+      method tooltipSettings =
+        let textBox = Dom_html.getElementById "tooltipSettings" in
+        	textBox##.innerHTML := Js.string "Change Settings" (*TODO: LANG*)
 
 		  method tooltipNewModel =
 			let textBox = Dom_html.getElementById "tooltipNewModel" in
@@ -231,9 +251,9 @@ struct
 			let textBox = Dom_html.getElementById "tooltipTest" in
 			textBox##.innerHTML := Js.string (Lang.i18nTooltipTest ())
 
-              method tooltipTrace =
-                let textBox = Dom_html.getElementById "tooltipTrace" in
-                textBox##.innerHTML := Js.string ("Show Acceptance Path")
+      method tooltipTrace =
+        let textBox = Dom_html.getElementById "tooltipTrace" in
+        textBox##.innerHTML := Js.string ("Show Acceptance Path")
 		  
 		  method tooltipStep =
 			let textBox = Dom_html.getElementById "tooltipStep" in
@@ -255,6 +275,14 @@ struct
 			let textBox = Dom_html.getElementById "tooltipExportModel" in
 			textBox##.innerHTML := Js.string (Lang.i18nTooltipExportModel ())
 
+			method tooltipSaveModel =
+				let textBox = Dom_html.getElementById "tooltipSaveModel" in
+				textBox##.innerHTML := Js.string (Lang.i18nTooltipSaveModel ())
+
+			method tooltipDeleteModels =
+				let textBox = Dom_html.getElementById "tooltipDeleteModels" in
+				textBox##.innerHTML := Js.string (Lang.i18nTooltipDeleteModels ())
+
 		  method tooltipAbout =
 			let textBox = Dom_html.getElementById "tooltipAbout" in
 			textBox##.innerHTML := Js.string (Lang.i18nTooltipAbout ())
@@ -264,6 +292,6 @@ struct
 			textBox##.innerHTML := Js.string (Lang.i18nTooltipFeedback ())
 
 		  method start =
-			start ()
+				start ()
 	end
 end

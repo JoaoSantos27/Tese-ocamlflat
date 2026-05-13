@@ -119,6 +119,9 @@ struct
 			Error.error id.kind "Wrong kind" ();
 		validate id.name rep;
 		ignore (Error.endGroup kind id.name)
+	
+	let getName (id: t): string =
+		if id.name <> "_" then id.name else "default"
 end
 
 module Entity =
@@ -141,6 +144,7 @@ struct
 		(* Representation *)
 			method id: t = id
 			method errors: string list = errors
+			method getName: string = getName self#id
 		(* Kind *)
 			method isFiniteAutomaton : bool = false
 			method isRegularExpression : bool = false

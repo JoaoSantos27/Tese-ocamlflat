@@ -68,6 +68,9 @@ let createModelPrepGR textAreaString okAction =
 module CtrlUtil = struct
   let changeToControllerCtrlRight = ref (fun () -> ())
   let changeToControllerCtrlLeft = ref (fun () -> ())
+  let savePreviousController = ref (fun () -> ())
+  let returnPreviousController = ref (fun () -> ())
+  let hasPreviousController = ref (fun () -> false)
 
   let oneBox cy = 
     !changeToControllerCtrlRight();
@@ -79,7 +82,7 @@ module CtrlUtil = struct
     Cytoscape.fit cy
 end
 
-class virtual controller =
+class virtual controller0 =
   object(self)
 
     val mutable layoutDir = None
@@ -104,11 +107,12 @@ class virtual controller =
     method locked : bool = false
     (* TM *)
     (* method addNode (x : int) (y : int) (st: state) : unit = Error.fatal "addNode" *)
-	method addNode (x : int) (y : int) (initial : bool) (final : bool): unit = Error.fatal "addNode"
+	  method addNode (x : int) (y : int) (initial : bool) (final : bool): unit = Error.fatal "addNode"
     method eliminateNode (st: state) : unit = Error.fatal "eliminateNode"
     method changeTab : unit = Error.fatal "changeTab"
     method getTab : bool = Error.fatal "getTab"
     method startGraph : unit = Error.fatal "startGraph"
+    method redrawLayout : unit = Error.fatal "redrawLayout" 
     method defineExample : unit = Error.fatal "defineExample"
     method defineExample2 : unit = Error.fatal "define Example cy 2"
     method defineInformationBox : unit = Error.fatal "defineInformationBox"
@@ -126,10 +130,11 @@ class virtual controller =
     method addFinalNode (x : int) (y : int) (st: state): unit = Error.fatal "addFinalNode"
     method turnFinalNode (st: state): unit = Error.fatal "turnFinalNode"
     method removeFinalNode (st: state): unit = Error.fatal "removeFinalNode"
-    method addInitialNode (st: state) : unit = Error.fatal "addInitialNode"
+    method addInitialNode : unit = Error.fatal "addInitialNode"
+    method turnInitialNode (st: state) : unit = Error.fatal "turnInitialNode" 
     method autoAccept : bool Lwt.t = Error.fatal "accept"
     method getModel : string = ""
-    method getAutomaton: AutomatonView.model = Error.fatal "addInitialNode"
+    method getAutomaton: AutomatonView.model = Error.fatal "getAutomaton"
     method changeToEditModelMode: unit = Error.fatal "changeToEditMode"
     method getWords (number: int): unit = Error.fatal "getWords"
     method getNewSentence = Js.string ("")
@@ -148,7 +153,14 @@ class virtual controller =
     method showTrace (word: string) : unit = Error.fatal "trace"
     method checkWord (word: string) : unit = Error.fatal "checkword"
     method model2Str : string = Error.fatal "model2Str"
-
+    method getModelName : string = Error.fatal "getModelName"
+    method showHelpModel : unit = Error.fatal "showHelpModel"
+    method showHelpAnimation : unit = Error.fatal "showHelpAnimation"
+    method clearPoppers : unit = Error.fatal "clearPoppers"
+    method hasAcceptWord: bool = false
+    method clearAcceptWord: unit = Error.fatal "clearAcceptWord"
+    method getlastAction: string = ""
+    method setLastAction (opName: string): unit = ()
 
     method getCy: Cytoscape.cytoscape Js_of_ocaml.Js.t = 
       match cy with
@@ -183,8 +195,6 @@ class virtual controller =
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyGRButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOtherButtons
 
-    method setTitle: unit = HtmlPageClient.defineMainTitle ("")
-
     method checkHelper (result: bool) ((insideErrors: word set), (outsideErrors: word set), (properties: property set)) : unit = Error.fatal "checkHelper"
 
     method changeLayoutDir newLayout =
@@ -205,16 +215,14 @@ class virtual controller =
 
     method returnType = ""
 
-    method operation opName modelKind: unit =
-      Js.Unsafe.global##logEntry (Js.string opName) (Js.string modelKind)
-    
+    method virtual operation: string -> string -> unit
 
-      method changeProm prom = activeProm <- prom
-      method returnProm = activeProm
-      method cancelProm = Lwt.cancel activeProm
-      method promState = Lwt.state activeProm
-      
-      method finish = self#cancelProm (*upgradeable*)  
+    method changeProm prom = activeProm <- prom
+    method returnProm = activeProm
+    method cancelProm = Lwt.cancel activeProm
+    method promState = Lwt.state activeProm
+    
+    method finish = self#cancelProm (*upgradeable*)  
 
     method getFA : FiniteAutomatonView.model = Error.fatal "get automata"
     method getFST : TransducerView.model = Error.fatal "get FST"
@@ -238,10 +246,12 @@ class virtual controller =
     method box2GRShow (g : Grammar.model) : unit = Error.fatal "show gr transformation box 2"
     
     method renameState (s : state) : unit = Error.fatal "rename state"
+
+    method ctrlType: string = ""
 end
 
 class textController (s : bool) = 
-  object(self) inherit controller as super
+  object(self) inherit controller0 as super
     
     val side = s
     
@@ -262,19 +272,25 @@ class textController (s : bool) =
     method setUpdateType s =
       updateType <- Some s
 
+    method operation opName modelKind: unit =
+      Js.Unsafe.global##logEntry (Js.string opName) (Js.string modelKind)
+
     method feedback =
-      super#operation "Feedback" "Feedback";
+      self#operation "Feedback" "Feedback";
       HtmlPageClient.oneBox ();
       HtmlPageClient.disableButtons (self#returnType);
       HtmlPageClient.feedback()
   
     method about =  (* VER SE É PRECISO AMD *****)
-    super#operation "About" "About";
+      self#operation "About" "About";
       HtmlPageClient.oneBox ();
       StateVariables.changeCy1ToText();
       HtmlPageClient.disableButtons (self#returnType);
       HtmlPageClient.about()
 
+    method redrawLayout = ()
+
+    method ctrlType: string = "info"
 end
 
 module Ctrl = struct 
@@ -283,19 +299,54 @@ module Ctrl = struct
   let ctrlL = ref (textCtrl false)
   let ctrlR = ref (textCtrl true)
 
-  let changeCtrlL (nc: controller) =
-    ctrlL := nc;;
+  let ctrlI = ref (textCtrl false)
+  let hasCtrl = ref false
 
-  let changeCtrlR (nc: controller) =
-    ctrlR := nc;;
+  let changeCtrl c lr = 
+    if lr then begin 
+      ctrlR := (c :> controller0)
+    end
+    else begin 
+      ctrlL := (c :> controller0)
+    end
 
-  let runOp (op: string) =
-    !ctrlL#handleOp op;;
+  let _ = changeCtrl (textCtrl false) false;
+          changeCtrl (textCtrl true) true;;
 
-  let _ = changeCtrlL (textCtrl false);
-          changeCtrlR (textCtrl true);
-          Listeners.runOp := runOp;;
+  CtrlUtil.savePreviousController := fun () -> if (!ctrlL#ctrlType != "info") then (ctrlI := !ctrlL; hasCtrl := true);;
+  CtrlUtil.returnPreviousController := fun () -> ctrlL := !ctrlI; hasCtrl := false;;
+  CtrlUtil.hasPreviousController := fun () -> !hasCtrl;;
 
-  CtrlUtil.changeToControllerCtrlRight := fun () -> (changeCtrlR (textCtrl true));;
-  CtrlUtil.changeToControllerCtrlLeft := fun () -> (changeCtrlL (textCtrl false));;
+  CtrlUtil.changeToControllerCtrlLeft := fun () -> (changeCtrl (textCtrl false) false);;
+  CtrlUtil.changeToControllerCtrlRight := fun () -> (changeCtrl (textCtrl true) true);;
+end
+
+class virtual controller =
+  object(self) inherit controller0 as super
+
+  val mutable lastOp = ""
+
+  method getlastAction =
+    lastOp
+
+  method setLastAction opName =
+    lastOp <- opName
+
+  method operation opName modelKind: unit =
+    (* Js.Unsafe.global##logEntry (Js.string opName) (Js.string modelKind);*)
+    JS.log (lastOp ^ " - " ^ opName ^ " - " ^ modelKind);
+    self#setLastAction opName
+
+  method showHelpModel =
+      CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+      !CtrlUtil.changeToControllerCtrlRight();
+      !Ctrl.ctrlR#setUpdateType "helpModel";
+      HtmlPageClient.showHelpModel !Ctrl.ctrlL#getModelName
+
+  method showHelpAnimation =
+      CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+      !CtrlUtil.changeToControllerCtrlRight();
+      !Ctrl.ctrlR#setUpdateType "helpAnimation";
+      HtmlPageClient.showHelpAnimation !Ctrl.ctrlL#getModelName lastOp
+
 end

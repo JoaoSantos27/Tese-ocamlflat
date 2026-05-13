@@ -168,7 +168,7 @@ struct
         let generate_node_id () = incr node_counter; Printf.sprintf "N%d" !node_counter in
         let add_cy_node node_label =
           let node_id = generate_node_id () in
-          Cytoscape.add_node cy3 node_id "root" "" node_label;
+          ignore(Cytoscape.add_node cy3 node_id "root" "" node_label);
           node_id
         in
         let add_cy_edge parent_id child_id =
@@ -275,11 +275,8 @@ struct
         ); (* End of iterating through tree_rules *)
 
         (* 6. Apply Tree Layout *)
-        let treeLayout = object%js
-          val name = Js.string "dagre"
-          val rankDir = Js.string "TB"
-          (* Add other dagre options if needed *)
-        end in
+        let treeLayout = Cytoscape.treeGrlayout
+        in
         try
            (* Adapt layout call based on your Cytoscape binding *)
            Cytoscape.run_layout (cy3##layout treeLayout);

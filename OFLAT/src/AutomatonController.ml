@@ -6,6 +6,8 @@ open JS
 open Listeners
 open FiniteAutomatonView
 open OCamlFlat
+open Settings
+open State
 
 class virtual automatonController (s: bool)=
   object(self) inherit controller as super
@@ -14,11 +16,24 @@ class virtual automatonController (s: bool)=
     val cy = Some (if s then Cytoscape.initFaCy "cy2" else Cytoscape.initFaCy "cy")
     val mutable tab = false;
 
-
-    method virtual operationAutomaton: string -> unit
     method virtual defineInformationBox: unit
     method virtual loadButtons: unit
     method virtual getAutomaton: AutomatonView.model
+    method virtual clearPoppers: unit
+
+    method operationA opName : unit =
+        super#operation opName "Automaton"
+
+    method ctrlType: string = "automaton"
+
+    method hasAcceptWord =
+      not self#getAutomaton#isSentenceEmpty
+
+    method clearAcceptWord =
+      self#getAutomaton#changeTheTestingSentence "";
+
+    method clearPoppers =
+      self#getAutomaton#clearPoppers
 
     method resetStyle = Cytoscape.resetStyle self#getCy Cytoscape.faStyle
 
@@ -29,29 +44,39 @@ class virtual automatonController (s: bool)=
       JS.log("Tab changed to" ^ Bool.to_string tab)
 
     method defineExample =
-      self#operationAutomaton "create example";
+      self#operationA "create example";
       HtmlPageClient.disableButton "autoAccept";
       HtmlPageClient.changeButtonColor "autoAccept" "";
       self#updateButtons;
       self#loadButtons;
-      HtmlPageClient.closeBoxRegex ();
-      self#getAutomaton#drawExample self#getCy;
+      self#getAutomaton#drawExample self#getCy (Settings.getSetting "layout");
       self#defineInformationBox;
       Cytoscape.fit self#getCy_opt
 
     method defineExample2 = 
-      self#getAutomaton#drawExample self#getCy;
+      self#getAutomaton#drawExample self#getCy (Settings.getSetting "layout");
       self#defineInformationBox;
+      Cytoscape.fit self#getCy_opt
+
+    method redrawLayout =
+      self#operationA "redraw";
+      HtmlPageClient.disableButton "autoAccept";
+      HtmlPageClient.changeButtonColor "autoAccept" "";
+      self#updateButtons;
+      self#loadButtons;
+      self#getAutomaton#redrawLayout self#getCy (Dom_html.getElementById "cy");
+      self#defineInformationBox;
+      Cytoscape.fit self#getCy_opt
 
     method getWords v = 
-      self#operationAutomaton "accepted words";
+      self#operationA "accepted words";
       let var = self#getAutomaton#staticGenerate v in 
       let (_, visitedConfigs, exact, time) = self#getAutomaton#returnStats in
         HtmlPageClient.putWords var;
         HtmlPageClient.displayGenStats visitedConfigs exact time
 
     method showTrace word =
-      self#operationAutomaton "trace";
+      self#operationA "trace";
       self#getAutomaton#changeTheTestingSentence word;
       self#getAutomaton#staticAcceptFull;
       let (accepted, configs, exact, time) = self#getAutomaton#returnStats in
@@ -62,7 +87,7 @@ class virtual automatonController (s: bool)=
       Js.string self#getAutomaton#newSentence
 
     method startStep word =
-      self#operationAutomaton "accept start";
+      self#operationA "accept start";
       self#cancelProm;
       HtmlPageClient.fitBoxRegex ();
       HtmlPageClient.enableButton "autoAccept";
@@ -73,21 +98,21 @@ class virtual automatonController (s: bool)=
       HtmlPageClient.displayAcceptStats accepted configs exact time
     
     method nextStep =
-      self#operationAutomaton "accept next";
+      self#operationA "accept next";
       self#cancelProm;
       HtmlPageClient.changeButtonColor "autoAccept" "crimson";
       self#getAutomaton#next self#getCy;
       (Dom_html.getElementById "regExp")##.innerHTML := self#getNewSentence
 
     method backStep = 
-      self#operationAutomaton "accept back";
+      self#operationA "accept back";
       self#cancelProm;
       HtmlPageClient.changeButtonColor "autoAccept" "crimson";
       self#getAutomaton#back self#getCy;
       (Dom_html.getElementById "regExp")##.innerHTML := self#getNewSentence
 
     method checkWord word =
-      self#operationAutomaton "checkWord";
+      self#operationA "checkWord";
       HtmlPageClient.fitBoxRegex ();
       self#getAutomaton#changeTheTestingSentence word;
       (Dom_html.getElementById "regExp")##.innerHTML := Js.string word;
@@ -114,7 +139,7 @@ class virtual automatonController (s: bool)=
       Lwt.return_true
 
     method changeToEditModelMode =
-      self#operationAutomaton "editModel";
+      self#operationA "editModel";
       (Dom_html.getElementById "regExp")##.innerHTML := Js.string "";
       self#getAutomaton#changeToEditModelMode self#getCy
 

@@ -9,7 +9,6 @@ open GrammarView
 open Listeners
 open ViewUtil
 
-
 let grammar2Str (rep:GrammarView.t) =
   let open Grammar in
   let initialRules = Set.filter (fun {head = h; _} -> List.hd h = rep.initial && List.length h = 1) rep.rules in
@@ -23,9 +22,6 @@ let grammar2Str (rep:GrammarView.t) =
     | x::xs -> x ^ "\n" ^ (toString xs)
   in
     toString rulesList
-
-
-  
 
 class grController (gr: GrammarView.model) (s:bool) =
   object(self) inherit controller as super
@@ -45,14 +41,8 @@ class grController (gr: GrammarView.model) (s:bool) =
     
     method getModel =
       myGR#toDisplayString "solution"
- 
-    method setTitle =
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (Grammar.kind)
 
     method returnType = Grammar.kind
-
-
     
     method defineExample = 
       self#operationGR "create example";
@@ -71,40 +61,42 @@ class grController (gr: GrammarView.model) (s:bool) =
       myGR#createGrammarTableHtml (GrammarView.productionsTableId2());
       !Ctrl.ctrlR#defineInformationBox
 
+    method redrawLayout =
+      self#defineExample
+
     method replicateOnLeft =
       let c = new grController self#getGR false in
       Ctrl.ctrlL := (c :> controller);
 
     method defineInformationBox =
-      let infoBox = HtmlPageClient.defineInformationBox side in
       if side then HtmlPageClient.grCy2Close();
-      let cfg = myGR#isContextFreeGrammar in
-      let csg = myGR#isContextSensitiveGrammar in 
+      let name = myGR#getName in
       let mo = myGR#isMonotonicGrammar in 
-      let ug = myGR#isUnrestrictedGrammar in
-      if cfg then begin
-        let lg = myGR#isLinearGrammar in
-        let llg = myGR#isLeftLinearGrammar in
-        let lrg = myGR#isRightLinearGrammar in
-        if lg then begin
-          HtmlPageClient.getIsLG lg infoBox;
-          if llg then
-            HtmlPageClient.getIsLLG llg infoBox
-          else
-            HtmlPageClient.getIsRLG lrg infoBox
-        end else
-          HtmlPageClient.getIsCFG cfg infoBox
-      end else if csg then begin
-        HtmlPageClient.getIsCSG csg infoBox
-      end else 
-        HtmlPageClient.getIsUG ug infoBox;
-    
-      HtmlPageClient.getIsMO mo infoBox;
       let c = myGR#isClean in
       let prod = myGR#allRulesProductive in
       let access = myGR#allRulesAccessible in
-      HtmlPageClient.getIsGRClean c prod access infoBox;
-      ()
+
+      let cfg = myGR#isContextFreeGrammar in
+      let csg = myGR#isContextSensitiveGrammar in 
+      let grammar = (
+        if cfg then
+          let lg = myGR#isLinearGrammar in
+          let llg = myGR#isLeftLinearGrammar in
+          let lrg = myGR#isRightLinearGrammar in
+
+          if lg then
+            if llg then "llg"
+            else if lrg then "lrg"
+            else "lg"
+          else
+            "cfg"
+
+        else if csg then
+          "csg"
+        else
+          "ug") in
+    
+        HtmlPageClient.drawGrammarStats (Lang.i18nGR ()) name grammar mo c prod access side
 
     method box2GRShow (g : Grammar.model) =
       self#operationGR "create example2";
@@ -161,7 +153,6 @@ class grController (gr: GrammarView.model) (s:bool) =
       let gr_representation = !Ctrl.ctrlL#getGR#representation in
       grammar2Str gr_representation
 
-
     method convertToCFG =
       let open ContextFreeGrammarView in
       self#operationGR "convert to CFG";
@@ -175,8 +166,6 @@ class grController (gr: GrammarView.model) (s:bool) =
       let (accepted, configs, exact, time) = myGR#returnStats in
       HtmlPageClient.displayAcceptStats accepted configs exact time;
       myGR#displayTrace
-
-
 
     method handleOp (operation: string) =
       match operation with
@@ -198,7 +187,7 @@ class grController (gr: GrammarView.model) (s:bool) =
             let newGrModel = (newGr :> Grammar.model) in
             let gr = GrammarView.adjust newGrModel in
             let c = new grController gr true in
-              Ctrl.changeCtrlR (c :> Controller.controller);
+              Ctrl.changeCtrl c true;
             self#box2GRShow newGrModel
           else
             JS.alertStr (Lang.i18nAlertIsClean())
@@ -208,7 +197,7 @@ class grController (gr: GrammarView.model) (s:bool) =
             let newGrModel = (newGr :> Grammar.model) in
             let gr = GrammarView.adjust newGrModel in
             let c = new grController gr true in
-              Ctrl.changeCtrlR (c :> Controller.controller);
+              Ctrl.changeCtrl c true;
             self#box2GRShow newGrModel
           else
             JS.alertStr (Lang.i18nAlertIsNotMonotonic())
@@ -218,7 +207,7 @@ class grController (gr: GrammarView.model) (s:bool) =
             let newGrModel = (newGr :> Grammar.model) in
             let gr = GrammarView.adjust newGrModel in
             let c = new grController gr true in
-              Ctrl.changeCtrlR (c :> Controller.controller);
+              Ctrl.changeCtrl c true;
             self#box2GRShow newGrModel
           else
             JS.alertStr (Lang.i18nAlertIsNotMonotonic())
@@ -230,7 +219,7 @@ class grController (gr: GrammarView.model) (s:bool) =
             let newGrModel = (newGr :> Grammar.model) in
             let gr = GrammarView.adjust newGrModel in
             let c = new grController gr true in
-              Ctrl.changeCtrlR (c :> Controller.controller);
+              Ctrl.changeCtrl c true;
             self#box2GRShow newGrModel
           else
             JS.alertStr (Lang.i18nAlertIsNotMonotonic())

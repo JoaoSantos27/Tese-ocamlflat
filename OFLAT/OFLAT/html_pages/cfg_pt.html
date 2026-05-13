@@ -1,0 +1,118 @@
+<head><meta charset="UTF-8"></head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<HR><h1>Autómatos finitos</h1>
+
+
+<p> Um autómato finito é um modelo de computação que pode ser utilizado para especificar uma linguagem. Uma linguagem é um conjunto de palavras sobre um alfabeto.
+
+<p> O poder expressivo dos autómatos finitos é relativamente fraco, sendo apenas é capaz de descrever linguagens com uma estrutura muito regular, concretamente as linguagens descritas pelas gramáticas Tipo-3 de Chomsky, conhecidas como linguagens regulares.
+
+<p>A especificação duma linguagem é realizada através de reconhecimento. Para testar se uma palavra pertence à linguagem, aplica-se o autómato à palavra e o autómato decide se a palavra é aceite ou rejeitada.
+
+<p>Um autómato é constituido por estados e por transições etiquetadas entre estados, não possuindo memória. Um dos estados é inicial, e alguns estados são finais. Para tentar reconhecer uma palavra, começamos a navegar a partir do estado inicial e vamos consumindo os símbolos da palavra sequencialmente, enquanto se seguem as transições etiquetadas disponíveis, com base no símbolo de entrada. A palavra é aceite sse for alcançada uma situação em que a palavra foi totalmente consumida e o estado corrente é final.
+
+<p>Num <b>autómato determinista</b>, o conjunto das transições associa a cada par (estado, símbolo) um único estado no máximo. Ou seja, a relação de transição é uma função. Eis um exemplo dum autómato determinista:
+
+<p><img src="images/fa1.png"></img>
+
+<p>Exemplos de palavras reconhecidas: <tt>'', 'ab', 'aba', 'abab', 'abaab', 'ababa', 'abaaba', 'ababab'</tt>.
+
+<p>Num <b>autómato não determinista</b> permite-se que dum estado saiam várias transições com o mesmo símbolo; e também se permitem transições etiquetadas com ε, que são usadas sem consomir qualquer símbolo da palavra. Neste caso a relação de transição não é uma função. Eis um exemplo dum autómato não determinista, apresentado sob a forma de grafo:
+
+<p><img src="images/fa3.png"></img>
+
+<p>Exemplos de palavras reconhecidas: <tt>'', 'aa', 'ab', 'aaa', 'aab', 'aba', 'aaaa', 'aaab', 'abaa'</tt>.
+
+<p>Mais informação na documentação da disciplina.
+
+
+
+
+
+<h1>Comandos</h1>
+
+
+<A NAME="Clean">
+<h2>Limpar</h2>
+
+Remove do autómato todos os estados inúteis, ou seja todos os estados inecessíveis e todos os estados improdutivos.
+
+
+
+
+<h2>Tornar determinista</h2>
+
+Torna determinista um autómato, usando o algoritmo das aulas.
+
+
+<A NAME="Minimize">
+<h2>Minimizar autómato</h2>
+
+Minimiza um autómato determinista, usando o algoritmo das aulas.
+
+<p> Se o autómato não for determinista, é preciso convertê-lo primeiro num autómato determinista, usando o comando apropriado.
+
+
+
+
+
+<A NAME="Productive">
+<h2>Estados produtivos</h2>
+
+Pinta de cor de laranja os estados produtivos dum autómato.
+
+<p>Um estado é produtivo se contribuir de alguma forma para o reconhecimento de alguma palavra.
+
+
+
+<A NAME="Accessible">
+<h2>Estados acessíveis</h2>
+
+Pinta de amarelo todos os estados acessíveis dum autómato.
+
+<p>Um estado é acessível se, a partir do estado inicial, existir um percurso no grafo que o permitam alcançar.
+
+
+<A NAME="Usefull">
+<h2>Estados úteis</h2>
+
+Pinta de lilás todos os estados acessíveis dum autómato.
+
+<p>Um estado é útil se for ao mesmo tempo produtivo e acessível.
+
+
+
+<A NAME="CleanColors">
+<h2>Limpar cores</h2>
+
+Limpa as cores dos estados, que estejam presentes em virtude do comando anterior.
+
+
+
+<A NAME="Clean">
+<h2>Mostrar tabela</h2>
+
+Mostra o autómato sob a forma de tabela.
+
+
+
+<A NAME="Animation">
+<h2>Animação</h2>
+
+
+<p><img src="images/fa_a1.png"></img>
+<p><img src="images/fa_a2.png"></img>
+<p><img src="images/fa_a3.png"></img>
+
+<HR>
+
+
+
+
+<a href="https://ctp.fct.unl.pt/OFLAT/help/fa_pt.html">HELP</a>
+<a href="https://ctp.fct.unl.pt/OFLAT/help/fa_pt.html#Minimize">HELP minimize</a>
+
+
+
+

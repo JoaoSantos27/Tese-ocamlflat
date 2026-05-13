@@ -77,6 +77,7 @@ sig
 	val (-->) : symbol -> string -> rule
 	val rule2str : rule -> string
 	val showRules : rules -> unit
+	val showConfigurations : configurations -> unit
 end
 
 (* REVER e comparar com o parser do CFG AMD *)
@@ -163,8 +164,16 @@ struct
 	let (-->) h b : rule =
 		{ head = h; body = str2word b } ;;
 
-	let showRules rs =
+	let showRules rs: unit =
 		Util.println [toString rs]
+
+	let configurations2str (cs: configurations): string =
+		let m = Set.map (fun (sf, w) ->
+			"(" ^ word2str sf ^ "," ^ word2str w ^ ")") cs in
+			String.concat ", " (Set.toList m) 
+
+	let showConfigurations (cs: configurations): unit =
+		Util.show(configurations2str cs)
 end
 
 module ContextFreeGrammarConversions =
@@ -227,6 +236,10 @@ struct
 		initial : variableX;
 		rules : string list
 	}
+	
+	type cfgTreeX =
+		  LeafX of string
+		| RootX of string * cfgTreeX list
 
 	let internalize (cfg: tx): t = {
 		alphabet = symbolsI cfg.alphabet;
@@ -241,6 +254,11 @@ struct
 		initial = symbX cfg.initial;
 		rules = ContextFreeGrammarSyntax.toStringList cfg.rules
 	}
+	
+	let rec externalizeParseTree (pt: cfgTree): cfgTreeX =
+		match pt with
+		| Leaf sy -> LeafX (symb2str sy)
+		| Root (sy, l) -> RootX (symb2str sy, List.map (fun pt -> externalizeParseTree pt) l)
 end
 
 module ContextFreeGrammarLearnOCaml =

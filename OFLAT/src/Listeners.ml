@@ -25,14 +25,18 @@ open OCamlFlat.BasicTypes
 module Listeners = 
 struct
 	let save = ref (fun () -> ()) (*carolina*)
-  let saveModel = ref (fun () -> ())
+  	let saveModel = ref (fun () -> ())
 	let closeLeftListener = ref (fun () -> ())
+	let closeLeftListenerSecondary = ref (fun () -> ())
 	let closeRightListener = ref (fun () -> ())
 	let openEntityListener = ref (fun (txt : string) -> ())
 	let defineInformationBoxListener = ref (fun () -> ())
 	let showModelListener = ref (fun () -> ())
+	let showHelpModel = ref (fun () -> ())
+	let showHelpAnimation = ref (fun () -> ())
 	let createModelListener = ref (fun () -> ())
 	let updateRightListener = ref (fun () -> ())
+	let clearBox = ref (fun () -> ())
 	let editModelListener = ref (fun () -> ())
 	let runOp = ref (fun (op : string) -> ())
 end
@@ -46,7 +50,7 @@ struct
 	let addNode = ref (fun (x : int) (y : int) -> ())
 	let removeTypeFinal = ref (fun (node : state) -> ())
 	let turnNodeInitial = ref (fun (node : state) -> ())
-	let addInitialNode = ref (fun (x : int) (y : int) -> ())
+	let addInitialNode = ref (fun () -> ())
 	let addFinalNode = ref (fun (x : int) (y : int) -> ())
 	let addTransition = ref (fun (src : state) (trg : state) -> ())
 	let removeTransition = ref (fun (srcId : state) (trgId : state) (symb : state) -> ())
@@ -56,6 +60,7 @@ struct
 	let paintAllUsefulListener = ref (fun () -> ())
 	let clearAutoListener = ref (fun () -> ())
 	let showTable = ref (fun () -> ())
+	let refreshLayout = ref (fun () -> ())
 	let editModelListener = ref (fun () -> ())
 end
 

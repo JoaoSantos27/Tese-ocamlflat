@@ -23,6 +23,7 @@ open ViewUtil
 open Lang
 open Cytoscape
 open AutomatonView
+open StateVariables
 
 module PushdownAutomatonView =
 struct
@@ -31,11 +32,15 @@ struct
   (** Auxiliar Methods **)
 
   let transitionPda2CytoscapeEdge (state1, symbStack, symbInput, state2, topStack) =
-    let topStackString = if topStack = [] then "~" else String.concat "" (List.map (fun s -> symb2str s) topStack) in
-      let edgeLabel = (symb2str symbInput) ^ " : " ^ (symb2str symbStack) ^ " / " ^ topStackString in
+    let setEmptyChar s =
+      if s = epsilon then StateVariables.returnEmpty() else symb2str s
+    in
+    let topStackString = if topStack = [] then StateVariables.returnEmpty()
+                                          else String.concat "" (List.map (fun s -> setEmptyChar s) topStack) in
+      let edgeLabel = (setEmptyChar symbInput) ^ " : " ^ (setEmptyChar symbStack) ^ " / " ^ topStackString in
         (state1, edgeLabel, state2)
 
-  let symbInputRegex = " *[A-Za-z0-9~]+ *"
+  let symbInputRegex = " *[A-Za-z0-9~ελ]+ *"
 
   let htmlDelta = "ẟ"
 
@@ -377,10 +382,12 @@ end
 
     method updateInitialState state =
       let rep: t = self#representation in 
+      let tmpStates = Set.filter (fun stateAux -> stateAux != state) rep.states in
+      let newStates = Set.cons state tmpStates in
       new model (Arg.Representation {
         inputAlphabet = rep.inputAlphabet;
         stackAlphabet = rep.stackAlphabet;
-        states = rep.states;
+        states = newStates;
         initialState = state;
         initialStackSymbol = rep.initialStackSymbol;
         transitions = rep.transitions;
@@ -636,7 +643,10 @@ end
     method private destroyAllPoppers =
       destroyAllPoppers configsCounter;
       self#destroyPopperDivs;
-      configsCounter <- []            
+      configsCounter <- []
+
+    method clearPoppers = 
+      self#destroyAllPoppers     
 
     method private buildPoppersConfigsCounter cy configs =
       self#destroyAllPoppers;

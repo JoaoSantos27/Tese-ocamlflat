@@ -23,13 +23,8 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=5
-FILE_NAME_0=2663;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FTransducerSupport.ml;0;4
-FILE_NAME_1=970;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FTransducerTests.ml;0;4
-FILE_NAME_2=283;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FTransducer.ml;0;4
-FILE_NAME_3=527;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FFiniteAutomaton.ml;0;4
-FILE_NAME_4=15855;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FFiniteAutomatonTests.ml;0;4
-FILE_NAME_5=12540;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FExamples.ml;0;4
+current_page=0
+FILE_NAME_0=16745;CAML;0;EUTF-8;1;1;1;%2Fhome%2Famd%2Fdevelopment%2FOCamlFlat-development%2FOCamlFlat%2Fsrc%2FRegularExpression.ml;0;4
 
 [VTE]
 last_dir=/home/amd

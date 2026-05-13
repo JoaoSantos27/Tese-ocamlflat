@@ -40,11 +40,7 @@ class compController (comp: CompositionView.model) (s: bool) =
 
     method getModel = 
       comp1#toDisplayString "solution"
-
-    method setTitle = 
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (Composition.kind)
-
+      
     method operationComp opName : unit =
       super#operation opName "COMP"
 
@@ -117,13 +113,30 @@ class compController (comp: CompositionView.model) (s: bool) =
       Cytoscape.fit self#getCy_opt;
       let test = Composition.toString comp1#representation in
        self#drawTree self#getCy comp1#representation test;
-       HtmlPageClient.defineRE test side
+       HtmlPageClient.defineRE test side;
+       self#defineInformationBox
+
+    method redrawLayout =
+      self#operationComp "redraw layout";
+      self#updateButtons;
+      HtmlPageClient.putCyREButtons();
+      HtmlPageClient.fitBoxRegex ();
+      Cytoscape.fit self#getCy_opt;
+      Cytoscape.redrawTree self#getCy (Dom_html.getElementById "cy");
+      let test = Composition.toString comp1#representation in
+       HtmlPageClient.defineRE test side;
+       self#defineInformationBox
 
     method defineExample2 =
       self#operationComp "create 2";
       let text = Composition.toString comp1#representation in
         self#drawTree self#getCy comp1#representation text;
-        HtmlPageClient.defineRE text side
+        HtmlPageClient.defineRE text side;
+        self#defineInformationBox
+
+    method defineInformationBox =
+      let name = comp1#getName in
+        HtmlPageClient.drawCompStats (Lang.i18nComp ()) name side
 
     method checkWord2 word = 
       self#operationComp "accept";

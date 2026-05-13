@@ -41,10 +41,6 @@ class virtual cfgBasicController (cfg: ContextFreeGrammarView.model) (s:bool) =
     
     method getModel =
       myCFG#toDisplayString "solution"
- 
-    method setTitle =
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (ContextFreeGrammarBasic.kind)
 
     method returnType = ContextFreeGrammar.kind
     
@@ -52,31 +48,35 @@ class virtual cfgBasicController (cfg: ContextFreeGrammarView.model) (s:bool) =
       self#operationCFG "create example";
       self#updateButtons;
       HtmlPageClient.putCyCFGButtons();
-      HtmlPageClient.cfgBoxRegex();
+      HtmlPageClient.grBoxRegex();
       HtmlPageClient.cfgCyClose();
       HtmlPageClient.defineCFG();
-      myCFG#createGrammarTableHtml ""; 
+      myCFG#createGrammarTableHtml "";
       self#defineInformationBox
+
+    method defineInformationBox =
+      ()
+
+    method defineInformationBox2 = (* AMD AMD - Ver urgencia!!!!! *)
+      if side then HtmlPageClient.cfgCy2Close();
+      let name = myCFG#getName in
+      let ll1 = myCFG#isLL1 in
+      let lr = myCFG#isLeftRecursive in
+      let lf = myCFG#isLeftFactoring in
+      let pConf = myCFG#hasParsingTableConflict in
+      let clean = myCFG#isClean in
+      let prod = myCFG#isFullyProductive in
+      let access = myCFG#isFullyAccessible in
+        HtmlPageClient.drawCFGStats (Lang.i18nCFG ()) name ll1 lr lf pConf clean prod access side
+
+    method redrawLayout =
+      self#operationCFG "redraw layout";
+      self#defineExample
+
 end
 
 class virtual cfgLL1Controller (cfg: ContextFreeGrammarView.model) (s:bool) =
-  object(self) inherit cfgBasicController cfg s  as super
-
-    method defineInformationBox =
-      let infoBox = HtmlPageClient.defineInformationBox side in
-      if side then HtmlPageClient.cfgCy2Close();
-      let ll1 = myCFG#isLL1 in 
-        HtmlPageClient.getIsLL1 ll1 infoBox;
-      let lr = myCFG#isLeftRecursive in 
-        HtmlPageClient.getIsLeftRecursive lr infoBox;
-      let lf = myCFG#isLeftFactoring in 
-        HtmlPageClient.getIsLeftFactoring lf infoBox;
-      let pConf = myCFG#hasParsingTableConflict in
-        HtmlPageClient.getHasParsingTableConflict pConf infoBox;
-      let c = myCFG#isClean in
-      let prod = myCFG#isFullyProductive in
-      let access = myCFG#isFullyAccessible in
-        HtmlPageClient.getIsCFGClean c prod access infoBox
+  object(self) inherit cfgBasicController cfg s as super
 
     method box2CFGShow (f : ContextFreeGrammarLL1.transformation) =
       self#operationCFG "create example2";
@@ -201,44 +201,57 @@ class virtual cfgLL1Controller (cfg: ContextFreeGrammarView.model) (s:bool) =
       let (accepted, configs, exact, time) = myCFG#returnStats in
       HtmlPageClient.displayAcceptStats accepted configs exact time;
       myCFG#displayTrace
-
     
 end
 
 
 class cfgLRController (cfg: ContextFreeGrammarView.model) (s: bool)=
   object(self) inherit cfgLL1Controller cfg s as super
+
+    method getIsLR0 is =
+    if is then ((Lang.i18nGrammar ()) ^ "LR0.")
+          else ((Lang.i18nGrammarN ()) ^ "LR0.")
       
-
-
-    method setTitle = 
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (ContextFreeGrammarBasic.kind)
+  method getIsSLR1 is =
+    if is then ((Lang.i18nGrammar ()) ^ "SLR1.")
+          else ((Lang.i18nGrammarN ()) ^ "SLR1.")
       
-     method defineExample = (* abrir elementos de graficos na janela esquerda *)
-		super#defineExample;
-		
-		let infoBox = HtmlPageClient.defineInformationBox side in
+  method getIsLR1 is =
+    if is then ((Lang.i18nGrammar ()) ^ "LR1.")
+          else ((Lang.i18nGrammarN ()) ^ "LR1.")
+      
+  method getIsLALR1 is =
+    if is then ((Lang.i18nGrammar ()) ^ "LALR1.")
+          else ((Lang.i18nGrammarN ()) ^ "LALR1.")
 
-		HtmlPageClient.putLRButtons ();
-	(*     !Listeners.defineInformationBoxListener(); *)
-		(* myLR#buildCyLR0Diagram self#getCy; *)
-		Cytoscape.fit self#getCy_opt;
-		 
-		 
-		(* HtmlPageClient.cfgCyClose(); *)
-		HtmlPageClient.defineCFG();
-		 
-		(* JS.log(self#getCy);
-		 JS.log(self#getCy##getElementById (Js.string "14")) 
-		 *)
-		 
-		 if(myCFG#isLR0) then HtmlPageClient.getIsLR0 true infoBox
-		 else if(myCFG#isSLR1) then HtmlPageClient.getIsSLR1 true infoBox
-		 else if(myCFG#isLALR1) then HtmlPageClient.getIsLALR1 true infoBox
-		 else if(myCFG#isLR1) then HtmlPageClient.getIsLR1 true infoBox
-		 else HtmlPageClient.getIsLR1 false infoBox
-		 
+  method getCFGVal =
+    if (myCFG#isLR0) then self#getIsLR0 true
+    else if(myCFG#isSLR1) then self#getIsSLR1 true
+    else if(myCFG#isLALR1) then self#getIsLALR1 true
+    else if(myCFG#isLR1) then self#getIsLR1 true
+    else self#getIsLR1 false
+
+      
+    method defineExample = (* abrir elementos de graficos na janela esquerda *)
+		  super#defineExample;
+  		HtmlPageClient.putLRButtons ();
+  	(*     !Listeners.defineInformationBoxListener(); *)
+  		(* myLR#buildCyLR0Diagram self#getCy; *)
+  		Cytoscape.fit self#getCy_opt;
+  		 
+  		 
+  		(* HtmlPageClient.cfgCyClose(); *)
+  		HtmlPageClient.defineCFG();
+  		 
+  		(* JS.log(self#getCy);
+  		 JS.log(self#getCy##getElementById (Js.string "14")) 
+  		 *)
+		  let name = myCFG#getName in
+      let text = self#getCFGVal in
+        HtmlPageClient.drawCFGLRStats (Lang.i18nCFG ()) name text side
+
+    method redrawLayout =
+      self#defineExample
 
   (*  method defineExample2 = () *) (* abrir codigo na janela direita *)
   (*    myLR#drawExample self#getCy *)
@@ -254,7 +267,7 @@ class cfgLRController (cfg: ContextFreeGrammarView.model) (s: bool)=
 
     method replicateOnLeft =
       let c = new cfgLRController self#getCFG false in
-      Ctrl.ctrlL := (c :> controller);
+        Ctrl.changeCtrl c false
 
 (* AMD check!!! *)
 	 method updateButtons =

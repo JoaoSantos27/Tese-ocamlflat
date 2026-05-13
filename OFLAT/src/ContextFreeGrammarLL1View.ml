@@ -5,8 +5,6 @@ open Js_of_ocaml
 open Js.Opt
 open Lang
 open StateVariables
-
-
 open ContextFreeGrammarBasicView
 
 module ContextFreeGrammarLL1View =
@@ -121,8 +119,9 @@ struct
       if bodies = Set.empty then ()
       else let (x,xs) = Set.cut bodies in
         let span = Dom_html.createSpan doc in
+        let wordStr = word2str x in
     (* talvez visualização!!! JOAO CARLOS VER! perceber... era: span##.innerHTML := Js.string (if x = [] then StateVariables.returnEmpty() else word2str x); *)
-          span##.textContent := Js.some (Js.string (if x = [] then StateVariables.returnEmpty() else word2str x));
+          span##.textContent := Js.some (Js.string (if wordStr = "~" then StateVariables.returnEmpty() else wordStr));
           span##.classList##add (Js.string monospaceClass);
           HTMLTable.appendChildtoRow row span;
         if xs = Set.empty then fillRule row xs

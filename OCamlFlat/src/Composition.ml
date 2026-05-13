@@ -34,18 +34,26 @@
    
    let exists (name:string) : bool =
      List.mem_assoc name !data 
-   
  
    let delete (name:string) : unit =
      data := List.remove_assoc name !data
    
-   
    let update (name:string) (model: t) : unit =
      delete name;
      data := (name,model)::!data
- 
 
-        
+   let clear () : unit = (* Alexandre *)
+     let emptyList : (string * t) list ref = ref [] in
+       data := !emptyList
+       
+   let getSize () = (* Alexandre *)
+     let rec sizeAux rep =
+        match rep with
+        | [] -> 0
+        | x::xs -> 1 + sizeAux xs
+     in
+        sizeAux !data
+
    let updateModel (name:string) (model: Model.model) : unit =
     delete name;
     let m = PolyModel.model2comp model in

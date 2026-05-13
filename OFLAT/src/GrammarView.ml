@@ -59,7 +59,8 @@ struct
       if bodies = Set.empty then ()
       else let (x, xs) = Set.cut bodies in
         let span = Dom_html.createSpan doc in
-          span##.textContent := Js.some (Js.string (if x = [] then StateVariables.returnEmpty() else word2str x));
+        let wordStr = word2str x in
+          span##.textContent := Js.some (Js.string (if wordStr = "~" then StateVariables.returnEmpty() else wordStr));
           span##.classList##add (Js.string monospaceClass);
           HTMLTable.appendChildtoRow row span;
         if xs = Set.empty then fillRule row xs
@@ -326,7 +327,7 @@ struct
           let nodeId = Printf.sprintf "L%d_N%d_W%s_TNORMAL" current_level index nodeLabel in
           let x = ((index) * 50) - offset - 50 in 
           let y = current_level * 100 in 
-          Cytoscape.add_node cy3 nodeId ~pos:(x, y) "root" "" nodeLabel;
+          ignore(Cytoscape.add_node cy3 nodeId ~pos:(float_of_int x, float_of_int y) "root" "" nodeLabel);
         in
         
         (** Adiciona um nó auxiliar (normal) para um símbolo ao grafo Cytoscape. *)
@@ -336,7 +337,7 @@ struct
           let offset = (path_len * 100) / 2 in (* Usado para centralizar o grafo. *)
           let x = (index * 100) - offset in  
           let y = level * 100 in 
-          Cytoscape.add_node cy3 nodeId ~pos:(x, y) "root" "" nodeLabel;
+          ignore(Cytoscape.add_node cy3 nodeId ~pos:(float_of_int x, float_of_int y) "root" "" nodeLabel);
         in
         
         (** Adiciona um nó composto para uma regra (cabeça como pai, corpo como filhos) ao grafo Cytoscape. 
@@ -348,7 +349,7 @@ struct
           let x = (index * 100) - offset in 
           let y = level * 100 in 
           let pos = object%js val x = x val y = y end in
-          Cytoscape.addCompoundNode cy3 parentId ~pos (Some "");
+          ignore(Cytoscape.addCompoundNode cy3 parentId ~pos (Some ""));
         
           (* Adiciona nós filhos para cada símbolo na cabeça da regra (dentro do nó composto). *)
           List.iteri (fun sym_idx symbol ->
@@ -357,7 +358,7 @@ struct
             let x = ((index + sym_idx) * 100) - offset in 
             let y = level * 100 in 
             let pos = object%js val x = x val y = y end in
-            Cytoscape.addChildNode cy3 parentId childId (Some childLabel) ~pos;
+            ignore(Cytoscape.addChildNode cy3 parentId childId (Some childLabel) ~pos);
           ) rule.head;
         
           (* Adiciona arestas da cabeça para os símbolos do corpo (se não for épsilon). *)

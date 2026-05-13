@@ -399,7 +399,8 @@ struct
 			
 	let addInitialState s rep =
 		{ rep with
-			states = Set.add s rep.states;
+		(*	states = Set.add s rep.states; erro *)
+			states = Set.cons s rep.states; (*	Alexandre *)
 			initialState = s }
 
 	let addFinalState s rep =
@@ -417,6 +418,17 @@ struct
 			transitions = Set.filter (fun (a,_,c,_,_) ->
 							a <> s || c <> s) rep.transitions;
 			acceptStates = Set.remove s rep.acceptStates }
+
+	let turnStateInitial s rep = (* Alexandre *)
+		if s = rep.initialState then
+			rep
+		else
+			let tmpStates = Set.filter (fun node -> node != s) rep.states in
+            let newStates = Set.cons s tmpStates in
+				{ rep with
+					states = newStates;
+					initialState = s;
+				}
 
 	let changeStateToInitial s rep =
 		{ rep with

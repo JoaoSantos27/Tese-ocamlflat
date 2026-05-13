@@ -90,15 +90,17 @@ struct
 			let newConfigs = Set.diff configs seen in
 			let newSeen = Set.unionUnsafe newConfigs seen in
 			let _ = RuntimeControl.update (Set.size newConfigs) in
+			(* Util.showp "0000000000"; *)
 			if Set.isEmpty newConfigs then
 				false
 			else if Set.exists (isAccepting m) newConfigs then
 				true
 			else if RuntimeControl.giveUp () then
 				false
-			else
+			else (
+				(* Util.showp "111111111111"; *)
 				let nextConfigs = Set.flatMap (next m) newConfigs in
-					acceptX nextConfigs newSeen
+					acceptX nextConfigs newSeen)
 		in	
 		let _ = RuntimeControl.start () in
 		let initialConfigs = initial m w in
@@ -225,6 +227,7 @@ struct
 			(*method virtual acceptFull: 'c. word ->  bool * 'c path * 'c trail*)
 			method virtual generate: int -> words
 			(*method virtual generateDumb: int -> words*)
+
 		
 		(* Exercices support *)
 			method checkProperty (prop: string) = checkProperty prop

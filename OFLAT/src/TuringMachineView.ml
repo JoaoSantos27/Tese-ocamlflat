@@ -95,9 +95,16 @@ struct
 
 
   (*-------------drawExample-------------*)
-  let drawExample cy rep = 
+  let drawExample cy rep layout =
     inputNodes cy rep;
-    inputEdges cy rep.transitions
+    inputEdges cy rep.transitions;
+    Cytoscape.runLayout cy layout
+
+
+  (*-------------redrawLayout-------------*)
+
+  let redrawLayout cy =
+    Cytoscape.redrawLayout cy 
 
 
   (*-------------numberStates-------------*)
@@ -423,8 +430,11 @@ struct
       method inputNodes cy = 
         inputNodes cy self#representation
 
-      method drawExample cy = 
-        drawExample cy self#representation
+      method drawExample cy layout =
+        drawExample cy self#representation layout
+
+      method redrawLayout (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) =
+        redrawLayout cy
 
       method paint (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) state final best = 
         paint cy state final best finished isOver accepted self#getCriteria
@@ -443,6 +453,9 @@ struct
 
       method addInitialNode node: model =
         new model (Arg.Representation (self#addInitialState node))
+
+      method turnNodeInitial node: model =
+        new model (Arg.Representation (self#changeStateToInitial (state node))) 
 
       method addFinalNode node: model =
         new model (Arg.Representation (self#addFinalState node))

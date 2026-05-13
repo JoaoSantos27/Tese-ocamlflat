@@ -16,9 +16,6 @@ class exerController (exer: Exercise.exercise) (on: bool) (title: string) =
     method getExercise =
       exer1
 
-    method setTitle = 
-      HtmlPageClient.defineMainTitle (title1)
-
     method operationEXER opName : unit =
       super#operation opName "Exercise"
 

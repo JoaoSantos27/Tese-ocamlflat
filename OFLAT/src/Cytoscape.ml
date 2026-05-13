@@ -8,8 +8,8 @@ open OCamlFlat.BasicTypes
 
 class type position =
   object
-    method x : int readonly_prop
-    method y : int readonly_prop
+    method x : float readonly_prop
+    method y : float readonly_prop
   end
 
 class type ['a] style =
@@ -52,7 +52,7 @@ struct
       method data_fromName: js_string Js.t -> js_string Js.t meth (*ele.data(name) Get a particular data field for the element.*)
       method data_update: js_string Js.t -> js_string Js.t -> unit meth (*ele.data(name,value)Set a particular data field for the element.*)
       method group : js_string Js.t prop
-      method position : position Js.t prop
+      method position : position Js.t Js.optdef -> position Js.t Js.meth
       method renderedPosition : position Js.t prop
       method classes : js_string Js.t prop
       method length : number Js.t prop
@@ -67,10 +67,26 @@ struct
     end
 end
 
+class type bounding_box =
+  object
+    method x1 : float readonly_prop
+    method y1 : float readonly_prop
+    method w : float readonly_prop
+    method h : float readonly_prop
+  end 
+
 class type layout_options =
   object
     method name : js_string t readonly_prop
     method rankDir : js_string t readonly_prop
+    method startAngle: float readonly_prop
+    method ready: (unit -> unit) callback readonly_prop
+    method rows: int readonly_prop
+    method fit: bool readonly_prop
+    method padding: int readonly_prop
+    method minNodeSpacing: int readonly_prop
+    method spacingFactor: float readonly_prop
+    method boundingBox: bounding_box t readonly_prop 
   end
 
 class type layout =
@@ -111,7 +127,7 @@ class type props =
 
 class type cytoscape =
   object
-    method add : DataItem.t t -> unit meth
+    method add : DataItem.t t -> DataItem.t t meth
     method remove : DataItem.t t -> unit meth
     method remove_fromSelector : js_string t -> unit meth
     method mount : Dom_html.element t -> unit meth
@@ -133,6 +149,8 @@ class type cytoscape =
     method tapdragover: DataItem.t t -> unit meth
     method contextMenus : 'c t  -> contextMenus Js.t meth
     method popper : 'z -> popper Js.t meth
+    method zoom : float Js.opt -> float meth
+    method zoomBy : float -> unit meth 
   end
 
 type cytoscape_cs = (props Js.t -> cytoscape Js.t) constr
@@ -148,9 +166,80 @@ let default_style : Unsafe.any style t js_array t =
     end in
   array [| node_style |]
 
+let default_bounding_box : bounding_box t =
+    object%js
+    val x1 = 100.0
+    val y1 = 100.0
+    val w = 500.0
+    val h = 500.0
+end
+
+let default_bounding_box2 : bounding_box t =
+    object%js
+    val x1 = 0.0
+    val y1 = 100.0
+    val w = 400.0
+    val h = 300.0
+end
+
+let default_bounding_box3 : bounding_box t =
+    object%js
+    val x1 = 100.0
+    val y1 = 100.0
+    val w = 500.0
+    val h = 500.0
+end
+
 let default_layout : layout_options t =
   object%js val name = string "preset" 
-    val rankDir = Js.string "LR"
+    val rankDir = Js.string ""
+    val startAngle = 0.0
+    val ready = Js.wrap_callback (fun () -> ())
+    val rows = 0
+    val fit = false
+    val padding = 30
+    val minNodeSpacing = 10
+    val spacingFactor = 1.0
+    val boundingBox = default_bounding_box
+end
+
+let random_layout callbackFun : layout_options t =
+  object%js val name = string "preset" 
+    val rankDir = Js.string ""
+    val startAngle = 0.0
+    val ready = callbackFun
+    val rows = 0
+    val fit = false
+    val padding = 30
+    val minNodeSpacing = 10
+    val spacingFactor = 1.0
+    val boundingBox = default_bounding_box
+end
+
+let circle_layout callbackFun : layout_options t =
+  object%js val name = string "circle"
+  val rankDir = Js.string "LR"
+  val startAngle = Float.pi
+  val ready = callbackFun
+  val rows = 0
+  val fit = false
+  val padding = 180
+  val minNodeSpacing = 10
+  val spacingFactor = 1.0
+  val boundingBox = default_bounding_box
+end
+
+let grid_layout callbackFun rowSize : layout_options t =
+  object%js val name = string "grid"
+  val rankDir = Js.string ""
+  val startAngle = 0.0
+  val ready = callbackFun
+  val rows = rowSize
+  val fit = false
+  val padding = 30
+  val minNodeSpacing = 10
+  val spacingFactor = 2.0
+  val boundingBox = default_bounding_box2
 end
 
 let position x y : position t =
@@ -158,16 +247,15 @@ let position x y : position t =
 
 let node id pos nodeType classes label : DataItem.t t =
   let data : DataItem.data t = Unsafe.obj [||] in
-  let node : DataItem.t t = Unsafe.obj [||] in
-  data##.id := string id;
-  (match pos with None -> () | Some (x, y) -> node##.position := position x y);
-  data##.nodeType := string nodeType;
-  node##.classes := string classes;
-  data##.label := string label;
-  node##.data := data;
-  node##.group := Js.string "nodes";
-  node
-
+  let node_data = Unsafe.obj [||] in
+    data##.id := string id;
+    data##.nodeType := string nodeType;
+    data##.label := string label;
+    node_data##.data := data;
+    node_data##.group := Js.string "nodes";
+    node_data##.classes := string classes;
+    (match pos with None -> () | Some (x, y) -> node_data##.position := position x y);
+    node_data
 
 let edge id source target label : DataItem.t t =
   let data : DataItem.data t = Unsafe.obj [||] in
@@ -201,32 +289,26 @@ let addCompoundNode cy id ?pos label =
   let data : DataItem.data t = Unsafe.obj [||] in
   data##.id := string id;
   (match label with None -> () | Some label -> data##.label := string label);
-  let node : DataItem.t t = Unsafe.obj [||] in
-  node##.data := data;
-  node##.group := string "nodes";
-  (match pos with None -> () | Some pos -> node##.position := pos);
-  cy##add node
+  let node_data = Unsafe.obj [||] in
+  node_data##.data := data;
+  node_data##.group := string "nodes";
+  (match pos with None -> () | Some pos -> node_data##.position := pos);
+  cy##add node_data
 
 let addChildNode cy parentId childId ?pos childLabel=
   let data : DataItem.data t = Unsafe.obj [||] in
   data##.id := string childId;
   data##.parent := string parentId; 
   (match childLabel with None -> () | Some label -> data##.label := string label);
-  let node : DataItem.t t = Unsafe.obj [||] in
-  node##.data := data;
-  node##.group := string "nodes";
-  (match pos with None -> () | Some pos -> node##.position := pos);
-  cy##add node
+  let node_data = Unsafe.obj [||] in
+  node_data##.data := data;
+  node_data##.group := string "nodes";
+  (match pos with None -> () | Some pos -> node_data##.position := pos);
+  cy##add node_data
 
 let add_edge cy ?id source target label =
 (*  Firebug.console##log ("Adding edge with id: '" ^ (match id with |None -> "" | Some a -> a) ^ "' from: '" ^ source ^ "' to: '" ^ target ^ "' with symbol: '" ^ label ^ "'.");*)
-  cy##add (edge id source target label)
-
-let random_layout g : layout t =
-  let layout_opt = object%js
-    val name = string "random"
-  end in
-  g##layout layout_opt
+  ignore (cy##add (edge id source target label))
 
 let run_layout (l : layout t) =
   l##run
@@ -264,22 +346,41 @@ let data_update element name value =
 let faLayout : layout_options Js.t = (**Layout for finite automata**)
   object%js val name = Js.string "grid"
             val rankDir = Js.string "LR"
-          end
+            val startAngle = 0.0
+            val ready = Js.wrap_callback (fun () -> ())
+            val rows = 0
+            val fit = true
+            val padding = 30
+            val minNodeSpacing = 10
+            val spacingFactor = 1.0
+            val boundingBox = default_bounding_box
+  end
 
 let reLayout : layout_options Js.t = (**Layout for regular expression trees**)
   object%js val name = Js.string "dagre"
             val rankDir = Js.string "TB"
-          end
+            val startAngle = 0.0
+            val ready = Js.wrap_callback (fun () -> ())
+            val rows = 0
+            val fit = true
+            val padding = 30
+            val minNodeSpacing = 10
+            val spacingFactor = 1.0
+            val boundingBox = default_bounding_box
+  end
 
 let cfglayout : layout_options Js.t = (**Layout for context free grammars**)
   object%js val name = Js.string "dagre" 
             val rankDir = Js.string ""
-          end
-
-let grlayout : layout_options Js.t = (**Layout for grammars**)
-object%js val name = Js.string "dagre" 
-          val rankDir = Js.string ""
-        end
+            val startAngle = 0.0
+            val ready =Js.wrap_callback (fun () -> ())
+            val rows = 0
+            val fit = true
+            val padding = 30
+            val minNodeSpacing = 10
+            val spacingFactor = 1.0
+            val boundingBox = default_bounding_box
+  end
 
 (* let treeGrlayout : layout_options Js.t = (**Layout for grammars**)
 object%js val name = Js.string "dagre" 
@@ -288,7 +389,15 @@ object%js val name = Js.string "dagre"
 let treeGrlayout : layout_options Js.t = (**Layout for grammars**)
 object%js val name = Js.string "dagre" 
           val rankDir = Js.string ""
-end
+          val startAngle = 0.0
+          val ready = Js.wrap_callback (fun () -> ())
+          val rows = 0
+          val fit = true
+          val padding = 30
+          val minNodeSpacing = 10
+          val spacingFactor = 1.0
+          val boundingBox = default_bounding_box
+  end
 
 let edgehandlesOptions =
   object%js
@@ -358,7 +467,7 @@ let menu2 =
       let menu2 = Js.def (object%js
         val content = Js.string (Lang.i18nTextAddInitial ())
         val select = fun element evt -> 
-          !ListenersAutomaton.addInitialNode evt##.position##.x evt##.position##.y;
+          !ListenersAutomaton.addInitialNode ();
           !Listeners.updateRightListener ()
       end) in 
       let menu3 = Js.def (object%js
@@ -809,7 +918,7 @@ let removeAllElements cy =
 
 let resetFaElems cy = 
   removeAllElements cy;
-  add_node cy "transparent" ~pos:(0,200) "" "transparent" "transparent"
+  ignore (add_node cy "transparent" ~pos:(0.0, 200.0) "" "transparent" "transparent")
   
 
 let paintNode cy node color = 
@@ -844,7 +953,7 @@ let initFaCy cyContainer =
     cy##cxtmenu(menu cy eh);
     cy##cxtmenu(menu2);
     cy##cxtmenu(menu3) end;
-  add_node cy ~pos:(0,200) "transparent" "" "transparent" "transparent";
+  ignore (add_node cy ~pos:(-200.0, 0.0) "transparent" "" "transparent" "transparent");
   cy##autolock( false );
   cy
 
@@ -863,7 +972,7 @@ let initLL1Cy cyContainer =
 let initGRCy cyContainer =
   let props = mk_graph ~style:grStyle cyContainer in
   let cy = display props in
-  run_layout (cy##layout grlayout);
+  run_layout (cy##layout treeGrlayout);
   cy
 
 let initGRCy3 cyContainer =
@@ -903,32 +1012,30 @@ let addEdgeGeneral cy (first, edgeLabel, second) =
 let addNode cy node ?(x = Random.int 1399) ?(y = Random.int 299) isStart isFinal =
   let verify = elementId cy node in
     if ((Js.float_of_number verify##.length) < 1.) then
-      if (isFinal = true) then
-        if (isStart = true) then
-          (add_node ~pos:(100, 200) cy node "" "SUCCESS" node;
-          (elementId cy node)##lock;
+      if (isFinal) then
+        if (isStart) then
+          (ignore (add_node ~pos:(100.0, 200.0) cy node "" "SUCCESS" node);
           addEdge cy ("transparent", " ", node) )
         else
-          add_node cy ~pos:(x, y) node "" "SUCCESS" node
+          ignore (add_node cy ~pos:(float_of_int x, float_of_int y) node "" "SUCCESS" node)
       else 
-        if (isStart = true) then
-          (add_node cy ~pos:(100, 200) node "" "NOT" node;
-          (elementId cy node)##lock;
+        if (isStart) then
+          (ignore (add_node cy ~pos:(100.0, 200.0) node "" "NOT" node);
           addEdge cy ("transparent", " ", node) )
         else 
-          add_node cy ~pos:(x, y) node "" "NOT" node
+          ignore (add_node cy ~pos:(float_of_int x, float_of_int y) node "" "NOT" node)
 
 let addNode2 cy node isStart isFinal =
   let verify = elementId cy node in
-  let y = 100 + (100 * (int_of_string node)) in
+  let y = float_of_int (100 + (100 * (int_of_string node))) in
   (*let y = 200 + (50 * ((int_of_string node) -1)) in *)
   (* let y = Random.int 399 in **)
-  let x = 200 + (50 * ((int_of_string node mod 2)-2) * ((int_of_string node))) * -1 in
+  let x = float_of_int (200 + (50 * ((int_of_string node mod 2)-2) * ((int_of_string node))) * -1) in
     if ((Js.float_of_number verify##.length) < 1.) then
         if (node = "0") then
-          add_node cy ~pos:(100, 200) node "" "" node
+          ignore (add_node cy ~pos:(100.0, 200.0) node "" "" node)
         else
-          add_node cy ~pos:(x, y) node "" "" node
+          ignore (add_node cy ~pos:(x, y) node "" "" node)
 
 let removeNode cy node =
   let element = elementId cy node in
@@ -952,6 +1059,50 @@ let removeEdge cy source label target =
   cy##remove(getEdge);
   if (newLabel <> "") then add_edge cy ~id:nId source target newLabel 
 
+let lockNode cy node =
+  (elementId cy node)##lock
+
+let addTransparentNode cy startNode x y =
+  let transNode = add_node cy "transparent" "" "transparent" "" in
+    addEdge cy ("transparent", " ", startNode);
+    ignore (transNode##position (Js.def (position (x -. 100.0) y)))
+
+let getLayoutOptions cy layout: layout_options t =
+  (* if the number of transitions is < 2 then the last node is set as the first one in the cytoscape nodes collection *)
+  let ready_callback =
+    Js.wrap_callback (fun () ->
+      let nodes = cy##nodes (Js.string "") in
+      let numEdges = (cy##edges (Js.string ""))##.length in
+      JS.log nodes;
+      let pos = if (numEdges < 2 && nodes##.length > 1) then 1 else 0 in
+        match Js.Optdef.to_option (Js.array_get nodes pos) with
+          | Some first -> let label = data_fromName first "id" in
+                          let pos = first##position Js.undefined in
+                          let x = pos##.x in
+                          let y = pos##.y in
+                            lockNode cy label;
+                            addTransparentNode cy label x y
+          | _ -> ()
+    ) in
+    match layout with
+      | "circle" -> circle_layout ready_callback
+      | "grid" -> let rowSize = int_of_float ( Float.sqrt (float_of_int ((cy##nodes (Js.string ""))##.length)) ) in
+                    grid_layout ready_callback rowSize
+      | _ -> random_layout ready_callback
+
+let runLayout cy layout =
+  removeNode cy "transparent";
+  let l = cy##layout (getLayoutOptions cy layout) in
+    l##run
+
+let redrawLayout cy container =
+  cy##mount container;
+  let eh = (Js.Unsafe.coerce cy)##edgehandles edgehandlesOptions in
+  let _ = Js.Unsafe.meth_call cy "cxtmenu" [|Js.Unsafe.inject (menu cy eh)|] in
+  let _ = Js.Unsafe.meth_call cy "cxtmenu" [|Js.Unsafe.inject menu2|] in
+  let _ = Js.Unsafe.meth_call cy "cxtmenu" [|Js.Unsafe.inject menu3|] in
+  ()
+
 let destroyGraph cy =
   cy##destroy()
 
@@ -965,12 +1116,14 @@ let centerGraph cy =
   cy##fit
   
 let makeTreeNode cy id node =
-  add_node cy id "" "" node;
-  run_layout (cy##layout reLayout)
+  ignore (add_node cy id "" "" node)
+
+let redrawTree cy container =
+  ignore (cy##mount container) 
 
 (* Carolina *)
 let makeTreeNode2 cy id name =
-    add_node cy id "" "" name;
+    ignore (add_node cy id "" "" name);
     (*let elem = elementId cy id in
     elem##on_3 "tap" (fun event a b c -> JS.alertStr ("aaa"));*)
     run_layout (cy##layout reLayout);
@@ -995,13 +1148,27 @@ let changeDirection cy2 layoutDir =
     (run_layout (cy2##layout (object%js 
                             val name = Js.string "dagre"
                             val rankDir = Js.string "TB"
+                            val startAngle = 0.0
+                            val ready = Js.wrap_callback (fun () -> ())
+                            val rows = 0
+                            val fit = true
+                            val padding = 30
+                            val minNodeSpacing = 10
+                            val spacingFactor = 1.0
+                            val boundingBox = default_bounding_box
                             end));
     "TB")
   else 
     (run_layout (cy2##layout (object%js 
                             val name = Js.string "dagre"
                             val rankDir = Js.string "LR"
+                            val startAngle = 0.0
+                            val ready = Js.wrap_callback (fun () -> ())
+                            val rows = 0
+                            val fit = true
+                            val padding = 30
+                            val minNodeSpacing = 10
+                            val spacingFactor = 1.0
+                            val boundingBox = default_bounding_box
                             end));
     "LR")
-
-

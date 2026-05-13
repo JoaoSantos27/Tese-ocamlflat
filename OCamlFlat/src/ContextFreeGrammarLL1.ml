@@ -135,7 +135,7 @@ struct
   let isLeftRecursive (rep:t) = 
     Set.exists (fun x -> x = true) (Set.map (fun v -> leftRecursionTest v Set.empty rep) rep.variables)
 
-  let isLL1Deterministic simple (rep:t) =
+  let isLL1Deterministic (simple: bool) (rep:t) =
     let variables = rep.variables in
     let pairsSet = Set.map (fun v -> Set.make (List.flatten (pairs (sameHeadRules v rep)))) variables in
     let lookaheadInterSet = Set.flatMap (fun v -> Set.map (fun (p1,p2) -> Set.inter (lookahead p1 simple rep) (lookahead p2 simple rep)) v) pairsSet in

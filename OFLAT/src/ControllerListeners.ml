@@ -30,6 +30,7 @@ open TuringMachineController
 open CompositionController
 open ExerciseController
 open GrammarController
+open Settings
 
 (* PEDRO CARLOS VER! 80 linhas. Fazem o que?  o put abaixo?... *)
 let cfgStr2Model str = (*TODO put in controller*)
@@ -116,39 +117,25 @@ module ControllerListeners = struct
   let listColors = [|"Red"; "Yellow"; "Cyan"; "Green"; "Indigo"; "Blue"; "Magenta"; "Sienna"; "Violet"; "Orange"; "Lime"; "Teal"; "SteelBlue"; "Silver"; "Olive"; "Salmon"; "Crimson"; "Purple"; "DarkKhaki"; "PowderBlue"|]
   let listColorsBig: string array ref = ref [||];;
 
-  let setTitle () =
-    if !Ctrl.ctrlR#locked then
-      !Ctrl.ctrlR#setTitle
-    else 
-      !Ctrl.ctrlL#setTitle
-  
-  let createController c lr = 
-    if lr then begin 
-      Ctrl.ctrlR := (c :> controller);
-    end
-    else begin 
-      Ctrl.ctrlL := (c :> controller);
-    end
-
   let createFAController fa lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new faController fa lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
   
   let createPDAController pda lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new pdaController pda lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
   
   let createREController re lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new reController re lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
 
   let createCFGController (cfg: ContextFreeGrammarView.model) lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new cfgController cfg lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
       
   let createCFGController2 (cfg: ContextFreeGrammarBasic.model) lr =
       if not lr then !Ctrl.ctrlL#finish else ();
@@ -159,7 +146,7 @@ module ControllerListeners = struct
   let createGRController (gr: GrammarView.model) lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new grController gr lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
       
   let createGRController2 (gr: Grammar.model) lr =
       if not lr then !Ctrl.ctrlL#finish else ();
@@ -169,35 +156,36 @@ module ControllerListeners = struct
   let createTransducerController (fst: TransducerView.model) lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new fstController fst lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
 
   let createTMController (tm: TuringMachineView.model) lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new tmController tm lr in
-       createController c lr   
+       Ctrl.changeCtrl c lr   
       
   let createCompController (comp: CompositionView.model) lr =
     if not lr then !Ctrl.ctrlL#finish else ();
     let c = new compController comp lr in
-      createController c lr
+      Ctrl.changeCtrl c lr
  
   let createExerController ex lr title =
     if not lr then !Ctrl.ctrlL#finish else (); (*pode se apagar eventualmente?*)
     let c = new exerController ex lr title in
-      createController c lr 
+      Ctrl.changeCtrl c lr 
 
   let closeLeftAction () =
     (match !Ctrl.ctrlR#locked with
     | false -> 
-      HtmlPageClient.clearBox1 ();
-      !Ctrl.ctrlR#replicateOnLeft;
-      !Ctrl.ctrlL#defineExample;
-      CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt
+      let lastOp = !Ctrl.ctrlL#getlastAction in
+        HtmlPageClient.clearBox1 ();
+        !Ctrl.ctrlR#replicateOnLeft;
+        !Ctrl.ctrlL#defineExample;
+        !Ctrl.ctrlL#setLastAction lastOp;
+        CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt
     | true -> (*apagar apenas esquerda*)
       HtmlPageClient.clearBox1 ();
       !CtrlUtil.changeToControllerCtrlLeft ());
-    !Ctrl.ctrlL#updateButtons;
-    setTitle()
+    !Ctrl.ctrlL#updateButtons
     
   let conversionTo n =
     CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
@@ -294,34 +282,42 @@ module ControllerListeners = struct
               let enu = new Exercise.exercise (JSon j) in 
               createExerController enu true "exercise";
               !Ctrl.ctrlR#defineExample2);
-        setTitle();
         !Ctrl.ctrlL#printErrors);;
 
   Listeners.closeRightListener := 
     fun () -> !Ctrl.ctrlR#closeRightAction;
               !Ctrl.ctrlL#resetStyle;
-              CtrlUtil.oneBox (!Ctrl.ctrlL#getCy_opt);
-              setTitle();;
+              CtrlUtil.oneBox (!Ctrl.ctrlL#getCy_opt);;
 
   Listeners.defineInformationBoxListener :=
     fun () -> !Ctrl.ctrlL#defineInformationBox;;
 
-  ListenersAutomaton.paintAllUsefulListener :=
-    fun () -> !Ctrl.ctrlL#resetStyle;
-    (!Ctrl.ctrlL#getAutomaton)#usefulPainting !Ctrl.ctrlL#getCy;;
+    ListenersAutomaton.paintAllUsefulListener :=
+    fun () -> !Ctrl.ctrlL#resetStyle; 
+              !Ctrl.ctrlL#operation "Useful" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHighlightName (Lang.i18nUsefulBox ());
+              HtmlPageClient.changeHelpName (Lang.i18nUseful ());
+              (!Ctrl.ctrlL#getAutomaton)#usefulPainting !Ctrl.ctrlL#getCy;;
 
   ListenersAutomaton.paintAllProductivesListener :=
-    fun () -> (!Ctrl.ctrlL#resetStyle;
-    (!Ctrl.ctrlL#getAutomaton)#productivePainting !Ctrl.ctrlL#getCy);;
+    fun () -> (!Ctrl.ctrlL#resetStyle; 
+              !Ctrl.ctrlL#operation "Productive" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHighlightName (Lang.i18nProductiveBox ());
+              HtmlPageClient.changeHelpName (Lang.i18nProductive ());
+              (!Ctrl.ctrlL#getAutomaton)#productivePainting !Ctrl.ctrlL#getCy);;
 
-  ListenersAutomaton.paintAllReachableListener := 
-    fun () -> !Ctrl.ctrlL#resetStyle;
-    (!Ctrl.ctrlL#getAutomaton)#reachablePainting !Ctrl.ctrlL#getCy;;
+  ListenersAutomaton.paintAllReachableListener := (* need to get model name *)
+    fun () -> !Ctrl.ctrlL#resetStyle; 
+              !Ctrl.ctrlL#operation "Accessible" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHighlightName (Lang.i18nAccessibleBox ());
+              HtmlPageClient.changeHelpName (Lang.i18nAccessible ());
+              (!Ctrl.ctrlL#getAutomaton)#reachablePainting !Ctrl.ctrlL#getCy;;
+
 (* ML *)
 
   ListenersAutomaton.addNode := fun x y -> !Ctrl.ctrlL#addNode x y false false;;
 
-  ListenersAutomaton.addInitialNode := fun x y -> !Ctrl.ctrlL#addNode x y true false;;
+  ListenersAutomaton.addInitialNode := fun () -> !Ctrl.ctrlL#addInitialNode;;
 
   ListenersAutomaton.addFinalNode := fun x y -> !Ctrl.ctrlL#addNode x y false true;;
 
@@ -354,7 +350,7 @@ module ControllerListeners = struct
 
   ListenersAutomaton.removeTypeFinal := fun node -> !Ctrl.ctrlL#removeFinalNode node;;
 
-  ListenersAutomaton.turnNodeInitial := fun node -> !Ctrl.ctrlL#addInitialNode node;;
+  ListenersAutomaton.turnNodeInitial := fun node -> !Ctrl.ctrlL#turnInitialNode node;;
 
     
   ListenersAutomaton.addTransition := fun src trg -> !Ctrl.ctrlL#createTransition src trg ;;
@@ -374,16 +370,16 @@ module ControllerListeners = struct
     fun (state) -> !Ctrl.ctrlL#renameState state;;
 
   ListenersAutomaton.showTable :=
-    fun () -> 
+    fun () -> !Ctrl.ctrlL#operation "table" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHelpName (Lang.i18nTableView ());
               !Ctrl.ctrlL#changeTab;
               let flag = !Ctrl.ctrlL#getTab in
               HtmlPageClient.toggleTab flag;
               Cytoscape.fit !Ctrl.ctrlL#getCy_opt;;
-              
-
 
   ListenersFA.cleanUselessListener :=
-    fun () -> if ((!Ctrl.ctrlL#getFA)#areAllStatesUseful) then 
+    fun () -> HtmlPageClient.changeHelpName (Lang.i18nClean ());
+              if ((!Ctrl.ctrlL#getFA)#areAllStatesUseful) then 
                 JS.alertStr (Lang.i18nAlertClean ())
               else 
                 (let auto = (!Ctrl.ctrlL#getFA)#cleanUselessStates1 !Ctrl.ctrlL#getCy in 
@@ -393,10 +389,12 @@ module ControllerListeners = struct
                 Cytoscape.fit !Ctrl.ctrlR#getCy_opt;);;
 
   ListenersFA.getDeterministicListener :=
-    fun () -> if ((!Ctrl.ctrlL#getFA)#isDeterministic) then 
+    fun () -> HtmlPageClient.changeHelpName (Lang.i18nDeterministicText ());
+              if ((!Ctrl.ctrlL#getFA)#isDeterministic) then 
                 JS.alertStr (Lang.i18nAlertDeterministic ())
-              else 
-                (let auto = (!Ctrl.ctrlL#getFA)#toDeterministic1 in 
+              else
+                (!Ctrl.ctrlL#operation "Deterministic" ((!Ctrl.ctrlL#model)#id).kind;
+                let auto = (!Ctrl.ctrlL#getFA)#toDeterministic1 in
                 CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
                 createFAController auto true;
                 !Ctrl.ctrlR#defineExample2;
@@ -419,19 +417,20 @@ module ControllerListeners = struct
       done);;
 
   ListenersFA.defineMinimizedListener :=
-  fun () -> if ((!Ctrl.ctrlL#getFA)#isDeterministic) then
-              if ((!Ctrl.ctrlL#getFA)#isMinimized) then 
-                JS.alertStr (Lang.i18nAlertMinimum ())
+    fun () -> HtmlPageClient.changeHelpName (Lang.i18nMinimizeText ());
+              if ((!Ctrl.ctrlL#getFA)#isDeterministic) then
+                if ((!Ctrl.ctrlL#getFA)#isMinimized) then 
+                  JS.alertStr (Lang.i18nAlertMinimum ())
+                else 
+                  (let auto = (!Ctrl.ctrlL#getFA)#minimize1 in 
+                  CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+                  createFAController auto true;
+                  let number = (!Ctrl.ctrlL#getFA)#getColors in
+                  setColor number;
+                  !Ctrl.ctrlR#defineMinimize !listColorsBig number;)
               else 
-                (let auto = (!Ctrl.ctrlL#getFA)#minimize1 in 
-                CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
-                createFAController auto true;
-                let number = (!Ctrl.ctrlL#getFA)#getColors in
-                setColor number;
-                !Ctrl.ctrlR#defineMinimize !listColorsBig number;)
-            else 
-              JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
-
+                JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
+  
   ListenersFST.cleanUselessListener :=
     fun () -> 
       let fstView = !Ctrl.ctrlL#getFST in
@@ -479,20 +478,29 @@ module ControllerListeners = struct
       else 
         JS.alertStr (Lang.i18nAlertNeedsDeterministic ());;
 
+
   ListenersPDA.cleanUselessListener :=
-  fun () -> if ((!Ctrl.ctrlL#getPDA)#areAllStatesUseful) then 
-              JS.alertStr (Lang.i18nAlertClean ())
-            else 
-              (let automaton = (!Ctrl.ctrlL#getPDA)#cleanUselessStates1 !Ctrl.ctrlL#getCy in 
-              CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
-              createPDAController automaton true;
-              !Ctrl.ctrlR#defineExample2;
-              Cytoscape.fit !Ctrl.ctrlR#getCy_opt;);;
+    fun () -> if ((!Ctrl.ctrlL#getPDA)#areAllStatesUseful) then 
+                JS.alertStr (Lang.i18nAlertClean ())
+              else 
+                (let automaton = (!Ctrl.ctrlL#getPDA)#cleanUselessStates1 !Ctrl.ctrlL#getCy in 
+                CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+                createPDAController automaton true;
+                !Ctrl.ctrlR#defineExample2;
+                Cytoscape.fit !Ctrl.ctrlR#getCy_opt;);;
+
+  Listeners.closeLeftListenerSecondary :=
+    fun () -> if (!CtrlUtil.hasPreviousController ()) then (
+      !CtrlUtil.returnPreviousController ();
+      HtmlPageClient.clearBox1 ();
+      !Ctrl.ctrlL#redrawLayout;
+      CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
+      !Ctrl.ctrlL#updateButtons
+    )else(
+      HtmlPageClient.clearBox1 ());;
 
   Listeners.closeLeftListener := 
-  fun () -> 
-    (closeLeftAction ();
-    setTitle () );;
+    fun () -> closeLeftAction ();;
           
   Listeners.showModelListener := 
     fun () -> CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
@@ -500,6 +508,12 @@ module ControllerListeners = struct
               !Ctrl.ctrlR#setUpdateType "specification";
               let getInfo = JSon.toString ((!Ctrl.ctrlL#model)#toJSon) in
               HtmlPageClient.showModelInfo getInfo;;
+
+  Listeners.showHelpModel := 
+    fun () -> !Ctrl.ctrlL#showHelpModel;;
+
+  Listeners.showHelpAnimation := 
+    fun () -> !Ctrl.ctrlL#showHelpAnimation;;
 
   ListenersRE.resultCountListener := 
     fun () -> 
@@ -551,9 +565,7 @@ module ControllerListeners = struct
       HtmlPageClient.oneBox ();
       let element = Dom_html.getElementById "cy2" in
         element##.innerHTML := Js.string "";
-      !CtrlUtil.changeToControllerCtrlRight();
-      setTitle ();
-      );;
+      !CtrlUtil.changeToControllerCtrlRight(););;
 
   ListenersRE.changeDirectionListener :=  fun () -> 
     let newDir = (Cytoscape.changeDirection !Ctrl.ctrlL#getCy !Ctrl.ctrlL#getLayoutDir) in
@@ -651,8 +663,7 @@ module ControllerListeners = struct
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createGRController2 grModel false;
-      !Ctrl.ctrlL#defineExample;
-      setTitle()
+      !Ctrl.ctrlL#defineExample
     with
       _ -> JS.alert (Lang.i18nErrorParsing());;
 
@@ -815,8 +826,7 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createFAController defaultFA false;
-      !Ctrl.ctrlL#defineExample;
-      setTitle();;
+      !Ctrl.ctrlL#defineExample;;
 
   ListenersPDA.createModelListener := fun () -> 
     let defaultPDA = new PushdownAutomatonView.model (Representation {
@@ -833,7 +843,6 @@ open ContextFreeGrammarLL1View;;
       HtmlPageClient.clearBox1();
       createPDAController defaultPDA false;
       !Ctrl.ctrlL#defineExample;
-      setTitle();;
 
     ListenersFST.createModelListener := fun () -> 
       let defaultFST = new TransducerView.model (Representation {
@@ -847,8 +856,7 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createTransducerController defaultFST false;
-      !Ctrl.ctrlL#defineExample;
-      setTitle();;
+      !Ctrl.ctrlL#defineExample;;
 
     ListenersTM.createModelListener := fun () -> 
        let defaultTM =
@@ -862,8 +870,7 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createTMController defaultTM false;
-      !Ctrl.ctrlL#defineExample;
-      setTitle();;
+      !Ctrl.ctrlL#defineExample;;
   
   ListenersRE.createModelListener := fun () ->
     try
@@ -873,8 +880,7 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createREController reStr false;
-      !Ctrl.ctrlL#defineExample;
-      setTitle()
+      !Ctrl.ctrlL#defineExample
     with
       _ -> JS.alert (Lang.i18nErrorParsing());;
 
@@ -887,8 +893,7 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createCompController compStr false;
-     !Ctrl.ctrlL#defineExample;
-     setTitle()
+     !Ctrl.ctrlL#defineExample
     with
       _ -> JS.alert (Lang.i18nErrorParsing());;
   
@@ -901,8 +906,7 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createCFGController2 cfgModel false;
-      !Ctrl.ctrlL#defineExample;
-      setTitle()
+      !Ctrl.ctrlL#defineExample
     with
       _ -> JS.alert (Lang.i18nErrorParsing());;
 (*
@@ -942,18 +946,18 @@ open ContextFreeGrammarLL1View;;
       JS.log (m));
       Repository.updateModel str !Ctrl.ctrlL#model;
       HtmlPageClient.hideModalWindow();
-      HtmlPageClient.putButton2 str;;
+      HtmlPageClient.putButton2 str;
+      Settings.saveModel str (!Ctrl.ctrlL#model)#toJSon
+    ;;
 
-
-
+  Listeners.clearBox :=
+    fun () -> if !Ctrl.ctrlL#ctrlType = "automaton" then !ListenersAutomaton.clearAutoListener () else () ;;
 
   ListenersPDA.toggleAcceptanceCriteria :=
-    fun () ->
-      !Ctrl.ctrlL#toggleAcceptanceCriteria;;
+    fun () -> !Ctrl.ctrlL#toggleAcceptanceCriteria;;
 
   ListenersPDA.changeInitialStackSymbol :=
-    fun () ->
-      !Ctrl.ctrlL#changeInitialStackSymbol;;
+    fun () -> !Ctrl.ctrlL#changeInitialStackSymbol;;
 
   let showPdaCtrlR pda =
     CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
@@ -979,8 +983,25 @@ open ContextFreeGrammarLL1View;;
   ListenersCFG.editModelListener :=
     fun () -> createModelPrepCFG (grammar2Str !Ctrl.ctrlL#getCFG#representation) (fun () -> !ListenersCFG.createModelListener());;
     *)
+
   ListenersAutomaton.clearAutoListener :=
-    fun () -> Cytoscape.resetStyle !Ctrl.ctrlL#getCy Cytoscape.faStyle;;
+    fun () -> (!Ctrl.ctrlL#operation "clean" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHelpName (Lang.i18nClearColorText ());
+              HtmlPageClient.changeHighlightName "";
+              !Ctrl.ctrlL#resetStyle;
+              if HtmlPageClient.elementExists "statsBox" then
+                (!Ctrl.ctrlL#clearPoppers;
+                !Ctrl.ctrlL#clearAcceptWord;
+                HtmlPageClient.closeBoxRegex ())
+              )
+    ;; 
+  
+  ListenersAutomaton.refreshLayout := 
+    fun () -> (HtmlPageClient.clearBox1 ();
+              !Ctrl.ctrlL#replicateOnLeft;
+              !Ctrl.ctrlL#defineExample;
+              CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
+              !Ctrl.ctrlL#updateButtons);;
     
   Listeners.updateRightListener :=
     fun () -> !Ctrl.ctrlL#updateRight
@@ -997,7 +1018,7 @@ open ContextFreeGrammarLL1View;;
 
 					
 					HtmlPageClient.defineCFG();
-					HtmlPageClient.cfgBoxRegex();
+					HtmlPageClient.grBoxRegex();
 					(* HtmlPageClient.cfgCyClose(); *)
 					cfg#buildCyLR0Diagram cy;	 
 					
@@ -1018,7 +1039,7 @@ open ContextFreeGrammarLL1View;;
 
 					
 					HtmlPageClient.defineCFG();
-					HtmlPageClient.cfgBoxRegex();
+					HtmlPageClient.grBoxRegex();
 					(* HtmlPageClient.cfgCyClose(); *)
 					cfg#buildCySLR1Diagram cy;	 
 					
@@ -1038,7 +1059,7 @@ open ContextFreeGrammarLL1View;;
 					let cy = !Ctrl.ctrlR#getCy in
 					
 					HtmlPageClient.defineCFG();
-					HtmlPageClient.cfgBoxRegex();
+					HtmlPageClient.grBoxRegex();
 					(* HtmlPageClient.cfgCyClose(); *)
 					cfg#buildCyLR1Diagram cy;	 
 					
@@ -1058,7 +1079,7 @@ open ContextFreeGrammarLL1View;;
 					let cy = !Ctrl.ctrlR#getCy in
 					
 					HtmlPageClient.defineCFG();
-					HtmlPageClient.cfgBoxRegex();
+					HtmlPageClient.grBoxRegex();
 					(* HtmlPageClient.cfgCyClose(); *)
 					cfg#buildCyLALR1Diagram cy;	 
 					
@@ -1203,15 +1224,5 @@ open ContextFreeGrammarLL1View;;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt        
         | _ -> Error.fatal "showTreeNode");
       )
-        (*setTitle();
-        !Ctrl.ctrlL#printErrors);;*)
-  
-   (*carolina*)
-    
-		
-
-
-
-
 
 end

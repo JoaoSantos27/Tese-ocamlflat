@@ -59,6 +59,7 @@ struct
       method virtual getInitialState: state
       method virtual getAcceptStates: states
       method virtual getStates: states
+      method virtual clearPoppers: unit
       method virtual staticAccept: unit
       method virtual staticAcceptFull: unit
       method virtual setInitialStep: Cytoscape.cytoscape Js_of_ocaml.Js.t -> unit
@@ -79,9 +80,13 @@ struct
           Cytoscape.addNode cy el (el = self#getInitialState) (Set.belongs el self#getAcceptStates)
         ) self#getStates
 
-      method drawExample cy = 
+      method drawExample cy layout = 
         self#inputNodes cy;
-        self#inputEdges cy
+        self#inputEdges cy;
+        Cytoscape.runLayout cy layout
+
+      method redrawLayout (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) =
+        Cytoscape.redrawLayout cy 
 
       method reachablePainting (cy:Cytoscape.cytoscape Js_of_ocaml.Js.t) =
         let list1 = Set.toList self#reachableFromInitialState in
@@ -100,7 +105,12 @@ struct
 
       method newSentence = !newSentence
 
+      method isSentenceEmpty = ((List.length !sentence) = 0)
+
       method isOver = isOver
+
+      method clearPoppers =
+        self#clearPoppers 
 
       method staticAccept =
         self#staticAccept

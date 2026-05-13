@@ -28,7 +28,7 @@ open Listeners
 open StateVariables
 open JS
 open HTMLTable
-
+open LocalStorage
 open ContextFreeGrammarLL1View
 open ContextFreeGrammarView
 open FiniteAutomatonView
@@ -178,6 +178,17 @@ let select id elementsList =
       ) elementsList;
   select
 
+let elementExists id =
+  try
+    let _ = Dom_html.getElementById id in
+    true
+  with
+  | Not_found -> false
+
+let changeButtonColor but color =
+  let button = Dom_html.getElementById but in
+    button##.style##.backgroundColor := Js.string color 
+
 let putInnerHtml idtxt txt =
   let element = Dom_html.getElementById idtxt in
   element##.innerHTML := Js.string txt
@@ -200,27 +211,6 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   let listOnlyGRButtons = ["testing"; "trace"; "generate"]
   let listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"]
 
-  let defineMainTitle type1 =
-    let title = Dom_html.getElementById "mainTitle" in
-      title##.innerHTML := Js.string "";
-    if type1 = "finite automaton" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitle1 ())
-    else if type1 = "transducer" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitleFST ())
-    else if type1 = "pushdown automaton" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitlePDA ())
-    else if type1 = "regular expression" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitle2 ())
-    else if type1 = "exercise" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitle3 ())
-    else if type1 = "context free grammar" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitle4 ())
-    else if type1 = "turing machine" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitleTM ())
-    else if type1 = "grammar" then
-      title##.innerHTML := Js.string (Lang.i18nMainTitle5 ())
-    else ()
-
   let disableButton buttonName =
     let buttonTo = Dom_html.getElementById buttonName in
       buttonTo##setAttribute (Js.string "disabled") (Js.string "disabled")
@@ -228,6 +218,10 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   let enableButton buttonName =
     let buttonTo = Dom_html.getElementById buttonName in
       buttonTo##removeAttribute (Js.string "disabled")
+
+  let isButtonDisabled buttonName =
+    let buttonTo = Dom_html.getElementById buttonName in
+      Js.to_bool (buttonTo##hasAttribute (Js.string "disabled")) 
 
   let disableButtons type1 =
     if type1 = "finite automaton" then
@@ -298,13 +292,13 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     | None -> ()
     | Some box1 ->
       let buttonBox = div "buttonBox" in
+      let tab = div3 "tab" "tab-pad" in
       let regExp = div "regExp" in
-      let tab = div "tab" in
       let cy = div "cy" in
-      let infoBox = div "infoBox" in
+      let infoBox = div3 "infoBox" "infoBox" in
         Dom.appendChild box1 buttonBox;
+        Dom.appendChild box1 tab; 
         Dom.appendChild box1 regExp;
-        Dom.appendChild box1 tab;
         Dom.appendChild box1 cy;
         Dom.appendChild box1 infoBox
       
@@ -315,10 +309,12 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     | Some box2 ->
       let buttonBox1 = div "buttonBox1" in
       let textBox = div "textBox" in
+      let textBox2 = div "textBox2" in 
       let cy2 = div "cy2" in
-      let infoBox2 = div "infoBox2" in
+      let infoBox2 = div3 "infoBox2" "infoBox2" in
         Dom.appendChild box2 buttonBox1;
         Dom.appendChild box2 textBox;
+        Dom.appendChild box2 textBox2;
         Dom.appendChild box2 cy2;
         Dom.appendChild box2 infoBox2
 
@@ -342,6 +338,11 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       Dom.appendChild c tool;
     c
 
+  let closeButtonSide () =
+    let c = button1 "X" "closeLeft" "tooltip1" !Listeners.closeLeftListenerSecondary in            
+    let tool = div2 "tooltipCloseLeft" "tooltiptext1" (Lang.i18nTooltipCloseLeft ()) in
+      Dom.appendChild c tool;
+      c 
 
   let putLR0Table () =
 	table "lr0Table" ""
@@ -398,14 +399,22 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       Dom.appendChild buttonBox divButtons2;
     let di = Dom_html.getElementById "close" in
       Dom.appendChild di (closeButton());
-    let save = button1 (Lang.i18nSave ()) "save" "tooltip1" !Listeners.save in
-      Dom.appendChild di save;
-    let tool1 = div2 "tooltipSpecification" "tooltiptext1" (Lang.i18nTooltipSave ()) in
-      Dom.appendChild save tool1;
+
     let info = button1 (Lang.i18nFormatting  ()) "formatting" "tooltip2" !Listeners.showModelListener in 
       Dom.appendChild di info;
     let tool = div2 "tooltipSpecification" "tooltiptext2" (Lang.i18nTooltipSpecification ()) in
-      Dom.appendChild info tool
+      Dom.appendChild info tool;
+
+    let helpModel = button1 (Lang.i18nShowHelpModel  ()) "helpModel" "tooltip2" !Listeners.showHelpModel in 
+      Dom.appendChild di helpModel;
+    let tool = div2 "tooltipSpecification" "tooltiptext2" (Lang.i18nTooltipShowHelpModel ()) in
+      Dom.appendChild helpModel tool;
+
+    let helpAction = button1 (Lang.i18nAction ()) "helpAction" "tooltip2" !Listeners.showHelpAnimation in 
+      Dom.appendChild di helpAction;
+    let tool2 = div2 "tooltipHelpAction" "tooltiptext2" (Lang.i18nTooltipShowHelpAnimation ()) in
+      Dom.appendChild helpAction tool2;
+      disableButton "helpAction"
       
   let putCy2Buttons () = 
     let buttonBox = Dom_html.getElementById "buttonBox1" in
@@ -434,21 +443,25 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 	let regExp = Dom_html.getElementById "regExp" in
 		regExp##.style##.height:= Js.string "6.5%"
       
+  let fitBoxRegex () = 
+    let regExp = Dom_html.getElementById "regExp" in
+    let tab = Dom_html.getElementById "tab" in
+      regExp##.style##.height:= Js.string "5%";
+      tab##.style##.paddingBottom := Js.string "10px"
+      
   let closeBoxRegex () =
-	let regExp = Dom_html.getElementById "regExp" in
-		regExp##.style##.height:= Js.string "0%";
-	let cy = Dom_html.getElementById "cy" in
-      cy##.style##.height:= Js.string "60vh"
-		
-  let cfgBoxRegex () =
-  let regExp = Dom_html.getElementById "regExp" in
-    regExp##.style##.height := Js.string "auto";
-    regExp##.style##.overflow := Js.string "unset";
-  let cy = Dom_html.getElementById "cy" in
-    cy##.style##.height:= Js.string "40vh";
-    cy##.style##.textAlign:= Js.string "unset";
-    cy##.style##.marginLeft:= Js.string "50%"
-(*    cy##.classList##add (Js.string "cyBorder")*)
+    let regExp = Dom_html.getElementById "regExp" in
+      regExp##.style##.height:= Js.string "0%";
+      regExp##.innerHTML := Js.string "";
+    let tab = Dom_html.getElementById "tab" in
+      tab##.style##.paddingBottom := Js.string "20px";
+    let box1 = Dom_html.getElementById "Box1" in
+    let statsBox = Dom_html.getElementById "statsBox" in
+      Dom.removeChild box1 statsBox;
+      changeButtonColor "autoAccept" "";
+      disableButton "autoAccept";
+    let cy = Dom_html.getElementById "cy" in
+        cy##.style##.height:= Js.string "83.2%"
 
   let grBoxRegex () =
     let regExp = Dom_html.getElementById "regExp" in
@@ -470,7 +483,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
   let cfgCyOpen() =
     let cy = Dom_html.getElementById "cy" in
-    cy##.style##.height:= Js.string "60vh"
+    cy##.style##.height:= Js.string "83.2%"
   
   let cfgCy2Close() =
     let cy = Dom_html.getElementById "cy2" in
@@ -483,7 +496,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   
     let grCyOpen() =
       let cy = Dom_html.getElementById "cy" in
-      cy##.style##.height:= Js.string "60vh"
+      cy##.style##.height:= Js.string "83.2%"
     
     let grCy2Close() =
       let cy = Dom_html.getElementById "cy2" in
@@ -495,11 +508,13 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     if flag then 
       (tab##.style##.height:= Js.string "40vh";
       automataTable##.style##.display := Js.string "";
+      (Dom_html.getElementById "showTable")##.innerHTML := Js.string (Lang.i18nShowAutomataView ());
       cfgCyClose(); grCyClose())
        (**TODO *)
     else 
       (tab##.style##.height:= Js.string "0vh";
       automataTable##.style##.display := Js.string "none";
+      (Dom_html.getElementById "showTable")##.innerHTML := Js.string (Lang.i18nShowTableView ()); 
       cfgCyOpen(); grCyOpen())
       (**TODO *)
   
@@ -533,10 +548,8 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
     let showModelInfo info =
       let textBox = Dom_html.getElementById "textBox" in
-      let test = Dom_html.createDiv doc in 
-      test##.textContent := Js.some (Js.string info);
-      test##.style##.fontSize := Js.string "14px";  
-      Dom.appendChild textBox test
+      let test = pre "infoAutomata" info in
+        Dom.appendChild textBox test
 
   let putCyAutomataButtons () =
     putCyButtons();
@@ -547,7 +560,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       Dom.appendChild divButtons1 c;
       let tool = div2 "tooltipClean" "tooltiptext3" (Lang.i18nTooltipClean ()) in
         Dom.appendChild c tool;
-    let de = button1 (Lang.i18nDeterministic  ()) "deterministic" "tooltip3" !ListenersFA.getDeterministicListener in 
+    let de = button1 (Lang.i18nMakeDeterministic  ()) "deterministic" "tooltip3" !ListenersFA.getDeterministicListener in 
       Dom.appendChild divButtons1 de;
       let tool = div2 "tooltipDeterministic" "tooltiptext3" (Lang.i18nTooltipDeterministic ()) in
         Dom.appendChild de tool;
@@ -575,8 +588,12 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       Dom.appendChild divButtons3 clearAuto;
       let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
         Dom.appendChild clearAuto tool;
+    let refreshLayout = button1 (Lang.i18nRefreshL ()) "refreshLayout" "tooltip3" !ListenersAutomaton.refreshLayout in
+      Dom.appendChild divButtons3 refreshLayout;
+      let tool = div2 "tooltipRefreshLayout" "tooltiptext3" (Lang.i18nTooltipRefreshL ()) in
+        Dom.appendChild refreshLayout tool; 
     (*put lang*)
-    let tableView = button1 ("Show Table View") "showTable" "tooltip3" !ListenersAutomaton.showTable in
+    let tableView = button1 (Lang.i18nShowTableView ()) "showTable" "tooltip3" !ListenersAutomaton.showTable in
       Dom.appendChild divButtons3 tableView
 
   let putCyAutomataPDAButtons () =
@@ -624,7 +641,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         let convertEmptyStackAccept = button1 (Lang.i18nConvertToAcceptEmptyStack ()) "convertEmptyStackAccept" "tooltip3" !ListenersPDA.convertEmptyStackAccept in
           Dom.appendChild divButtons2 convertEmptyStackAccept;
         
-          let tableView = button1 ("Show Table View") "showTable" "tooltip3" !ListenersAutomaton.showTable in
+          let tableView = button1 (Lang.i18nShowTableView ()) "showTable" "tooltip3" !ListenersAutomaton.showTable in
               Dom.appendChild divButtons2 tableView;
 
       let divButtons = div "bottomLineButtons" in
@@ -632,21 +649,23 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
         let b = button1 (Lang.i18nProductive  ()) "productive" "tooltip3" !ListenersPDA.paintAllProductivesListener in 
           Dom.appendChild divButtons b;
-
           let tool = div2 "tooltipProductive" "tooltiptext3" (Lang.i18nTooltipProductive ()) in
             Dom.appendChild b tool;
 
         let a = button1 (Lang.i18nAccessible ()) "accessible" "tooltip3" !ListenersPDA.paintAllReachableListener in
           Dom.appendChild divButtons a;
-
           let tool = div2 "tooltipAccessible" "tooltiptext3" (Lang.i18nTooltipAccessible ()) in
             Dom.appendChild a tool;
 
         let u = button1 (Lang.i18nUseful ()) "useful" "tooltip3" !ListenersPDA.paintAllUsefulListener in
           Dom.appendChild divButtons u;
-
           let tool = div2 "tooltipUseful" "tooltiptext3" (Lang.i18nTooltipUseful ()) in
-            Dom.appendChild u tool
+            Dom.appendChild u tool;
+
+        let refreshLayout = button1 (Lang.i18nRefreshL ()) "refreshLayout" "tooltip3" !ListenersAutomaton.refreshLayout in
+          Dom.appendChild divButtons refreshLayout;
+          let tool = div2 "tooltipRefreshLayout" "tooltiptext3" (Lang.i18nTooltipRefreshL ()) in
+            Dom.appendChild refreshLayout tool 
 
   let showModal () =
     let modalC = Dom_html.getElementById "modal-content" in 
@@ -659,63 +678,6 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         Dom.appendChild buttonBox test;
         let tool = div2 "tooltipCloseRight" "tooltiptext1" (Lang.i18nTooltipCloseRight ()) in
           Dom.appendChild test tool
-
-  let putCyTransducerButtons () =
-    putCyButtons();
-    let buttonBox = Dom_html.getElementById "buttonBox" in
-    let divButtons1 = div "min" in
-      Dom.appendChild buttonBox divButtons1;
-    
-    (* Clean Button *)
-    let c = button1 (Lang.i18nClean ()) "clean" "tooltip3" !ListenersFST.cleanUselessListener in
-      Dom.appendChild divButtons1 c;
-    let tool = div2 "tooltipClean" "tooltiptext3" (Lang.i18nTooltipClean ()) in
-        Dom.appendChild c tool;
-
-    (* Deterministic Button *)
-    let de = button1 (Lang.i18nDeterministic ()) "deterministic" "tooltip3" !ListenersFST.getDeterministicListener in
-      Dom.appendChild divButtons1 de;
-    let tool = div2 "tooltipDeterministic" "tooltiptext3" (Lang.i18nTooltipDeterministic ()) in
-        Dom.appendChild de tool;
-
-    (* Minimize Button *)
-    let mi = button1 (Lang.i18nMinimize ()) "minimize" "tooltip3" !ListenersFST.defineMinimizedListener in
-      Dom.appendChild divButtons1 mi;
-    let tool = div2 "tooltipMinimize" "tooltiptext3" (Lang.i18nTooltipMinimize ()) in
-        Dom.appendChild mi tool;
-
-    let divButtons = div "prod" in
-      Dom.appendChild buttonBox divButtons;
-
-    (* Productive States Button *)
-    let b = button1 (Lang.i18nProductive ()) "productive" "tooltip3" !ListenersFST.paintAllProductivesListener in 
-      Dom.appendChild divButtons b;
-    let tool = div2 "tooltipProductive" "tooltiptext3" (Lang.i18nTooltipProductive ()) in
-        Dom.appendChild b tool;
-
-    (* Accessible/Reachable States Button *)
-    let a = button1 (Lang.i18nAccessible ()) "accessible" "tooltip3" !ListenersFST.paintAllReachableListener in
-      Dom.appendChild divButtons a;
-    let tool = div2 "tooltipAccessible" "tooltiptext3" (Lang.i18nTooltipAccessible ()) in
-        Dom.appendChild a tool;
-
-    (* Useful States Button *)
-    let u = button1 (Lang.i18nUseful ()) "useful" "tooltip3" !ListenersFST.paintAllUsefulListener in
-      Dom.appendChild divButtons u;
-    let tool = div2 "tooltipUseful" "tooltiptext3" (Lang.i18nTooltipUseful ()) in
-        Dom.appendChild u tool;
-
-    (* Clear Automaton Button *)
-    let divButtons3 = div "clear" in
-      Dom.appendChild buttonBox divButtons3;
-    let clearAuto = button1 (Lang.i18nClearAuto ()) "clearAuto" "tooltip3" !ListenersFST.clearAutoListener in
-      Dom.appendChild divButtons3 clearAuto;
-    let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
-        Dom.appendChild clearAuto tool;
-    let tableView = button1 ("Show Table View") "showTable" "tooltip3" !ListenersAutomaton.showTable in
-      Dom.appendChild divButtons3 tableView
-
-    (*TODO add more buttons (table, outputs)*)
     
   let putCyREButtons() =
     putCyButtons();
@@ -728,7 +690,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     let tool = div2 "tooltipDirection" "tooltiptext3" (Lang.i18nTooltipDirection ()) in
       Dom.appendChild direction tool
 
-  let putCyCFGButtons () =
+    let putCyCFGButtons () =
       putCyButtons();
       let buttonBox = Dom_html.getElementById "buttonBox" in
       let row1 = div "row1" in
@@ -1215,7 +1177,17 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
 
 
-
+  let getGrammar grammar infoBox =
+    let text = span "grammarType" (
+      match grammar with
+      | "lg" -> (Lang.i18nIsLG ())
+      | "llg" -> (Lang.i18nIsLLG ())
+      | "lrg" -> (Lang.i18nIsRLG ())
+      | "cfg" -> (Lang.i18nIsCFG ())
+      | "csg" -> (Lang.i18nIsCSG ())
+      | "ug" -> (Lang.i18nIsUG ())
+      ) in
+      Dom.appendChild infoBox text
       
   let getIsLeftRecursive lr infoBox =
     let text = span "isLeftRecursive" 
@@ -1264,62 +1236,59 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     in
       Dom.appendChild infoBox text
 
-      let getIsCSG c infoBox =
-        let text = span "isCSG"
-        (if c
-            then (Lang.i18nIsCSG ())
-            else ""
-        )
-        in
-          Dom.appendChild infoBox text
+  let getIsCSG c infoBox =
+    let text = span "isCSG"
+    (if c
+        then (Lang.i18nIsCSG ())
+        else ""
+    )
+    in
+      Dom.appendChild infoBox text
 
 
-          let getIsMO c infoBox =
-            let text = span "isMO"
-            (if c
-                then (Lang.i18nIsMO ())
-                else ""
-            )
-            in
-              Dom.appendChild infoBox text
+  let getIsMO c infoBox =
+    if c then (
+      let text = span "isMO" (Lang.i18nIsMO ()) in
+        Dom.appendChild infoBox text
+    )
 
 
-              let getIsUG c infoBox =
-                let text = span "isUG"
-                (if c
-                    then (Lang.i18nIsUG ())
-                    else ""
-                )
-                in
-                  Dom.appendChild infoBox text
+  let getIsUG c infoBox =
+    let text = span "isUG"
+    (if c
+        then (Lang.i18nIsUG ())
+        else ""
+    )
+    in
+      Dom.appendChild infoBox text
 
 
-                  let getIsLG c infoBox =
-                    let text = span "isLG"
-                    (if c
-                        then (Lang.i18nIsLG ())
-                        else ""
-                    )
-                    in
-                      Dom.appendChild infoBox text
-                      
-                      let getIsRLG c infoBox =
-                        let text = span "isRLG"
-                        (if c
-                            then (Lang.i18nIsRLG ())
-                            else ""
-                        )
-                        in
-                          Dom.appendChild infoBox text
+  let getIsLG c infoBox =
+    let text = span "isLG"
+    (if c
+        then (Lang.i18nIsLG ())
+        else ""
+    )
+    in
+      Dom.appendChild infoBox text
+      
+  let getIsRLG c infoBox =
+    let text = span "isRLG"
+    (if c
+        then (Lang.i18nIsRLG ())
+        else ""
+    )
+    in
+      Dom.appendChild infoBox text
 
-                          let getIsLLG c infoBox =
-                            let text = span "isLLG"
-                            (if c
-                                then (Lang.i18nIsLLG ())
-                                else ""
-                            )
-                            in
-                              Dom.appendChild infoBox text
+  let getIsLLG c infoBox =
+    let text = span "isLLG"
+    (if c
+        then (Lang.i18nIsLLG ())
+        else ""
+    )
+    in
+      Dom.appendChild infoBox text
 
   let getIsGRClean c prod access infoBox =
     let text = span "isGRClean"
@@ -1337,13 +1306,23 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       let en = div1 "treeResult" text in 
         Dom.appendChild textBox en
 
+  let getKind kind infoBox = 
+    let modelKind = (Lang.i18nkind ()) ^ kind in
+      let info = span "getkind" modelKind in
+        Dom.appendChild infoBox info
+
+  let getName name infoBox = 
+      let modelName = (Lang.i18nName ()) ^ name in
+        let info = span "getname" modelName in 
+            Dom.appendChild infoBox info
+
   let getDeterminim deter infoBox = 
-    let info = if deter then Lang.i18nIsDeterministic () else Lang.i18nNotDeterministic () in
+    let info = (Lang.i18nDeterministic()) ^ (if deter then (Lang.i18nTrue()) else (Lang.i18nFalse())) in
       let deterministic = span "isdeterministic" info in 
         Dom.appendChild infoBox deterministic
     
   let getMinimism min infoBox = 
-    let info = if min then Lang.i18nIsMinimal () else Lang.i18nNotMinimal () in
+    let info = (Lang.i18nMinimal()) ^ (if min then (Lang.i18nTrue()) else (Lang.i18nFalse())) in
       let minimal = span "isminimal" info in 
         Dom.appendChild infoBox minimal
   
@@ -1356,9 +1335,9 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     let info = if isMoore then Lang.i18nIsMoore () else Lang.i18nIsNotMoore () in
       let sp = span "isMoore" info in 
         Dom.appendChild infoBox sp
-        
-  let getHasUselessStates use uStates infoBox = 
-    if use then 
+  
+  let getHasUselessStates hasUseless uStates infoBox = 
+    if not hasUseless then 
       (let useful = span "areuseful" (Lang.i18nNotUseless ()) in
         Dom.appendChild infoBox useful)
     else 
@@ -1368,6 +1347,10 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
             let use = span "areuseful" useful in
               Dom.appendChild infoBox use)
 
+  let getHighlight infoBox = 
+    let highlight = span "gethighlight" "" in 
+      Dom.appendChild infoBox highlight
+
   let getIsEquivalentFA isEquivalentFA infoBox = 
     let info = if isEquivalentFA then Lang.i18nisEquivalentFA () else Lang.i18nisNotEquivalentFA () in
       let isFA = span "isEquivalentFA" info in
@@ -1375,15 +1358,19 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
   let getNumberStates nStates infoBox = 
     let number = string_of_int nStates in 
-      let sentence = (Lang.i18nNumberStates ()) ^ number ^ ". " in 
+      let sentence = "Nº " ^ (Lang.i18nNumberStates ()) ^ number in 
         let sentence1 = span "numberstates" sentence in
           Dom.appendChild infoBox sentence1
     
   let getNumberTransitions nTransitions infoBox = 
     let number = string_of_int nTransitions in 
-        let sentence = (Lang.i18nNumberTransitions ()) ^ number ^ ". " in 
+        let sentence = "Nº " ^ (Lang.i18nNumberTransitions ()) ^ number in 
           let sentence1 = span "numbertransitions" sentence in
             Dom.appendChild infoBox sentence1
+
+  let createActionButton infoBox =
+    let actionButton = button1 "" "actionButton" "actionButton" !Listeners.showHelpAnimation in
+      Dom.appendChild infoBox actionButton
 
 (* TM *)
   let getIsLinearBounded is infoBox = 
@@ -1394,28 +1381,115 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       let lb = span "islinearbounded" (Lang.i18nIsNotLinearBounded ()) in 
         Dom.appendChild infoBox lb
 
-    
+  let getCFG text infoBox =
+    let text = span "cfgType" text in
+      Dom.appendChild infoBox text
+
   let defineInformationBox s =
     let elementStr = if s then "infoBox2" else "infoBox" in
     let element = Dom_html.getElementById elementStr in
-    element##.innerHTML := Js.string "";
-    element
+      element##.innerHTML := Js.string "";
+      element
+
+  let drawREStats kind name side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      infoBox##.className := Js.string "infoBox reBox"
+
+  let drawAutomatonStats kind name isDeter hasUseless nUseless nStates nTrans modelStat side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      getNumberStates nStates infoBox;
+      getNumberTransitions nTrans infoBox;
+      getDeterminim isDeter infoBox;
+      if (kind = (Lang.i18nPDA ())) then (getIsEquivalentFA modelStat infoBox; infoBox##.className := Js.string "infoBox pdaBox")
+              else (if (kind = (Lang.i18nFA ())) then getMinimism modelStat infoBox else getIsLinearBounded modelStat infoBox);
+      getHasUselessStates hasUseless nUseless infoBox;
+      getHighlight infoBox
+
+  let drawCFGStats kind name ll1 lr lf pConf clean prod access side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      getIsLL1 ll1 infoBox;
+      getIsLeftRecursive lr infoBox;
+      getIsLeftFactoring lf infoBox;
+      getHasParsingTableConflict pConf infoBox;
+      getIsCFGClean clean prod access infoBox;
+      infoBox##.className := Js.string "infoBox grammarBox"    
+    
+  let drawGrammarStats kind name grammar mo c prod access side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      getGrammar grammar infoBox;
+      getIsMO mo infoBox;
+      getIsGRClean c prod access infoBox;
+      infoBox##.className := Js.string "infoBox grammarBox"
+
+  let drawCFGLRStats kind name text side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      getCFG text infoBox;
+      infoBox##.className := Js.string "infoBox cfgBox"
+
+  let drawTMStats kind name isDeter hasUseless nUseless nStates nTrans isLB side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      getNumberStates nStates infoBox;
+      getNumberTransitions nTrans infoBox;
+      getIsLinearBounded isLB infoBox;
+      getHasUselessStates hasUseless nUseless infoBox;
+      getHighlight infoBox;
+      infoBox##.className := Js.string "infoBox tmBox"
+
+  let drawCompStats kind name side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      infoBox##.className := Js.string "infoBox compBox"
+
+  let changeHighlightName name =
+    let highlight = Dom_html.getElementById "gethighlight" in
+      highlight##.innerHTML := Js.string name
+
+  let changeHelpName name =
+    if isButtonDisabled "helpAction" then enableButton "helpAction";
+    let helpAction = Dom_html.getElementById "helpAction" in
+    let toolTip = div2 "tooltipHelpAction" "tooltiptext2" (Lang.i18nTooltipShowHelpAnimation ()) in
+      helpAction##.innerHTML := Js.string name;
+      Dom.appendChild helpAction toolTip
 
   let createServerExampleButton name =
       button name "exampleButton" (fun () -> !Listeners.openEntityListener (Repository.getText name));; (* carolina *)
 
+  let removeExamples numEx =
+    let examples = Dom_html.getElementById "examplesServer" in
+      for i = 0 to numEx do
+        match Js.Opt.to_option examples##.firstChild with
+        | Some child -> ignore (examples##removeChild child)
+        | None -> ()
+      done
+      
   let putButton name = 
     let examples = Dom_html.getElementById "examplesServer" in
-      let title = name in 
-        let example = createServerExampleButton title in 
+        let example = createServerExampleButton name in 
           Dom.appendChild examples example
 
 (* carolina *)
   let putButton2 name = 
     let examples = Dom_html.getElementById "examplesServer" in
-      let title = name in 
-        let example = createServerExampleButton title in 
+        let example = createServerExampleButton name in 
           Dom.insertBefore examples example examples##.firstChild
+
+  let putExample name =
+    let examples = Dom_html.getElementById "examplesServer" in
+      let example = createServerExampleButton name in
+        Dom.insertBefore examples example examples##.firstChild 
 
   let defineRE def s =
     let elem = if s then Dom_html.getElementById "textBox" else Dom_html.getElementById "regExp" in
@@ -1507,7 +1581,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
   let defineTreeButtons () =
     let textBox = Dom_html.getElementById "textBox" in
-      let en = div "treeButtons" in 
+      let en = div "treeButtons" in
         Dom.appendChild textBox en;
       let buttonBox = Dom_html.getElementById "treeButtons" in 
         let previous = button (Lang.i18nPrevious ()) "previousTree" !ListenersRE.previousTreeListener in
@@ -1538,8 +1612,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
     putInnerHtml "infoBox" "";
     let cy = Dom_html.getElementById "buttonBox" in
       cy##.innerHTML := Js.string "";
-        Dom.appendChild cy (closeButton());
-    putInnerHtml "mainTitle" (Lang.i18nAboutTitle ());
+        Dom.appendChild cy (closeButtonSide());
     let info = div "aboutBox" in 
       Dom.appendChild cy info;
     let aboutBox = Dom_html.getElementById "aboutBox" in
@@ -1609,8 +1682,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         cy##.innerHTML := Js.string "";
       let cy = Dom_html.getElementById "buttonBox" in
         cy##.innerHTML := Js.string "";
-          Dom.appendChild cy (closeButton());
-      putInnerHtml "mainTitle" (Lang.i18nFeedback ());
+          Dom.appendChild cy (closeButtonSide());
       let test1 = div ("FeedbackDiv") in
         Dom.appendChild cy test1;
       let text = Dom_html.getElementById "FeedbackDiv" in
@@ -1627,246 +1699,62 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
           Dom.appendChild spanBox1 span2;
         let text3 = p "feedbackThankYou" (Lang.i18nFeedbackThankYou ()) in
           Dom.appendChild text text3
-      
-    
 
     let putGenText statsDiv visitedConfigs exactResult time =
-      let textConfigs = span "configs" (" | Configurations Visited: " ^ Int.to_string visitedConfigs) in
-      let textExact = span "exact" (" | Computation Aborted: " ^ Bool.to_string (not(exactResult))) in
-      let textTime = span "time" (" | Time Taken: " ^ Printf.sprintf "%.4f" time ^ " seconds. |") in
+      let isAbort = (if not(exactResult) then (Lang.i18nTrue()) else (Lang.i18nFalse())) in
+      let textConfigs = span "configs" ((Lang.i18nConfigVis ()) ^ Int.to_string visitedConfigs) in
+      let textExact = span "exact" ((Lang.i18nCompAbort ()) ^ isAbort) in
+      let textTime = span "time" ((Lang.i18nTimeTaken ()) ^ Printf.sprintf "%.4f" time ^ (Lang.i18nSeconds ())) in
       Dom.appendChild statsDiv textConfigs;
       Dom.appendChild statsDiv textExact;
       Dom.appendChild statsDiv textTime
         
     let putAcceptText statsDiv accepted visitedConfigs exactResult time =
-      let textAccepted = span "accepted" ("Word Accepted: " ^ Bool.to_string accepted) in
+      let isAccept = (if accepted then (Lang.i18nTrue()) else (Lang.i18nFalse())) in
+      let textAccepted = span "accepted" ((Lang.i18nWordAccept ()) ^ isAccept) in
       Dom.appendChild statsDiv textAccepted;
       putGenText statsDiv visitedConfigs exactResult time
 
-
     let displayGenStats visitedConfigs exactResult time =
       let prevStatsBox = Dom_html.getElementById_opt("statsBox") in
-      let infoBox = Dom_html.getElementById("infoBox") in
-      match prevStatsBox with
-      | None ->
-        let statsDiv = div "statsBox" in
-        Dom.appendChild infoBox statsDiv;
-        putGenText statsDiv visitedConfigs exactResult time
-      | Some statsDiv -> 
-        putInnerHtml "statsBox" "";
-        putGenText statsDiv visitedConfigs exactResult time
+      let box = Dom_html.getElementById("Box1") in
+        match prevStatsBox with
+        | None ->
+          let statsDiv = div "statsBox" in
+          Dom.appendChild box statsDiv;
+          putGenText statsDiv visitedConfigs exactResult time
+        | Some statsDiv -> 
+          putInnerHtml "statsBox" "";
+          putGenText statsDiv visitedConfigs exactResult time
 
     let displayAcceptStats accepted visitedConfigs exactResult time =
       let prevStatsBox = Dom_html.getElementById_opt("statsBox") in
-      let infoBox = Dom_html.getElementById("infoBox") in
-      match prevStatsBox with
-      | None ->
-        let statsDiv = div "statsBox" in
-        Dom.appendChild infoBox statsDiv;
-        putAcceptText statsDiv accepted visitedConfigs exactResult time
-      | Some statsDiv -> 
-        putInnerHtml "statsBox" "";
-        putAcceptText statsDiv accepted visitedConfigs exactResult time
-      
-      
-    
-    let changeButtonColor but color =
-      let button = Dom_html.getElementById but in
-        button##.style##.backgroundColor := Js.string color
-      
-    
-  let changeLang () =
-    ViewUtil.changeLang !Lang.lang;
-    putInnerHtml "title" (Lang.i18nTitle ());
-    putInnerHtml "version" (Lang.i18nVersion ());
-    putInnerHtml "optionNewDefault" (Lang.i18nNewModel ());
-    putInnerHtml "optionNewAutomatonFA" (Lang.i18nMainTitle1());
-    putInnerHtml "optionNewTransducer" (Lang.i18nMainTitleFST());
-    putInnerHtml "optionNewAutomatonPDA" (Lang.i18nMainTitlePDA());
-    putInnerHtml "optionNewRegularExpression" (Lang.i18nMainTitle2());
-    putInnerHtml "optionNewContextFreeGrammar" (Lang.i18nMainTitle4());
+      let box = Dom_html.getElementById("Box1") in
+        match prevStatsBox with
+        | None ->
+          let statsDiv = div "statsBox" in
+          Dom.appendChild box statsDiv;
+          putAcceptText statsDiv accepted visitedConfigs exactResult time
+        | Some statsDiv -> 
+          putInnerHtml "statsBox" "";
+          putAcceptText statsDiv accepted visitedConfigs exactResult time
 
-    putInnerHtml "optionNewGrammar" (Lang.i18nMainTitle5());
-    putInnerHtml "optionNewTuringMachine" (Lang.i18nselectTM());
-    putInnerHtml "optionNewComposition" (Lang.i18nMainTitleComp()); (* carolina *)
+    let showHelpModel modelName =
+      let langAux = LocalStorage.getItem "lang" in
+      let langVal = (if langAux == "" then "en" else String.lowercase_ascii langAux) in
+      let textBox = Dom_html.getElementById "textBox" in
+        let modelFileName = modelName ^ "_" ^ langVal in
+          textBox##.style##.height := Js.string "100%";
+          let docDir = "html_pages/" ^ modelFileName ^ ".html" in
+            textBox##.innerHTML := Js.string ("<object id='helpBox' class='helpBox' type='text/html' data='" ^ docDir ^ "'></object>")
 
-    putInnerHtml "editModel" (Lang.i18nEditModel ());
-    putInnerHtml "fitGraph" (Lang.i18nFitGraph ());
-    putInnerHtml "generate" (Lang.i18nGenerate ());
-    putInnerHtml "testing" (Lang.i18nTesting ());
-    putInnerHtml "trace" "Trace";
-    putInnerHtml "step" (Lang.i18nStep ());
-    putInnerHtml "start" (Lang.i18nStart ());
-        
-    putInnerHtml "selectRegex" (Lang.i18nSelectRegex ());
-    putInnerHtml "selectFA" (Lang.i18nselectFA ());
-    putInnerHtml "selectPDA" (Lang.i18nselectPDA ());
-    putInnerHtml "selectCFG" (Lang.i18nselectCFG ());
+    let showHelpAnimation modelName animName =
+      let langAux = LocalStorage.getItem "lang" in
+      let langVal = (if langAux == "" then "en" else String.lowercase_ascii langAux) in
+      let textBox = Dom_html.getElementById "textBox" in
+        let modelFileName = modelName ^ "_" ^ langVal in
+          textBox##.style##.height := Js.string "100%";
+          let docDir = "html_pages/" ^ modelFileName ^ ".html#" ^ animName in
+            textBox##.innerHTML := Js.string ("<object id='helpBox' class='helpBox' type='text/html' data='" ^ docDir ^ "'></object>")
 
-    putInnerHtml "selectGR" (Lang.i18nselectGR ());
-
-    putInnerHtml "selectTM" (Lang.i18nselectTM ()); (* carolina *)
-    putInnerHtml "selectTM2Tapes" (Lang.i18nselectTM2Tapes ()); 
-    putInnerHtml "selectConv" (Lang.i18nSelectConv ());
-
-    putInnerHtml "importModel" (Lang.i18nImportModel ());
-    putInnerHtml "exportModel" (Lang.i18nExportModel ());
-    putInnerHtml "server" (Lang.i18nServer ());     
-
-    (* putInnerHtml "selectedL" (Lang.i18nSelectedL ());   
-    putInnerHtml "selectPT" (Lang.i18nSelectPT ());
-    putInnerHtml "selectEN" (Lang.i18nSelectEN ());
-    putInnerHtml "selectFR" (Lang.i18nSelectFR ()); *)
-
-    putInnerHtml "about" (Lang.i18nAbout ());
-    putInnerHtml "feedback" (Lang.i18nFeedback ());
-    putInnerHtml "settings" "Settings" (*TODO: LANG*);
-        
-    putInnerHtml "developed" (Lang.i18nDeveloped ());
-    putInnerHtml "footerButton0" (Lang.i18nNovaLincs () );
-    putInnerHtml "project" (Lang.i18nProject ());
-    putInnerHtml "footerButton3" (Lang.i18nFactor ());
-    putInnerHtml "and" (Lang.i18nAnd ());
-    (* putInnerHtml "leaf" (Lang.i18nLeafs ()); *)
-    putInnerHtml "financing" (Lang.i18nFinancing ());
-    putInnerHtml "footerButton1" (Lang.i18nFooter ());
-    putInnerHtml "and1" (Lang.i18nAnd ());
-    putInnerHtml "footerButton2" (Lang.i18nFooter1 ());
-
-    if (StateVariables.getCy1Type() = StateVariables.getAutomatonType() || StateVariables.getCy1Type() = StateVariables.getTransducerType()) then
-      (putInnerHtml "tooltipCloseLeft" (Lang.i18nTooltipCloseLeft ());
-      putInnerHtmlButtons "save" (Lang.i18nSave ()) "tooltipSpecification" "tooltiptext1" (Lang.i18nTooltipSpecification ());
-      putInnerHtmlButtons "formatting" (Lang.i18nFormatting ()) "tooltipSpecification" "tooltiptext2" (Lang.i18nTooltipSpecification ());
-      putInnerHtmlButtons "clean" (Lang.i18nClean ()) "tooltipClean" "tooltiptext3" (Lang.i18nTooltipClean ());
-      putInnerHtmlButtons "deterministic" (Lang.i18nDeterministic ()) "tooltipDeterministic" "tooltiptext3" (Lang.i18nTooltipDeterministic ());
-      putInnerHtmlButtons "minimize" (Lang.i18nMinimize ()) "tooltipMinimize" "tooltiptext3" (Lang.i18nTooltipMinimize ());
-      putInnerHtmlButtons "productive" (Lang.i18nProductive ()) "tooltipProductive" "tooltiptext3" (Lang.i18nTooltipProductive ());
-      putInnerHtmlButtons "accessible" (Lang.i18nAccessible ()) "tooltipAccessible" "tooltiptext3" (Lang.i18nTooltipAccessible ());
-      putInnerHtmlButtons "useful" (Lang.i18nUseful ()) "tooltipUseful" "tooltiptext3" (Lang.i18nTooltipUseful ());
-      putInnerHtml "infoBox" "";
-      putInnerHtml "mainTitle" (Lang.i18nMainTitle1 ());
-      !Listeners.defineInformationBoxListener());
-
-    if (StateVariables.getCy1Type() = StateVariables.getRegexType()) then
-      (putInnerHtml "tooltipCloseLeft" (Lang.i18nTooltipCloseLeft ());
-      putInnerHtmlButtons "changeDirection" (Lang.i18nDirection ()) "tooltipDirection" "tooltiptext2" (Lang.i18nTooltipDirection ());
-      putInnerHtml "mainTitle" (Lang.i18nMainTitle2 ()));
-
-    if (StateVariables.getCy2Type() = StateVariables.getEnumerationType()) then
-      (putInnerHtml "enumVerify" (Lang.i18nVerify ());
-
-      let prob = (StateVariables.returnEnum())#representation.problem in
-        let prob1 = (Lang.i18nProblem ()) ^ prob in
-        putInnerHtml "prob" prob1;
-      putInnerHtml "enum" (Lang.i18nEnumTitle ());
-      putInnerHtml "accept" (Lang.i18nAcceptedWords ());
-      putInnerHtml "notAccept" (Lang.i18nNonAccepted ());
-      if Dom_html.getElementById_opt "correct" <> None then
-        putInnerHtml "correct" (Lang.i18nRight ());
-      if Dom_html.getElementById_opt "wrong" <> None then
-        putInnerHtml "wrong" (Lang.i18nWrong ());
-      putInnerHtml "mainTitle" (Lang.i18nMainTitle3 ());
-      );
-
-    if (StateVariables.getCy2Type() = StateVariables.getInfoType()) then
-      (putInnerHtml "generateWords" (Lang.i18nGenerateWords ());
-      putInnerHtml "tooltipCloseRight" (Lang.i18nTooltipCloseRight ());
-      );
-
-    if (StateVariables.getCy2Type() = StateVariables.getVerifyType()) then
-      (putInnerHtml "textBox" "";
-      !ListenersRE.resultCountListener ();
-      !ListenersRE.defineNumberTreesListener ();
-      defineTreeButtons ();
-      putInnerHtml "tooltipCloseRight" (Lang.i18nTooltipCloseRight ());
-      );
-
-      if (StateVariables.getCy1Type() = StateVariables.getFeedbackType()) then
-      (putInnerHtml "mainTitle" "------------";
-       putInnerHtml "feedbackText" (Lang.i18nFeedbackText ());
-       putInnerHtml "feedbackText2" (Lang.i18nFeedbackText2 ());
-       putInnerHtml "feedbackThankYou" (Lang.i18nFeedbackThankYou ());
-      );
-
-   if (StateVariables.getCy1Type() = StateVariables.getInfoType ()) then
-       (putInnerHtml "mainTitle" (Lang.i18nAboutTitle ());
-        putInnerHtml "aboutSubtitle" (Lang.i18nAboutSubtitle ());
-        putInnerHtml "aboutSubtitle2" (Lang.i18nAboutSubtitle2 ());
-        putInnerHtml "aboutText1" (Lang.i18nAboutText1 ());
-        putInnerHtml "aboutText2" (Lang.i18nAboutText2 ());
-        putInnerHtml "aaa" (Lang.i18nAboutText16 ());
-        putInnerHtml "bbb" (Lang.i18nAboutText3 ());
-        putInnerHtml "aboutText4" (Lang.i18nAboutText4 ());
-        putInnerHtml "aboutText5" (Lang.i18nAboutText5 ());
-        putInnerHtml "aboutText6" (Lang.i18nAboutText6 ());
-        putInnerHtml "aboutText7" (Lang.i18nAboutText7 ());
-        putInnerHtml "aboutText8" (Lang.i18nAboutText8 ());
-        putInnerHtml "aboutText9" (Lang.i18nAboutText9 ());
-        putInnerHtml "aboutText10" (Lang.i18nAboutText10 ());
-        putInnerHtml "aboutText11" (Lang.i18nAboutText11 ());
-        putInnerHtml "aboutText12" (Lang.i18nAboutText12 ());
-        putInnerHtml "aboutText13" (Lang.i18nAboutText13 ());
-        putInnerHtml "aboutText14" (Lang.i18nAboutText14 ());
-        putInnerHtml "aboutText15" (Lang.i18nAboutText15 ());
-        putInnerHtml "aboutText16" (Lang.i18nAboutText16 ());
-        putInnerHtml "tezos" (Lang.i18nFooter ());
-		putInnerHtml "inria" (Lang.i18nFooter1 ());
-        
-       )
-
-    (*JP*)
-
-    (*TODO: LANG*)
-
-	let rec find_indexX f l i =
-		match l with
-			| [] -> None
-			| x::xs -> if f x then Some i
-					else find_indexX f xs (i+1)
-	
-	let find_index f l =    (* AMD passar para Util *)
-		find_indexX f l 0 
-	
-    let settings() =
-      clearBox1();
-      putInnerHtml "mainTitle" "Settings";
-      let buttonBox = Dom_html.getElementById "buttonBox" in
-      let settingsDiv = div "settings" in
-        Dom.appendChild buttonBox settingsDiv;
-        Dom.appendChild settingsDiv (closeButton());
-      let h1 = h2 "settingsIntro" "Customizable Settings" in
-        Dom.appendChild settingsDiv h1;
-      let spanL = span "settingsText" "Change Language" in
-        Dom.appendChild settingsDiv spanL;
-      let languageOptions = ["EN"; "PT"; "FR"] in
-      let selectLanguage = select "selectLanguage" languageOptions in
-        let findIndex = Some 0 (*List.find_index(fun str -> String.lowercase_ascii str == !Lang.lang) languageOptions*) in
-        match findIndex with
-        | None -> ()
-        | Some index ->
-        selectLanguage##.selectedIndex := index;
-        selectLanguage##.onchange := Dom.handler (fun _ ->
-          let langString = String.lowercase_ascii (Js.to_string selectLanguage##.value) in
-            Lang.set_language (Js.string langString);
-            changeLang();
-            Js._true       
-          );
-        Dom.appendChild settingsDiv selectLanguage;
-      let span1 = span "settingsText" "Change Empty Symbol" in
-        Dom.appendChild settingsDiv span1;
-      let emptyOptions = ["ε"; "∼"; "𝜆"] in
-      let selectEmpty = select "selectEmpty" emptyOptions in 
-        let findIndex2 = Some 1 (* find_index(fun str -> str == StateVariables.returnEmpty()) emptyOptions *) in
-        match findIndex2 with
-        | None -> ()
-        | Some index2 ->
-        selectEmpty##.selectedIndex := index2;
-        selectEmpty##.onchange := Dom.handler (fun _ -> 
-        StateVariables.changeEmpty (Js.to_string selectEmpty##.value);
-        JS.log ("MUDEI O EMPTY para " ^ StateVariables.returnEmpty());
-        Js._true);
-        Dom.appendChild settingsDiv selectEmpty
-
-
-
-end
+end 

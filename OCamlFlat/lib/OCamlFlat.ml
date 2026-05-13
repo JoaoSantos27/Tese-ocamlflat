@@ -632,6 +632,7 @@ struct
 	let epsilon: symbol = symb "~" (* used for representing the empty transitions *)
 	let dollar: symbol = symb "$"
 	let empty: symbol = symb "B"
+	let error: symbol = symb "$$_ERROR_$$"
 
 	let str2symbX (s: string): symbolX = symbX (str2symb s)
 	let symbX2str (s: symbolX): string = symb2str (symbI s)
@@ -698,6 +699,9 @@ struct
 			String.concat "" strs
 		
 	let symbols (s: string): symbols = Set.make (word s)
+	
+	let wordClear (w: word): word =
+		List.filter (fun s -> s <> epsilon) w
 
 	(* Internalize/Externalize *)
 	let wordI = str2word
@@ -764,6 +768,8 @@ struct
 
 	let pathX (configX: 'config -> 'configX) (p: 'config path): 'configX pathX =
 		List.map configX p
+	let pathI (config: 'configX -> 'config) (p: 'configX pathX): 'config path =
+		List.map config p
 end
 
 module Trail =
@@ -912,8 +918,12 @@ struct
 	let update n =
 		runconfigs := !runconfigs + n;
 		runtime := Sys.time() -. !timeStart;
-		if false then
-			Printf.printf "(%d, %d, %f, [%d])\n" n !runconfigs !runtime ((Gc.quick_stat()).Gc.heap_words)
+		if false then (
+			if !runtime > _TIME_ALLOWANCE || !runconfigs > _CONFIGS_ALLOWANCE then
+				Printf.printf "GIVE UP\n";
+			Printf.printf "(%d, %d confs, %f secs, [%d])\n" n !runconfigs !runtime ((Gc.quick_stat()).Gc.heap_words);
+			flush stdout
+		)
 
 	let giveUp () =
 		if !runtime > _TIME_ALLOWANCE || !runconfigs > _CONFIGS_ALLOWANCE then begin
@@ -1091,9 +1101,18 @@ struct
 
 	let printStrings (s: strings): unit =
 		Set.iter printString s
+
+	let pause () =
+		ignore (input_char stdin)
 		
 	let show (s: string): unit =
-		print_string ("|" ^ s ^ "|\n")
+		print_string ("|" ^ s ^ "|\n");
+		flush stdout
+		
+	let showp (s: string): unit =
+		print_string ("|" ^ s ^ "|");
+		flush stdout;
+		pause ()
 		
 	let handleHomeDir (s: string): string =
 		match String.length s with
@@ -2416,129 +2435,6 @@ struct
 			acceptStates : [],
 			criteria : "true"
 		} |}
-
-(*Finite State Transducers*)
-
-	let fst_1 = {| {
-    kind : "transducer",
-    description : "Identity transducer",
-    name : "fst1",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["c", "d"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","c","S"],
-      ["S","b","d","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
-
-	let fst_ND = {| {
-    kind : "transducer",
-    description : "Nondeterministic  (2 transitions with same input)",
-    name : "fst3",
-    inAlphabet : ["a"],
-    outAlphabet : ["x","y"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","S"],
-      ["S","a","y","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
-	
-	let fst_complex_ND = {| {
-    kind : "transducer",
-    description : "ND FST: Ambiguous 'a' paths and epsilon-output conflict",
-    name : "complex_fst_nd",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["x", "y", "z"],
-    states : ["S", "A", "B", "C"],
-    initialState : "S",
-    transitions : [
-      ["S", "a", "x", "A"],
-      ["S", "a", "z", "B"],
-      ["A", "a", "x", "S"],
-      ["B", "b", "y", "S"],
-      ["S", "~", "z", "C"],
-      ["C", "a", "x", "S"]
-    ],
-    acceptStates : ["S", "A"]
-  } |}
-
-	let fst_ND2 = {| {
-    kind : "transducer",
-    description : "dd",
-    name : "fst_ND2",
-    inAlphabet : ["a", "b", "c", "d", "e"],
-    outAlphabet : ["0", "1"],
-    states : ["START", "A", "AB", "SUCCESS", "UNREACHABLE", "UNPRODUCTIVE"],
-    initialState : "START",
-    transitions : [
-        ["START","a","0","A"], ["START","b","0","START"], ["START","c","0","START"], ["START","d","0","START"],
-        ["A","a","0","A"], ["A","b","0","AB"], ["A","c","0","START"], ["A","d","0","START"],
-        ["AB","a","0","A"], ["AB","b","0","START"], ["AB","c","1","SUCCESS"], ["AB","d","0","START"],
-        ["SUCCESS","a","1","SUCCESS"], ["SUCCESS","b","1","SUCCESS"], ["SUCCESS","c","1","SUCCESS"], ["SUCCESS","d","1","SUCCESS"], 
-        ["A","a","0","AB"], ["UNREACHABLE", "a", "1", "SUCCESS"],
-        ["SUCCESS", "e", "0", "UNPRODUCTIVE"], ["UNPRODUCTIVE", "a", "0", "UNPRODUCTIVE"]
-      ],
-    acceptStates : ["SUCCESS"]
-  } |}
-
-	let fst_M = {| {
-    kind : "transducer",
-    description : "Minimizable: A and B are equivalent)",
-    name : "fst_min_merge_AB",
-    inAlphabet : ["a","b"],
-    outAlphabet : ["x","y"],
-    states : ["S","A","B"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","A"],
-      ["S","b","y","B"],
-
-      ["A","a","x","A"],
-      ["A","b","y","B"],
-
-      ["B","a","x","A"],
-      ["B","b","y","B"]
-    ],
-    acceptStates : ["A","B"]
-  } |}
-
-	let fst_Moore = {| {
-    kind : "transducer",
-    description : "Moore",
-    name : "fst2",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["x", "y"],
-    states : ["S","A"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","A"],
-      ["S","b","x","A"],
-      ["A","a","y","S"],
-      ["A","b","y","S"]
-    ],
-    acceptStates : ["S","A"]
-  } |}
-
-	let fst_Mealy = {| {
-    kind : "transducer",
-    description : "Deterministic & complete Mealy (outputs match inputs; not Moore)",
-    name : "fst7",
-    inAlphabet : ["a","b"],
-    outAlphabet : ["a","b"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","a","S"],
-      ["S","b","b","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
 		
 (* Turing Machine *)
 
@@ -3083,36 +2979,6 @@ struct
 			properties : ["finite automaton"]
 		} |}
 
-	let exer_fst_identity = {| {
-			kind : "exercise",
-			description : "FST: identity transducer over a and b",
-			name : "exer_fst_identity",
-			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer). For example: 'a' -> 'a', 'ab' -> 'ab', 'ba' -> 'ba'.",
-			inside : ["a->a", "b->b", "ab->ab", "ba->ba", "aab->aab"],
-			outside : [],
-			properties : ["transducer", "deterministic"]
-		} |}
-
-	let exer_fst_mealy = {| {
-			kind : "exercise",
-			description : "FST: Mealy machine swapping a and b",
-			name : "exer_fst_mealy",
-			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read. For example: 'a' -> 'b', 'ab' -> 'ba', 'aab' -> 'bba'.",
-			inside : ["a->b", "b->a", "ab->ba", "ba->ab", "aab->bba"],
-			outside : [],
-			properties : ["transducer", "deterministic", "mealy"]
-		} |}
-
-	let exer_fst_moore = {| {
-			kind : "exercise",
-			description : "FST: Moore machine outputting x on a and y on b",
-			name : "exer_fst_moore",
-			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every 'a' read and 'y' for every 'b' read. For example: 'a' -> 'x', 'ab' -> 'xy', 'ba' -> 'yx', 'aab' -> 'xxy'.",
-			inside : ["a->x", "b->y", "ab->xy", "ba->yx", "aab->xxy"],
-			outside : [],
-			properties : ["transducer", "deterministic", "moore"]
-		} |}
-
   let examplesTable = [
   ("Finite Automata",
   [
@@ -3162,17 +3028,6 @@ struct
     ("pda_Explode", pda_Explode)
   ]);
 
-	("Finite State Transducers",
-	[
-		("fst_1", fst_1);
-		("fst_ND", fst_ND);
-		("fst_ND2", fst_ND2);
-		("fst_complex_ND", fst_complex_ND);
-		("fst_M", fst_M);
-		("fst_Moore", fst_Moore);
-		("fst_Mealy", fst_Mealy)
-	]);
-
   ("Turing Machine",
   [
     ("tm_astar1", tm_astar1);
@@ -3214,10 +3069,7 @@ struct
     ("exer_abcd", exer_abcd);
     ("exer_ab", exer_ab);
     ("exer_re2fa", exer_re2fa);
-    ("exer_readwrite", exer_readwrite);
-    ("exer_fst_identity", exer_fst_identity);
-    ("exer_fst_mealy", exer_fst_mealy);
-    ("exer_fst_moore", exer_fst_moore)
+    ("exer_readwrite", exer_readwrite)
   ])]
 
 	let examplesAll =
@@ -3367,6 +3219,9 @@ struct
 			Error.error id.kind "Wrong kind" ();
 		validate id.name rep;
 		ignore (Error.endGroup kind id.name)
+	
+	let getName (id: t): string =
+		if id.name <> "_" then id.name else "default"
 end
 
 module Entity =
@@ -3389,6 +3244,7 @@ struct
 		(* Representation *)
 			method id: t = id
 			method errors: string list = errors
+			method getName: string = getName self#id
 		(* Kind *)
 			method isFiniteAutomaton : bool = false
 			method isRegularExpression : bool = false
@@ -3725,15 +3581,17 @@ struct
 			let newConfigs = Set.diff configs seen in
 			let newSeen = Set.unionUnsafe newConfigs seen in
 			let _ = RuntimeControl.update (Set.size newConfigs) in
+			(* Util.showp "0000000000"; *)
 			if Set.isEmpty newConfigs then
 				false
 			else if Set.exists (isAccepting m) newConfigs then
 				true
 			else if RuntimeControl.giveUp () then
 				false
-			else
+			else (
+				(* Util.showp "111111111111"; *)
 				let nextConfigs = Set.flatMap (next m) newConfigs in
-					acceptX nextConfigs newSeen
+					acceptX nextConfigs newSeen)
 		in	
 		let _ = RuntimeControl.start () in
 		let initialConfigs = initial m w in
@@ -3860,6 +3718,7 @@ struct
 			(*method virtual acceptFull: 'c. word ->  bool * 'c path * 'c trail*)
 			method virtual generate: int -> words
 			(*method virtual generateDumb: int -> words*)
+
 		
 		(* Exercices support *)
 			method checkProperty (prop: string) = checkProperty prop
@@ -5107,7 +4966,6 @@ struct
 	let acceptFull = acceptFull
 	let generate = generate	
 	let toDeterministic = toDeterministic	
-	let areAllStatesUseful = areAllStatesUseful
 
 	(* Class *)
 	class model (arg: t Arg.alternatives) =
@@ -5173,7 +5031,6 @@ struct
 	let fa_text text = faX (make (Arg.Text text))
 	let fa_json json = faX (make (Arg.JSon json))
 	let fa_predef name = fa_text (Examples.example name)
-
 
 	let confX (s, w) = (state2str s, word2str w)
 	let pathX (p: path) = pathX confX p
@@ -5823,7 +5680,162 @@ struct
 	* This method simplifies the regular expression
 	*
 	* @returns RegularExpression.model -> the new simplified, equivalent expression
+	*
+	* https://www.ict.griffith.edu.au/teaching/3515ICT/lectures/regular.pdf
+	* https://youtu.be/u1eR88wxAWI
+	* https://www.youtube.com/watch?v=xLp36MhQ_D8
+	* Rich 106
+	* https://people.csail.mit.edu/meyer/rsq.pdf
+	* !! https://www.researchgate.net/publication/221570367_Optimal_Lower_Bounds_on_Regular_Expression_Size_Using_Communication_Complexity
+	*
+	
+	converting deterministic ﬁnite automata accepting ﬁnite languages into reg-ular expression leads to an inevitable blow-up in size of nΘ(log n), 
+	
+	https://cs.uwaterloo.ca/research/tr/1994/01/intro.pdf
+	
+Simplifying Regular Expressions. A Quantitative Perspective
+	https://www.uni-trier.de/fileadmin/fb4/prof/INF/TIN/Veroeffentlichungen/gruber_gulan_lata2010.pdf
+	
+	
+Enumerating Regular Expressions and Their Languages
+	https://cs.uwaterloo.ca/~shallit/Papers/ciaa-04.pdf
+	
+	Regular expressions have been studied for almost fifty years, yet many interesting
+and challenging problems about them remain unsolved.
+
+The equivalence problem for regular expressions with squaring requires exponential space
+https://people.csail.mit.edu/meyer/rsq.pdf
+
+
+Simplification of regular expression
+https://cs.stackexchange.com/questions/93027/simplification-of-regular-expression
+ to stare at that regular expression, understand very well what language it recognizes, and write down a shorter freah regexp
+
+How can one ACTUALLY minimize a regular expression?
+https://cstheory.stackexchange.com/questions/31630/how-can-one-actually-minimize-a-regular-expression
+
+minimizing size of regular expression
+https://cstheory.stackexchange.com/questions/12361/minimizing-size-of-regular-expression
+
+
+minimizing size of regular expression for finite sets
+https://cstheory.stackexchange.com/questions/16860/minimizing-size-of-regular-expression-for-finite-sets
+
+On Learning Regular Languages
+https://cstheory.blogoverflow.com/2011/08/on-learning-regular-languages/
+
+
+Simplifying regular expressions further
+https://www.sciencedirect.com/science/article/abs/pii/S0747717121000572
+
+However, although various algebraic laws about expressions (Salomaa, 1966) are routinely used as simplification rules, there is no efficient equivalent to FSA minimisation for expressions.
+
+Regular expression simplification
+https://www.sciencedirect.com/science/article/abs/pii/S0378475497000864
+
+
+A Program That Simplifies Regular Expressions (Tool paper)
+https://arxiv.org/abs/2307.06436
+
+Optimizing regular expressions
+https://blog.gistre.epita.fr/posts/thomas.corbiere-2024-09-22-optimizing-regular-expressions/
+
+Efficient Enumeration of Regular Expressions for Faster Regular Expression Synthesis
+https://www.academia.edu/66935755/Efficient_Enumeration_of_Regular_Expressions_for_Faster_Regular_Expression_Synthesis
+
+Maple
+https://www.maplesoft.com/msw/program/MSW04FinalProgram.pdf
+
+
+
+
+A tool for optimizing regular expressions
+https://www.codeproject.com/Articles/5388733/A-tool-for-optimizing-regular-expressions
+NAIVE
+
+Simplification of regular expression
+https://cs.stackexchange.com/questions/93027/simplification-of-regular-expression
+
+Optimizing Regular Expressions via Rewrite-Guided Synthesis
+https://arxiv.org/abs/2104.12039
+
+Analysis of an efficient reduction algorithm for
+random regular expressions based on universality
+detection
+https://hal.science/hal-04484361/document
+
+https://regex101.com/
+
+
+----
+Regular expressions into finite automata
+https://www.sciencedirect.com/science/article/pii/0304397593902874
+
+Gruber, H., Gulan, S.: Simplifying regular expressions.
+https://www.informatik.uni-giessen.de/reports/Report0904.pdf
+
+Follow automata
+https://www.sciencedirect.com/science/article/pii/S0890540103000907
+
+Enumerating regular expressions and their languages.
+https://cs.uwaterloo.ca/~shallit/Papers/ciaa-04.pdf
+
+Short Regular Expressions from Finite Automata: Empirical Results
+http://www.hermann-gruber.com/data/ciaa09-final.pdf
+
+Approximation to the Smallest Regular Expression for a Given Regular Language
+https://link.springer.com/chapter/10.1007/978-3-540-30500-2_31
+
+https://www.gap-system.org/
+
+Obtaining shorter regular expressions from finite-state automata
+https://toc.yonsei.ac.kr/~emmous/papers/tcs_se.pdf
+
+How to convert finite automata to regular expressions?
+https://cs.stackexchange.com/questions/2016/how-to-convert-finite-automata-to-regular-expressions
+Brzozowski algebraic method
+https://web.archive.org/web/20140922220310/http://codepad.org/dbFztCCM
+
+Here are some useful rules for simplifying RE's:
+
+Shifting Rule: E(FE)* = (EF)*E
+Denesting Rule: (E*F)*E* = (E+F)*
+
+Conversion of Deterministic and Non-Deterministic Finite Automata to Regular Expression using Brzozowski Algebraic Method
+https://www.researchgate.net/publication/346016950_Conversion_of_Deterministic_and_Non-_Deterministic_Finite_Automata_to_Regular_Expression_using_Brzozowski_Algebraic_Method
+
+New Heuristics for Obtaining Smaller Regular Expressions from Deterministic Finite Automata
+https://www.ripublication.com/ijaer17/ijaerv12n22_26.pdf
+
+Regular-expression derivatives reexamined
+https://www.khoury.northeastern.edu/home/turon/re-deriv.pdf
+
+Comparisons Amongst Different Techniques for Conversion of Deterministic Finite
+Automata to Regular Expression
+https://www.ijarcs.info/index.php/Ijarcs/article/download/491/479/957
+
+Manipulation of Regular Expressions Using
+Derivatives: an Overview
+https://www.dcc.fc.up.pt/~nam/resources/publica/flan14.pdf
+
+Converting Deterministic Finite Automata to
+Regular Expressions
+http://www.sci.brooklyn.cuny.edu/~zhou/teaching/cis3160/ConvertDFSMtoRegExp.pdf
+
+RE -> NFA 
+
+
+
+RE simplify = PSPACE-complete (Quantitative Perspective)
+
+
+
+
+	
 	*)
+
+(* +++ simplify original 
+
 	let simplify (rep: t): t =
 
 	  (* various base case simplification rules to apply to the given expressions *)
@@ -5890,6 +5902,151 @@ struct
 		in
 
 			simplify rep
+
++++ simplify original *)
+
+(* +++ simplify do Alexandre *)
+
+	(**
+	* This method simplifies the regular expression
+	*
+	* @returns RegularExpression.model -> the new simplified, equivalent expression
+	*)
+	let simplify (rep: t): t =
+	  (* if an expression already exists inside a sum then we remove it *)
+	  let rec removeDuplicates (re: t): t = 
+	  	let rec existsIn (first: t) (second: t): bool =
+	  		if first = second then true
+	  		else match second with
+		  		| Plus(l, r) -> if first = l then true else existsIn first r
+			  	| _ -> false
+	  	in
+	  	match re with
+		  	| Plus(l, r) -> let left = (removeDuplicates l) and right = (removeDuplicates r) in
+		  		if (existsIn left right) then right else Plus(left, right)
+		  	| Seq(l, r) -> Seq(removeDuplicates l, removeDuplicates r)
+		  	| Star(l) -> Star(removeDuplicates l)
+		  	| _ -> re
+	  in
+
+	  (* Shifts the expression to be left alligned *)
+	  let rec shift (re: t): t =
+	  	match re with
+	  	| Plus(Plus(l1, r1), Plus(l2, r2)) -> Plus( shift l1, shift (Plus(r1, Plus(l2, r2))) )
+	  	| Plus(Plus(l1, r1), r2) -> Plus(shift l1, Plus(shift r1, shift r2)) (* r2 is not a plus *)
+	  	| Seq(Star(l1), Seq(l2, r2)) when l1 = l2 -> Seq( shift l1, shift (Seq(Star(l2), r2)) )
+	  	| Seq(l, r) -> Seq(shift l, shift r)
+	  	| Star(l) -> Star(shift l)
+	  	| _ -> re
+	  in
+
+	  (* Applies the distributive property *)
+	  let distribute (re: t): t =
+	  	match re with
+	  	| Plus(l1, Seq(l2, r2)) when l1 = l2 -> Seq(l1, Plus(Empty, r2)) (* doesn't work for nested expressions *)
+	  	| Plus(l1, Seq(l2, r2)) when l1 = r2 -> Seq(l1, Plus(Empty, l2))
+	  	| Plus(Seq(l1, r1), r2) when l1 = r2 -> Seq(r2, Plus(Empty, r1))
+	  	| Plus(Seq(l1, r1), r2) when r1 = r2 -> Seq(r2, Plus(Empty, l1))
+	  	| _ -> re
+	  in
+
+	  (* Checks for equality of 2 sides of a sum *)
+	  let rec allExpressionsEqual (first: t) (second: t): bool =
+	  	if first = second then true
+	  	else match second with
+	  	    | Plus(l, r) -> allExpressionsEqual first l && allExpressionsEqual first r
+	  		| Seq(l, r) -> allExpressionsEqual first l && allExpressionsEqual first r
+	  		| Star(l) -> allExpressionsEqual first l
+	  		| _ -> false
+	  in
+
+	  (* Checks for non consecutive equal expressions in sums. a+b+a -> a + b *)
+	  let rec existsInPlus (first: t) (second: t): bool =
+	  	if first = second then true
+	  	else match second with
+	  	     | Plus(l, r) -> existsInPlus first l || existsInPlus first r
+	  	     | _ -> false
+	  in
+	  (* various base case simplification rules to apply to the given expressions *)
+	  let simpX re =
+		match re with
+			(* (a*a)* -> a* *)
+			| Star(Seq(l, Star(r))) when l = r -> Star(l)
+			| Star(Seq(Star(l), r)) when l = r -> Star(l)
+			(* a*+a... -> a* *)
+			| Plus(Star(l), r) when (allExpressionsEqual l r) -> Star(l)
+			| Plus(l, Star(r)) when (allExpressionsEqual r l) -> Star(l)
+			(* (a...+a...)* -> a* *)
+			| Star(Plus(l, r)) when (allExpressionsEqual l r) -> Star(l)
+			(* a*a*b -> a*b *)
+			| Seq(Star(l1), Seq(Star(l2), r2)) when l1 = l2 -> Seq(Star(l1), r2)
+			(* (a+b)*b* -> (a+b)* *)
+			| Seq(Star(Plus(l1, r1)), Star(r2)) when (existsInPlus r2 (Plus(l1, r1))) -> Star(Plus(l1, r1))
+			| Seq(Star(l1), Star(Plus(l2, r2))) when (existsInPlus l1 (Plus(l2, r2))) -> Star(Plus(l2, r2))
+			(* plus *)
+			(* a* + empty -> a*  *)
+			| Plus(Star(l), Empty) -> Star(l)
+			| Plus(Empty, Star(r)) -> Star(r)
+			(* a + zero = a  *)
+			| Plus(Zero, r) -> r
+			| Plus(l, Zero) -> l
+			(* ~ + aa* = a*  *)
+			| Plus(Empty, Seq(l, Star(r))) when l = r -> Star(r)
+			| Plus(Empty, Seq(Star(l), r)) when l = r -> Star(l)
+			| Plus(Seq(l, Star(r)), Empty) when l = r -> Star(r)
+			| Plus(Seq(Star(l), r), Empty) when l = r -> Star(l)
+			(* a* + a + empty = a* ????? *)
+			| Plus(Star(l), Plus(Empty, r)) when l = r -> Star(l)
+			| Plus(Star(l), Plus(r, Empty)) when l = r -> Star(l)
+			| Plus(Plus(Empty, l), Star(r)) when l = r -> Star(r)
+			| Plus(Plus(l, Empty), Star(r)) when l = r -> Star(r)
+			(* a* + a = a* *)
+			(*| Plus(Star(l), r) when l = r -> Star(l) not needed anymore *)
+			(*| Plus(l, Star(r)) when l = r -> Star(l) not needed anymore *)
+			(* a + a = a  *)
+			(*| Plus(l, r) when l = r -> l not needed anymore *)
+			(* seq *)
+			| Seq(Empty, Empty) -> Empty
+			| Seq(Zero, Zero) -> Zero
+			| Seq(Empty, r) -> r
+			| Seq(l, Empty) -> l
+			| Seq(Zero, r) -> Zero
+			| Seq(l, Zero) -> Zero
+			(* (~+a)a* = a* *)
+			| Seq(Plus(Empty, l),Star(r)) when l = r -> Star(r)
+			| Seq(Plus(l, Empty),Star(r)) when l = r -> Star(r)
+			| Seq(Star(l),Plus(Empty, r)) when l = r -> Star(l)
+			| Seq(Star(l),Plus(r, Empty)) when l = r -> Star(l)
+			| Seq(Star(l),Star(r)) when l = r -> Star(l)
+			(* star a** = a* *)
+			| Star(Star(r)) -> Star(r)
+			(* star (~+a)* = a* *)
+			| Star(Plus(Empty, r)) -> Star(r)
+			| Star(Plus(r, Empty)) -> Star(r)
+			(* star (~)* = ~ *)
+			| Star(Empty) -> Empty
+			(* star (0)* = ~ *)
+			| Star(Zero) -> Empty
+			(* other *)
+			| _ -> re
+		in
+
+		(* applies various base case simplifications to the various sub-expressions of regular expression re *)
+		let rec simplify re =
+
+			match re with
+				| Plus(l,r) -> simpX (Plus(simplify l, simplify r))
+				| Seq(l,r) -> simpX (Seq(simplify l, simplify r))
+				| Star(re) -> simpX (Star(simplify re))
+				| Symb(c) -> Symb c
+				| Empty -> Empty
+				| Zero -> Zero
+		in
+
+			removeDuplicates (simplify (shift (distribute rep)))
+
+
+
 
 
 			(*CODIGO JP*)
@@ -5973,6 +6130,9 @@ struct
 	let stats = Model.stats
 	let accept = accept
 	let generate = generate
+	let alphabet = alphabet
+	let quasiLanguage = quasiLanguage
+	let allTrees = allTrees
 	let simplify = simplify
 	let partialDerivative = partialDerivative
 	let partialDerivativeUno = partialDerivativeUno
@@ -5983,7 +6143,7 @@ struct
 		(* Representation *)
 			method representation = representation
 		(* Kind *)
-			method isRegulartExpression : bool = true
+			method isRegularExpression : bool = true
 		(* Show *)			
 			method toJSon: JSon.t = toJSon representation
 			method toJSon2: JSon.t = toJSon2 id representation
@@ -6053,6 +6213,377 @@ open RegularExpressionTop
 		let w = str2word w in
 			a#accept w
 *)
+# 1 "src/TransducerSupport.ml"
+(*
+ * TransducerSupport.ml
+ *
+ * This file is part of the OCamlFLAT library
+ *
+ * LEAFS project (partially supported by the OCaml Software Foundation) [2020/21]
+ * FACTOR project (partially supported by the Tezos Foundation) [2019/20]
+ *
+ * NOVA LINCS - NOVA Laboratory for Computer Science and Informatics
+ * Dept. de Informatica, FCT, Universidade Nova de Lisboa.
+ *
+ * This software is distributed under the terms of the GPLv3 license.
+ * See the included LICENSE file for details.
+ *
+ *  Written by Artur Miguel Dias (amd)
+ *)
+
+(*
+ * ChangeLog:
+ *
+ * jul/2025 (amd) - New file.
+ *)
+
+(*
+ * Description: Supporting types and functions for Finite-state transducers.
+ *)
+
+open BasicTypes
+
+module TransducerBasics =
+struct
+	type transition4 = state * symbol * symbol * state
+	type transitions4 = transition4 set
+	type t = {
+		inAlphabet : symbols;
+		outAlphabet : symbols;
+		states : states;
+		initialState : state;
+		transitions : transitions4;
+		acceptStates : states
+	}
+
+	type configuration = state * word * word
+	type configurations = configuration set
+	type path = configuration list
+	type trail = configurations list
+
+	let kind = "transducer"
+
+	let fst_zero: t = {
+		inAlphabet = Set.empty;
+		outAlphabet = Set.empty;
+		states = Set.make [draftState];
+		initialState = draftState;
+		transitions = Set.empty;
+		acceptStates = Set.empty
+	}
+end
+
+module TransducerConversions =
+struct
+	open TransducerBasics
+
+	let fromJSon (j: JSon.t): t =
+		if JSon.isNull j || not (JSon.hasField j "kind") then
+			fst_zero
+		else {
+			inAlphabet = JSon.fieldSymbolSet j "inAlphabet";
+			outAlphabet = JSon.fieldSymbolSet j "outAlphabet";
+			states = JSon.fieldStateSet j "states";
+			initialState = JSon.fieldState j "initialState";
+			transitions = JSon.fieldQuadsSet j "transitions";
+			acceptStates = JSon.fieldStateSet j "acceptStates"
+		}
+
+	let toJSon0 (rep: t): JSon.t =
+		JSon.makeAssoc [
+			("inAlphabet", JSon.makeSymbolSet rep.inAlphabet);
+			("outAlphabet", JSon.makeSymbolSet rep.outAlphabet);
+			("states", JSon.makeStateSet rep.states);
+			("initialState", JSon.makeState rep.initialState);
+			("transitions", JSon.makeQuadsSet rep.transitions);
+			("acceptStates", JSon.makeStateSet rep.acceptStates)
+		]
+	
+	let toJSon2 (id: Entity.t) (rep: t): JSon.t =
+		 JSon.append (Entity.toJSon id) (toJSon0 rep)
+	
+	let toJSon (rep: t): JSon.t =
+		 toJSon2 (Entity.dummyId kind) rep
+end
+
+module TransducerBasicFunctions =
+struct
+	open TransducerBasics
+	open TransducerConversions
+
+	let make2 (arg: t Arg.alternatives) validate: Entity.t * t =
+		Entity.make2 arg fromJSon kind validate
+
+	let make (arg: t Arg.alternatives) validate: t =
+		snd (make2 arg validate)
+
+	let show (rep: t): unit =
+		let j = toJSon rep in
+			JSon.show j
+
+	let show2 (id: Entity.t) (rep: t): unit =
+		let j = toJSon2 id rep in
+			JSon.show j
+end
+
+module TransducerX =
+struct
+	open TransducerBasics
+
+	type transition4X = state * symbolX * symbolX * state
+	type tx = {
+		inAlphabet : symbolX list;
+		outAlphabet : symbolX list;
+		states : state list;
+		initialState : state;
+		transitions : transition4X list;
+		acceptStates : state list
+	}
+
+	let transitions4I (l: transition4X list): transitions4 =
+		let trans4I (a,b,c,d): transition4 = (a, symbI b, symbI c, d) in
+			Set.make (List.map trans4I l)
+			
+	let transitions4X (s: transitions4): transition4X list =
+		let trans4X (a,b,c,d): transition4X = (a, symbX b, symbX c, d) in
+			List.map trans4X (Set.toList s)
+
+	let internalize (fst: tx): t = {
+		inAlphabet = symbolsI fst.inAlphabet;
+		outAlphabet = symbolsI fst.outAlphabet;
+		states = Set.make fst.states;
+		initialState = fst.initialState;
+		transitions = transitions4I fst.transitions;
+		acceptStates = Set.make fst.acceptStates
+	}
+	
+	let externalize (fst: t): tx = {
+		inAlphabet = symbolsX fst.inAlphabet;
+		outAlphabet = symbolsX fst.outAlphabet;
+		states = Set.toList fst.states;
+		initialState = fst.initialState;
+		transitions = transitions4X fst.transitions;
+		acceptStates = Set.toList fst.acceptStates
+	}
+end
+
+module TransducerLearnOCaml =
+struct
+	open TransducerBasics
+	open TransducerX
+
+	let moduleName =
+		"Transducer"
+
+	let xTypeName =
+		"finiteAutomaton"
+
+	let transs4XD (l: transition4X list): string =
+		let t2d (a,b,c,d) =
+			Printf.sprintf "(%s, %s, %s, %s)"
+			(stateXD a)
+			(symbXD b)
+			(symbXD c)
+			(stateXD d)
+		in listD t2d l
+
+	let solution (name: string) (rep: t): string =
+		let repx = externalize rep in
+		Printf.sprintf {zzz|
+		%s{
+			inAlphabet = %s;
+			outAlphabet = %s;
+			states = %s;
+			initialState = %s;
+			transitions = %s;
+			acceptStates = %s
+		}
+		|zzz}	(* please, do not change this line *)
+			(FiniteEnumerationLearnOCaml.displayHeader name xTypeName)
+			(symbolsXD repx.inAlphabet)
+			(symbolsXD repx.outAlphabet)
+			(statesXD repx.states)
+			(stateXD repx.initialState)
+			(transs4XD repx.transitions)
+			(statesXD repx.acceptStates)
+
+
+	let prelude : string =
+		Printf.sprintf {zzz|
+		type symbol = %s
+		type state = string
+		type finiteAutomaton = {
+			alphabet : symbol list;
+			states : state list;
+			initialState : state;
+			transitions : (state * symbol * state) list;
+			acceptStates : state list
+		}
+		|zzz}	(* please, do not change this line *)
+			symbolTypeName
+
+	let example : JSon.t =
+		JSon.parse {|
+		{
+			kind : "transducer",
+			description : "this is an example",
+			name : "fst example",
+			alphabet: ["w", "z"],
+			states : ["START", "X", "Z"],
+			initialState : "START",
+			transitions : [
+				["START", "w", "w", "X"], ["X", "z", "z", "X"]
+			],
+			acceptStates : ["Z"]
+		}
+		|}	(* please, do not change this line *)
+end
+
+module TransducerSupport =
+struct
+	include TransducerBasics
+	include TransducerConversions
+	include TransducerBasicFunctions
+	include TransducerLearnOCaml
+end
+# 1 "src/Transducer.ml"
+(*
+ * Transducer.ml
+ *
+ * This file is part of the OCamlFLAT library
+ *
+ * LEAFS project (partially supported by the OCaml Software Foundation) [2020/21]
+ * FACTOR project (partially supported by the Tezos Foundation) [2019/20]
+ *
+ * NOVA LINCS - NOVA Laboratory for Computer Science and Informatics
+ * Dept. de Informatica, FCT, Universidade Nova de Lisboa.
+ *
+ * This software is distributed under the terms of the GPLv3 license.
+ * See the included LICENSE file for details.
+ *
+ *  Written by João Santos (js)
+ *)
+
+(*
+ * ChangeLog:
+ *
+ * jul/2025 (amd) - Initial skeleton.
+ *)
+
+(*
+ * Description: Finite-state transducer functionality.
+ *)
+
+open BasicTypes
+
+module TransducerAccept =
+struct
+	open TransducerSupport
+
+	let accept (fst: t) (w: word): bool =
+		false
+
+	let acceptFull (fa: t) (w: word) : bool * path * trail =
+		(false, [], [])
+end
+
+module TransducerGenerate =
+struct
+	open TransducerSupport
+	open TransducerAccept
+
+	let generate (fa: t) (len: int): words =
+		Set.empty
+
+	let generateDumb (fa: t) (len: int): words =
+		Set.empty
+end
+
+module TransducerPrivate =
+struct
+	open TransducerSupport
+
+	let validate (name: string) (fst: t): unit =
+		()	
+	
+	let asFiniteAutomaton (fst:t): FiniteAutomaton.t =
+		FiniteAutomaton.fa_zero
+
+	let cleanUselessStates (fst: t): t =
+		fst
+
+	let isClean (fst: t): bool =
+		false
+
+	let isDeterministic (fst: t): bool =
+		false
+
+	let isComplete (fst: t): bool =
+		false
+
+	let isMooreMachine (fst: t): bool =
+		false
+
+	let isMeelyMachine (fst: t): bool =
+		false
+end
+
+module Transducer =
+struct
+	include TransducerSupport
+	open TransducerAccept
+	open TransducerGenerate
+	open TransducerPrivate
+
+	(* Make *)
+	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
+	let make (arg: t Arg.alternatives): t = make arg validate
+
+	(* Exercices support *)
+	let checkProperty (fst: t) (prop: string) =
+		match prop with
+			| "deterministic" -> isDeterministic fst
+			| "complete" -> isComplete fst
+			| "moore" -> isMooreMachine fst
+			| "meely" -> isMeelyMachine fst
+			| "transducer" -> true
+			| "finite-state transducer" -> true
+			| _ -> Model.checkProperty prop
+	let checkExercise ex fst = Model.checkExercise ex (accept fst) (checkProperty fst)	
+	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (accept fst) (checkProperty fst)
+
+	(* Ops *)
+	let stats = Model.stats
+	let accept = accept
+	let acceptFull = acceptFull
+	let generate = generate	
+
+	(* Class *)
+	class model (arg: t Arg.alternatives) =
+		object(self) inherit Model.model (make2 arg) as super	
+		(* Representation *)
+			method representation = representation
+		(* Kind *)
+			method isTransducer : bool = true
+		(* Show *)			
+			method toJSon: JSon.t = toJSon representation
+			method toJSon2: JSon.t = toJSon2 id representation
+			method show: unit = show representation
+			method show2: unit = show2 id representation
+		(* Ops *)
+			method accept (w: word): bool = accept representation w
+			method acceptFull (w: word) : bool * path * trail = acceptFull representation w
+			method generate (length: int): words = generate representation length
+		(* Exercices support *)
+			method checkProperty (prop: string) = Util.println["WWW"]; checkProperty representation prop	
+		(* Learn-OCaml support *)
+			method moduleName = moduleName
+			method xTypeName = xTypeName
+			method xTypeDeclString : string = prelude
+			method toDisplayString (name: string): string = solution name self#representation
+			method example : JSon.t = example
+		end
+end
 # 1 "src/GrammarSupport.ml"
 (*
  * GrammarSupport.ml
@@ -6867,8 +7398,8 @@ struct
 		close_out oc
 
 
-
-	let expand2 (gram: t) (sf,w) : configurations =
+	let expand2 (gram: t) ((sf: word), (w: word)) : configurations =
+		Util.printWord sf;
 		let rules = Set.filter (fun r -> containsSubSequence r.head sf) gram.rules in
 		(* Generate one configuration for each matching rule *)
 		Set.flatMap (fun rule ->
@@ -6886,8 +7417,12 @@ struct
 				Set.make (List.map (fun newSf -> (newSf, w)) newSfs)
 		) rules
 
+	let showSentencialForm fs =
+		()
+		
 	let nextConfigs2 (gram: t) (sf, w) : configurations =
 		(* showInFile("Starting nextConfigs for: " ^ word2str sf); *)
+		let _ = Util.printWord sf in
 		let configs = expand2 gram (sf, w) in
 		if isMonotonicGrammar gram then
 			let filtered = Set.filter (fun (sf', _) -> List.length sf' <= List.length w) configs in
@@ -6979,6 +7514,9 @@ struct
 			true
 		else
 			Model.accept processed_gram w initialConfig nextConfigs2 isAcceptingConfig
+
+	let accept3 (gram: t) (w: word) : bool =
+		Model.accept gram w initialConfig nextConfigs2 isAcceptingConfig
 
 	let acceptFull (gram: t) (w: word) : bool * path * trail =
 		if (generatesEmpty gram) && (w = [] || w = [epsilon]) then
@@ -7456,6 +7994,7 @@ struct
 		(* Acceptance *)
 		let accept = GrammarAccept.accept
 		let accept2 = GrammarAccept.accept2
+		let accept3 = GrammarAccept.accept3
 		let acceptFull = GrammarAccept.acceptFull
 		let find_applied_rules = GrammarAccept.find_applied_rules
 
@@ -7545,6 +8084,9 @@ struct
 	let stats () = RuntimeControl.stats ()
 
 	let g_accept gx w = accept (gI gx) (wordI w)
+	let g_accept2 gx w = accept2 (gI gx) (wordI w)
+	let g_accept3 gx w = accept3 (gI gx) (wordI w)
+			
 
 	let g_path gx w =
 		let (r,p,t) = acceptFull (gI gx) (wordI w) in
@@ -7561,6 +8103,20 @@ open GrammarTop
 
 
 (*
+	let g_balanced = {| {
+			kind : "grammar",
+			description : "CFG: Language of balanced square bracket parentheses",
+			name : "g_balanced",
+			alphabet : ["[", "]"],
+			variables : ["S"],
+			initial : "S",
+			rules : [ "S -> [S] | SS | ~"]
+		} |}
+
+let a = g_text g_balanced;;
+g_accept3 a "[[][][]]";;
+
+
 
 --------------------
 
@@ -8310,6 +8866,7 @@ sig
 	val (-->) : symbol -> string -> rule
 	val rule2str : rule -> string
 	val showRules : rules -> unit
+	val showConfigurations : configurations -> unit
 end
 
 (* REVER e comparar com o parser do CFG AMD *)
@@ -8396,8 +8953,16 @@ struct
 	let (-->) h b : rule =
 		{ head = h; body = str2word b } ;;
 
-	let showRules rs =
+	let showRules rs: unit =
 		Util.println [toString rs]
+
+	let configurations2str (cs: configurations): string =
+		let m = Set.map (fun (sf, w) ->
+			"(" ^ word2str sf ^ "," ^ word2str w ^ ")") cs in
+			String.concat ", " (Set.toList m) 
+
+	let showConfigurations (cs: configurations): unit =
+		Util.show(configurations2str cs)
 end
 
 module ContextFreeGrammarConversions =
@@ -8460,6 +9025,10 @@ struct
 		initial : variableX;
 		rules : string list
 	}
+	
+	type cfgTreeX =
+		  LeafX of string
+		| RootX of string * cfgTreeX list
 
 	let internalize (cfg: tx): t = {
 		alphabet = symbolsI cfg.alphabet;
@@ -8474,6 +9043,11 @@ struct
 		initial = symbX cfg.initial;
 		rules = ContextFreeGrammarSyntax.toStringList cfg.rules
 	}
+	
+	let rec externalizeParseTree (pt: cfgTree): cfgTreeX =
+		match pt with
+		| Leaf sy -> LeafX (symb2str sy)
+		| Root (sy, l) -> RootX (symb2str sy, List.map (fun pt -> externalizeParseTree pt) l)
 end
 
 module ContextFreeGrammarLearnOCaml =
@@ -9023,7 +9597,30 @@ struct
 		cykAccept (chomsky cfg) w
 
 end
-# 1 "src/ContextFreeGrammarBasic.ml"
+
+
+
+
+# 5 "src/ContextFreeGrammarBasic.ml"
+(*
+
+URGENTE
+
+
+ContextfreeGrammarControl  defineInformationBox
+
+O método não foi tocado pelo Alexandre,
+mas dá problema no Alexandre
+e não dava problema no PEdro Carlos.
+
+A recursividade infinita acontece na biblioteca, e é la que deve ter acontecido alguma coisa.
+
+Comparar o código mais atual da biblioteco com o do Carlos.
+
+O problema acontece apenas com gramáticas que tem o "~".
+
+*)
+
 (*
  * ContextFreeGrammarBasic.ml
  *
@@ -9244,26 +9841,251 @@ struct
 		if not areRuleBodiesValid then
 			Error.error name
 				"Some rule bodies are not declared symbols" ()
-				
-	let accept (fe: t) (w: word): bool =
-		false (* TODO *)
+end
 
-	let generate (fe: t) (length: int): words =
-		Set.empty (* TODO *)
+
+module ContextFreeGrammarAccept = (* AMD *)
+struct
+	open ContextFreeGrammarSupport
+
+	let clearEpsilon (cfg : t) : t = {
+		alphabet = cfg.alphabet;
+		variables = cfg.variables;
+		initial = cfg.initial;
+		rules = 
+			Set.map
+				(fun r -> {head = r.head; body = wordClear r.body})
+				cfg.rules
+	}
+
+	let isVariable (cfg : t) (var : symbol) : bool = 
+		Set.belongs var cfg.variables
+	
+	let isTerminalSymbol (cfg : t) (symbol : symbol) : bool = 
+		Set.belongs symbol cfg.alphabet
+
+	let hasEmpty body =
+		body = [epsilon]
+
+	let initialConfig (cfg: t) (w: word) : configurations =
+		Set.make [([cfg.initial], wordClear w)]
+
+	let rec expand (cfg: t) ((sf, w): word*word) : configurations =
+		match sf with
+			| [] -> Set.make [([],w)]
+			| x::xs ->
+				let ySet = expand cfg (xs, w) in
+					if isTerminalSymbol cfg x then
+						Set.map (fun (fs, w) -> (x::fs, w)) ySet
+					else
+						let xRules = Set.filter(fun r -> r.head = x) cfg.rules in
+						let xBodies = Set.map (fun r -> r.body) xRules in
+						let res = Set.flatMap (fun (fs1, w) -> Set.map (fun fs2 -> (fs2@fs1, w)) xBodies) ySet in
+						res
+
+	let nextConfigs (cfg: t) ((sf, w): word*word) : configurations =
+		expand cfg (sf,w)
+
+	let nextConfigs1 (cfg: t) ((sf, w): word*word) : configurations =
+		let _ = Util.show (word2str sf) in
+		let res = expand cfg (sf,w) in
+			showConfigurations res;
+			res
+
+	let isAcceptingConfig (cfg: t) (rl, w) : bool =
+		rl = w
+
+	let isAcceptingConfig1 (cfg: t) (rl, w) : bool =
+		let _ = Util.show (word2str rl ^ " " ^ (if rl = w then "SIM" else "NO")) in
+			rl = w
+	
+	let accept (cfg: t) (w: word) : bool =
+		let cfg = clearEpsilon cfg in
+			Model.accept cfg w initialConfig nextConfigs isAcceptingConfig
+		
+	let acceptFull (cfg: t) (w: word) : bool * path * trail =
+		let cfg = clearEpsilon cfg in
+			Model.acceptFull cfg w initialConfig nextConfigs isAcceptingConfig
+	;;
+end
+
+module ContextFreeGrammarParseTree = (* AMD *)
+struct
+	open ContextFreeGrammarSupport
+	open ContextFreeGrammarAccept
+
+	(* Permutation of sets of rules
+         permutations [[1;2;3];[4;5];[6;7]] =
+	          [[1; 4; 6]; [1; 4; 7]; [1; 5; 6]; [1; 5; 7];
+	           [2; 4; 6]; [2; 4; 7]; [2; 5; 6]; [2; 5; 7];
+	           [3; 4; 6]; [3; 4; 7]; [3; 5; 6]; [3; 5; 7]]
+	 *)
+	let rec permutations (ll: 'a list list): 'a list list =
+		match ll with
+		   [] -> [[]]
+		  | l::ls ->
+			let ps = permutations ls in
+				List.flatten (List.map (fun x ->  List.map (fun p -> x::p) ps) l)
+
+	(* Expand variables in sentential form using the rules
+	   pre: len(varsof(sf)) = len(rs) *)
+	let rec sfApply (cfg: t) (sf: word) (rs: rule list): word =
+		match sf, rs with
+		  [], [] -> []
+		| x::xs, [] ->
+			if isVariable cfg x then
+				failwith "apply 1"
+			else x::sfApply cfg xs []
+		| x::xs, r::rs ->
+			if isVariable cfg x then
+				(r.body) @ (sfApply cfg xs rs)
+			else x::sfApply cfg xs (r::rs)
+		| _, _ -> failwith "apply 2"
+	;;
+	
+	(* Find appliable rules *)
+	let sfFindAppliableRules (cfg: t) (sf: word): rule list list =
+		let vars = List.filter (isVariable cfg) sf in
+			List.map (fun v -> Set.toList (Set.filter(fun r -> r.head = v) cfg.rules)) vars
+	
+	let rec sfFindPermutationX (cfg: t) (sf: word) (sf1: word) (rss: rule list list): rule list =
+		match rss with
+		| [] -> []
+		| rs::rss ->
+			if wordClear (sfApply cfg sf rs) = sf1 then
+				rs
+			else
+				sfFindPermutationX cfg sf sf1 rss
+
+	let sfFindPermutation (cfg: t) (sf: word) (sf1: word): rule list =
+		let rules = sfFindAppliableRules cfg sf in
+		let perms = permutations rules in
+		let perm = sfFindPermutationX cfg sf sf1 perms in
+			perm
+
+	let rec rulesSequence (cfg: t) (p: path): rule list list =
+		match p with
+			[] | [_] -> []
+		| (a,_)::(b,bb)::ps ->
+			(sfFindPermutation cfg a b)::rulesSequence cfg ((b,bb)::ps)	
+
+	let rec makeTreeBUG (cfg: t) (v: variable) (rss: rule list list): cfgTree =
+		match rss with
+		| rs::rss ->
+			let rs = ref rs in
+			let next () =
+				match !rs with
+				| x::xs -> rs := xs; x
+				| [] -> failwith "makeTree 1"
+			in
+				Root (v,
+					List.map
+						( fun sy ->
+							if isVariable cfg sy then
+								makeTreeBUG cfg sy rss
+							else
+								Leaf sy
+						)
+						((next ()).body)
+				)
+		| [] -> failwith "makeTreeBUG"
+
+	let rec makeTree (cfg: t) (rss: rule list list): cfgTree =
+		match rss with
+		| (r::_)::rs::rss ->
+			let zs = ref rs in
+			let next () = (
+				let res = !zs in
+					zs := List.tl !zs;
+					res
+			) in
+				Root (r.head,
+					List.map
+						( fun sy ->
+							if isVariable cfg sy then
+								makeTree cfg (next ()::rss)
+							else
+								Leaf sy
+						)
+						r.body
+				)
+		| _ -> failwith "makeTree"
+
+
+	let parseTree (cfg: t) (w: word): cfgTree =
+		let (r,p,_) = acceptFull cfg w in
+			if r then
+				let rss = rulesSequence cfg p in
+					makeTree cfg (rss@[[]])
+			else
+				Leaf error
+end
+
+module ContextFreeGrammarGenerate = (* AMD *)
+struct
+	open ContextFreeGrammarSupport
+	open ContextFreeGrammarAccept
+
+	let rec expandsEmpty cfg sym =
+		let xRules = Set.filter(fun r -> r.head = sym) cfg.rules in
+		let xBodies = Set.map (fun r -> r.body) (Set.filter (fun r -> List.length r.body == 1) xRules) in
+		Set.for_all(fun b -> hasEmpty b || List.for_all (fun sy -> expandsEmpty cfg sy && isVariable cfg sy) b) xBodies
+
+	let verifyLength cfg sf body len =
+		let lengthSf = List.length (sf) in
+		let lengthBody = List.length (body) in
+		let sfVars = List.length (List.filter(fun sy -> isVariable cfg sy && expandsEmpty cfg sy) sf) in 
+		let bodyVars = List.length (List.filter(fun sy -> isVariable cfg sy && expandsEmpty cfg sy) body) in
+		lengthSf + lengthBody - sfVars - bodyVars - 1 <= len
+
+	let rec expandGenerate (cfg: t) (len: int) (sf,w) : configurations =
+		match sf with
+			| [] -> Set.make [([],[])]
+			| x::xs ->
+				let ySet = expandGenerate cfg len (xs, w) in
+					if isTerminalSymbol cfg x then
+						Set.map (fun (fs, w) -> (x :: fs, w)) ySet
+					else
+						let xRules = Set.filter(fun r -> r.head = x) cfg.rules in
+						let xBodies = Set.map (fun r -> r.body) (Set.filter(fun r -> hasEmpty r.body || verifyLength cfg sf r.body len) xRules) in
+						let res = Set.flatMap (fun (fs1, w) -> Set.map (fun fs2 -> (fs2@fs1, w)) xBodies) ySet in
+						res
+
+	let isAcceptingConfig2 (cfg: t) (sf, w) : bool =
+		List.for_all (isTerminalSymbol cfg) sf
+
+	let nextConfigs2 (cfg: t) (len: int) (sf, w) : configurations =
+		Util.showp("Starting nextConfigs for: "^word2str sf);
+		let res = expandGenerate cfg len (sf,w) in
+			Set.iter(fun (sf, w) -> Util.showp("[" ^ word2str sf ^ "," ^ word2str w ^ "]")) res;
+			res
+
+	let isTerminalSymbol2 (symbol: symbol) : bool =
+		let str = symb2str symbol in
+		not (("A" <= str && str <= "Z") || String.get str 0 = '<' && String.get str (String.length str - 1) = '>')   
+		
+	let getWord (sf, _) = List.filter (fun symb -> isTerminalSymbol2 symb) sf
+
+	let generate (cfg: t) (len: int) : words =
+		Model.generate cfg len initialConfig nextConfigs2 isAcceptingConfig2 getWord
+
+end
+
 
 (* ----------------------------------------------------------------------------*)
+module ContextFreeGrammarAcceptJP =
+struct
+	open ContextFreeGrammarSupport
 
 	(*CODIGO JP*)
 
 	(*checks if symbol var is a cfg grammar variable*)
 	let isVariable (var : symbol) (cfg : t) : bool = 
 		Set.belongs var cfg.variables
-	;;
 	
 		(*checks if symbol symbol is a terminal symbol*)		
 	let isTerminalSymbol (symbol : symbol) (cfg : t) : bool = 
 		Set.belongs symbol cfg.alphabet
-	;;
 
 	let isTerminalSymbol2 (symbol: symbol) : bool =
 		let str = symb2str symbol in
@@ -9419,15 +10241,15 @@ struct
 
 
 	let nextConfigs (cfg: t) (sf, w) : configurations =
-		Util.show("Starting nextConfigs for: "^word2str sf);
+		Util.showp("Starting nextConfigs for: "^word2str sf);
 		let res = expand cfg (sf,w) in
-			Set.iter(fun (sf, w) -> Util.show("[" ^ word2str sf ^ "," ^ word2str w ^ "]")) res;
+			Set.iter(fun (sf, w) -> Util.showp("[" ^ word2str sf ^ "," ^ word2str w ^ "]")) res;
 			res
 
 	let nextConfigs2 (cfg: t) (len: int) (sf, w) : configurations =
-		Util.show("Starting nextConfigs for: "^word2str sf);
+		Util.showp("Starting nextConfigs for: "^word2str sf);
 		let res = expandGenerate cfg len (sf,w) in
-			Set.iter(fun (sf, w) -> Util.show("[" ^ word2str sf ^ "," ^ word2str w ^ "]")) res;
+			Set.iter(fun (sf, w) -> Util.showp("[" ^ word2str sf ^ "," ^ word2str w ^ "]")) res;
 			res
 
 		
@@ -9437,10 +10259,10 @@ struct
 
 	
 	let accept (cfg: t) (w: word) : bool =
-			Model.accept cfg w initialConfig nextConfigs isAcceptingConfig
+		Model.accept cfg w initialConfig nextConfigs isAcceptingConfig
 		
 	let acceptFull (cfg: t) (w: word) : bool * path * trail =
-			Model.acceptFull cfg w initialConfig nextConfigs isAcceptingConfig
+		Model.acceptFull cfg w initialConfig nextConfigs isAcceptingConfig
 	
 	let isAcceptingConfig2 (cfg: t) (sf, w) : bool =
 		List.for_all(fun sym -> isTerminalSymbol sym cfg) sf
@@ -9527,6 +10349,8 @@ module ContextFreeGrammarBasic =
 struct
 	include ContextFreeGrammarSupport
 	open ContextFreeGrammarPrivate
+	open ContextFreeGrammarAccept
+	open ContextFreeGrammarGenerate
 
 	(* Make *)
 	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
@@ -9546,7 +10370,9 @@ struct
 	let follow = follow
 	let first = first
 	let accept = accept
-	let generate = generate	
+	let acceptFull = acceptFull
+	let generate = generate
+	let parseTree = ContextFreeGrammarParseTree.parseTree
 
 	class model (arg: t Arg.alternatives) =
 		object(self) inherit Model.model (make2 arg) as super
@@ -9614,7 +10440,7 @@ struct
 
 			(* PEDRO CARLOS *)
 			method find_applied_rules (path: path) : (word * rule list * int list) list =
-				find_applied_rules representation path
+				ContextFreeGrammarAcceptJP.find_applied_rules representation path
 
 			method private acceptXXX (testWord:word) : bool =
 
@@ -9828,188 +10654,6 @@ struct
 		end
 end
 
-module ContextFreeGrammarTop =
-struct
-	open ContextFreeGrammarBasic
-	open ContextFreeGrammarBasicsX
-
-	let cfgI cfg = internalize cfg
-	let cfgX cfg = externalize cfg
-	
-	let cfg_load file = cfgX (make (Arg.File file))
-	let cfg_text text = cfgX (make (Arg.Text text))
-	let cfg_json json = cfgX (make (Arg.JSon json))
-	let cfg_predef name = cfg_text (Examples.example name)
-
-(*	let confX (s, w) = (state2str s, word2str w)
-	let pathX (p: path) = pathX confX p
-	let trailX (t: trail) = trailX confX t *)
-	
-	let stats () = RuntimeControl.stats ()
-
-	let cfg_accept cfg w = accept (cfgI cfg) (wordI w)
-
-(*
-	let cfg_path cfg w =
-		let (r,p,t) = acceptFull (cfgI cfg) (wordI w) in
-			pathX p
-
-	let cfg_trail cfg w =
-		let (r,p,t) = acceptFull (cfgI cfg) (wordI w) in
-			trailX t
-		*)
-
-	let cfg_generate cfg len = wordsX (generate (cfgI cfg) len)
-end
-
-open ContextFreeGrammarTop
-
-     (* Adds a sufix to a variable name name *)
-     let addSufixCFG (v: symbol)(sufix: string): symbol =
-       str2symb((symb2str v)^"_"^sufix)
-
-
-(* addSufix a que? *)
-    let addSufixList  body sufix =
-        List.map(fun s -> addSufixCFG  s sufix) body
-
-       (* Renames all the variables in one gramatic adding a sufix *)	
-     let renameVariablesCFG (cfg: ContextFreeGrammarBasic.t) (sufix: string): ContextFreeGrammarBasic.t =
-       let open ContextFreeGrammarBasic in 
-       {alphabet = cfg.alphabet;
-       variables =	Set.map (fun v -> addSufixCFG v sufix) cfg.variables;
-       initial = addSufixCFG cfg.initial sufix;
-       rules = Set.map (fun {head= h;body = b} -> {head=(addSufixCFG h sufix);body= addSufixList b sufix}) cfg.rules
-       }
-
-
-(*
-
---------------------
-
-let cfg_balanced = {| {
-		kind : "context free grammar",
-		description : "CFG: Language of balanced square bracket parentheses",
-		name : "cfg_balanced",
-		alphabet : ["[", "]"],
-		variables : ["<Start>"],
-		initial : "<Start>",
-		rules : [ "<Start> -> [<Start>] | <Start><Start> | ~"]
-	} |};;
-
-let cfg = cfg_text cfg_balanced;;
-
-let cfg2 = cfgX cfg;;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-let cfg2 = renameVariablesCFG (cfgI cfg) "ola";;
-
-
-
-
-
-let cfg = cfg_predef "cfg_simple";;
-
-let cfg2 = renameVariablesCFG (cfgI cfg) "ola";;
-
-
-
-let cfg2 = cfgX (renameVariablesCFG (cfgI cfg) "ola");;
-
-fa_generate fa 8;;
-
-fa_accept fa "aaaa";;
-fa_accept fa "aaaca";;
-
-fa_path fa "aaaa";;
-fa_path fa "aaaca";;
-
-fa_trail fa "aaaa";;
---------------------
-
-#print_depth 10000;;
-#print_length 10000;;
-
-
-
-
---------------------
-let fa = fa_predef "dfa_astar";;
-
-fa_generate fa 8;;
-
-fa_accept fa "aaaa";;
-fa_accept fa "aaaca";;
-
-fa_path fa "aaaa";;
-fa_path fa "aaaca";;
-
-fa_trail fa "aaaa";;
---------------------
-
-#print_depth 10000;;
-#print_length 10000;;
-
-
-
-let fa_astar = {| {
-		kind : "finite automaton2",
-		description : "this is an example",
-		name : "dfa_astar",
-		alphabet: ["a"],
-		states : ["START", "Z1"],
-		initialState : "START",
-		transitions : [
-			["START", "a", "START"],
-			["START", "~", "START"],			
-			["START", "~", "Z"],			
-			["Z", "a", "Z"],
-			["START", "a", "Z"]
-		],
-		acceptStates : ["START", "Z"]
-		} |}
-;;
-let fa = fa_text fa_astar;;
-
-let fa_astar = {| {
-		kind : "finite automaton2",
-		description : "this is an example",
-		name : "dfa_astar",
-		alphabet: ["a"],
-		states : ["START", "Z1"],
-		initialState : "START",
-		transitions : [
-			["START", "a", "START"],
-			["START", "~", "START"],			
-			["START", "~", "Z"],			
-			["Z", "a", "Z"],
-			["START", "a", "Z"]
-		],
-		acceptStates : ["START", "Z"]
-		} |}
-;;
-let fa = fa_text fa_astar;;
-
-*)
 
 # 3 "src/ContextFreeGrammarRDParser.ml"
 open BasicTypes
@@ -10680,7 +11324,7 @@ struct
   let isLeftRecursive (rep:t) = 
     Set.exists (fun x -> x = true) (Set.map (fun v -> leftRecursionTest v Set.empty rep) rep.variables)
 
-  let isLL1Deterministic simple (rep:t) =
+  let isLL1Deterministic (simple: bool) (rep:t) =
     let variables = rep.variables in
     let pairsSet = Set.map (fun v -> Set.make (List.flatten (pairs (sameHeadRules v rep)))) variables in
     let lookaheadInterSet = Set.flatMap (fun v -> Set.map (fun (p1,p2) -> Set.inter (lookahead p1 simple rep) (lookahead p2 simple rep)) v) pairsSet in
@@ -13231,6 +13875,236 @@ struct
 		object(self) inherit ContextFreeGrammarLR.model arg as super
      end
 end
+
+
+module ContextFreeGrammarTop =
+struct
+	open ContextFreeGrammarBasic
+	open ContextFreeGrammarBasicsX
+
+	let cfgI cfg = internalize cfg
+	let cfgX cfg = externalize cfg
+	let ptX pt = externalizeParseTree pt
+	
+	let cfg_load file = cfgX (make (Arg.File file))
+	let cfg_text text = cfgX (make (Arg.Text text))
+	let cfg_json json = cfgX (make (Arg.JSon json))
+	let cfg_predef name = cfg_text (Examples.example name)
+
+	let confX (sf, w) = (word2str sf, word2str w)
+	let pathX (p: path) = pathX confX p
+	let trailX (t: trail) = trailX confX t
+	
+	let stats () = RuntimeControl.stats ()
+
+	let cfg_accept cfg w = accept (cfgI cfg) (wordI w)
+
+	let cfg_path cfg w =
+		let (r,p,t) = acceptFull (cfgI cfg) (wordI w) in
+			pathX p
+
+	let cfg_trail cfg w =
+		let (r,p,t) = acceptFull (cfgI cfg) (wordI w) in
+			trailX t
+
+	let cfg_parse_tree cfg w =
+		let pt = parseTree (cfgI cfg) (wordI w) in
+			ptX pt
+
+	let cfg_generate cfg len = wordsX (generate (cfgI cfg) len)
+	
+	let cfg_info cfg  =
+		if ContextFreeGrammarLL1.isLL1 true (cfgI cfg) then
+			print_string "LL1\n"
+	;;
+
+end
+
+
+
+(*
+    method defineInformationBox =
+      let infoBox = HtmlPageClient.defineInformationBox side in
+      if side then HtmlPageClient.cfgCy2Close();
+      let ll1 = myCFG#isLL1 in
+        HtmlPageClient.getIsLL1 ll1 infoBox;
+      let lr = myCFG#isLeftRecursive in
+        HtmlPageClient.getIsLeftRecursive lr infoBox;
+      let lf = myCFG#isLeftFactoring in
+        HtmlPageClient.getIsLeftFactoring lf infoBox;
+      let pConf = myCFG#hasParsingTableConflict in
+        HtmlPageClient.getHasParsingTableConflict pConf infoBox;
+      let c = myCFG#isClean in
+      let prod = myCFG#isFullyProductive in
+      let access = myCFG#isFullyAccessible in
+        HtmlPageClient.getIsCFGClean c prod access infoBox
+*)
+
+
+(*
+
+examples;;
+open ContextFsreeGrammarSupport;;
+open ContextFreeGrammarBasicsX;;
+let g = cfg_predef "cfg_balanced";;
+let w = "[[][]]";;
+cfg_accept g w;;
+cfg_path g w;;
+cfg_parse_tree g w;;
+
+let g = cfg_predef "cfg_balanced";;
+cfg_info g;;
+
+*)
+
+open ContextFreeGrammarTop
+
+     (* Adds a sufix to a variable name name *)
+     let addSufixCFG (v: symbol)(sufix: string): symbol =
+       str2symb((symb2str v)^"_"^sufix)
+
+
+(* addSufix a que? *)
+    let addSufixList  body sufix =
+        List.map(fun s -> addSufixCFG  s sufix) body
+
+       (* Renames all the variables in one gramatic adding a sufix *)	
+     let renameVariablesCFG (cfg: ContextFreeGrammarBasic.t) (sufix: string): ContextFreeGrammarBasic.t =
+       let open ContextFreeGrammarBasic in 
+       {alphabet = cfg.alphabet;
+       variables =	Set.map (fun v -> addSufixCFG v sufix) cfg.variables;
+       initial = addSufixCFG cfg.initial sufix;
+       rules = Set.map (fun {head= h;body = b} -> {head=(addSufixCFG h sufix);body= addSufixList b sufix}) cfg.rules
+       }
+
+
+(*
+
+--------------------
+
+let cfg_balanced = {| {
+		kind : "context free grammar",
+		description : "CFG: Language of balanced square bracket parentheses",
+		name : "cfg_balanced",
+		alphabet : ["[", "]"],
+		variables : ["<Start>"],
+		initial : "<Start>",
+		rules : [ "<Start> -> [<Start>] | <Start><Start> | ~"]
+	} |};;
+
+let cfg = cfg_text cfg_balanced;;
+
+let cfg2 = cfgX cfg;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let cfg2 = renameVariablesCFG (cfgI cfg) "ola";;
+
+
+
+
+
+let cfg = cfg_predef "cfg_simple";;
+
+let cfg2 = renameVariablesCFG (cfgI cfg) "ola";;
+
+
+
+let cfg2 = cfgX (renameVariablesCFG (cfgI cfg) "ola");;
+
+fa_generate fa 8;;
+
+fa_accept fa "aaaa";;
+fa_accept fa "aaaca";;
+
+fa_path fa "aaaa";;
+fa_path fa "aaaca";;
+
+fa_trail fa "aaaa";;
+--------------------
+
+#print_depth 10000;;
+#print_length 10000;;
+
+
+
+
+--------------------
+let fa = fa_predef "dfa_astar";;
+
+fa_generate fa 8;;
+
+fa_accept fa "aaaa";;
+fa_accept fa "aaaca";;
+
+fa_path fa "aaaa";;
+fa_path fa "aaaca";;
+
+fa_trail fa "aaaa";;
+--------------------
+
+#print_depth 10000;;
+#print_length 10000;;
+
+
+
+let fa_astar = {| {
+		kind : "finite automaton2",
+		description : "this is an example",
+		name : "dfa_astar",
+		alphabet: ["a"],
+		states : ["START", "Z1"],
+		initialState : "START",
+		transitions : [
+			["START", "a", "START"],
+			["START", "~", "START"],			
+			["START", "~", "Z"],			
+			["Z", "a", "Z"],
+			["START", "a", "Z"]
+		],
+		acceptStates : ["START", "Z"]
+		} |}
+;;
+let fa = fa_text fa_astar;;
+
+let fa_astar = {| {
+		kind : "finite automaton2",
+		description : "this is an example",
+		name : "dfa_astar",
+		alphabet: ["a"],
+		states : ["START", "Z1"],
+		initialState : "START",
+		transitions : [
+			["START", "a", "START"],
+			["START", "~", "START"],			
+			["START", "~", "Z"],			
+			["Z", "a", "Z"],
+			["START", "a", "Z"]
+		],
+		acceptStates : ["START", "Z"]
+		} |}
+;;
+let fa = fa_text fa_astar;;
+
+*)
 # 1 "src/AttributeGrammarSupport.ml"
 (*
  * AttributeGrammarSupport.ml
@@ -13266,19 +14140,27 @@ struct
 	type attribute = symbol
 	type attributes = attribute set
 	type attrArg = variable * int
+	type value =
+	    | Int of int
+        | String of string
+        | Bool of bool
 	type expression =
-		| Int of int
-		| String of string
-		| Bool of bool
-		| Apply of attribute * attrArg
+		| Const of value
+		| Apply of attribute * attrArg (* l(A2) *)
 		| Expr of string * expression * expression
 	type equation = expression * expression
 	type equations = equation set
-	type condition = expression
+	type condition = expression 
 	type conditions = condition set
 
+
+	(*
+ * condition: tem que ser booleano
+ * equation do lado esquerdo é um apply
+ *)
+
 	type rule = {
-		head : symbol;
+		head : variable;
 		body : word;
 		equations : equations;
 		conditions : conditions
@@ -13294,14 +14176,6 @@ struct
 		rules : rules
 	}
 
-	type evaluation = (attribute * int) set
-	
-	type node = symbol * evaluation
-	
-	type parseTree =
-		  Leaf of node
-		| Root of node * parseTree list
-
 	let kind = "attribute grammar"
 
 	let ag_zero: t = {
@@ -13312,6 +14186,13 @@ struct
 		initial = draftVar;
 		rules = Set.empty;
 	}
+	
+	type evaluation = attribute * value
+	type evaluations = evaluation set
+    type node = symbol * evaluations
+    type parseTree =
+              Leaf of node
+            | Node of node * parseTree list
 end
 
 module ExpressionSyntax =
@@ -13332,14 +14213,14 @@ struct
 		
 	let rec parseExp3 (): expression =
 		match peek () with
-		| c when isDigit c -> Int (getInt ())
-		| '\'' -> String (getDelim '\'' '\'')
-		| 'T' -> skip (); Bool true
-		| 'F' -> skip (); Bool false
+		| c when isDigit c -> Const (Int (getInt ()))
+		| '\'' ->  Const (String (getDelim '\'' '\''))
+		| 'T' -> skip (); Const (Bool true)
+		| 'F' -> skip (); Const (Bool false)
 		| '(' -> let _ = getChar '(' in
 				let e = parseExp0 () in
 				let _ = getChar ')' in
-					Expr ("(", e, Int 0)
+					Expr ("(", e, Const (Int 0))
 		| _ -> parseApply ()
 
 	and parseExp2 (): expression =
@@ -13386,11 +14267,11 @@ struct
 	
 	let rec expression2str e =
 		match e with
-		| Int i ->
+		| Const (Int i) ->
 			string_of_int i
-		| String s ->
+		| Const (String s) ->
 			"\"" ^ s ^ "\""
-		| Bool b ->
+		| Const (Bool b) ->
 			if b then "T" else "F"
 		| Apply (attr, (var, i)) when i = -1 ->
 			symb2str attr ^ "(" ^ symb2str var ^ ")"
@@ -13493,7 +14374,6 @@ struct
 	let rec parseBody (): word =
 		match peek() with
 		| ' ' | '{' -> []
-		| '~' -> skip(); parseBody ()
 		| _ -> let sy = parseSymbol () in
 					sy::parseBody ()
 
@@ -13508,14 +14388,14 @@ struct
 		else begin
 			Scanner.start "AttributeGrammarSyntax" line;
 			try
-				let finish l = if l = [] then [epsilon] else l in
 				let h = parseHead () in
 				let _ = parseNeck () in
 				let b = parseBody () in
+				let b = if b = [] then [epsilon] else b in
 				let e = EquationsSyntax.parseEquations () in
 				let c = ConditionsSyntax.parseConditions () in
 				let _ = parseFinish () in
-					Set.make [{head=h; body=finish b;
+					Set.make [{head=h; body=b;
 						equations=e; conditions=c}]
 			with Not_found ->
 				Set.empty
@@ -13524,7 +14404,7 @@ struct
 	let parse rs: rules =
 		Set.flatMap parseLine rs
 					
-	let rule2str {head=h; body=b; equations=eqs; conditions=conds}: string =
+	let rule2str {head=h; body=b; equations=eqs; conditions=conds} =
 		let rule = (symb2str h) ^ " -> " ^ (word2str b) in
 		let eqs = Set.toList eqs in
 		let eqs = String.concat "; " (List.map EquationsSyntax.equation2str eqs) in
@@ -13546,8 +14426,20 @@ struct
 		{ head = h; body = str2word b;
 		equations=Set.empty; conditions=Set.empty }
 
-	let show rs =
+	let showRules rs =
 		Util.println [toString rs]
+
+	let showRule r =
+		showRules (Set.make [r])
+
+	let showEquation (e: equation): unit =
+		Util.println ["equation "; EquationsSyntax.equation2str e]
+		
+	let showExpression (e: expression): unit =
+		Util.println [ExpressionSyntax.expression2str e]
+		
+	let showValue (v: value): unit =
+		showExpression (Const v)
 end
 
 
@@ -13589,6 +14481,82 @@ struct
 		 toJSon2 (Entity.dummyId kind) rep
 end
 
+module AttributeGrammarParseTree =
+struct
+	open AttributeGrammarBasics
+
+	let value2str (v: value): string =
+		match v with
+		| Int i -> string_of_int i
+		| String s -> s
+		| Bool b -> if b then "true" else "false"
+
+	let evaluation2str (e: evaluation): string =
+		let (attr, v) = e in
+			(symb2str attr) ^ "=" ^ (value2str v)
+
+	let rec evaluations2list (es: evaluations): string list =
+		Set.match_ es
+			(fun () -> [])
+			(fun (attr, v) tl ->
+				(evaluation2str (attr, v))::evaluations2list tl
+			)
+
+	let node2str (node: node): string =
+		let (symbol, evals) = node in
+		let sy = symb2str symbol in
+		let l = evaluations2list evals in
+		let str = String.concat ", " l in
+			Printf.sprintf "%s {%s}" sy str		
+	
+	let rec showParseTreeX (pt: parseTree) (n: int): unit =
+		print_string (String.make (4*n) ' ');
+		match pt with
+         | Leaf (symbol, evals) ->
+			let str = node2str (symbol, evals) in
+				Printf.printf "%s\n" str
+         | Node ((symbol, evals), children) ->
+ 			let str = node2str (symbol, evals) in
+				Printf.printf "%s\n" str;
+				List.iter (fun c -> showParseTreeX c (n+1)) children
+
+	let showParseTree (pt: parseTree): unit =
+		showParseTreeX pt 0
+
+	let showNodeList (nodes: node list): unit =
+		let l = List.map (node2str) nodes in
+		let str = String.concat "] [" l in
+			Printf.printf "nodes [ [%s] ]\n" str
+	
+	let  showEvaluation (e: evaluation): unit =
+		let str = evaluation2str e in
+			Printf.printf "{%s}\n" str		
+	
+	let  showEvaluations (es: evaluations): unit =
+		let l = evaluations2list es in
+		let str = String.concat ", " l in
+			Printf.printf "{%s}\n" str		
+end
+
+(*
+	let rec showX (pt: parseTree) (tab: int): unit =
+		print_string (str_tab n);
+		match pt with
+         | Leaf (symbol, _) ->
+             Printf.printf "%s\n" (symb2str symbol)
+             
+         | Node ((symbol, evals), children) ->
+             Printf.printf "Node: %s\n" (symb2str symbol);
+             Set.iter (fun (attr, value) ->
+               match value with
+               | Int v -> Printf.printf "  Attribute: %s = %d\n" (symb2str attr) v
+               | String s -> Printf.printf "  Attribute: %s = %s\n" (symb2str attr) s
+               | Bool b -> Printf.printf "  Attribute: %s = %b\n" (symb2str attr) b
+             ) evals;
+             List.iter (fun c -> showX c 0) children
+*)
+
+
 module AttributeGrammarBasicFunctions =
 struct
 	open AttributeGrammarBasics
@@ -13607,6 +14575,23 @@ struct
 	let show2 (id: Entity.t) (rep: t): unit =
 		let j = toJSon2 id rep in
 			JSon.show j
+end
+
+module AttributeGrammarDebug =
+struct
+	open AttributeGrammarSyntax
+	open AttributeGrammarParseTree
+
+	let showRules = showRules
+	let showRule = showRule
+	let showEquation = showEquation
+	let showExpression = showExpression
+	let showValue = showValue
+	
+	let showParseTree = showParseTree
+	let showNodeList = showNodeList
+	let showEvaluation = showEvaluation
+	let showEvaluations = showEvaluations
 end
 
 module AttributeGrammarX =
@@ -13640,6 +14625,7 @@ struct
 	include AttributeGrammarBasics
 	include AttributeGrammarConversions
 	include AttributeGrammarBasicFunctions
+	include AttributeGrammarDebug
 	include AttributeGrammarLearnOCaml
 end
 # 1 "src/AttributeGrammar.ml"
@@ -13663,7 +14649,7 @@ end
 (*
  * ChangeLog:
  *
- * ???/2025 (pb) - ....
+ * mar/2025 (pb) - validateAG implementation method.
  * feb/2025 (amd) - New file "AttributeGrammar.ml".
  *)
 
@@ -13673,96 +14659,504 @@ end
  * TODO: More cleanup.
  *)
 
-open BasicTypes
+	open BasicTypes
+	open Set
 
-module AttributeGrammarPrivate =
-struct
-	open AttributeGrammarSupport
+	module AttributeGrammarPrivate =
+	struct
+		open AttributeGrammarSupport
 
-	let ag2cfg (rep: t): ContextFreeGrammarBasic.t =
-		ContextFreeGrammarBasic.cfg_zero
-	
-	let validateAG (name: string) (rep: t): unit =
-		()
-	
-	let validate (name: string) (rep: t): unit =
-		let cfg = ag2cfg rep in
-			ContextFreeGrammarPrivate.validate "_" cfg;
-			validateAG "_" rep
+		let howMany (body: word) (v: variable) =
+			List.length (List.filter (fun x-> x = v) body)
 
-	let accept (rep: t) (w: word): bool =
-		false
-end
+		let ag2cfg (rep: t): ContextFreeGrammarBasic.t =
+			ContextFreeGrammarBasic.cfg_zero
 
-module AttributeGrammar =
-struct
-	include AttributeGrammarSupport
-	open AttributeGrammarPrivate
+		let validateAttrArg (ag:t) (r:rule) (attr: attribute) (v,i) =
+			if i = 0 then
+				r.head = v && Set.belongs attr (Set.union ag.synthesized ag.inherited)
+		else
+			let counter = howMany r.body v in
+				counter >= i
 
-	(* Make *)
-	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
-	let make (arg: t Arg.alternatives): t = make arg validate
 
-	(* Exercices support *)
-	let checkProperty (fa: t) (prop: string) =
-		match prop with
-			| _ -> Model.checkProperty prop
-	let checkExercise ex fa = Model.checkExercise ex (accept fa) (checkProperty fa)	
-	let checkExerciseFailures ex fa = Model.checkExerciseFailures ex (accept fa) (checkProperty fa)
+		let rec validateExp (name: string) (ag: t) (r: rule) (e: expression) : string =
+					  let attr_exists attr =
+					    Set.belongs attr (Set.union ag.synthesized ag.inherited)
+					  in
 
-	(* Ops *)
-	let stats = Model.stats
-	let accept = accept
-end
+					  let vars_exists vars =
+					    Set.belongs vars ag.variables
+					  in
 
-module AttributeGrammarTop =
-struct
-	open AttributeGrammar
-end
+					  match e with
+					  | Const (Int _) -> "int"
+					  | Const (String _) -> "string"
+					  | Const (Bool _) -> "bool"
+					  | Apply (attr, (var, i)) ->
+					      if attr_exists attr then
+					        if vars_exists var then
+					          if validateAttrArg ag r attr (var, i) then "int"
+					          else Error.error name  "Argumento do Atributo invalido" "error"
+					        else  Error.error name  "Variável não encontrada" "error"
+					      else Error.error name  "Atributo não encontrado" "error"
+					  | Expr (op, l, r_expr) ->
+					      let tl = validateExp name ag r l in
+					      let tr = validateExp name ag r r_expr in
+					      if tl = tr then
+					        match op with
+					        | "+" | "*" ->
+					            if tl <> "string" then tl
+					            else Error.error name "Incompatibilidade de tipos" "error"
+					        | "<" | ">" | "<=" | ">=" | "=" | "<>" ->
+					            if tl = "int" then "bool"
+					            else Error.error name "Incompatibilidade de tipos" "error"
+					        | _ -> Error.error name "Operador desconhecido" "error"
+					      else Error.error name "Incompatibilidade de tipos" "error"
 
-open AttributeGrammarTop
+		let validateEquation (name: string) (ag: t) ((lhs, rhs): equation) (r: rule): unit =
+		    match lhs with
+		    | Apply _ ->
+		        let lhs_type = validateExp name ag r lhs in
+		        let rhs_type = validateExp name ag r rhs in
+		        if lhs_type = rhs_type && lhs_type <> "erro" then ()
+		        else Error.error name "Incompatibilidade de tipos na equaçao" () (* passar os erros para ingles*)
+		    | _ -> Error.error name "Lado esquerdo da equação deve ser Apply" ()
 
-module AttributeGrammarSupportTests : sig end =
-struct
-	open AttributeGrammar
-	
-	let active = false
-	
-	let ag = {| {
-		kind : "attribute grammar",
-		description : "",
-		name : "ag",
-		alphabet : ["[", "]"],
-		variables : ["S"],
-		inherited : [],
-		synthesized : [],
-		initial : "S",
-		rules : [ "S -> [S] {l(S) = 2; l(S) = 'ole'; l(S0) = l(S1)} [123 + 56; 56; 'ola']",
-				  "S -> SS {l(S) = l(S1) + 3 + 'ola' + l(S12345)}",
-				  "S -> ~ {l(S0) = 6}",
-				  "S -> ~ {l(S0) = 1+2*3<T>F<=T>=5=T<>T+(1*2)}"
-				]
-	} |}
+		    (*fazer vadildação das condições, fazer validar da expr e ver se é booleano*)
+		    (*passo seguinte calcular os atributos utilizando a tree??*)
+		    (*começar com atributos sintetizados*)
 
-	let test0 () =
-		let j = JSon.parse ag in
-		let g = fromJSon j in
-		let h = toJSon g in
-			JSon.show h
+        let validateCondition (name: string) (ag: t) (cond: condition) (rule: rule): unit =
+           if validateExp name ag rule cond = "bool" then ()
+           else Error.error name "Condição deve ser booleana" ()
 
-	let test1 () =
-		let g = make (Arg.Text ag) in
-		let h = toJSon g in
-			JSon.show h
 
-	let runAll =
-		if Util.testing active "AttributeGrammarSupport" then begin
-			Util.header "test0";
-			test1 ();
-			Util.header ""
-		end
-end
+		let accept (rep: t) (w: word): bool =
+			false
 
+        let ag_to_cfg (ag: t): ContextFreeGrammar.t =
+          {
+            alphabet = ag.alphabet;
+            variables = ag.variables;
+            initial = ag.initial;
+            rules = Set.map (fun r ->
+              {
+                ContextFreeGrammar.head = r.head;
+                body = r.body
+              }
+            ) ag.rules
+          }
+
+
+
+        let cfg_to_ag (cfg: ContextFreeGrammar.t): t =
+          {
+            alphabet = cfg.alphabet;
+            variables = cfg.variables;
+            synthesized = Set.empty;
+            inherited = Set.empty;
+            initial = cfg.initial;
+            rules = Set.map (fun (r: ContextFreeGrammar.rule) ->
+              {
+                head = r.head;
+                body = r.body;
+                equations = Set.empty;
+                conditions = Set.empty
+              }
+            ) cfg.rules
+          }
+
+        let validateEquations (name: string) (rep: t): unit =
+            Set.iter (fun r ->
+                Set.iter (fun eq ->
+                    validateEquation name rep eq r
+                ) r.equations
+            ) rep.rules
+
+        let validateConditions (name: string) (rep: t): unit =
+            Set.iter (fun r ->
+                Set.iter (fun eq ->
+                    validateCondition name rep eq r
+                ) r.conditions
+            ) rep.rules
+
+        let validate (name: string) (rep: t): unit =
+            let cfg = ag2cfg rep in
+                ContextFreeGrammarPrivate.validate name cfg;
+                validateEquations name rep;
+                validateConditions name rep
+
+        let rec collectFromExpression (exp: expression): attributes =
+          match exp with
+            | Apply (attr, _) -> Set.make [attr]
+            | Expr (_, l, r) -> Set.union (collectFromExpression l) (collectFromExpression r)
+            | _ -> Set.empty
+
+        let collectFromEquation (eq: equation): attributes =
+            let (lhs, rhs) = eq in
+            Set.union (collectFromExpression lhs) (collectFromExpression rhs)
+
+        let collectFromCondition (cond: condition): attributes =
+            collectFromExpression cond
+
+        let collectFromRule (r: rule): attributes =
+            let fromEquations = Set.flat_map collectFromEquation r.equations in
+            let fromConditions = Set.flat_map collectFromCondition r.conditions in
+            Set.union fromEquations fromConditions
+
+        let removeUnusedAttributes (rep: t): t =
+            let used = Set.flat_map collectFromRule rep.rules in
+            let newSynthesized = Set.inter rep.synthesized used in
+            let newInherited = Set.inter rep.inherited used in
+           {
+              rep with
+              synthesized = newSynthesized;
+              inherited = newInherited;
+            }
+
+        let collectVarsFromRule (r: rule) (vars: variables): variables =
+          Set.inter vars (Set.make r.body)
+
+        let removeUnusedRulesAndVariables (rep: t) =
+          let rec collectUsedVariables rules used =
+            match rules with
+            | [] -> used
+            | rule :: rest ->
+                let usedInBody = List.fold_left (fun acc sym -> Set.cons sym acc) used rule.body in
+                collectUsedVariables rest (Set.cons rule.head usedInBody)
+          in
+          let usedVariables = collectUsedVariables (Set.toList rep.rules) (Set.make [rep.initial]) in
+          let newVariables = Set.filter (fun var -> Set.belongs var usedVariables) rep.variables in
+          let newRules =
+            Set.filter
+              (fun rule ->
+                Set.belongs rule.head newVariables &&
+                List.for_all (fun sym -> Set.belongs sym newVariables || Set.belongs sym rep.alphabet) rule.body
+              )
+              rep.rules
+          in
+          { rep with variables = newVariables; rules = newRules }
+
+        let rec associX key idx (nodes: node list): evaluations =
+            match nodes with
+            | (k, evs) :: xs when key = k && (idx <= 0) ->
+                evs
+            | [] ->
+                print_string "not found\n";
+                raise Not_found
+            | _ when idx = 0 ->
+                print_string "not found\n";
+                raise Not_found
+            | _ :: xs ->
+                 associX key (idx-1) xs
+
+       let associ key idx (nodes: node list): evaluations =
+           Printf.printf "%s%d ===> " (symb2str key) idx;
+           let evs = associX key idx nodes in
+              showEvaluations evs;
+              evs
+
+        let rec updatei key idx (ev: evaluation) (nodes: node list): node list =
+            match nodes with
+            | (k, evs) :: xs when key = k && (idx <= 0) ->
+                  (k, Set.cons ev evs) :: xs
+            | [] ->
+                print_string "not found\n";
+                raise Not_found
+            | _ when idx = 0 ->
+                print_string "not found\n";
+                raise Not_found
+            | x :: xs -> x :: updatei key (idx-1) ev xs
+
+        let updatei key idx (ev: evaluation) (nodes: node list): node list =
+            updatei key idx ev nodes
+        
+        let evaluateOp (op: string) (l: value) (r:value): value =
+            match op with
+                | "+" ->(
+                    match (l, r) with
+                    | Int li, Int ri -> Int (li + ri)
+                    | String ls, String rs -> String (ls ^ rs)
+                    | _ -> failwith "Invalid expression in evaluation"
+                )
+                | "*" -> (
+                    match (l, r) with
+                    | Int li, Int ri -> Int (li * ri)
+                    | _ -> failwith "Invalid expression in evaluation"
+                )
+
+                (* acabar isto com os outros valores  -> *)
+                | _ -> failwith "Unknown operator in evaluation"
+
+       let rec evaluate (e: expression) (nodes: node list): value =
+            match e with
+            | Const v -> v
+            | Apply (attr, (var, idx)) ->
+                let evals = associ var idx nodes in
+                let (_,b) = Set.find (fun (a, _) -> a = attr) evals in
+                b
+            | Expr (op, left, right) ->
+                let l = evaluate left  nodes in
+                let r = evaluate right nodes in
+                evaluateOp op l r
+
+
+        let rec update2 a b l =
+            match l with
+            | [] -> [(a, b)]
+            | (x, y) :: xs when x = a -> (x, b) :: xs
+            | x :: xs -> x :: update2 a b xs
+
+        (* Evaluate an equation and update the list of evaluations *)
+       let eval (e: equation) (nodes: node list): node list =
+            showEquation e;
+            match e with
+            | (Apply (attr, (var, idx)), expr) ->
+            (try
+                let _ = showNodeList nodes in
+                let value = evaluate expr nodes in
+                let _ = showValue value in
+                let ev = (attr, value) in
+                let nodes = updatei var idx ev nodes in
+                let _ = showNodeList nodes in
+                    nodes
+            with _ ->
+				Printf.printf "%s has no value\n" (symb2str attr);
+                nodes
+             )
+            | _ -> failwith "Invalid equation in evaluation"
+
+(*        (* Evaluate an equation and update the list of evaluations *)
+       let evalZ (e: equation) (nodes: node list): node list =
+            showEquation e;
+            match e with
+            | (Apply (attr, (var, idx)), expr) ->
+            (try
+                let _ = showNodeList nodes in
+                let value = evaluate expr nodes in
+                let _ = showValue value in
+                let ev = (attr, value) in
+                let evs = List.assoc var nodes in
+                let new_evs = Set.cons ev evs in
+                let nodes = updatei var 0 new_evs nodes in
+                let _ = showNodeList nodes in
+                    nodes
+            with _ ->
+				Printf.printf "%s has no value\n" (symb2str attr);
+                nodes
+             )
+            | _ -> failwith "Invalid equation in evaluation"*)
+
+(******************************************************)
+       let getRoot (pt: parseTree): node =
+                match pt with
+                | Leaf ((s,e)) -> (s,e)
+                | Node ((s,e), _) -> (s,e)
+
+       let getChildren (pt: parseTree): parseTree list =
+                match pt with
+                | Leaf _ -> []
+                | Node (_, children) -> children
+
+        let getRootSymbol (pt: parseTree): symbol =
+            getRoot pt |> fst
+
+      let getRootRule (ag: t) (pt: parseTree): AttributeGrammarSupport.rule =
+        match pt with
+         | Leaf _ ->
+            failwith "getRootRule"
+         | Node (_, children) ->
+			let head = getRootSymbol pt in
+			let body = List.map getRootSymbol children in
+			try
+               Set.find (fun r -> r.head = head && r.body = body) ag.rules
+            with _ -> failwith (symb2str head)
+
+      let updateRoot a n =
+            match a with
+            | Leaf _ -> Leaf n
+            | Node (_, children) ->
+                   Node (n, children)
+
+      let calcAtributesAtRoot (ag: t) (pt: parseTree): parseTree =
+         match pt with
+        | Leaf n ->
+            Leaf n
+        | Node (_, children) ->
+            let rule: AttributeGrammarSupport.rule = getRootRule ag pt in
+            let _ = print_string "\n"; showRule rule in
+            let equations = rule.equations in
+            let all = pt::children in
+ 			let nodes = List.map getRoot all in
+            let nodes = Set.fold_left (fun a e -> eval e a) nodes equations in
+            let all = List.map2 (fun a n -> updateRoot a n) all nodes in
+            let pt = Node (getRoot (List.hd all), List.tl all) in
+            let _ = showParseTree pt in
+				pt
+
+      let rec calcAtributes (ag: t) (pt: parseTree): parseTree =
+         match pt with
+        | Leaf n ->
+            Leaf n
+        | Node (_, _) ->
+	(* inherited *)
+	    let pt = calcAtributesAtRoot ag pt in
+	(* recursion *)
+		let root = getRoot pt in
+		let children = getChildren pt in
+        let pt = Node (root, List.map (calcAtributes ag) children) in
+	(* synthetized *)
+		let pt = calcAtributesAtRoot ag pt in
+          pt
+(******************************************************)
+	end
+
+	module AttributeGrammar =
+	struct
+		include AttributeGrammarSupport
+		open AttributeGrammarPrivate
+
+		(* Make *)
+		let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
+		let make (arg: t Arg.alternatives): t = make arg validate
+
+		(* Exercices support *)
+		let checkProperty (fa: t) (prop: string) =
+			match prop with
+				| _ -> Model.checkProperty prop
+		let checkExercise ex fa = Model.checkExercise ex (accept fa) (checkProperty fa)
+		let checkExerciseFailures ex fa = Model.checkExerciseFailures ex (accept fa) (checkProperty fa)
+
+		(* Ops *)
+		let stats = Model.stats
+		let accept = accept
+	end
+
+	module AttributeGrammarTop =
+	struct
+		open AttributeGrammar
+	end
+
+	open AttributeGrammarTop
+
+	module AttributeGrammarSupportTests : sig end =
+	struct
+		open AttributeGrammar
+		open AttributeGrammarPrivate
+
+		let active = true
+        let e s = (symb s, Set.empty);;
+
+        let ag1 = {| {
+                kind : "attribute grammar",
+                description : "",
+                name : "ag1",
+                alphabet : ["[", "]"],
+                variables : ["S","E","F"],
+                inherited : [""],
+                synthesized : ["v"],
+                initial : "S",
+                rules : [ "S -> E {v(S) = v(E)}",
+                            "E -> E * F {v(E0) = v(E1) * v(F)}",
+                            "E -> F {v(E) = v(F)}",
+                            "F -> 0 {v(F) = 0}",
+                            "F -> 1 {v(F) = 1}",
+                            "F -> 2 {v(F) = 2}",
+                            "F -> 3 {v(F) = 3}",
+                            "F -> 4 {v(F) = 4}",
+                            "F -> 5 {v(F) = 5}",
+                            "F -> 6 {v(F) = 6}",
+                            "F -> 7 {v(F) = 7}",
+                            "F -> 8 {v(F) = 8}",
+                            "F -> 9 {v(F) = 9}"
+                            ]
+                } |}
+
+        let pt1 =
+                Node (e "S", [
+                    Node (e "E", [
+                         Node (e "E", [
+                             Node (e "F", [
+                                  Leaf (e "3")
+                            ])
+                        ]);
+                        Leaf (e "*");
+                        Node (e "F", [
+                            Leaf (e "2")
+                        ])
+                  ] )
+                ])
+
+
+        let ag2 = {| {
+                kind : "attribute grammar",
+                description : "",
+                name : "ag2",
+                alphabet : ["[", "]"],
+                variables : ["S","E","F"],
+                inherited : ["q"],
+                synthesized : ["v"],
+                initial : "S",
+                rules : [ "S -> E {v(S) = v(E); q(E) = 99}",
+                            "E -> E * F {v(E0) = v(E1) * v(F); q(E1) = q(E0)+1}",
+                            "E -> F {v(E) = v(F); q(F) = q(E)+1}",
+                            "F -> 0 {v(F) = 0}",
+                            "F -> 1 {v(F) = 1}",
+                            "F -> 2 {v(F) = 2}",
+                            "F -> 3 {v(F) = 3 + q(F)}",
+                            "F -> 4 {v(F) = 4}",
+                            "F -> 5 {v(F) = 5}",
+                            "F -> 6 {v(F) = 6}",
+                            "F -> 7 {v(F) = 7}",
+                            "F -> 8 {v(F) = 8}",
+                            "F -> 9 {v(F) = 9}"
+                            ]
+                } |}
+
+
+        let pt2 =
+                Node (e "S", [
+                    Node (e "E", [
+                         Node (e "E", [
+                             Node (e "F", [
+                                  Leaf (e "3")
+                            ])
+                        ]);
+                        Leaf (e "*");
+                        Node (e "F", [
+                            Leaf (e "2")
+                        ])
+                  ] )
+                ])
+
+
+		let test0 () =
+			let j = JSon.parse ag1 in
+			let g = fromJSon j in
+			let h = toJSon g in
+				JSon.show h
+
+		let test1 () =
+			let g = make (Arg.Text ag1) in
+			let newTree = calcAtributes g pt1 in
+			Printf.printf "--------------------------\n";
+			Printf.printf "Final parse tree:\n";
+            showParseTree newTree
+
+		let test2 () =
+			let g = make (Arg.Text ag2) in
+			let newTree = calcAtributes g pt2 in
+			Printf.printf "--------------------------\n";
+			Printf.printf "Final parse tree:\n";
+            showParseTree newTree
+
+        let runAll =
+          if Util.testing active "AttributeGrammarSupport" then begin
+            Util.header "test2";
+            test2 ();
+          end
+	end
 
 # 3 "src/PushdownAutomatonSupport.ml"
 (*
@@ -15406,7 +16800,8 @@ struct
 			
 	let addInitialState s rep =
 		{ rep with
-			states = Set.add s rep.states;
+		(*	states = Set.add s rep.states; erro *)
+			states = Set.cons s rep.states; (*	Alexandre *)
 			initialState = s }
 
 	let addFinalState s rep =
@@ -15424,6 +16819,17 @@ struct
 			transitions = Set.filter (fun (a,_,c,_,_) ->
 							a <> s || c <> s) rep.transitions;
 			acceptStates = Set.remove s rep.acceptStates }
+
+	let turnStateInitial s rep = (* Alexandre *)
+		if s = rep.initialState then
+			rep
+		else
+			let tmpStates = Set.filter (fun node -> node != s) rep.states in
+            let newStates = Set.cons s tmpStates in
+				{ rep with
+					states = newStates;
+					initialState = s;
+				}
 
 	let changeStateToInitial s rep =
 		{ rep with
@@ -15701,1654 +17107,6 @@ tm_trail tm "abab";;
 --------------------
 
 *)
-# 1 "src/TransducerSupport.ml"
-(*
- * TransducerSupport.ml
- *
- * This file is part of the OCamlFLAT library
- *
- * LEAFS project (partially supported by the OCaml Software Foundation) [2020/21]
- * FACTOR project (partially supported by the Tezos Foundation) [2019/20]
- *
- * NOVA LINCS - NOVA Laboratory for Computer Science and Informatics
- * Dept. de Informatica, FCT, Universidade Nova de Lisboa.
- *
- * This software is distributed under the terms of the GPLv3 license.
- * See the included LICENSE file for details.
- *
- *  Written by Artur Miguel Dias (amd)
- *)
-
-(*
- * ChangeLog:
- *
- * jul/2025 (amd) - New file.
- *)
-
-(*
- * Description: Supporting types and functions for Finite-state transducers.
- *)
-
-open BasicTypes
-
-module TransducerBasics =
-struct
-	type transition4 = state * symbol * symbol * state
-	type transitions4 = transition4 set
-	type t = {
-		inAlphabet : symbols;
-		outAlphabet : symbols;
-		states : states;
-		initialState : state;
-		transitions : transitions4;
-		acceptStates : states
-	}
-
-	type configuration = state * word * word
-	type configurations = configuration set
-	type path = configuration list
-	type trail = configurations list
-
-	let kind = "transducer"
-
-	let fst_zero: t = {
-		inAlphabet = Set.empty;
-		outAlphabet = Set.empty;
-		states = Set.make [draftState];
-		initialState = draftState;
-		transitions = Set.empty;
-		acceptStates = Set.empty
-	}
-end
-
-module TransducerConversions =
-struct
-	open TransducerBasics
-
-	let fromJSon (j: JSon.t): t =
-		if JSon.isNull j || not (JSon.hasField j "kind") then
-			fst_zero
-		else {
-			inAlphabet = JSon.fieldSymbolSet j "inAlphabet";
-			outAlphabet = JSon.fieldSymbolSet j "outAlphabet";
-			states = JSon.fieldStateSet j "states";
-			initialState = JSon.fieldState j "initialState";
-			transitions = JSon.fieldQuadsSet j "transitions";
-			acceptStates = JSon.fieldStateSet j "acceptStates"
-		}
-
-	let toJSon0 (rep: t): JSon.t =
-		JSon.makeAssoc [
-			("inAlphabet", JSon.makeSymbolSet rep.inAlphabet);
-			("outAlphabet", JSon.makeSymbolSet rep.outAlphabet);
-			("states", JSon.makeStateSet rep.states);
-			("initialState", JSon.makeState rep.initialState);
-			("transitions", JSon.makeQuadsSet rep.transitions);
-			("acceptStates", JSon.makeStateSet rep.acceptStates)
-		]
-	
-	let toJSon2 (id: Entity.t) (rep: t): JSon.t =
-		 JSon.append (Entity.toJSon id) (toJSon0 rep)
-	
-	let toJSon (rep: t): JSon.t =
-		 toJSon2 (Entity.dummyId kind) rep
-end
-
-module TransducerBasicFunctions =
-struct
-	open TransducerBasics
-	open TransducerConversions
-
-	let make2 (arg: t Arg.alternatives) validate: Entity.t * t =
-		Entity.make2 arg fromJSon kind validate
-
-	let make (arg: t Arg.alternatives) validate: t =
-		snd (make2 arg validate)
-
-	let show (rep: t): unit =
-		let j = toJSon rep in
-			JSon.show j
-
-	let show2 (id: Entity.t) (rep: t): unit =
-		let j = toJSon2 id rep in
-			JSon.show j
-end
-
-module TransducerX =
-struct
-	open TransducerBasics
-
-	type transition4X = state * symbolX * symbolX * state
-	type tx = {
-		inAlphabet : symbolX list;
-		outAlphabet : symbolX list;
-		states : state list;
-		initialState : state;
-		transitions : transition4X list;
-		acceptStates : state list
-	}
-
-	let transitions4I (l: transition4X list): transitions4 =
-		let trans4I (a,b,c,d): transition4 = (a, symbI b, symbI c, d) in
-			Set.make (List.map trans4I l)
-			
-	let transitions4X (s: transitions4): transition4X list =
-		let trans4X (a,b,c,d): transition4X = (a, symbX b, symbX c, d) in
-			List.map trans4X (Set.toList s)
-
-	let internalize (fst: tx): t = {
-		inAlphabet = symbolsI fst.inAlphabet;
-		outAlphabet = symbolsI fst.outAlphabet;
-		states = Set.make fst.states;
-		initialState = fst.initialState;
-		transitions = transitions4I fst.transitions;
-		acceptStates = Set.make fst.acceptStates
-	}
-	
-	let externalize (fst: t): tx = {
-		inAlphabet = symbolsX fst.inAlphabet;
-		outAlphabet = symbolsX fst.outAlphabet;
-		states = Set.toList fst.states;
-		initialState = fst.initialState;
-		transitions = transitions4X fst.transitions;
-		acceptStates = Set.toList fst.acceptStates
-	}
-end
-
-module TransducerLearnOCaml =
-struct
-	open TransducerBasics
-	open TransducerX
-
-	let moduleName =
-		"Transducer"
-
-	let xTypeName =
-		"finiteAutomaton"
-
-	let transs4XD (l: transition4X list): string =
-		let t2d (a,b,c,d) =
-			Printf.sprintf "(%s, %s, %s, %s)"
-			(stateXD a)
-			(symbXD b)
-			(symbXD c)
-			(stateXD d)
-		in listD t2d l
-
-	let solution (name: string) (rep: t): string =
-		let repx = externalize rep in
-		Printf.sprintf {zzz|
-		%s{
-			inAlphabet = %s;
-			outAlphabet = %s;
-			states = %s;
-			initialState = %s;
-			transitions = %s;
-			acceptStates = %s
-		}
-		|zzz}	(* please, do not change this line *)
-			(FiniteEnumerationLearnOCaml.displayHeader name xTypeName)
-			(symbolsXD repx.inAlphabet)
-			(symbolsXD repx.outAlphabet)
-			(statesXD repx.states)
-			(stateXD repx.initialState)
-			(transs4XD repx.transitions)
-			(statesXD repx.acceptStates)
-
-
-	let prelude : string =
-		Printf.sprintf {zzz|
-		type symbol = %s
-		type state = string
-		type finiteAutomaton = {
-			alphabet : symbol list;
-			states : state list;
-			initialState : state;
-			transitions : (state * symbol * state) list;
-			acceptStates : state list
-		}
-		|zzz}	(* please, do not change this line *)
-			symbolTypeName
-
-	let example : JSon.t =
-		JSon.parse {|
-		{
-			kind : "transducer",
-			description : "this is an example",
-			name : "fst example",
-			alphabet: ["w", "z"],
-			states : ["START", "X", "Z"],
-			initialState : "START",
-			transitions : [
-				["START", "w", "w", "X"], ["X", "z", "z", "X"]
-			],
-			acceptStates : ["Z"]
-		}
-		|}	(* please, do not change this line *)
-end
-
-module TransducerSupport =
-struct
-	include TransducerBasics
-	include TransducerConversions
-	include TransducerBasicFunctions
-	include TransducerLearnOCaml
-end
-# 1 "src/Transducer.ml"
-(*
- * Transducer.ml
- *
- * This file is part of the OCamlFLAT library
- *
- * LEAFS project (partially supported by the OCaml Software Foundation) [2020/21]
- * FACTOR project (partially supported by the Tezos Foundation) [2019/20]
- *
- * NOVA LINCS - NOVA Laboratory for Computer Science and Informatics
- * Dept. de Informatica, FCT, Universidade Nova de Lisboa.
- *
- * This software is distributed under the terms of the GPLv3 license.
- * See the included LICENSE file for details.
- *
- *  Written by João Santos (js)
- *)
-
-(*
- * ChangeLog:
- *
- * jul/2025 (amd) - Initial skeleton.
- *)
-
-(*
- * Description: Finite-state transducer functionality.
- *)
-
-open BasicTypes
-
-module TransducerAccept =
-struct
-  open TransducerSupport
-
-  let initialConfigs (fst: t) (w: word) : configurations =
-    Set.make [(fst.initialState, w, [])]
-
-  let isAcceptingConfig (fst: t) (st, w, _out) : bool =
-    Set.belongs st fst.acceptStates && w = []
-
-  let nextConfigs (fst: t) (st, w, out) : configurations =
-    let build_next_config (new_w) (_, _, outSym, st2) =
-      let new_out = if outSym = epsilon then out else out @ [outSym] in
-      (st2, new_w, new_out)
-    in
-
-    match w with
-    | [] ->
-        let epsTr =
-          Set.filter (fun (st1, sy, _, _) -> st1 = st && sy = epsilon) fst.transitions
-        in
-        Set.map (build_next_config []) epsTr
-
-    | x::xs ->
-        let consume =
-          Set.filter (fun (st1, sy, _, _) -> st1 = st && sy = x) fst.transitions
-        in
-        let viaConsume =
-          Set.map (build_next_config xs) consume
-        in
-        let epsTr =
-          Set.filter (fun (st1, sy, _, _) -> st1 = st && sy = epsilon) fst.transitions
-        in
-        let viaEps =
-          Set.map (build_next_config w) epsTr
-        in
-
-        Set.union viaConsume viaEps
-
-  let accept (fst: t) (w: word) : bool =
-    ignore (Model.checkWord fst.inAlphabet w);
-    Model.accept fst w initialConfigs nextConfigs isAcceptingConfig
-
-  let acceptFull (fst: t) (w: word) : bool * path * trail =
-    ignore (Model.checkWord fst.inAlphabet w);
-    Model.acceptFull fst w initialConfigs nextConfigs isAcceptingConfig
-
-  let acceptOut (fst: t) (w: word) : bool*word =
-	let (ok, path, _) = acceptFull fst w in
-	if ok then
-		let (_, _, c) = List.hd (List.rev path) in
-		(ok, c)
-	else
-		(ok, [])
-
-	let acceptCheckOutput (fst: t) (w: word) : bool =
-		ignore (Model.checkWord fst.inAlphabet w);
-		let (ok, out) = acceptOut fst w in
-		ok && Model.checkWord fst.outAlphabet out
-		
-    let acceptExpectedOutput (fst: t) (w: word) : bool =
-        let wstr = String.trim (word2str w) in
-        match String.index_opt wstr '-' with
-        | Some i when i + 1 < String.length wstr && wstr.[i + 1] = '>' ->
-            let inp = String.sub wstr 0 i |> String.trim |> str2word in
-						Util.println [("acceptExpectedOutput: input part extracted: " ^ (word2str inp))];
-            let out_exp = String.sub wstr (i + 2) (String.length wstr - i - 2) |> String.trim |> str2word in
-            let (ok, out_act) = acceptOut fst inp in
-            ok && out_act = out_exp && Model.checkWord fst.outAlphabet out_act
-        | _ ->
-            acceptCheckOutput fst w
-	
-
-end
-
-module TransducerGenerate =
-struct
-  open TransducerSupport
-  open TransducerAccept
-
-  let nextConfigs2 (fst: t) _ (st, w, out) =
-    let trs = Set.filter (fun (st1, _, _, _) -> st1 = st) fst.transitions in
-    Set.map
-      (fun (_, inSym, outSym, st2) ->
-         if inSym = epsilon then
-           (st2, w, out @ [outSym])       
-         else
-           (st2, inSym::w, out @ [outSym])  
-      )
-      trs
-
-  let isAcceptingConfig2 (fst: t) (st, _, _) =
-    Set.belongs st fst.acceptStates
-
-  let getWord (_, w, _) = w
-
-  let generate (fst: t) (len: int) : words =
-    Model.generate fst len initialConfigs nextConfigs2 isAcceptingConfig2 getWord
-
-  let generateDumb (fst: t) (len: int) : words =
-    Model.generateDumb fst fst.inAlphabet len initialConfigs nextConfigs isAcceptingConfig
-end
-
-
-module TransducerPrivate =
-struct
-	open FiniteAutomaton
-	open TuringMachine
-	open TransducerSupport
-
-	exception DeterminizationFailed
-
-	(* get start state, start symbol, end symbol, or end state of all transitions in set *)
-	let transitionsGetS trns = Set.map ( fun (a,_,_,_) -> a ) trns
-	let transitionsGetSS trns = Set.map ( fun (_,b,_,_) -> b ) trns
-	let transitionsGetES trns = Set.map ( fun (_,_,c,_) -> c ) trns
-	let transitionsGetE trns = Set.map (fun (_,_,_,d) -> d) trns
-
-	let asFiniteAutomaton (fst: t): FiniteAutomaton.t =
-	{
-		alphabet = fst.inAlphabet;
-		states = fst.states;
-		initialState = fst.initialState;
-		acceptStates = fst.acceptStates;
-		transitions =
-		Set.map
-			(fun (src, input, _output, dst) -> (src, input, dst))
-			fst.transitions
-	}
-
-	let validate (name: string) (fst: t): unit =
-		(* input alphabet must not contain " " *)
-		let validInAlphabet = not (Set.belongs epsilon fst.inAlphabet) in
-
-		(* output alphabet must not contain " " *)
-		let validOutAlphabet = not (Set.belongs epsilon fst.outAlphabet) in
-
-		(* initial state must belong to the set of all states *)
-		let validInitSt = Set.belongs fst.initialState fst.states in
-
-		(* all accepted states must belong to the set of all states *)
-		let validAccSts = Set.subset fst.acceptStates fst.states in
-
-		let fromSt = transitionsGetS fst.transitions in
-		let ssy = transitionsGetSS fst.transitions in
-		let esy = transitionsGetES fst.transitions in
-		let toSt = transitionsGetE fst.transitions in
-		let salpha = Set.add epsilon fst.inAlphabet in
-		let ealpha = Set.add epsilon fst.outAlphabet in
-		(* all transitions states must belong to all states and symbols must belong corresponding to the alphabet *)
-		let validTrns = (Set.subset fromSt fst.states)
-					&& (Set.subset ssy salpha) && (Set.subset esy ealpha) 
-					&& (Set.subset toSt fst.states) in
-
-			if not validInAlphabet then
-				Error.error name "The input alphabet contains epsilon '~', and it should not" ();
-			if not validOutAlphabet then
-				Error.error name "The output alphabet contains epsilon '~', and it should not" ();
-			if not validInitSt then
-				Error.error name "The initial state does not belong to the set of all states" ();
-			if not validAccSts then
-				Error.error name "Some accept states do not belong to the set of all states" ();
-			if not validTrns then
-				Error.error name "Some transitions are invalid" ()
-	
-	(**
-	* This function generates all states that are reachable from the given state. A state is reachable from s if there
-	* exists a word that starting on s will lead to that state
-	*)
-	let reachable (fst: t) (s:state): states =
-		let neighbourSts st t = transitionsGetE (Set.filter (fun (a,_,_,_) -> a = st) t) in
-		let nextStates sts t = Set.flatMap (fun st -> neighbourSts st t) sts in
-		let remain s t = Set.filter (fun (a,_,_,_) -> not (Set.belongs a s)) t in
-		let rec reach visited s t = if visited = s then Set.empty else Set.union s ( reach s (nextStates s t) (remain s t) ) in
-			reach Set.empty (Set.make [s]) fst.transitions
-
-	(**
-	* This function generates all productive states. A state is productive if there exists a word that will lead said state
-	* to an acceptance state
-	*)
-	let productive (fst: t): states =
-		let reachsAccSt st = Set.exists (fun s -> Set.belongs s fst.acceptStates ) (reachable fst st) in
-			Set.filter (fun st -> reachsAccSt st) fst.states
-
-	(**
-	* This function generates the set of all useful states
-	*)
-	let getUsefulStates (fst: t): states =
-		Set.inter (productive fst) (reachable fst fst.initialState)
-
-	(**
-	* This function generates the set of all non useful states
-	*)
-	let getUselessStates (fst: t): states =
-		Set.diff fst.states (getUsefulStates fst)
-
-	(**
-	* This function creates the equivalent fst where all states are useful
-	*)
-	let cleanUselessStates (fst: t): t =
-		let usfSts = getUsefulStates fst in
-		let usfTrs = Set.filter
-						(fun (a,_,_,d) -> Set.belongs a usfSts && Set.belongs d usfSts)
-						fst.transitions in
-		let inAlf = transitionsGetSS usfTrs in
-		let usfInAlf = Set.diff inAlf (Set.make [epsilon]) in
-		let outAlf = transitionsGetES usfTrs in
-		let usfOutAlf = Set.diff outAlf (Set.make [epsilon]) in
-		let accSts = Set.inter fst.acceptStates usfSts in
-		let usfSts = Set.add fst.initialState usfSts in
-			{
-				inAlphabet = usfInAlf;
-				outAlphabet = usfOutAlf;
-				states = usfSts;
-				initialState = fst.initialState;
-				transitions = usfTrs;
-				acceptStates = accSts
-			}
-		
-	let isClean (fst: t): bool =
-		let fa = asFiniteAutomaton fst in
-		FiniteAutomaton.areAllStatesUseful fa
-		(*s
-		let usfSts = getUsefulStates fst in
-			Set.size fst.states = Set.size usfSts
-		*)
-
-	(**
-	* Performs a fast check for infinitely ambiguous epsilon-loops.
-	* A transducer with an epsilon self-loop that produces output
-	* is infinitely ambiguous and so, not determinizable.
-	*)
-	let isSelfLoop (fst: t) : bool =
-		let has_output_eps_loop =
-		  Set.exists
-			(fun (a, b, c, d) ->
-			   b = epsilon &&  (* Is it an epsilon transition? *)
-			   a = d &&        (* Is it a self-loop? *)
-			   c <> epsilon   (* Does it produce output? *)
-			)
-			fst.transitions
-		in
-		
-		if has_output_eps_loop then
-			true (* Immediately fail, FST is ambiguous *)
-		else
-			false (* Does not have this specific ambiguity *)
-	
-	(**
-	* Computes the ε-closure of a state, keeping track of output words
-	* produced along ε-transitions.
-	*)
-	let closeEmptyOut (st: state) (ts: transitions4) : (state * word) Set.t =
-		let rec explore (frontier: (state * word) Set.t) (visited: (state * word) Set.t) =
-			if Set.subset frontier visited then visited
-			else
-				let next =
-					Set.flatMap
-						(fun (s, out) ->
-							let epsTr = Set.filter (fun (a, b, _, _) -> a = s && b = epsilon) ts in
-							Set.map
-								(fun (_, _, epsOut, s2) -> (s2, out @ [epsOut]))
-								epsTr
-						)
-						frontier
-				in
-				let newSet = Set.union frontier visited in
-				explore next newSet
-		in
-		explore (Set.make [(st, [])]) Set.empty
-
-	(** 
-	* Take the first n elements of a list.
-	*)
-	let rec prefix n xs =
-		match (n, xs) with
-		| 0, _ -> []
-		| _, [] -> []
-		| n, x::xs' -> x :: prefix (n-1) xs'
-
-	(**
-	* Check if all words in a set are prefix-compatible.
-	* or any two words w1 and w2 in the set,
-	* either w1 is a prefix of w2 or w2 is a prefix of w1.
-	*)
-	let prefix_consistent (outputs: word Set.t) : bool =
-		let outs = Set.toList outputs in
-		List.for_all (fun w1 ->
-			List.for_all (fun w2 ->
-				let l1 = List.length w1 in
-				let l2 = List.length w2 in
-				if l1 <= l2 then
-					prefix l1 w2 = w1
-				else
-					prefix l2 w1 = w2
-			) outs
-		) outs
-
-	(**
-	* Checks if the transducer fst is deterministic.
-	*
-	* Deterministic means:
-	*  - there are no self looping ε-transitions that produce output
-	*  - ε-closure must not yield multiple output words without consuming input
-	*  - For each (state, input), at most one resulting (nextState, outputWord) is possible
-	*)
-	let isDeterministicEpsilon (fst: t) : bool =
-		if (isSelfLoop fst) then
-			false (* Fails the fast ambiguity check *)
-		else
-		Set.for_all
-			(fun st ->
-				let epsClosure = closeEmptyOut st fst.transitions in
-				(* ε-output ambiguity check *)
-				let epsOutputs = Set.map snd epsClosure in
-					if not (prefix_consistent epsOutputs) then
-						false
-					else
-				(* Determinism for each input symbol *)
-				Set.for_all
-					(fun input ->
-						if input = epsilon then 
-							true  (* skip ε input symbol explicitly *)
-						else
-							let results =
-								Set.flatMap
-									(fun (s, outPrefix) ->
-										(* transitions consuming this input *)
-										let trs =
-											Set.filter (fun (a, b, _, _) -> a = s && b = input) fst.transitions
-										in
-										(* follow each transition, accumulate output, then close with ε *)
-										Set.flatMap
-											(fun (_, _, out, s2) ->
-													let eps2 = closeEmptyOut s2 fst.transitions in
-													Set.map
-														(fun (sFinal, outSuffix) ->
-															(sFinal, outPrefix @ (out :: outSuffix))
-														)
-														eps2
-											)
-											trs
-									)
-								epsClosure
-							in
-						(* Deterministic if ≤ 1 possible (state, output) result *)
-						Set.size results <= 1
-					)
-				fst.inAlphabet
-			)
-		fst.states
-	
-	(**
-	* Checks if the transducer fst is deterministic.
-	*
-	* Deterministic means:
-	*  - The transducer has no ε-transitions.
-	*  - For every (state, input symbol), there is at most one transition.
-	*  - For each  transition, there is a single output.
-	*)
-	let isDeterministic (fst: t) : bool =
-	let has_epsilon =
-		Set.exists (fun (_, b, _, _) -> b = epsilon) fst.transitions
-	in
-	if has_epsilon then
-		false
-	else
-		Set.for_all
-		(fun st ->
-			Set.for_all
-			(fun input ->
-				let trs =
-					Set.filter (fun (a, b, _, _) -> a = st && b = input) fst.transitions
-				in
-				let outs = Set.map (fun (_,_,out,_) -> out) trs in
-				let dests = Set.map (fun (_,_,_,d) -> d) trs in
-				Set.size trs <= 1 && Set.size outs <= 1 && Set.size dests <= 1
-			)
-			fst.inAlphabet
-		)
-		fst.states
-
-	(* Get all states reachable from 'sts' via epsilon-input transitions *)
-	let rec closeEmpty (sts: states) (ts: transitions4) : states =
-		let nextEps = Set.flatMap (fun st ->
-		Set.map (fun (_,_,_,d) -> d)
-			(Set.filter (fun (a,b,_,_) -> a = st && b = epsilon) ts)
-		) sts in
-		let newSts = Set.union sts nextEps in
-		if Set.equals sts newSts then sts
-		else closeEmpty newSts ts
-
-	(* Get states reachable from 'sts' on one symbol 'sy' *)
-	let move (sts: states) (sy: symbol) (ts: transitions4) : states =
-		Set.flatMap (fun st ->
-		Set.map (fun (_,_,_,d) -> d)
-			(Set.filter (fun (a,b,_,_) -> a = st && b = sy) ts)
-		) sts
-
-	(* generates the set of states reachable from the given state set though the given symbol *)
-	let newR (oneR: states) (sy: symbol) (ts: transitions4) : states =
-		let nxtSts = move oneR sy ts in
-		Set.union nxtSts (closeEmpty nxtSts ts)
-
-	(* creates all transitions (given state set, a given symbol, output, states reachable) *)
-	let rToTs (r: states) (all_transitions: transitions4) in_alphabet =
-		let nxtTrans = Set.map (fun sy ->
-			(* Find all 'move' transitions from set 'r' on 'sy' *)
-			let moveTransitions = Set.filter (fun (a,b,_,_) -> Set.belongs a r && b = sy) all_transitions in
-
-			(* Get all outputs from this 'move' *)
-			let outputs = Set.map (fun (_,_,c,_) -> c) moveTransitions in
-
-			(* Calculate the destination DFST state (move + closeEmpty) *)
-			let destSet = newR r sy all_transitions in
-
-			if Set.isEmpty outputs then
-				(r, sy, epsilon, Set.empty) (* Placeholder, will be filtered *)
-			else
-				let out = List.hd (Set.toList outputs) in (* Pick the single output *)
-        		(r, sy, out, destSet)
-
-		) in_alphabet in
-		Set.filter (fun (_,_,_,z) -> not (Set.isEmpty z)) nxtTrans
-	
-	(* applies previous function to all state sets until no new set is generated *)
-	let rec rsToTs (stsD: states Set.t) (rD: states Set.t) (trnsD: (states * symbol * symbol * states) Set.t) (all_transitions: transitions4) in_alphabet =
-		let nxtTs = Set.flatMap (fun stSet -> rToTs stSet all_transitions in_alphabet) rD in
-		let nxtRs = Set.map (fun (_,_,_,z) -> z) nxtTs in 
-		let newRs = Set.filter (fun r -> not (Set.belongs r stsD)) nxtRs in
-		if Set.isEmpty newRs then (Set.union trnsD nxtTs) else
-		rsToTs (Set.union newRs stsD) newRs (Set.union trnsD nxtTs) all_transitions in_alphabet
-
-	(* Gets the longest common prefix of two words *)
-	let rec lcp w1 w2 =
-		match (w1, w2) with
-		| (x::xs, y::ys) when x = y -> x :: (lcp xs ys)
-		| _ -> []
-
-	(* Gets the suffix of a word after removing a prefix *)
-	let rec suffix prefix w =
-		match (prefix, w) with
-		| ([], _) -> w
-		| (p::ps, x::xs) when p = x -> suffix ps xs
-		| _ -> w (* Prefix doesn't match, return original word *)
-
-	(*
-	* This is the new "DFST state". It's a set of
-	* (NFST state * pending output word) pairs.
-	*)
-	type dfstState = (state * word) Set.t
-
-	(*
-	* This function "fuses" the dfstState into a single string
-	* name.
-	*)
-	let fusedfstState (st: dfstState) : state =
-		let l = Set.toList st in
-		let sorted_l = List.sort (fun (s1, w1) (s2, w2) ->
-			if s1 <> s2 then compare s1 s2 else compare w1 w2
-		) l in
-		let s = String.concat "," (List.map (fun (s, w) ->
-			s ^ "" ^ (String.concat "" (List.map Symbol.symbD w))
-		) sorted_l) in
-	"{" ^ s ^ "}"
-
-	(**
-	* Check for
-	* No ε-transitions from a state that produce two different outputs.
-	* No two transitions from the same (state, input) producing different outputs.
-	*)
-	let hasConflictOut (fst: t): bool =
-		(* ε-transition ambiguity: same source state, multiple ε outputs *)
-		let eps_conflict =
-			Set.exists (fun st ->
-			let outs =
-				Set.map (fun (_,_,out,_) -> out)
-				(Set.filter (fun (a,b,_,_) -> a = st && b = epsilon) fst.transitions)
-			in
-			Set.size outs > 1
-			) fst.states
-		in
-
-		(* input transition ambiguity: same (state, input), multiple outputs *)
-		let input_conflict =
-			Set.exists (fun st ->
-			Set.exists (fun input ->
-				if input = epsilon then false else
-				let outs =
-				Set.map (fun (_,_,out,_) -> out)
-					(Set.filter (fun (a,b,_,_) -> a = st && b = input) fst.transitions)
-				in
-				Set.size outs > 1
-			) fst.inAlphabet
-			) fst.states
-		in
-
-	not eps_conflict && not input_conflict
-
-
-	(**
-	* This function converts the non-deterministic fst into its deterministic equivalent if it exists
-	*)
-	let toDeterministicEpsilon (fst: t): t =
-	
-	if (isSelfLoop fst) then
-		(Error.error "toDeterministicEpsilon"
-		"The FST is infinitely ambiguous and cannot be determinized." ();
-		fst)
-	else if not (hasConflictOut fst) then
-		(Error.error "toDeterministicEpsilon"
-		"The FST has conflicting outputs and cannot be determinized." ();
-		fst)
-	else
-
-		let dfstStates: dfstState Set.t ref = ref Set.empty in
-		let newDfaTransitions: (state * symbol * symbol * state) Set.t ref = ref Set.empty in
-
-		let getNext (q: dfstState) (sy: symbol) (all_transitions: transitions4) =
-			let allResults =
-				Set.flatMap
-				(fun (st, outPrefix) -> 
-					let moveTransitions =
-					Set.filter (fun (a, b, _, _) -> a = st && b = sy) all_transitions
-					in
-					Set.flatMap
-					(fun (_, _, moveOut, destSt) ->
-						let newPrefix = outPrefix @ [moveOut] in
-						let epsClosure = closeEmptyOut destSt all_transitions in
-						Set.map
-						(fun (s, epsOut) -> (s, newPrefix @ epsOut))
-						epsClosure
-					)
-					moveTransitions
-				)
-				q
-			in
-			if Set.isEmpty allResults then
-				None
-			else
-				begin
-				let allWords = Set.map (fun (_, w) -> w) allResults in
-				let firstWord = (Set.toList allWords) |> List.hd in
-				let lcpWord = Set.fold_left lcp firstWord allWords in
-				
-				let newdfstState =
-					Set.map (fun (s, w) -> (s, suffix lcpWord w)) allResults
-				in
-
-				let outSymbol =
-					if List.length lcpWord > 0 then List.hd lcpWord else epsilon
-				in
-				
-				Some (outSymbol, newdfstState)
-				end
-		in
-
-		(* Initial state is the epsilon-closure of the original start state *)
-		let r1 = closeEmptyOut fst.initialState fst.transitions in
-
-		(* Use a worklist to find all reachable DFST states and transitions *)
-		let worklist = ref [r1] in
-		dfstStates := Set.add r1 !dfstStates;
-
-		while !worklist <> [] do
-		let currentdfstState = List.hd !worklist in
-		worklist := List.tl !worklist;
-		let srcFused = fusedfstState currentdfstState in
-
-		Set.iter (fun sy ->
-			match getNext currentdfstState sy fst.transitions with
-			| Some (outSymbol, nextdfstState) ->
-				let destFused = fusedfstState nextdfstState in
-				
-				if outSymbol <> epsilon then
-				newDfaTransitions := Set.add (srcFused, sy, outSymbol, destFused) !newDfaTransitions;
-				
-				if not (Set.belongs nextdfstState !dfstStates) then (
-				dfstStates := Set.add nextdfstState !dfstStates;
-				worklist := nextdfstState :: !worklist
-				)
-			| None -> ()
-		) fst.inAlphabet
-		done;
-
-		(* Determine new accepting states *)
-		let newAllSts = Set.map fusedfstState !dfstStates in
-		let newAccSts =
-		Set.map fusedfstState (
-			Set.filter (fun dfstState ->
-			Set.exists (fun (st, _) -> Set.belongs st fst.acceptStates) dfstState
-			) !dfstStates
-		)
-		in
-		let newOutAlf = Set.map (fun (_,_,c,_) -> c) !newDfaTransitions in
-
-		(* Build the new FST *)
-		{
-		inAlphabet = fst.inAlphabet;
-		outAlphabet = Set.diff newOutAlf (Set.make [epsilon]);
-		states = newAllSts;
-		initialState = fusedfstState r1;
-		transitions = !newDfaTransitions;
-		acceptStates = newAccSts
-		}
-	
-	(**
-	* Converts a possibly ε-nondeterministic FST into an equivalent deterministic one,
-	* as long as ε-transitions do not produce any output symbols.
-	*
-	* Determinization fails (and returns the original fst) if:
-	*   - there are ε self-loops with output (infinite ambiguity)
-	*   - there are conflicting outputs for the same (state, input)
-	*
-	*)
-	let toDeterministic (fst: t): t =
-		let has_bad_eps =
-			Set.exists (fun (_, b, c, _) -> b = epsilon && c <> epsilon) fst.transitions
-		in
-		if has_bad_eps then (
-			Error.error "toDeterministic"
-			"The FST has ε-transitions that emit output, cannot determinize." ();
-			fst
-		) else try
-		let dfaStates : states Set.t ref = ref Set.empty in
-		let newTransitions : (state * symbol * symbol * state) Set.t ref = ref Set.empty in
-
-		let move (sts: states) (sy: symbol) (ts: transitions4) : states * symbols =
-			let relevant =
-			Set.filter (fun (a,b,_,_) -> Set.belongs a sts && b = sy) ts
-			in
-			let next = Set.map (fun (_,_,_,d) -> d) relevant in
-			let outs = Set.map (fun (_,_,c,_) -> c) relevant in
-			(next, outs)
-		in
-
-		let startSet = closeEmpty (Set.make [fst.initialState]) fst.transitions in
-		let worklist = ref [startSet] in
-		dfaStates := Set.add startSet !dfaStates;
-
-		while !worklist <> [] do
-			let current = List.hd !worklist in
-			worklist := List.tl !worklist;
-			let srcName = fusedfstState (Set.map (fun s -> (s, [])) current) in
-
-			Set.iter (fun sy ->
-			if sy <> epsilon then (
-				let nextSts, outs = move current sy fst.transitions in
-				if not (Set.isEmpty nextSts) then
-				let closedNext = closeEmpty nextSts fst.transitions in
-				let destName = fusedfstState (Set.map (fun s -> (s, [])) closedNext) in
-
-				if Set.size outs > 1 then (
-					Error.error "toDeterministic"
-					"Multiple distinct outputs found for same (state,input), cannot determinize." ();
-					raise DeterminizationFailed
-				) else (
-					let outSymbol =
-					if Set.isEmpty outs then epsilon
-					else List.hd (Set.toList outs)
-					in
-
-					newTransitions := Set.add (srcName, sy, outSymbol, destName) !newTransitions;
-
-					if not (Set.belongs closedNext !dfaStates) then (
-					dfaStates := Set.add closedNext !dfaStates;
-					worklist := closedNext :: !worklist
-					)
-				)
-			)
-			) fst.inAlphabet
-		done;
-
-		let newStates = Set.map (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset)) !dfaStates in
-		let newAccepts =
-			Set.filter (fun sname ->
-			let compSet = Set.find (fun sset -> fusedfstState (Set.map (fun s -> (s, [])) sset) = sname) !dfaStates in
-			Set.exists (fun st -> Set.belongs st fst.acceptStates) compSet
-			) newStates
-		in
-		let newOutAlf = Set.map (fun (_,_,c,_) -> c) !newTransitions in
-
-		{
-			inAlphabet = fst.inAlphabet;
-			outAlphabet = Set.diff newOutAlf (Set.make [epsilon]);
-			states = newStates;
-			initialState = fusedfstState (Set.map (fun s -> (s, [])) startSet);
-			transitions = !newTransitions;
-			acceptStates = newAccepts;
-		}
-	with DeterminizationFailed -> fst
-
-	let isComplete (fst: t): bool =
-		Set.for_all
-			(fun st ->
-			Set.for_all
-				(fun input ->
-				if input = epsilon then true
-				else
-					Set.exists
-					(fun (a, b, _, _) -> a = st && b = input)
-					fst.transitions
-				)
-				fst.inAlphabet
-		)
-		fst.states
-
-	(** 
-	* Checks whether a given finite-state transducer (fst) is a Moore machine.
-	* 
-	* A Moore machine must satisfy three conditions:
-	*  1. It is deterministic — for each (state, input) pair there is at most one transition.
-	*  2. It is complete — for each state and input, there is at least one transition.
-	*  3. Every state has a single output symbol (the output depends only on the state, not on the input).
-	*)
-	let isMooreMachine (fst: t): bool =
-		let deterministic = isDeterministic fst in
-		let complete = isComplete fst in
-		let state_has_single_output =
-			Set.for_all
-				(fun st ->
-					(* Get all transitions that start from this state *)
-					let outgoing = Set.filter (fun (a, _, _, _) -> a = st) fst.transitions in
-					(* Extract all output symbols from those transitions *)
-					let outputs = Set.map (fun (_, _, c, _) -> c) outgoing in
-					(* For Moore: all outgoing transitions from this state must share the same output *)
-					Set.size outputs <= 1
-				)
-				fst.states
-		in
-	deterministic && complete && state_has_single_output
-
-
-	(**
-	* Checks whether a given finite-state transducer (fst) is a Mealy machine.
-	*
-	* A Mealy machine must satisfy three conditions:
-	*  1. It is deterministic — no two transitions share the same (state, input) pair.
-	*  2. It is complete — for every state and input symbol, there exists a transition.
-	*  3. For each (state, input) pair, there is at most one output symbol.
-	*)
-	let isMealyMachine (fst: t): bool =
-		let deterministic = isDeterministic fst in
-		let complete = isComplete fst in
-		let transition_output_ok =
-			Set.for_all
-				(fun st ->
-					Set.for_all
-						(fun input ->
-							if input = epsilon then true (* ignore epsilon transitions *)
-							else
-								(* Filter all transitions with this source state and input symbol *)
-								let transitions_for_input =
-									Set.filter
-										(fun (a, b, _, _) -> a = st && b = input)
-										fst.transitions
-								in
-								(* Extract all output symbols from those transitions *)
-								let outputs =
-									Set.map (fun (_, _, c, _) -> c)
-										transitions_for_input
-								in
-								(* Must have at most one unique output per (state, input) *)
-								Set.size outputs <= 1
-						)
-						fst.inAlphabet
-				)
-				fst.states
-		in
-		deterministic && complete && transition_output_ok
-
-	(**
-	* Computes the equivalence classes of states for a deterministic transducer.
-	*)
-	let equivalencePartition (transducer: t) : states Set.t =
-		let fst_clean = cleanUselessStates transducer in
-
-		let finals, nonfinals =
-			Set.partition (fun st -> Set.belongs st fst_clean.acceptStates) fst_clean.states
-		in
-		let init_partition =
-			Set.filter (fun b -> Set.size b > 0) (Set.make [finals; nonfinals])
-		in
-
-		let block_of (partition: states Set.t) (st: state) : states =
-			Set.find (fun b -> Set.belongs st b) partition
-		in
-
-		let signature (partition: states Set.t) (st: state) =
-			let outgoing = Set.filter (fun (a,_,_,_) -> a = st) fst_clean.transitions in
-			Set.map
-			(fun (_, inp, out, dst) -> (inp, out, block_of partition dst))
-			outgoing
-		in
-
-		let refine_block (partition: states Set.t) (block: states) : states list =
-			let pairs = Set.map (fun st -> (st, signature partition st)) block |> Set.toList in
-			let rec group acc = function
-			| [] -> acc
-			| (s, sigs) :: rest ->
-				let same, diff = List.partition (fun (_, sigs2) -> sigs2 = sigs) rest in
-				let new_block = Set.make (s :: List.map (fun (x, _) -> x) same) in
-				group (new_block :: acc) diff
-			in
-			group [] pairs
-		in
-
-		let rec refine (partition: states Set.t) : states Set.t =
-			let refined = Set.flatMap (fun block -> Set.make (refine_block partition block)) partition in
-			if Set.equals refined partition then partition else refine refined
-		in
-		refine init_partition
-
-	(**
-	* Minimizes a deterministic transducer.
-	*)
-	let minimize (transducer: t): t =
-		let fst_clean = cleanUselessStates transducer in
-		let final_partition = equivalencePartition fst_clean in
-
-		let block_of (partition: states Set.t) (st: state) : states =
-			Set.find (fun b -> Set.belongs st b) partition
-		in
-		let representative (block: states) : state = List.hd (Set.toList block) in
-		let translate (st: state) : state =
-			representative (block_of final_partition st)
-		in
-
-		let new_states   = Set.map representative final_partition in
-		let new_init     = translate fst_clean.initialState in
-		let new_accepts  =
-			Set.map representative
-			(Set.filter (fun blk -> Set.exists (fun st -> Set.belongs st fst_clean.acceptStates) blk) final_partition)
-		in
-		let new_trans =
-			Set.map (fun (a,b,c,d) -> (translate a, b, c, translate d)) fst_clean.transitions
-		in
-
-		{
-			inAlphabet   = fst_clean.inAlphabet;
-			outAlphabet  = fst_clean.outAlphabet;
-			states       = new_states;
-			initialState = new_init;
-			transitions  = new_trans;
-			acceptStates = new_accepts;
-		}
-		
-	(**
-	* This function verifies if the fst is minimal
-	*)
-	let isMinimized (fst: t): bool =
-		if not (isDeterministic fst) then 
-			false
-		else 
-			let min = minimize fst in
-			Set.size fst.states = Set.size min.states
-   
-   (**
-   * Converts a Finite-State Transducer (FST) into an equivalent
-   * 2-tape Turing Machine (TM).
-   *
-   * Tape 1: Read-only input tape
-   * Tape 2: Write-only output tape
-   *)
-  let asTuringMachine (fst: t): TuringMachine.t =
-    let tm_accept_state = "q_accept_tm" in
-    let tm_states = Set.add tm_accept_state fst.states in
-    let tm_in_alphabet = fst.inAlphabet in
-    
-    let tm_empty = empty in
-    
-    let tm_tape_alphabet =
-      Set.union (Set.union fst.inAlphabet fst.outAlphabet) (Set.make [tm_empty])
-    in
-    
-    let tm_initial_state = fst.initialState in
-    let tm_accept_states = Set.make [tm_accept_state] in
-    
-    (* Handle transitions that consume input *)
-    let input_consuming_trs = Set.filter (fun (_, inp, _, _) -> inp <> epsilon) fst.transitions in
-    let tm_trs_1 = Set.map (fun (q1, a, b_out, q2) ->
-      (*
-       * FST: (q1, a, b, q2)
-       * TM:  In state q1, read 'a' (tape 1) and 'empty' (tape 2)
-       * Go to q2, write 'a' (tape 1), write 'b' (tape 2)
-       * Move Tape 1 Right, Tape 2 Right/Stay
-       *)
-      let (write_b, move_b) =
-        if b_out = epsilon then (tm_empty, S)
-        else (b_out, R) 
-      in
-      (q1, [a; tm_empty], q2, [a; write_b], [R; move_b])
-    ) input_consuming_trs in
-
-    (* Handle transitions that do NOT consume input (epsilon-input) *)
-    let epsilon_consuming_trs = Set.filter (fun (_, inp, _, _) -> inp = epsilon) fst.transitions in
-    
-    let all_input_symbols_and_empty = Set.add tm_empty fst.inAlphabet in
-
-    let tm_trs_2 = Set.flatMap (fun (q1, _, b_out, q2) ->
-      (*
-       * FST: (q1, ~, b, q2)
-       * TM:  For each symbol 's' on Tape 1:
-       * In state q1, read 's' (tape 1) and 'empty' (tape 2)
-       * Go to q2, write 's' (tape 1), write 'b' (tape 2)
-       * Move Tape 1 Stay, Tape 2 Right/Stay
-       *)
-      let (write_b, move_b) =
-        if b_out = epsilon then (tm_empty, S) 
-        else (b_out, R) 
-      in
-      Set.map (fun s ->
-        (q1, [s; tm_empty], q2, [s; write_b], [S; move_b])
-      ) all_input_symbols_and_empty
-    ) epsilon_consuming_trs in
-
-    (* Handle transitions to the final accept state *)
-    let tm_trs_3 = Set.map (fun q_f ->
-      (*
-       * FST: state q_f is accepting
-       * TM:  If in state q_f and input tape is empty, move to tm_accept_state
-       *)
-      (q_f, [tm_empty; tm_empty], tm_accept_state, [tm_empty; tm_empty], [S; S])
-    ) fst.acceptStates in
-
-    let all_tm_trs = Set.union (Set.union tm_trs_1 tm_trs_2) tm_trs_3 in
-
-    let tm_data = {
-      states = tm_states;
-      entryAlphabet = tm_in_alphabet;
-      tapeAlphabet = tm_tape_alphabet;
-      initialState = tm_initial_state;
-      empty = tm_empty;
-      transitions = all_tm_trs;
-      acceptStates = tm_accept_states;
-      criteria = true;
-      lbMarkers = [];
-	  	_nTapes = 2 
-    } in
-    
-    (TuringMachine.make (Arg.Representation tm_data) : TuringMachine.t)
-	
-end
-
-(* * 
- * This module is added to provide composition functionality.
- *)
-module TransducerComposition =
-struct
-  open TransducerSupport
-  open TransducerPrivate
-
-  let fuse_states (s1: state) (s2: state) : state =
-	s1 ^ "_" ^ s2
-
-  (**
-   * Composes two finite-state transducers.
-   * T1: A -> B
-   * T2: B -> C
-   * T = T1 o T2: A -> C
-   *)
-  let compose (fst1: t) (fst2: t): t =
-	
-		let new_in_alphabet = fst1.inAlphabet in
-		let tr2_eps_outputs =
-			Set.map (fun (_, _, c, _) -> c)
-			(Set.filter (fun (_, a, _, _) -> a = epsilon) fst2.transitions)
-		in
-		let new_out_alphabet = Set.union fst2.outAlphabet (Set.diff tr2_eps_outputs (Set.make[epsilon])) in
-		
-		let initial_pair = (fst1.initialState, fst2.initialState) in
-		let initial_fused_state = fuse_states fst1.initialState fst2.initialState in
-		
-		let new_states = ref (Set.make [initial_fused_state]) in
-		let new_transitions = ref Set.empty in
-		let new_accept_states = ref Set.empty in
-		
-		let worklist = ref (Set.make [initial_pair]) in
-		let visited = ref (Set.make [initial_pair]) in
-
-		if Set.belongs fst1.initialState fst1.acceptStates && Set.belongs fst2.initialState fst2.acceptStates then
-			new_accept_states := Set.add initial_fused_state !new_accept_states;
-
-		while not (Set.isEmpty !worklist) do
-			let (q1, q2) = List.hd (Set.toList !worklist) in
-			worklist := Set.remove (q1, q2) !worklist;
-			
-			let fused_src = fuse_states q1 q2 in
-			(*
-			* Case 1: Lock-step (T1 consumes input 'a' != eps, T2 consumes T1's output 'b')
-			* T1: q1 --a/b--> q1' (a != epsilon)
-			* T2: q2 --b/c--> q2'
-			* T: (q1,q2) --a/c--> (q1',q2')
-			*)
-			let tr1_moves = Set.filter (fun (s, a, _, _) -> s = q1 && a != epsilon) fst1.transitions in
-			Set.iter (fun (q1, a, b, q1') ->
-			let tr2_matches = Set.filter (fun (s, b', _, _) -> s = q2 && b' = b) fst2.transitions in
-			Set.iter (fun (q2, b, c, q2') ->
-				let new_pair = (q1', q2') in
-				let fused_dst = fuse_states q1' q2' in
-				
-				new_transitions := Set.add (fused_src, a, c, fused_dst) !new_transitions;
-				new_states := Set.add fused_dst !new_states;
-				
-				if Set.belongs q1' fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
-				new_accept_states := Set.add fused_dst !new_accept_states;
-
-				if not (Set.belongs new_pair !visited) then (
-				visited := Set.add new_pair !visited;
-				worklist := Set.add new_pair !worklist
-				)
-			) tr2_matches
-			) tr1_moves;
-
-			(*
-			* Case 2: T1 epsilon-step (T1 consumes epsilon, T2 consumes T1's output 'b')
-			* T1: q1 --eps/b--> q1'
-			* T2: q2 --b/c--> q2'
-			* T: (q1,q2) --eps/c--> (q1',q2')
-			*)
-			let tr1_eps = Set.filter (fun (s, a, _, _) -> s = q1 && a = epsilon) fst1.transitions in
-			Set.iter (fun (q1, _, b, q1') ->
-			let tr2_matches = Set.filter (fun (s, b', _, _) -> s = q2 && b' = b) fst2.transitions in
-			Set.iter (fun (q2, b, c, q2') ->
-				let new_pair = (q1', q2') in
-				let fused_dst = fuse_states q1' q2' in
-
-				new_transitions := Set.add (fused_src, epsilon, c, fused_dst) !new_transitions;
-				new_states := Set.add fused_dst !new_states;
-
-				if Set.belongs q1' fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
-				new_accept_states := Set.add fused_dst !new_accept_states;
-
-				if not (Set.belongs new_pair !visited) then (
-				visited := Set.add new_pair !visited;
-				worklist := Set.add new_pair !worklist
-				)
-			) tr2_matches
-			) tr1_eps;
-
-			(*
-			* Case 3: T2 epsilon-step (T1 does nothing, T2 consumes epsilon)
-			* T1: (stuck at q1)
-			* T2: q2 --eps/c--> q2'
-			* T: (q1,q2) --eps/c--> (q1,q2')
-			*)
-			let tr2_eps = Set.filter (fun (s, a, _, _) -> s = q2 && a = epsilon) fst2.transitions in
-			Set.iter (fun (q2, _, c, q2') ->
-			let new_pair = (q1, q2') in 
-			let fused_dst = fuse_states q1 q2' in
-
-			new_transitions := Set.add (fused_src, epsilon, c, fused_dst) !new_transitions;
-			new_states := Set.add fused_dst !new_states;
-
-			if Set.belongs q1 fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
-				new_accept_states := Set.add fused_dst !new_accept_states;
-
-			if not (Set.belongs new_pair !visited) then (
-				visited := Set.add new_pair !visited;
-				worklist := Set.add new_pair !worklist
-			)
-			) tr2_eps;
-
-		done;
-		
-		{
-			inAlphabet = new_in_alphabet;
-			outAlphabet = new_out_alphabet;
-			states = !new_states;
-			initialState = initial_fused_state;
-			transitions = !new_transitions;
-			acceptStates = !new_accept_states
-		}
-
-   (*
-   * Union
-   *)
-  let union (fst1: t) (fst2: t): t =
-		let rename_state (suffix: string) (st: state) : state =
-			st ^ suffix
-		in
-		let s1_suffix = "_1" in
-		let s2_suffix = "_2" in
-		
-		let new_init = "S_init_union" in
-		
-		let rename_trans suffix (a,b,c,d) =
-			(rename_state suffix a, b, c, rename_state suffix d)
-		in
-		
-		let sts1 = Set.map (rename_state s1_suffix) fst1.states in
-		let sts2 = Set.map (rename_state s2_suffix) fst2.states in
-		let new_states = Set.union (Set.union sts1 sts2) (Set.make [new_init]) in
-		
-		let trs1 = Set.map (rename_trans s1_suffix) fst1.transitions in
-		let trs2 = Set.map (rename_trans s2_suffix) fst2.transitions in
-		
-		let init_trs = Set.make [
-			(new_init, epsilon, epsilon, rename_state s1_suffix fst1.initialState);
-			(new_init, epsilon, epsilon, rename_state s2_suffix fst2.initialState)
-		] in
-		let new_transitions = Set.union (Set.union trs1 trs2) init_trs in
-		
-		let acc1 = Set.map (rename_state s1_suffix) fst1.acceptStates in
-		let acc2 = Set.map (rename_state s2_suffix) fst2.acceptStates in
-		let new_accepts = Set.union acc1 acc2 in
-		
-		{
-			inAlphabet = Set.union fst1.inAlphabet fst2.inAlphabet;
-			outAlphabet = Set.union fst1.outAlphabet fst2.outAlphabet;
-			states = new_states;
-			initialState = new_init;
-			transitions = new_transitions;
-			acceptStates = new_accepts
-		}
-
-  (*
-   * Intersection
-   * Implements T1 n T2.
-   * This is a product construction where a transition exists
-   * only if both machines take the *same input* and produce the
-   * *same output*.
-   *)
-  let intersection (fst1: t) (fst2: t): t =
-		let new_in_alphabet = Set.inter fst1.inAlphabet fst2.inAlphabet in
-		let new_out_alphabet = Set.inter fst1.outAlphabet fst2.outAlphabet in
-		
-		let initial_pair = (fst1.initialState, fst2.initialState) in
-		let initial_fused_state = fuse_states fst1.initialState fst2.initialState in
-		
-		let new_states = ref (Set.make [initial_fused_state]) in
-		let new_transitions = ref Set.empty in
-		let new_accept_states = ref Set.empty in
-		
-		let worklist = ref (Set.make [initial_pair]) in
-		let visited = ref (Set.make [initial_pair]) in
-
-		if Set.belongs fst1.initialState fst1.acceptStates && Set.belongs fst2.initialState fst2.acceptStates then
-			new_accept_states := Set.add initial_fused_state !new_accept_states;
-
-		while not (Set.isEmpty !worklist) do
-			let (q1, q2) = List.hd (Set.toList !worklist) in
-			worklist := Set.remove (q1, q2) !worklist;
-			
-			let fused_src = fuse_states q1 q2 in
-
-			let trs1 = Set.filter (fun (s, _, _, _) -> s = q1) fst1.transitions in
-			let trs2 = Set.filter (fun (s, _, _, _) -> s = q2) fst2.transitions in
-
-			(*
-			* Case 1: Lock-step on (input, output)
-			* Find all pairs of transitions (t1, t2) where
-			* t1.input = t2.input AND t1.output = t2.output.
-			* This includes (eps, eps) transitions.
-			*)
-			Set.iter (fun (q1, a1, c1, q1') ->
-			let matching_trs2 =
-				Set.filter (fun (_, a2, c2, _) -> a1 = a2 && c1 = c2) trs2
-			in
-			Set.iter (fun (q2, a, c, q2') ->
-				let new_pair = (q1', q2') in
-				let fused_dst = fuse_states q1' q2' in
-
-				new_transitions := Set.add (fused_src, a, c, fused_dst) !new_transitions;
-				new_states := Set.add fused_dst !new_states;
-
-				if Set.belongs q1' fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
-				new_accept_states := Set.add fused_dst !new_accept_states;
-
-				if not (Set.belongs new_pair !visited) then (
-				visited := Set.add new_pair !visited;
-				worklist := Set.add new_pair !worklist
-				)
-			) matching_trs2
-			) trs1;
-			
-			(*
-			* Case 2: T1 moves on (eps, eps), T2 stutters
-			* This is for (eps, eps) only. (eps, output) is handled above.
-			*)
-			let tr1_eps_eps = Set.filter (fun (s, a, c, _) -> s = q1 && a = epsilon && c = epsilon) fst1.transitions in
-			Set.iter (fun (q1, a, c, q1') ->
-			let new_pair = (q1', q2) in
-			let fused_dst = fuse_states q1' q2 in
-			
-			new_transitions := Set.add (fused_src, epsilon, epsilon, fused_dst) !new_transitions;
-			new_states := Set.add fused_dst !new_states;
-
-			if Set.belongs q1' fst1.acceptStates && Set.belongs q2 fst2.acceptStates then
-				new_accept_states := Set.add fused_dst !new_accept_states;
-
-			if not (Set.belongs new_pair !visited) then (
-				visited := Set.add new_pair !visited;
-				worklist := Set.add new_pair !worklist
-			)
-			) tr1_eps_eps;
-			
-			(*
-			* Case 3: T2 moves on (eps, eps), T1 stutters
-			*)
-			let tr2_eps_eps = Set.filter (fun (s, a, c, _) -> s = q2 && a = epsilon && c = epsilon) fst2.transitions in
-			Set.iter (fun (q2, a, c, q2') ->
-			let new_pair = (q1, q2') in
-			let fused_dst = fuse_states q1 q2' in
-			
-			new_transitions := Set.add (fused_src, epsilon, epsilon, fused_dst) !new_transitions;
-			new_states := Set.add fused_dst !new_states;
-
-			if Set.belongs q1 fst1.acceptStates && Set.belongs q2' fst2.acceptStates then
-				new_accept_states := Set.add fused_dst !new_accept_states;
-
-			if not (Set.belongs new_pair !visited) then (
-				visited := Set.add new_pair !visited;
-				worklist := Set.add new_pair !worklist
-			)
-			) tr2_eps_eps;
-
-		done;
-		
-		{
-			inAlphabet = new_in_alphabet;
-			outAlphabet = new_out_alphabet;
-			states = !new_states;
-			initialState = initial_fused_state;
-			transitions = !new_transitions;
-			acceptStates = !new_accept_states
-		}
-
-   (*
-   * Inverse
-   * Creates a new transducer T' that inverts the input/output
-   * relationship of T.
-   * If T maps (w, v), then T' maps (v, w).
-   *)
-  let inverse (fst: t): t =
-		let new_transitions =
-			Set.map (fun (src, inp, outp, dst) ->
-			(src, outp, inp, dst)
-			) fst.transitions
-		in
-		{
-			inAlphabet = fst.outAlphabet;
-			outAlphabet = fst.inAlphabet;
-			states = fst.states;
-			initialState = fst.initialState;
-			transitions = new_transitions;
-			acceptStates = fst.acceptStates
-		}
-	
-  (*
-   * Concatenate
-   * Implements T1 . T2.
-   *)
-  let concatenate (fst1: t) (fst2: t): t =
-		let rename_state (suffix: string) (st: state) : state =
-			st ^ suffix
-		in
-		let s1_suffix = "_1" in
-		let s2_suffix = "_2" in
-		
-		let rename_trans suffix (a,b,c,d) =
-			(rename_state suffix a, b, c, rename_state suffix d)
-		in
-		
-		let sts1 = Set.map (rename_state s1_suffix) fst1.states in
-		let sts2 = Set.map (rename_state s2_suffix) fst2.states in
-		let new_states = Set.union sts1 sts2 in
-		
-		let trs1 = Set.map (rename_trans s1_suffix) fst1.transitions in
-		let trs2 = Set.map (rename_trans s2_suffix) fst2.transitions in
-		
-		let connect_trs =
-			Set.map (fun acc_st1 ->
-			(rename_state s1_suffix acc_st1, epsilon, epsilon, rename_state s2_suffix fst2.initialState)
-			) fst1.acceptStates
-		in
-		
-		let new_transitions = Set.union (Set.union trs1 trs2) connect_trs in
-		
-		let new_init = rename_state s1_suffix fst1.initialState in
-		
-		let new_accepts = Set.map (rename_state s2_suffix) fst2.acceptStates in
-		
-		{
-			inAlphabet = Set.union fst1.inAlphabet fst2.inAlphabet;
-			outAlphabet = Set.union fst1.outAlphabet fst2.outAlphabet;
-			states = new_states;
-			initialState = new_init;
-			transitions = new_transitions;
-			acceptStates = new_accepts
-		}
-
-end
-
-module Transducer =
-struct
-	include TransducerSupport
-	open TransducerAccept
-	open TransducerGenerate
-	open TransducerPrivate
-	open TransducerComposition
-
-	(* Make *)
-	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
-	let make (arg: t Arg.alternatives): t = make arg validate
-
-	let checkProperty (fst: t) (prop: string) =
-		match prop with
-			| "deterministic" -> isDeterministic fst
-			| "complete" -> isComplete fst
-			| "moore" -> isMooreMachine fst
-			| "mealy" -> isMealyMachine fst
-			| "minimal" -> isMinimized fst
-			| "clean" -> isClean fst
-			| "transducer" -> true
-			| "finite-state transducer" -> true
-			| _ -> Model.checkProperty prop
-	let checkExercise ex fst = Util.println ["transducer hit"]; Model.checkExercise ex (acceptExpectedOutput fst) (checkProperty fst)	
-	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (acceptExpectedOutput fst) (checkProperty fst)
-
-	(* Ops *)
-	let stats = Model.stats
-	let accept = accept
-	let acceptFull = acceptFull
-	let acceptOut = acceptOut
-	let acceptCheckOutput = acceptCheckOutput
-	let acceptExpectedOutput = acceptExpectedOutput
-	let generate = generate	
-	let asFiniteAutomaton = asFiniteAutomaton
-	let reachable = reachable
-	let productive = productive
-	let isDeterministic = isDeterministic
-	let toDeterministic = toDeterministic
-	let equivalencePartition = equivalencePartition
-	let minimize = minimize
-	let isMinimized = isMinimized
-	let asTuringMachine = asTuringMachine
-	let isComplete = isComplete
-	let isMooreMachine = isMooreMachine
-	let isMealyMachine = isMealyMachine
-	let isClean = isClean
-	let cleanUselessStates = cleanUselessStates
-	let compose = compose 
-	let union = union 
-	let intersection = intersection 
-	let inverse = inverse
-	let concatenate = concatenate 
-
-	(* Class *)
-	class model (arg: t Arg.alternatives) =
-		object(self) inherit Model.model (make2 arg) as super	
-		(* Representation *)
-			method representation = representation
-		(* Kind *)
-			method isTransducer : bool = true
-		(* Show *)			
-			method toJSon: JSon.t = toJSon representation
-			method toJSon2: JSon.t = toJSon2 id representation
-			method show: unit = show representation
-			method show2: unit = show2 id representation
-		(* Ops *)			
-			method accept (w: word): bool = accept representation w
-			method acceptFull (w: word) : bool * path * trail = acceptFull representation w
-			method acceptExpectedOutput (w: word): bool = acceptExpectedOutput representation w
-			method generate (length: int): words = generate representation length
-			method isClean: bool = isClean representation
-			method equivalencePartition = equivalencePartition representation
-			method minimize: t = minimize representation
-			method isMinimized: bool = isMinimized representation
-			method toDeterministic: t = toDeterministic representation
-			method compose (fst: t): t = compose representation fst
-			method union (fst: t): t = union representation fst
-			method intersection (fst: t): t = intersection representation fst
-			method inverse: t = inverse representation
-			method concatenate (fst: t): t = concatenate representation fst
-		(* Exercices support *)
-			method checkProperty (prop: string) = checkProperty representation prop	
-		(* Learn-OCaml support *)
-			method moduleName = moduleName
-			method xTypeName = xTypeName
-			method xTypeDeclString : string = prelude
-			method toDisplayString (name: string): string = solution name self#representation
-			method example : JSon.t = example
-		end
-end
 # 1 "src/CompositionSupport.ml"
 (*
  * CompositionSupport.ml
@@ -19861,18 +19619,26 @@ end
    
    let exists (name:string) : bool =
      List.mem_assoc name !data 
-   
  
    let delete (name:string) : unit =
      data := List.remove_assoc name !data
    
-   
    let update (name:string) (model: t) : unit =
      delete name;
      data := (name,model)::!data
- 
 
-        
+   let clear () : unit = (* Alexandre *)
+     let emptyList : (string * t) list ref = ref [] in
+       data := !emptyList
+       
+   let getSize () = (* Alexandre *)
+     let rec sizeAux rep =
+        match rep with
+        | [] -> 0
+        | x::xs -> 1 + sizeAux xs
+     in
+        sizeAux !data
+
    let updateModel (name:string) (model: Model.model) : unit =
     delete name;
     let m = PolyModel.model2comp model in
@@ -21340,9 +21106,7 @@ end
  end
  
  
-
-
-# 3 "src/TopLevel.ml"
+# 1 "src/TopLevel.ml"
 (*
  * TopLevel.ml
  *
@@ -21376,6 +21140,9 @@ end
  *)
 
 (*
+
+
+
 
 let f str =
 	let r = fa_accept fa str in
@@ -22744,129 +22511,143 @@ open BasicTypes
 
 module RegularExpressionTests: sig end =
 struct
+	open RegularExpression
 	let active = false
 
 	let test0 () =
-		let m = new RegularExpression.model (Arg.Predef "re_abc") in
-			let j = m#toJSon in
+		let m = make (Arg.Predef "re_abc") in
+		let j = toJSon m in
 				JSon.show j
 
 	let test1 () =
-		let re = new RegularExpression.model (Arg.Predef "re_abc") in
-			let j = re#toJSon in
+		let re = make (Arg.Predef "re_abc") in
+		let j = toJSon re in
 				JSon.show j
 
 	let testAlphabet () =
-		let re = new RegularExpression.model (Arg.Predef "re_abc") in
-			Util.println ["alphabet: "]; Util.printAlphabet re#alphabet;
+		let re = make (Arg.Predef "re_abc") in
+			Util.println ["alphabet: "];
+			Util.printAlphabet (alphabet re);
 			Util.println []
 
 	let testAlphabet2 () =
-		let re = new RegularExpression.model (Arg.Predef "re_simple") in
-			Util.println ["alphabet: "]; Util.printAlphabet re#alphabet;
+		let re = make (Arg.Predef "re_simple") in
+			Util.println ["alphabet: "];
+			Util.printAlphabet (alphabet re);
 			Util.println []
 
 	let testAlphabet3 () =
-		let re = new RegularExpression.model (Arg.Predef "re_complex") in
-			Util.println ["alphabet: "]; Util.printAlphabet re#alphabet;
+		let re = make (Arg.Predef "re_complex") in
+			Util.println ["alphabet: "];
+			Util.printAlphabet (alphabet re);
 			Util.println []
 
 	let testAlphabet4 () =
-		let re = new RegularExpression.model (Arg.Predef "re_convoluted") in
-			Util.println ["alphabet: "]; Util.printAlphabet re#alphabet;
+		let re = make (Arg.Predef "re_convoluted") in
+			Util.println ["alphabet: "];
+			Util.printAlphabet (alphabet re);
 			Util.println []
 
 	let testQuasiLang () =
-		let re = new RegularExpression.model (Arg.Predef "re_abc") in
-			let ws = re#quasiLanguage in
+		let re = make (Arg.Predef "re_abc") in
+		let ws = quasiLanguage re in
 			Util.printWords ws
 
 	let testQuasiLang2 () =
-		let re = new RegularExpression.model (Arg.Predef "re_simple") in
-			let ws = re#quasiLanguage in
+		let re = make (Arg.Predef "re_simple") in
+		let ws = quasiLanguage re in
 			Util.printWords ws
 
 	let testQuasiLang3 () =
-		let re = new RegularExpression.model (Arg.Predef "re_complex") in
-			let ws = re#quasiLanguage in
+		let re = make (Arg.Predef "re_complex") in
+		let ws = quasiLanguage re in
 			Util.printWords ws
 
 	let testQuasiLang4 () =
-		let re = new RegularExpression.model (Arg.Predef "re_convoluted") in
-			let ws = re#quasiLanguage in
+		let re = make (Arg.Predef "re_convoluted") in
+		let ws = quasiLanguage re in
 			Util.printWords ws
 
 	let check f w =
 		let msg = 
-			if f w then "word was accepted" else "word was not accepted"
+			if f w then "word was accepted"
+			else "word was not accepted"
 		in Util.println [msg]
 
 	let testAccept () =
-		let m = new RegularExpression.model (Arg.Predef "re_abc") in
-			check m#accept (word "aa")
+		let m = make (Arg.Predef "re_abc") in
+			check (accept m) (word "aa")
 
 	let testAccept2 () =
-		let m = new RegularExpression.model (Arg.Predef "re_simple") in
-			check m#accept (word "aa")
+		let m = make (Arg.Predef "re_simple") in
+			check (accept m) (word "aa")
 
 	let testAccept3 () =
-		let m = new RegularExpression.model (Arg.Predef "re_complex") in
-			check m#accept (word "aa")
+		let m = make (Arg.Predef "re_complex") in
+			check (accept m) (word "aa")
 
 	let testAccept4 () =
-		let m = new RegularExpression.model (Arg.Predef "re_convoluted") in
-			check m#accept (word "aa")
+		let m = make (Arg.Predef "re_convoluted") in
+			check (accept m) (word "aa")
 
 	let testGenerate () =
-		let re = new RegularExpression.model (Arg.Predef "re_abc") in
-			Util.println ["generated words size 0:"]; Util.printWords (re#generate 0);
-			Util.println ["generated words size 1:"]; Util.printWords (re#generate 1);
-			Util.println ["generated words size 2:"]; Util.printWords (re#generate 2);
-			Util.println ["generated words size 3:"]; Util.printWords (re#generate 3);
-			Util.println ["generated words size 4:"]; Util.printWords (re#generate 4);
+		let re = make (Arg.Predef "re_abc") in
+			Util.println ["generated words size 0:"]; Util.printWords (generate re 0);
+			Util.println ["generated words size 1:"]; Util.printWords (generate re 1);
+			Util.println ["generated words size 2:"]; Util.printWords (generate re 2);
+			Util.println ["generated words size 3:"]; Util.printWords (generate re 3);
+			Util.println ["generated words size 4:"]; Util.printWords (generate re 4);
 			Util.println []
 
 	let testGenerate2 () =
-		let re = new RegularExpression.model (Arg.Predef "re_simple") in
-			Util.println ["generated words size 0:"]; Util.printWords (re#generate 0);
-			Util.println ["generated words size 1:"]; Util.printWords (re#generate 1);
-			Util.println ["generated words size 2:"]; Util.printWords (re#generate 2);
-			Util.println ["generated words size 3:"]; Util.printWords (re#generate 3);
-			Util.println ["generated words size 4:"]; Util.printWords (re#generate 4);
+		let re = make (Arg.Predef "re_simple") in
+			Util.println ["generated words size 0:"]; Util.printWords (generate re 0);
+			Util.println ["generated words size 1:"]; Util.printWords (generate re 1);
+			Util.println ["generated words size 2:"]; Util.printWords (generate re 2);
+			Util.println ["generated words size 3:"]; Util.printWords (generate re 3);
+			Util.println ["generated words size 4:"]; Util.printWords (generate re 4);
 			Util.println []
 
 	let testGenerate3 () =
-		let re = new RegularExpression.model (Arg.Predef "re_complex") in
-			Util.println ["generated words size 0:"]; Util.printWords (re#generate 0);
-			Util.println ["generated words size 1:"]; Util.printWords (re#generate 1);
-			Util.println ["generated words size 2:"]; Util.printWords (re#generate 2);
-			Util.println ["generated words size 3:"]; Util.printWords (re#generate 3);
-			Util.println ["generated words size 4:"]; Util.printWords (re#generate 4);
+		let re = make (Arg.Predef "re_complex") in
+			Util.println ["generated words size 0:"]; Util.printWords (generate re 0);
+			Util.println ["generated words size 1:"]; Util.printWords (generate re 1);
+			Util.println ["generated words size 2:"]; Util.printWords (generate re 2);
+			Util.println ["generated words size 3:"]; Util.printWords (generate re 3);
+			Util.println ["generated words size 4:"]; Util.printWords (generate re 4);
 			Util.println []
 
 	let testGenerate4 () =
-		let re = new RegularExpression.model (Arg.Predef "re_convoluted") in
-			Util.println ["generated words size 0:"]; Util.printWords (re#generate 0);
-			Util.println ["generated words size 1:"]; Util.printWords (re#generate 1);
-			Util.println ["generated words size 2:"]; Util.printWords (re#generate 2);
-			Util.println ["generated words size 3:"]; Util.printWords (re#generate 3);
-			Util.println ["generated words size 4:"]; Util.printWords (re#generate 4);
+		let re = make (Arg.Predef "re_convoluted") in
+			Util.println ["generated words size 0:"]; Util.printWords (generate re 0);
+			Util.println ["generated words size 1:"]; Util.printWords (generate re 1);
+			Util.println ["generated words size 2:"]; Util.printWords (generate re 2);
+			Util.println ["generated words size 3:"]; Util.printWords (generate re 3);
+			Util.println ["generated words size 4:"]; Util.printWords (generate re 4);
 			Util.println []
 
-	let testSimplify2 () =
-		let re = new RegularExpression.model (Arg.Predef "re_simple") in
-		let res = re#simplify in
-			JSon.show res#toJSon
+	let re = {| {
+			kind : "regular expression",
+			description : "this is a simple example",
+			name : "re_simple",
+			re : "a+a*+bc*"
+		} |}
+
+	let testSimplify () =
+		let re = make (Arg.Text re) in
+			show re;
+			show (simplify re)
 
 	let testEnum () =
 		let e = new Exercise.exercise (Arg.Predef "exer_re2fa") in
 		let re = new RegularExpression.model (Arg.Predef "re_simple") in
 		let result = re#checkExercise e in
-			if result then Util.print ["it works"] else Util.print ["it does not work"]
+			if result then Util.print ["it works"]
+			else Util.print ["it does not work"]
 
 	let testTrace () =
-		let re = new RegularExpression.model (Arg.Predef "re_simple") in
-			re#allTrees (word "acbacb")
+		let re = make (Arg.Predef "re_simple") in
+			allTrees re (word "acbacb")
 	
 	let re_more = {| {
 			kind : "regular expression",
@@ -22876,12 +22657,12 @@ struct
 	} |}
 				
 	let testMore () =
-		let re = new RegularExpression.model (Arg.Text re_more) in
-			re#allTrees (word "aa")
+		let re = make (Arg.Text re_more) in
+			allTrees re (word "aa")
 
 	let runAll =
 		if Util.testing active "RegularExpression" then begin
-			testMore ()
+			testSimplify ()
 		end
 end
 # 1 "src/TransducerTests.ml"
@@ -22899,7 +22680,7 @@ end
  * This software is distributed under the terms of the GPLv3 license.
  * See the included LICENSE file for details.
  *
- * Written by João Santos (js)
+ *  Written by João Santos (js)
  *)
 
 (*
@@ -22916,433 +22697,55 @@ open BasicTypes
 
 module TransducerTests : sig end =
 struct
-  open FiniteAutomaton
-  open Transducer
-  
-  let active = true
-  
-  let fstIdentity = {| {
-    kind : "transducer",
-    description : "Identity transducer",
-    name : "fstId",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["a", "b"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [["S","a","a","S"], ["S","b","b","S"]],
-    acceptStates : ["S"]
-  } |}
-
-  let fst1_Identity = {| {
-    kind : "transducer",
-    description : "Deterministic, Complete, Mealy",
-    name : "fst1",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["c", "d"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","c","S"],
-      ["S","b","d","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
-
-  let fst2_Moore = {| {
-    kind : "transducer",
-    description : "Moore",
-    name : "fst2",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["x", "y"],
-    states : ["S","A"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","A"],
-      ["S","b","x","A"],
-      ["A","a","y","S"],
-      ["A","b","y","S"]
-    ],
-    acceptStates : ["S","A"]
-  } |}
-
-  let fst3_NonDeterministic = {| {
-    kind : "transducer",
-    description : "Nondeterministic  (2 transitions with same input)",
-    name : "fst3",
-    inAlphabet : ["a"],
-    outAlphabet : ["x","y"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","S"],
-      ["S","a","y","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
-
-  let fst4_Incomplete = {| {
-    kind : "transducer",
-    description : "Deterministic but incomplete (missing 'b' on S)",
-    name : "fst4",
-    inAlphabet : ["a", "b"],
-    outAlphabet : ["x"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
-
-  let fst5_EpsConflict = {| {
-    kind : "transducer",
-    description : "Nondeterministic due to epsilon with conflicting outputs",
-    name : "fst5",
-    inAlphabet : ["a"],
-    outAlphabet : ["x","y"],
-    states : ["S","A","B"],
-    initialState : "S",
-    transitions : [
-      ["S","~","x","A"],
-      ["S","~","y","B"],
-      ["A","a","x","A"],
-      ["B","a","y","B"]
-    ],
-    acceptStates : ["A","B"]
-  } |}
-
-  let fst6_EpsDeterministic = {| {
-    kind : "transducer",
-    description : "ε-closure but deterministic (same epsilon output)",
-    name : "fst6",
-    inAlphabet : ["a"],
-    outAlphabet : ["x","y"],
-    states : ["S","A","B","C"],
-    initialState : "S",
-    transitions : [
-      ["S","~","x","A"],
-      ["A","~","x","B"],
-      ["A","~","x","C"],
-      ["B","a","x","B"]
-    ],
-    acceptStates : ["B","C"]
-  } |}
-
-  let fst7_NotMoore = {| {
-    kind : "transducer",
-    description : "Deterministic & complete but not Moore (output depends on input)",
-    name : "fst7",
-    inAlphabet : ["a","b"],
-    outAlphabet : ["x","y"],
-    states : ["S"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","S"],
-      ["S","b","y","S"]
-    ],
-    acceptStates : ["S"]
-  } |}
-
-  let fstD = {| {
-    kind : "transducer",
-    description : "Not deterministic",
-    name : "fstND",
-    inAlphabet : ["a"],
-    outAlphabet : ["x","y"],
-    states : ["S","A","B"],
-    initialState : "S",
-    transitions : [
-        ["S","a","x","A"],
-        ["S","a","x","B"]
-    ],
-    acceptStates : ["A","B"]
-  } |}
-
-  let fstMin = {| {
-    kind : "transducer",
-    description : "Minimizable: A and B are equivalent)",
-    name : "fst_min_merge_AB",
-    inAlphabet : ["a","b"],
-    outAlphabet : ["x","y"],
-    states : ["S","A","B"],
-    initialState : "S",
-    transitions : [
-      ["S","a","x","A"],
-      ["S","b","y","B"],
-
-      ["A","a","x","A"],
-      ["A","b","y","B"],
-
-      ["B","a","x","A"],
-      ["B","b","y","B"]
-    ],
-    acceptStates : ["A","B"]
-  } |}
-
-  let fst_A_to_B = {| {
-    kind : "transducer", 
-		description : "A to B",
-		name : "A_to_B",
-    inAlphabet : ["a"], 
-		outAlphabet : ["b"], 
+	open Transducer
+	
+	let active = false
+	
+	let fstIdentity = {| {
+		kind : "transducer",
+		description : "Identity transducer",
+		name : "fstId",
+		inAlphabet : ["a", "b"],
+		outAlphabet : ["a", "b"],
 		states : ["S"],
-    initialState : "S", 
-		transitions : [["S","a","b","S"]], 
+		initialState : "S",
+		transitions : [["S","a","a","S"], ["S","b","b","S"]],
 		acceptStates : ["S"]
-  } |}
+	} |}
 
-  let fst_B_to_C = {| {
-    kind : "transducer", 
-		description : "B to C",
-		name : "B_to_C",
-    inAlphabet : ["b"], 
-		outAlphabet : ["c"], 
-		states : ["S"],
-    initialState : "S", 
-		transitions : [["S","b","c","S"]], 
-		acceptStates : ["S"]
-  } |}
-  
-  let fst_A_to_X = {| {
-    kind : "transducer",
-		description : "A to X", 
-		name : "A_to_X",
-    inAlphabet : ["a"], 
-		outAlphabet : ["x"], 
-		states : ["S"],
-    initialState : "S", 
-		transitions : [["S","a","x","S"]], 
-		acceptStates : ["S"]
-  } |}
-  
-  let fst_B_to_Y = {| {
-    kind : "transducer", 
-		description : "B to Y",
-		name : "B_to_Y",
-    inAlphabet : ["b"], 
-		outAlphabet : ["y"], 
-		states : ["S"],
-    initialState : "S", 
-		transitions : [["S","b","y","S"]], 
-		acceptStates : ["S"]
-  } |}
+	let test0 () =
+		let fst: t = make (Arg.Text fstIdentity) in
+			show fst
 
-  let fst_ax_by = {| {
-    kind : "transducer", 
-		description : "a->x, b->y",
-		name : "ax_by",
-    inAlphabet : ["a","b"], 
-		outAlphabet : ["x","y"], 
-		states : ["S"],
-    initialState : "S", 
-		transitions : [
-			["S","a","x","S"], 
-			["S","b","y","S"]
-		], 
-		acceptStates : ["S"]
-  } |}
+	let test1 () =
+		let fst: t = make (Arg.Text fstIdentity) in
+		let json: JSon.t = toJSon fst in
+			JSon.show json
 
-  let fst_ax_bz = {| {
-    kind : "transducer", 
-		description : "a->x, b->z",
-		name : "ax_bz",
-    inAlphabet : ["a","b"], 
-		outAlphabet : ["x","z"], 
-		states : ["S"],
-    initialState : "S", 
-		transitions : [
-			["S","a","x","S"], 
-			["S","b","z","S"]
-		], 
-		acceptStates : ["S"]
-  } |}
+	let test2 () =
+		let json: JSon.t = JSon.parse fstIdentity in
+		let fst: t = make (Arg.JSon json) in
+		let json: JSon.t = toJSon fst in
+			JSon.show json
 
+	let test3 () =
+		let json: JSon.t = JSon.parse fstIdentity in
+		let fst: t = fromJSon json in
+		let json: JSon.t = toJSon fst in
+			JSon.show json
 
-  let test0 () =
-    let fst: t = make (Arg.Text fstIdentity) in
-    show fst
-
-  let test1 () =
-    let fst: t = make (Arg.Text fstIdentity) in
-    let json: JSon.t = toJSon fst in
-      JSon.show json
-
-  let test2 () =
-    let json: JSon.t = JSon.parse fstIdentity in
-    let fst: t = make (Arg.JSon json) in
-    let json: JSon.t = toJSon fst in
-      JSon.show json
-
-  let test3 () =
-    let json: JSon.t = JSon.parse fstIdentity in
-    let fst: t = fromJSon json in
-    let json: JSon.t = toJSon fst in
-      JSon.show json
-
-  let test4 () =
-    let fst: t = make (Arg.Text fst6_EpsDeterministic) in
-    let test = isDeterministic fst in
-    Printf.printf "%s\n" (string_of_bool test)
-
-  let test5 () =
-    let fst: t = make (Arg.Text fst7_NotMoore) in
-    let test = isComplete fst in
-    Printf.printf "%s\n" (string_of_bool test)
-  
-  let test6 () =
-    let fst: t = make (Arg.Text fst7_NotMoore) in
-    let test = isMealyMachine fst in
-    Printf.printf "%s\n" (string_of_bool test)
-
-  let test7 () =
-    let fst: t = make (Arg.Text fst1_Identity) in
-    let input = BasicTypes.word "bab" in
-    let (ok, path, _) = Transducer.acceptFull fst input in
-    Printf.printf "accept(\"bab\") = %b\n" ok;
-    let (a, b, c) = List.hd (List.rev path) in
-    word2str c |> Printf.printf "output = %s\n";
-
-    let outs = Transducer.generate fst (-3) |> BasicTypes.wordsX in
-    Printf.printf "generate(3) = [%s]\n" (String.concat "; " outs)
-
-  let test8 () =
-    let fst: t = make (Arg.Text fstD) in
-    let fstD = Transducer.toDeterministic fst in
-    show fstD
-
-  (* Test for compose(T1(a->b), T2(b->c)) = T(a->c) *)
-  let test9 () =
-    let t1 = make (Arg.Text fst_A_to_B) in
-    let t2 = make (Arg.Text fst_B_to_C) in
-    let t_comp = Transducer.compose t1 t2 in
-    Printf.printf "Composition (a->b o b->c)\n";
-    show t_comp;
-    let (ok, path, _) = Transducer.acceptFull t_comp (BasicTypes.word "a") in
-    Printf.printf "accept(\"a\") = %b\n" ok;
-    if ok then
-      let (_, _, output_word) = List.hd (List.rev path) in
-      word2str output_word |> Printf.printf "output = %s (expected c)\n"
-
-  (* Test for union(T1(a->x), T2(b->y)) *)
-  let test10 () =
-    let t1 = make (Arg.Text fst_A_to_X) in
-    let t2 = make (Arg.Text fst_B_to_Y) in
-    let t_union = Transducer.union t1 t2 in
-    Printf.printf "Union (a->x U b->y)\n";
-    show t_union;
-    (* Test first machine's word *)
-    let (ok1, path1, _) = Transducer.acceptFull t_union (BasicTypes.word "a") in
-    Printf.printf "accept(\"a\") = %b\n" ok1;
-    if ok1 then
-      let (_, _, out1) = List.hd (List.rev path1) in
-      word2str out1 |> Printf.printf "output(a) = %s (expected x)\n";
-    (* Test second machine's word *)
-    let (ok2, path2, _) = Transducer.acceptFull t_union (BasicTypes.word "b") in
-    Printf.printf "accept(\"b\") = %b\n" ok2;
-    if ok2 then
-      let (_, _, out2) = List.hd (List.rev path2) in
-      word2str out2 |> Printf.printf "output(b) = %s (expected y)\n"
-
-  (* Test for intersection(T1(a->x, b->y), T2(a->x, b->z)) = T(a->x) *)
-  let test11 () =
-    let t1 = make (Arg.Text fst_ax_by) in
-    let t2 = make (Arg.Text fst_ax_bz) in
-    let t_inter = Transducer.intersection t1 t2 in
-    Printf.printf "Intersection (a->x, b->y) n (a->x, b->z)\n";
-    show t_inter;
-    (* Test matching word *)
-    let (ok1, path1, _) = Transducer.acceptFull t_inter (BasicTypes.word "a") in
-    Printf.printf "accept(\"a\") = %b (expected true)\n" ok1;
-    if ok1 then
-      let (_, _, out1) = List.hd (List.rev path1) in
-      word2str out1 |> Printf.printf "output(a) = %s (expected x)\n";
-    (* Test non-matching word *)
-    let (ok2, _, _) = Transducer.acceptFull t_inter (BasicTypes.word "b") in
-    Printf.printf "accept(\"b\") = %b (expected false)\n" ok2
-  
-  (* Test for inverse(T(a->x)) = T(x->a) *)
-  let test12 () =
-    let t1 = make (Arg.Text fst_A_to_X) in
-    let t_inv = Transducer.inverse t1 in
-    Printf.printf "Inverse (a->x) => (x->a)\n";
-    show t_inv;
-    let (ok, path, _) = Transducer.acceptFull t_inv (BasicTypes.word "x") in
-    Printf.printf "accept(\"x\") = %b\n" ok;
-    if ok then
-      let (_, _, output_word) = List.hd (List.rev path) in
-      word2str output_word |> Printf.printf "output = %s (expected a)\n"
-
-  (* Test for concatenate(T1(a->x), T2(b->y)) = T(ab->xy) *)
-  let test13 () =
-    let t1 = make (Arg.Text fst_A_to_X) in
-    let t2 = make (Arg.Text fst_B_to_Y) in
-    let t_cat = Transducer.concatenate t1 t2 in
-    Printf.printf "Concatenate (a->x) . (b->y)\n";
-    show t_cat;
-    let (ok, path, _) = Transducer.acceptFull t_cat (BasicTypes.word "ab") in
-    Printf.printf "accept(\"ab\") = %b\n" ok;
-    if ok then
-      let (_, _, output_word) = List.hd (List.rev path) in
-      word2str output_word |> Printf.printf "output = %s (expected xy)\n"
-
-
-  let test14 () =
-    let t = make (Arg.Text fstMin) in
-    Printf.printf "Original\n";
-    show t;
-    let t_min = Transducer.minimize t in
-    Printf.printf "Minimized\n";
-    show t_min;
-    let isMin = Transducer.isMinimized t_min in
-    Printf.printf "isMinimized = %b (expected true)\n" isMin
-
-  (* Test for asTuringMachine(T) *)
-  let test15 () =
-    let t = make (Arg.Text fst_A_to_B) in
-    let tm = Transducer.asTuringMachine t in
-    Printf.printf "Transducer to TM (a->b)\n";
-    TuringMachine.show tm;
-    let accepted_a = TuringMachine.accept tm (BasicTypes.word "a") in
-    Printf.printf "TM accept('a') = %b (expected true)\n" accepted_a;
-    let accepted_b = TuringMachine.accept tm (BasicTypes.word "b") in
-    Printf.printf "TM accept('b') = %b (expected false)\n" accepted_b
-
-  let runAll =
-    if Util.testing active "Transducer" then begin
-      Util.header "test0";
-      test0 ();
-      Util.header "test1";
-      test1 ();
-      Util.header "test2";
-      test2 ();
-      Util.header "test3";
-      test3 ();
-      Util.header "test4";
-      test4 ();
-      Util.header "test5";
-      test5 ();
-      Util.header "test6";
-      test6 ();
-      Util.header "test7";
-      test7 ();
-      Util.header "test8";
-      test8 ();
-      Util.header "test9 (compose)";
-      test9 ();
-      Util.header "test10 (union)";
-      test10 ();
-      Util.header "test11 (intersection)";
-      test11 ();
-      Util.header "test12 (inverse)";
-      test12 ();
-      Util.header "test13 (concatenate)";
-      test13 ();
-      Util.header "test14 (minimize)";
-      test14 ();
-      Util.header "test15 (asTuringMachine)";
-      test15 ();
-      Util.header ""
-    end
+	let runAll =
+		if Util.testing active "Transducer" then begin
+			Util.header "test0";
+			test0 ();
+			Util.header "test1";
+			test1 ();
+			Util.header "test2";
+			test2 ();
+			Util.header "test3";
+			test3 ();
+			Util.header ""
+		end
 end
 # 1 "src/ContextFreeGrammarBasicTests.ml"
 (*

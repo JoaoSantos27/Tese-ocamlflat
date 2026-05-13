@@ -26,7 +26,8 @@ open CSS
 module Lang =
   struct
 
-    let default_language () =
+  
+  let default_language () =
 	  (Js.Opt.get
         Dom_html.window##.navigator##.language
           (fun () ->
@@ -34,6 +35,7 @@ module Lang =
         ##substring
         0
         2
+        
   (* NOVO!
     let default_language () =
       (Js.Optdef.get
@@ -111,6 +113,15 @@ module Lang =
 
   let i18nConvertToAcceptEmptyStack () = 
     i18n ["Convert to acceptance by empty stack"; "Converter aceitação por pilha vazia"; "Convertisseur pour pile vide accepter"]
+ 
+  let i18nShowTableView () =
+    i18n ["Show Table view"; "Mostrar visualização de Tabela"; "Afficher la vue Tableau"]
+
+  let i18nShowAutomataView () =
+    i18n ["Show Automata view"; "Mostrar visualização de Autómato"; "Afficher la vue Automates"]
+
+  let i18nShowHelpModel () =
+    i18n ["Help"; "Ajuda"; "Aide"] 
 
 (** ---------------- Barra lateral terceiro bloco ----------------- **)
   let i18nSelectConv () = 
@@ -147,6 +158,12 @@ let i18nImportModel () =
   
 let i18nExportModel () =
   i18n ["Export model"; "Exportar modelo"; "Modèle d'exportation"]
+
+let i18nSaveModel () =
+  i18n ["Save model"; "Guardar modelo"; "Enregistrer le modèle"]
+
+let i18nDeleteModels () =
+  i18n ["Delete models"; "Apagar modelos"; "Supprimer des modèles"] 
 
 let i18nServer () = 
   i18n ["Predefined examples"; "Exemplos predefinidos"; "Exemples prédéfinis"] 
@@ -229,6 +246,32 @@ let i18nFooter () =
 let i18nFooter1 () = 
   i18n ["INRIA Foundation"; "Fundação INRIA"; "INRIA Foundation"]
 
+(** ---------------- Nomes de modelos ----------------- **)
+
+let i18nFA () =
+  i18n ["Finite Automata"; "Autómato Finito"; "Automate Fini"]
+
+let i18nRE () =
+  i18n ["Regular Expression"; "Expressão Regular"; "Expression régulière"]
+
+let i18nEx () =
+  i18n ["Exercise"; "Exercício"; "Exercice"]
+
+let i18nGR () =
+  i18n ["Grammar"; "Gramática"; "Grammaire"]
+
+let i18nCFG () =
+  i18n ["Context Free Grammar"; "Gramática Independente de Contexto"; "Grammaire Sans Contexte"]
+
+let i18nPDA () =
+  i18n ["Pushdown Automata"; "Autómato de Pilha"; "Automate à Pile"]
+
+let i18nTM () =
+    i18n ["Turing Machine"; "Máquina de Turing"; "machine de Turing"]
+
+let i18nComp () = (* carolina *)
+  i18n ["Composition"; "Composição"; "Composition"] 
+
 (** ------------------ Modal ------------------- **)
 
 let i18nNewModelSelectType() =
@@ -273,20 +316,20 @@ let i18nPenttonen () =
 let i18monoCSG () = 
   i18n ["Monotonic to CSG"; "Monótona para GSC"; "Monotone vers GSC"]
 
-let i18nDeterministic () = 
+let i18nMakeDeterministic () = 
   i18n ["Make deterministic"; "Tornar determinista"; "Rendre déterministe"]
 
 let i18nMinimize () = 
   i18n ["Minimize automaton"; "Minimizar autómato"; "Minimiser l'automate"]
 
-let i18nProductive () = 
-  i18n ["Productive states"; "Estados produtivos"; "États productifs"]
+let i18nProductiveBox () = 
+  i18n ["Highlight: Productive states"; "Destaque: Estados produtivos"; "Souligner: États productifs"]
 
-let i18nAccessible () = 
-  i18n ["Accessible states"; "Estados acessiveis"; "États accessibles"]
+let i18nAccessibleBox () = 
+  i18n ["Highlight: Accessible states"; "Destaque: Estados acessíveis"; "Souligner: États accessibles"]
 
-let i18nUseful () = 
-  i18n ["Useful states"; "Estados úteis"; "États utiles"]
+let i18nUsefulBox () = 
+  i18n ["Highlight: Useful states"; "Destaque: Estados úteis"; "Souligner: États utiles"]
 
 let i18nTogleAcceptCriteriaState () = 
   i18n ["Acceptance Mode: Final states"; "Modo de Aceitação: Estados Finais"; "Mode d'acceptation : États finaux"]
@@ -300,17 +343,17 @@ let i18nInitialStackSymbol () =
 (* let i18nInfoBox () = 
   i18n ["Data about the Automaton"; "Dados sobre o Autómato"] *) 
 
-let i18nIsDeterministic () = 
-  i18n ["The automaton is deterministic. "; "O autómato é determinista. "; "L'automate est déterministe. "]
+let i18nDeterministic () = 
+  i18n ["Deterministic: "; "Determinista: "; "Déterministe: "]
 
-let i18nNotDeterministic () = 
-  i18n ["The Automaton is not deterministic. "; "O Autómato não é determinista. "; "L'automate n'est pas déterministe. "]
+let i18nkind () = 
+  i18n ["Model: "; "Modelo: "; "Modèle: "]
 
-let i18nIsMinimal () = 
-  i18n ["The Automaton is minimal. "; "O Autómato é mínimo. "; "L'automate est minimal. "]
+let i18nName () = 
+  i18n ["Name: "; "Nome: "; "Nom: "]
 
-let i18nNotMinimal () = 
-  i18n ["The automaton is not minimal. "; "O autómato não é mínimo. "; "L'automate n'est pas minimal. "]
+let i18nMinimal () = 
+  i18n ["Minimal: "; "Mínimo: "; "Minimal: "]
 
 let i18nNotUseless () = 
   i18n ["The automaton has no useless states. "; "O autómato não tem estados inúteis. "; "L'automate n'a pas d'états inutiles. "]
@@ -328,10 +371,19 @@ let i18nUselessStates () =
   i18n [" useless states. "; " estados inúteis. "; " etats inutiles. "] 
 
 let i18nNumberStates () = 
-    i18n ["Number of states: "; "Número de Estados: "; "Nombre d'états: "] 
+    i18n ["States: "; "Estados: "; "États: "] 
 
 let i18nNumberTransitions () = 
-  i18n ["Number of transitions: "; "Número de Transições: "; "Nombre de transitions: "]
+  i18n ["Transitions: "; "Transições: "; "Transitions: "]
+
+let i18nProductive () =
+  i18n ["Productive"; "Produtivo"; "Productif"]
+
+let i18nAccessible () =
+  i18n ["Accessible"; "Acessível"; "Accessible"]
+
+let i18nUseful () =
+  i18n ["Useful"; "Útil"; "Utile"] 
 
 (* ML *)
 let i18nIsLinearBounded() = 
@@ -356,6 +408,12 @@ let i18nAlreadyInAcceptanceModeByEmptyStack () =
   i18n ["Automaton already in acceptance mode by empty stack"; 
   "O Autómato já está em modo de aceitação por pilha vazia"; 
   "Automate déjà en mode acceptation par pile vide"]
+
+let i18nGrammar () =
+  i18n ["The grammar is "; "A gramática é "; "La grammaire est "]
+
+let i18nGrammarN () =
+  i18n ["The grammar is not "; "A gramática não é "; "La grammaire n'est pas "] 
 
 (** ---------------- Regular Expressions ----------------- **)
 
@@ -529,6 +587,23 @@ let i18nRight () =
 
 let i18nWrong () = 
   i18n ["Wrong answer"; "Resposta errada"; "Mauvaise réponse"]
+
+(** ---------------- Palavras Testadas ----------------- **)
+
+let i18nConfigVis () =
+  i18n ["Configurations Visited: "; "Configurações visitadas: "; "Configurations consultées: "]
+
+let i18nCompAbort () =
+  i18n ["Computation Aborted: "; "Cálculo abortado: "; "Calcul interrompu: "]
+
+let i18nTimeTaken () =
+  i18n ["Time: "; "Tempo: "; "Temps: "]
+
+let i18nWordAccept () =
+  i18n ["Word Accepted: " ; "Palavra aceite: "; "Mot accepté: "]
+
+let i18nSeconds () =
+  i18n [" seconds" ; " segundos"; " seconds"] 
 
 (** ---------------- Palavras Geradas ----------------- **)
 
@@ -1006,6 +1081,15 @@ let i18nTooltipExportModel () =
   "Transfere a representação textual do modelo atualmente visivel.";
   "Téléchargez la représentation textuelle du modèle actuellement visible."]
 
+let i18nTooltipSaveModel () =
+  i18n ["Save the textual representation of the currently visible model in the examples.";
+  "Guarda a representação textual do modelo atualmente visivel nos exemplos.";
+  "Enregistre la représentation textuelle du modèle actuellement visible dans les exemples."]
+
+let i18nTooltipDeleteModels () =
+  i18n ["Delete the list of models saved by the user.";
+  "Apagar a lista de modelos guardados pelo utilizador.";
+  "Supprimer la liste des modèles enregistrés par l'utilisateur."] 
 
 let i18nTooltipAbout () = 
   i18n ["More about the page and some instructions"; 
@@ -1076,6 +1160,19 @@ let i18nTooltipSpecification () =
   i18n ["Show the specification of the model in a new box"; 
   "Mostra a especificação do modelo numa nova caixa";
   "Afficher la spécification du modèle dans une nouvelle case"]
+
+let i18nTooltipShowHelpModel () =
+  i18n ["Creates a new box with helpful text about the model";
+  "Cria numa nova caixa com texto de apoio ao modelo";
+  "Crée une nouvelle boîte avec du texte pour prendre en charge le modèle"]
+
+let i18nAction () =
+  i18n ["Action"; "Ação"; "Action"]
+
+let i18nTooltipShowHelpAnimation () =
+  i18n ["Creates a new box with text about the last action";
+  "Cria numa nova caixa com texto acerca da última ação";
+  "Crée une nouvelle boîte avec du texte autour de la dernière action"] 
 
 let i18nPropertyTrue () =
   i18n ["Does not require any property.";
@@ -1308,6 +1405,37 @@ let i18nModelEditFA () =
   i18n ["Edit the model directly on the graph. Try right-clicking or long-pressing an element of the graph.";
         "Edita o modelo diretamente no grafo. Experimenta clicar com o lado direito do rato ou manter premido num elemento do grafo.";
         "Modifiez le modèle directement sur le graphique. Essayez de cliquer avec le bouton droit de la souris ou d'appuyer longuement sur un élément du graphique."]
+
+let i18nTrue () =
+  i18n ["True"; "Verdadeiro"; "Vrai"]
+
+let i18nFalse () =
+  i18n ["False"; "Falso"; "Faux"]
+
+(** ----------------- Layout de automatos ------------------ **)
+
+let i18nRefreshL () =
+  i18n ["Refresh layout"; "Atualizar layout"; "Actualiser la mise en page"]
+
+let i18nTooltipRefreshL () =
+  i18n ["Redraw layout with all elements"; "Atualizar o layout com todos os elementos"; "Redessiner la mise en page avec tous les éléments"]
+
+(** ----------------- Botão ajuda nomes ------------------ **)
+
+let i18nTableView () =
+  i18n ["Table"; "Tabela"; "Tableau"]
+
+let i18nDeterministicText () =
+  i18n ["Deterministic"; "Determinista"; "Déterministe"]
+
+let i18nMinimizeText () =
+  i18n ["Minimize"; "Minimizar"; "Minimiser"]
+
+let i18nAnimationText () =
+  i18n ["Animation"; "Animação"; "Animation"]
+
+let i18nClearColorText () =
+  i18n ["Clean colors"; "Limpar cores"; "Effacer couleurs"] 
 
 (** ---------------- Antigos (fora de uso) -----------------
 

@@ -18,7 +18,7 @@
 (*
  * ChangeLog:
  *
- * ???/2025 (pb) - ....
+ * mar/2025 (pb) - validateAG implementation method.
  * feb/2025 (amd) - New file "AttributeGrammar.ml".
  *)
 
@@ -28,93 +28,501 @@
  * TODO: More cleanup.
  *)
 
-open BasicTypes
+	open BasicTypes
+	open Set
 
-module AttributeGrammarPrivate =
-struct
-	open AttributeGrammarSupport
+	module AttributeGrammarPrivate =
+	struct
+		open AttributeGrammarSupport
 
-	let ag2cfg (rep: t): ContextFreeGrammarBasic.t =
-		ContextFreeGrammarBasic.cfg_zero
-	
-	let validateAG (name: string) (rep: t): unit =
-		()
-	
-	let validate (name: string) (rep: t): unit =
-		let cfg = ag2cfg rep in
-			ContextFreeGrammarPrivate.validate "_" cfg;
-			validateAG "_" rep
+		let howMany (body: word) (v: variable) =
+			List.length (List.filter (fun x-> x = v) body)
 
-	let accept (rep: t) (w: word): bool =
-		false
-end
+		let ag2cfg (rep: t): ContextFreeGrammarBasic.t =
+			ContextFreeGrammarBasic.cfg_zero
 
-module AttributeGrammar =
-struct
-	include AttributeGrammarSupport
-	open AttributeGrammarPrivate
+		let validateAttrArg (ag:t) (r:rule) (attr: attribute) (v,i) =
+			if i = 0 then
+				r.head = v && Set.belongs attr (Set.union ag.synthesized ag.inherited)
+		else
+			let counter = howMany r.body v in
+				counter >= i
 
-	(* Make *)
-	let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
-	let make (arg: t Arg.alternatives): t = make arg validate
 
-	(* Exercices support *)
-	let checkProperty (fa: t) (prop: string) =
-		match prop with
-			| _ -> Model.checkProperty prop
-	let checkExercise ex fa = Model.checkExercise ex (accept fa) (checkProperty fa)	
-	let checkExerciseFailures ex fa = Model.checkExerciseFailures ex (accept fa) (checkProperty fa)
+		let rec validateExp (name: string) (ag: t) (r: rule) (e: expression) : string =
+					  let attr_exists attr =
+					    Set.belongs attr (Set.union ag.synthesized ag.inherited)
+					  in
 
-	(* Ops *)
-	let stats = Model.stats
-	let accept = accept
-end
+					  let vars_exists vars =
+					    Set.belongs vars ag.variables
+					  in
 
-module AttributeGrammarTop =
-struct
-	open AttributeGrammar
-end
+					  match e with
+					  | Const (Int _) -> "int"
+					  | Const (String _) -> "string"
+					  | Const (Bool _) -> "bool"
+					  | Apply (attr, (var, i)) ->
+					      if attr_exists attr then
+					        if vars_exists var then
+					          if validateAttrArg ag r attr (var, i) then "int"
+					          else Error.error name  "Argumento do Atributo invalido" "error"
+					        else  Error.error name  "Variável não encontrada" "error"
+					      else Error.error name  "Atributo não encontrado" "error"
+					  | Expr (op, l, r_expr) ->
+					      let tl = validateExp name ag r l in
+					      let tr = validateExp name ag r r_expr in
+					      if tl = tr then
+					        match op with
+					        | "+" | "*" ->
+					            if tl <> "string" then tl
+					            else Error.error name "Incompatibilidade de tipos" "error"
+					        | "<" | ">" | "<=" | ">=" | "=" | "<>" ->
+					            if tl = "int" then "bool"
+					            else Error.error name "Incompatibilidade de tipos" "error"
+					        | _ -> Error.error name "Operador desconhecido" "error"
+					      else Error.error name "Incompatibilidade de tipos" "error"
 
-open AttributeGrammarTop
+		let validateEquation (name: string) (ag: t) ((lhs, rhs): equation) (r: rule): unit =
+		    match lhs with
+		    | Apply _ ->
+		        let lhs_type = validateExp name ag r lhs in
+		        let rhs_type = validateExp name ag r rhs in
+		        if lhs_type = rhs_type && lhs_type <> "erro" then ()
+		        else Error.error name "Incompatibilidade de tipos na equaçao" () (* passar os erros para ingles*)
+		    | _ -> Error.error name "Lado esquerdo da equação deve ser Apply" ()
 
-module AttributeGrammarSupportTests : sig end =
-struct
-	open AttributeGrammar
-	
-	let active = false
-	
-	let ag = {| {
-		kind : "attribute grammar",
-		description : "",
-		name : "ag",
-		alphabet : ["[", "]"],
-		variables : ["S"],
-		inherited : [],
-		synthesized : [],
-		initial : "S",
-		rules : [ "S -> [S] {l(S) = 2; l(S) = 'ole'; l(S0) = l(S1)} [123 + 56; 56; 'ola']",
-				  "S -> SS {l(S) = l(S1) + 3 + 'ola' + l(S12345)}",
-				  "S -> ~ {l(S0) = 6}",
-				  "S -> ~ {l(S0) = 1+2*3<T>F<=T>=5=T<>T+(1*2)}"
-				]
-	} |}
+		    (*fazer vadildação das condições, fazer validar da expr e ver se é booleano*)
+		    (*passo seguinte calcular os atributos utilizando a tree??*)
+		    (*começar com atributos sintetizados*)
 
-	let test0 () =
-		let j = JSon.parse ag in
-		let g = fromJSon j in
-		let h = toJSon g in
-			JSon.show h
+        let validateCondition (name: string) (ag: t) (cond: condition) (rule: rule): unit =
+           if validateExp name ag rule cond = "bool" then ()
+           else Error.error name "Condição deve ser booleana" ()
 
-	let test1 () =
-		let g = make (Arg.Text ag) in
-		let h = toJSon g in
-			JSon.show h
 
-	let runAll =
-		if Util.testing active "AttributeGrammarSupport" then begin
-			Util.header "test0";
-			test1 ();
-			Util.header ""
-		end
-end
+		let accept (rep: t) (w: word): bool =
+			false
 
+        let ag_to_cfg (ag: t): ContextFreeGrammar.t =
+          {
+            alphabet = ag.alphabet;
+            variables = ag.variables;
+            initial = ag.initial;
+            rules = Set.map (fun r ->
+              {
+                ContextFreeGrammar.head = r.head;
+                body = r.body
+              }
+            ) ag.rules
+          }
+
+
+
+        let cfg_to_ag (cfg: ContextFreeGrammar.t): t =
+          {
+            alphabet = cfg.alphabet;
+            variables = cfg.variables;
+            synthesized = Set.empty;
+            inherited = Set.empty;
+            initial = cfg.initial;
+            rules = Set.map (fun (r: ContextFreeGrammar.rule) ->
+              {
+                head = r.head;
+                body = r.body;
+                equations = Set.empty;
+                conditions = Set.empty
+              }
+            ) cfg.rules
+          }
+
+        let validateEquations (name: string) (rep: t): unit =
+            Set.iter (fun r ->
+                Set.iter (fun eq ->
+                    validateEquation name rep eq r
+                ) r.equations
+            ) rep.rules
+
+        let validateConditions (name: string) (rep: t): unit =
+            Set.iter (fun r ->
+                Set.iter (fun eq ->
+                    validateCondition name rep eq r
+                ) r.conditions
+            ) rep.rules
+
+        let validate (name: string) (rep: t): unit =
+            let cfg = ag2cfg rep in
+                ContextFreeGrammarPrivate.validate name cfg;
+                validateEquations name rep;
+                validateConditions name rep
+
+        let rec collectFromExpression (exp: expression): attributes =
+          match exp with
+            | Apply (attr, _) -> Set.make [attr]
+            | Expr (_, l, r) -> Set.union (collectFromExpression l) (collectFromExpression r)
+            | _ -> Set.empty
+
+        let collectFromEquation (eq: equation): attributes =
+            let (lhs, rhs) = eq in
+            Set.union (collectFromExpression lhs) (collectFromExpression rhs)
+
+        let collectFromCondition (cond: condition): attributes =
+            collectFromExpression cond
+
+        let collectFromRule (r: rule): attributes =
+            let fromEquations = Set.flat_map collectFromEquation r.equations in
+            let fromConditions = Set.flat_map collectFromCondition r.conditions in
+            Set.union fromEquations fromConditions
+
+        let removeUnusedAttributes (rep: t): t =
+            let used = Set.flat_map collectFromRule rep.rules in
+            let newSynthesized = Set.inter rep.synthesized used in
+            let newInherited = Set.inter rep.inherited used in
+           {
+              rep with
+              synthesized = newSynthesized;
+              inherited = newInherited;
+            }
+
+        let collectVarsFromRule (r: rule) (vars: variables): variables =
+          Set.inter vars (Set.make r.body)
+
+        let removeUnusedRulesAndVariables (rep: t) =
+          let rec collectUsedVariables rules used =
+            match rules with
+            | [] -> used
+            | rule :: rest ->
+                let usedInBody = List.fold_left (fun acc sym -> Set.cons sym acc) used rule.body in
+                collectUsedVariables rest (Set.cons rule.head usedInBody)
+          in
+          let usedVariables = collectUsedVariables (Set.toList rep.rules) (Set.make [rep.initial]) in
+          let newVariables = Set.filter (fun var -> Set.belongs var usedVariables) rep.variables in
+          let newRules =
+            Set.filter
+              (fun rule ->
+                Set.belongs rule.head newVariables &&
+                List.for_all (fun sym -> Set.belongs sym newVariables || Set.belongs sym rep.alphabet) rule.body
+              )
+              rep.rules
+          in
+          { rep with variables = newVariables; rules = newRules }
+
+        let rec associX key idx (nodes: node list): evaluations =
+            match nodes with
+            | (k, evs) :: xs when key = k && (idx <= 0) ->
+                evs
+            | [] ->
+                print_string "not found\n";
+                raise Not_found
+            | _ when idx = 0 ->
+                print_string "not found\n";
+                raise Not_found
+            | _ :: xs ->
+                 associX key (idx-1) xs
+
+       let associ key idx (nodes: node list): evaluations =
+           Printf.printf "%s%d ===> " (symb2str key) idx;
+           let evs = associX key idx nodes in
+              showEvaluations evs;
+              evs
+
+        let rec updatei key idx (ev: evaluation) (nodes: node list): node list =
+            match nodes with
+            | (k, evs) :: xs when key = k && (idx <= 0) ->
+                  (k, Set.cons ev evs) :: xs
+            | [] ->
+                print_string "not found\n";
+                raise Not_found
+            | _ when idx = 0 ->
+                print_string "not found\n";
+                raise Not_found
+            | x :: xs -> x :: updatei key (idx-1) ev xs
+
+        let updatei key idx (ev: evaluation) (nodes: node list): node list =
+            updatei key idx ev nodes
+        
+        let evaluateOp (op: string) (l: value) (r:value): value =
+            match op with
+                | "+" ->(
+                    match (l, r) with
+                    | Int li, Int ri -> Int (li + ri)
+                    | String ls, String rs -> String (ls ^ rs)
+                    | _ -> failwith "Invalid expression in evaluation"
+                )
+                | "*" -> (
+                    match (l, r) with
+                    | Int li, Int ri -> Int (li * ri)
+                    | _ -> failwith "Invalid expression in evaluation"
+                )
+
+                (* acabar isto com os outros valores  -> *)
+                | _ -> failwith "Unknown operator in evaluation"
+
+       let rec evaluate (e: expression) (nodes: node list): value =
+            match e with
+            | Const v -> v
+            | Apply (attr, (var, idx)) ->
+                let evals = associ var idx nodes in
+                let (_,b) = Set.find (fun (a, _) -> a = attr) evals in
+                b
+            | Expr (op, left, right) ->
+                let l = evaluate left  nodes in
+                let r = evaluate right nodes in
+                evaluateOp op l r
+
+
+        let rec update2 a b l =
+            match l with
+            | [] -> [(a, b)]
+            | (x, y) :: xs when x = a -> (x, b) :: xs
+            | x :: xs -> x :: update2 a b xs
+
+        (* Evaluate an equation and update the list of evaluations *)
+       let eval (e: equation) (nodes: node list): node list =
+            showEquation e;
+            match e with
+            | (Apply (attr, (var, idx)), expr) ->
+            (try
+                let _ = showNodeList nodes in
+                let value = evaluate expr nodes in
+                let _ = showValue value in
+                let ev = (attr, value) in
+                let nodes = updatei var idx ev nodes in
+                let _ = showNodeList nodes in
+                    nodes
+            with _ ->
+				Printf.printf "%s has no value\n" (symb2str attr);
+                nodes
+             )
+            | _ -> failwith "Invalid equation in evaluation"
+
+(*        (* Evaluate an equation and update the list of evaluations *)
+       let evalZ (e: equation) (nodes: node list): node list =
+            showEquation e;
+            match e with
+            | (Apply (attr, (var, idx)), expr) ->
+            (try
+                let _ = showNodeList nodes in
+                let value = evaluate expr nodes in
+                let _ = showValue value in
+                let ev = (attr, value) in
+                let evs = List.assoc var nodes in
+                let new_evs = Set.cons ev evs in
+                let nodes = updatei var 0 new_evs nodes in
+                let _ = showNodeList nodes in
+                    nodes
+            with _ ->
+				Printf.printf "%s has no value\n" (symb2str attr);
+                nodes
+             )
+            | _ -> failwith "Invalid equation in evaluation"*)
+
+(******************************************************)
+       let getRoot (pt: parseTree): node =
+                match pt with
+                | Leaf ((s,e)) -> (s,e)
+                | Node ((s,e), _) -> (s,e)
+
+       let getChildren (pt: parseTree): parseTree list =
+                match pt with
+                | Leaf _ -> []
+                | Node (_, children) -> children
+
+        let getRootSymbol (pt: parseTree): symbol =
+            getRoot pt |> fst
+
+      let getRootRule (ag: t) (pt: parseTree): AttributeGrammarSupport.rule =
+        match pt with
+         | Leaf _ ->
+            failwith "getRootRule"
+         | Node (_, children) ->
+			let head = getRootSymbol pt in
+			let body = List.map getRootSymbol children in
+			try
+               Set.find (fun r -> r.head = head && r.body = body) ag.rules
+            with _ -> failwith (symb2str head)
+
+      let updateRoot a n =
+            match a with
+            | Leaf _ -> Leaf n
+            | Node (_, children) ->
+                   Node (n, children)
+
+      let calcAtributesAtRoot (ag: t) (pt: parseTree): parseTree =
+         match pt with
+        | Leaf n ->
+            Leaf n
+        | Node (_, children) ->
+            let rule: AttributeGrammarSupport.rule = getRootRule ag pt in
+            let _ = print_string "\n"; showRule rule in
+            let equations = rule.equations in
+            let all = pt::children in
+ 			let nodes = List.map getRoot all in
+            let nodes = Set.fold_left (fun a e -> eval e a) nodes equations in
+            let all = List.map2 (fun a n -> updateRoot a n) all nodes in
+            let pt = Node (getRoot (List.hd all), List.tl all) in
+            let _ = showParseTree pt in
+				pt
+
+      let rec calcAtributes (ag: t) (pt: parseTree): parseTree =
+         match pt with
+        | Leaf n ->
+            Leaf n
+        | Node (_, _) ->
+	(* inherited *)
+	    let pt = calcAtributesAtRoot ag pt in
+	(* recursion *)
+		let root = getRoot pt in
+		let children = getChildren pt in
+        let pt = Node (root, List.map (calcAtributes ag) children) in
+	(* synthetized *)
+		let pt = calcAtributesAtRoot ag pt in
+          pt
+(******************************************************)
+	end
+
+	module AttributeGrammar =
+	struct
+		include AttributeGrammarSupport
+		open AttributeGrammarPrivate
+
+		(* Make *)
+		let make2 (arg: t Arg.alternatives): Entity.t * t = make2 arg validate
+		let make (arg: t Arg.alternatives): t = make arg validate
+
+		(* Exercices support *)
+		let checkProperty (fa: t) (prop: string) =
+			match prop with
+				| _ -> Model.checkProperty prop
+		let checkExercise ex fa = Model.checkExercise ex (accept fa) (checkProperty fa)
+		let checkExerciseFailures ex fa = Model.checkExerciseFailures ex (accept fa) (checkProperty fa)
+
+		(* Ops *)
+		let stats = Model.stats
+		let accept = accept
+	end
+
+	module AttributeGrammarTop =
+	struct
+		open AttributeGrammar
+	end
+
+	open AttributeGrammarTop
+
+	module AttributeGrammarSupportTests : sig end =
+	struct
+		open AttributeGrammar
+		open AttributeGrammarPrivate
+
+		let active = true
+        let e s = (symb s, Set.empty);;
+
+        let ag1 = {| {
+                kind : "attribute grammar",
+                description : "",
+                name : "ag1",
+                alphabet : ["[", "]"],
+                variables : ["S","E","F"],
+                inherited : [""],
+                synthesized : ["v"],
+                initial : "S",
+                rules : [ "S -> E {v(S) = v(E)}",
+                            "E -> E * F {v(E0) = v(E1) * v(F)}",
+                            "E -> F {v(E) = v(F)}",
+                            "F -> 0 {v(F) = 0}",
+                            "F -> 1 {v(F) = 1}",
+                            "F -> 2 {v(F) = 2}",
+                            "F -> 3 {v(F) = 3}",
+                            "F -> 4 {v(F) = 4}",
+                            "F -> 5 {v(F) = 5}",
+                            "F -> 6 {v(F) = 6}",
+                            "F -> 7 {v(F) = 7}",
+                            "F -> 8 {v(F) = 8}",
+                            "F -> 9 {v(F) = 9}"
+                            ]
+                } |}
+
+        let pt1 =
+                Node (e "S", [
+                    Node (e "E", [
+                         Node (e "E", [
+                             Node (e "F", [
+                                  Leaf (e "3")
+                            ])
+                        ]);
+                        Leaf (e "*");
+                        Node (e "F", [
+                            Leaf (e "2")
+                        ])
+                  ] )
+                ])
+
+
+        let ag2 = {| {
+                kind : "attribute grammar",
+                description : "",
+                name : "ag2",
+                alphabet : ["[", "]"],
+                variables : ["S","E","F"],
+                inherited : ["q"],
+                synthesized : ["v"],
+                initial : "S",
+                rules : [ "S -> E {v(S) = v(E); q(E) = 99}",
+                            "E -> E * F {v(E0) = v(E1) * v(F); q(E1) = q(E0)+1}",
+                            "E -> F {v(E) = v(F); q(F) = q(E)+1}",
+                            "F -> 0 {v(F) = 0}",
+                            "F -> 1 {v(F) = 1}",
+                            "F -> 2 {v(F) = 2}",
+                            "F -> 3 {v(F) = 3 + q(F)}",
+                            "F -> 4 {v(F) = 4}",
+                            "F -> 5 {v(F) = 5}",
+                            "F -> 6 {v(F) = 6}",
+                            "F -> 7 {v(F) = 7}",
+                            "F -> 8 {v(F) = 8}",
+                            "F -> 9 {v(F) = 9}"
+                            ]
+                } |}
+
+
+        let pt2 =
+                Node (e "S", [
+                    Node (e "E", [
+                         Node (e "E", [
+                             Node (e "F", [
+                                  Leaf (e "3")
+                            ])
+                        ]);
+                        Leaf (e "*");
+                        Node (e "F", [
+                            Leaf (e "2")
+                        ])
+                  ] )
+                ])
+
+
+		let test0 () =
+			let j = JSon.parse ag1 in
+			let g = fromJSon j in
+			let h = toJSon g in
+				JSon.show h
+
+		let test1 () =
+			let g = make (Arg.Text ag1) in
+			let newTree = calcAtributes g pt1 in
+			Printf.printf "--------------------------\n";
+			Printf.printf "Final parse tree:\n";
+            showParseTree newTree
+
+		let test2 () =
+			let g = make (Arg.Text ag2) in
+			let newTree = calcAtributes g pt2 in
+			Printf.printf "--------------------------\n";
+			Printf.printf "Final parse tree:\n";
+            showParseTree newTree
+
+        let runAll =
+          if Util.testing active "AttributeGrammarSupport" then begin
+            Util.header "test2";
+            test2 ();
+          end
+	end

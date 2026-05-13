@@ -74,8 +74,12 @@ struct
 	let update n =
 		runconfigs := !runconfigs + n;
 		runtime := Sys.time() -. !timeStart;
-		if false then
-			Printf.printf "(%d, %d, %f, [%d])\n" n !runconfigs !runtime ((Gc.quick_stat()).Gc.heap_words)
+		if false then (
+			if !runtime > _TIME_ALLOWANCE || !runconfigs > _CONFIGS_ALLOWANCE then
+				Printf.printf "GIVE UP\n";
+			Printf.printf "(%d, %d confs, %f secs, [%d])\n" n !runconfigs !runtime ((Gc.quick_stat()).Gc.heap_words);
+			flush stdout
+		)
 
 	let giveUp () =
 		if !runtime > _TIME_ALLOWANCE || !runconfigs > _CONFIGS_ALLOWANCE then begin
@@ -253,9 +257,18 @@ struct
 
 	let printStrings (s: strings): unit =
 		Set.iter printString s
+
+	let pause () =
+		ignore (input_char stdin)
 		
 	let show (s: string): unit =
-		print_string ("|" ^ s ^ "|\n")
+		print_string ("|" ^ s ^ "|\n");
+		flush stdout
+		
+	let showp (s: string): unit =
+		print_string ("|" ^ s ^ "|");
+		flush stdout;
+		pause ()
 		
 	let handleHomeDir (s: string): string =
 		match String.length s with

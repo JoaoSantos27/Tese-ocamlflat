@@ -8,7 +8,7 @@ open Controller
 open AutomatonController
 open AutomatonView
 open PushdownAutomatonView
-open Listeners
+open Settings
 
 class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
   object(self) inherit automatonController(s) as super
@@ -33,10 +33,6 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
     method getModel = 
       myPDA#toDisplayString "solution"
 
-    method setTitle = 
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (PushdownAutomaton.kind)
-
     method returnType = PushdownAutomaton.kind
 
     method loadButtons = 
@@ -54,20 +50,16 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTM2TapesConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons
 
-    method defineInformationBox = 
-      let infoBox = HtmlPageClient.defineInformationBox side in
-      let deter = myPDA#isDeterministic in 
-        HtmlPageClient.getDeterminim deter infoBox;
-      let useful = myPDA#areAllStatesUseful in
-      let uStates = myPDA#getUselessStates in 
-        HtmlPageClient.getHasUselessStates useful uStates infoBox;
-      let isEquivalentFA = myPDA#isFiniteAutomaton in
-        HtmlPageClient.getIsEquivalentFA isEquivalentFA infoBox;
+    method defineInformationBox =
+      let name = myPDA#getName in
+      let isDeter = myPDA#isDeterministic in 
+      let hasUseless = not myPDA#areAllStatesUseful in
+      let nUseless = myPDA#getUselessStates in 
       let nStates = myPDA#numberStates in 
-        HtmlPageClient.getNumberStates nStates infoBox;
-      let nTransitions = myPDA#numberTransitions in
-        HtmlPageClient.getNumberTransitions nTransitions infoBox;
-      let _ = myPDA#buildTable in () (*UPDATE TABLE*)
+      let nTrans = myPDA#numberTransitions in
+      let isEquivalentFA = myPDA#isFiniteAutomaton in
+      let _ = myPDA#buildTable in (*UPDATE TABLE*)
+        HtmlPageClient.drawAutomatonStats (Lang.i18nPDA ()) name isDeter hasUseless nUseless nStates nTrans isEquivalentFA side
 
     method toggleAcceptanceCriteria =
       self#operationAutomaton "toggle acceptance criteria";
@@ -100,14 +92,18 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
       self#defineInformationBox
 
     method convertAcceptStates =
+      self#operationAutomaton "convert final states"; 
       if not myPDA#getCriteria then 
         let convertedPDA = myPDA#transformPdaToAcceptStates in
+        self#defineInformationBox; 
         Some (new PushdownAutomatonView.model (Representation convertedPDA#representation))
       else None
           
     method convertEmptyStackAccept =
+      self#operationAutomaton "convert empty stack"; 
       if myPDA#getCriteria then 
         let convertedPDA = myPDA#transformPdaToAcceptEmptyStack in
+        self#defineInformationBox; 
         Some (new PushdownAutomatonView.model (Representation convertedPDA#representation))
       else None
       
@@ -134,6 +130,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
 						JS.alertStr (Lang.i18nAlertExists ())
 				  else 
 					begin
+            super#resetStyle; 
 					  myPDA <- myPDA#addState st;
 					  Cytoscape.addNode self#getCy st ~x:x ~y:y false false
 					end;
@@ -148,36 +145,51 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
         if (node = myPDA#representation.initialState) then 
           JS.alertStr (Lang.i18nAlertDelete ()) 
         else 
-          (myPDA <- myPDA#removeState node;
+          (super#resetStyle; 
+          myPDA <- myPDA#removeState node;
           Set.iter (removeNodeTransitions node) myPDA#representation.transitions;
           Cytoscape.removeNode self#getCy node);
       self#defineInformationBox
 
+    method addInitialNode: unit = 
+      self#operationAutomaton "Add Inital Node";
+      let promptResult = (JS.prompt (Lang.i18nTextEnterState ()) "A") in
+      match Js.Opt.to_option promptResult with
+      | None -> ()
+      | Some v -> let st = (Js.to_string v) in
+                  JS.log myPDA#representation.states;
+                  if (Set.belongs st myPDA#representation.states) then 
+            JS.alertStr (Lang.i18nAlertExists ())
+          else 
+          begin
+            let cy = self#getCy in
+              myPDA <- myPDA#addState st;
+              myPDA <- myPDA#updateInitialState st;
+              Cytoscape.resetFaElems cy;
+              myPDA#drawExample cy (Settings.getSetting "layout");  
+          end;
+          self#defineInformationBox
+
 (* imitar TM *)
-    method addInitialNode node =
-      self#operationAutomaton "make node initial";
+    method turnInitialNode node =
+      self#operationAutomaton "turn node initial";
       myPDA <- myPDA#addState node;
       myPDA <- myPDA#updateInitialState node;
       let cy = self#getCy in
       Cytoscape.resetFaElems cy;
-      myPDA#drawExample cy;  
-      self#defineInformationBox     
-      
-(* imitar TM *)
-    method addFinalNode x y node =
-      self#operationAutomaton "add final node";
-      myPDA <- myPDA#addAcceptState node;
-      Cytoscape.addNode self#getCy ~x:x ~y:y node false true;
+      myPDA#drawExample cy (Settings.getSetting "layout"); 
       self#defineInformationBox
       
     method turnFinalNode node =
       self#operationAutomaton "make node final";
+      super#resetStyle; 
       myPDA <- myPDA#addAcceptState node;
       Cytoscape.turnFinal self#getCy node;
       self#defineInformationBox
     
     method removeFinalNode node =
       self#operationAutomaton "make node not final";
+      super#resetStyle; 
       myPDA <- myPDA#removeAcceptState node;
       Cytoscape.removeFinal self#getCy node;
       self#defineInformationBox
@@ -190,6 +202,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
       | Some v ->
         if (PushdownAutomatonView.isInputValid (Js.to_string v)) then
           begin 
+            super#resetStyle;
             let (topStack, inputSymb, toPutInStack) = PushdownAutomatonView.parseUserInput (Js.to_string v) in
             let transition = (source, topStack, inputSymb, target, toPutInStack) in
             myPDA <- myPDA#addTransition transition;
@@ -205,6 +218,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
         let transition = (source, topStack, inputSymb, target, toPutInStack) in
         if (Set.belongs transition myPDA#representation.transitions) then
           begin
+            super#resetStyle; 
             myPDA <- (myPDA#removeTransition transition);
             Cytoscape.removeEdge self#getCy source label target
           end
@@ -221,6 +235,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
         let stateName = String.trim (Js.to_string n) in
         if (PushdownAutomatonView.isStateNameValid stateName) then
           begin
+            super#resetStyle; 
             myPDA <- myPDA#renameState node (state stateName);
             Cytoscape.resetFaElems self#getCy;
             self#defineExample2
@@ -228,7 +243,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
 
     method replicateOnLeft =
       let c = new pdaController self#getPDA false in
-      Ctrl.ctrlL := (c :> controller);
+        Ctrl.changeCtrl c false
      
     method convertToFA = 
       let open FiniteAutomatonView in
@@ -261,4 +276,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
       let r = reg#simplify in 
       let rep = r#representation in 
       new RegularExpressionView.model (Representation (rep))
+
+    method getModelName =
+      "pda"
 end

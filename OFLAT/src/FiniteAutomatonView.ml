@@ -24,6 +24,7 @@ open Lang
 open Cytoscape
 open AutomatonView
 open HTMLTable
+open StateVariables
 
 module FiniteAutomatonView = 
 struct
@@ -206,11 +207,14 @@ struct
           paintMinimized cy2 newState color
         done
 
-      method inputEdges cy = 
-        let mapToCytoscapeEdge transitions = 
-          Set.map (fun (n1,s,n2) -> (n1, symb2str s, n2)) self#representation.transitions 
+      method inputEdges cy =
+        let setEmptyChar s =
+          if s = epsilon then StateVariables.returnEmpty() else symb2str s
         in
-          Set.iter (Cytoscape.addEdge cy) (mapToCytoscapeEdge self#representation.transitions)
+          let mapToCytoscapeEdge transitions =
+            Set.map (fun (n1,s,n2) -> (n1, setEmptyChar s, n2)) self#representation.transitions 
+          in
+            Set.iter (Cytoscape.addEdge cy) (mapToCytoscapeEdge self#representation.transitions)
 
       method accept3 (cy:Cytoscape.cytoscape Js_of_ocaml.Js.t) (w: word) =
         let transition sts sy t = 
@@ -231,9 +235,10 @@ struct
         let i = closeEmpty (Set.make [self#representation.initialState]) self#representation.transitions in
           accept2X i w self#representation.transitions true
 
-      method drawMinimize cy2 colors number =
+      method drawMinimize cy2 colors number layout =
         self#inputNodesPainting cy2 colors number;
-        self#inputEdges cy2
+        self#inputEdges cy2;
+        Cytoscape.runLayout cy2 layout
 
       method addInitialNode node firstNode exists =
         if firstNode then
@@ -247,9 +252,11 @@ struct
         else
           if exists then
             (let rep: t = self#representation in 
+            let tmpStates = Set.filter (fun nodeAux -> nodeAux != node) rep.states in
+            let newStates = Set.cons node tmpStates in 
             new model (Representation{
               alphabet = rep.alphabet;
-	            states = rep.states;
+	            states = newStates;
               initialState = node;
               transitions = rep.transitions;
               acceptStates = rep.acceptStates
@@ -258,7 +265,7 @@ struct
             (let rep: t = self#representation in 
             new model (Representation{
               alphabet = rep.alphabet;
-	            states = Set.add node rep.states;
+	            states = Set.cons node rep.states;
               initialState = node;
               transitions = rep.transitions;
               acceptStates = rep.acceptStates
@@ -566,6 +573,9 @@ struct
       self#resetConfigMenu;
       self#destroyAllPoppers
 
+    method clearPoppers = 
+      self#destroyAllPoppers;
+      self#resetConfigMenu
 
     method private updateConfigMenu (cy:Cytoscape.cytoscape Js_of_ocaml.Js.t) configs =
       self#resetConfigMenu;

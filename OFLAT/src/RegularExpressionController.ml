@@ -6,6 +6,7 @@ open JS
 open RegularExpressionView
 open Controller
 open Listeners
+open Js_of_ocaml
 
 class reController (re: RegularExpressionView.model) (s: bool) =
   object(self) inherit controller as super
@@ -38,10 +39,6 @@ class reController (re: RegularExpressionView.model) (s: bool) =
 
     method getModel = 
       re1#toDisplayString "solution"
-
-    method setTitle = 
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle (RegularExpression.kind)
 
     method operationRE opName : unit =
       super#operation opName "RE"
@@ -100,14 +97,31 @@ class reController (re: RegularExpressionView.model) (s: bool) =
       HtmlPageClient.fitBoxRegex ();
       Cytoscape.fit self#getCy_opt;
       let test = RegularExpression.toString re1#representation in
-       self#drawTree self#getCy re1#representation test;
-        HtmlPageClient.defineRE test side
+        self#drawTree self#getCy re1#representation test;
+        HtmlPageClient.defineRE test side;
+        self#defineInformationBox
+
+    method redrawLayout =
+      self#operationRE "redraw layout";
+      self#updateButtons;
+      HtmlPageClient.putCyREButtons();
+      HtmlPageClient.fitBoxRegex ();
+      Cytoscape.fit self#getCy_opt;
+      Cytoscape.redrawTree self#getCy (Dom_html.getElementById "cy");
+      let test = RegularExpression.toString re1#representation in
+        HtmlPageClient.defineRE test side;
+        self#defineInformationBox
 
     method defineExample2 =
       self#operationRE "create 2";
       let text = RegularExpression.toString re1#representation in
         self#drawTree self#getCy re1#representation text;
-        HtmlPageClient.defineRE text side
+        HtmlPageClient.defineRE text side;
+        self#defineInformationBox
+
+    method defineInformationBox =
+      let name = re1#getName in
+        HtmlPageClient.drawREStats (Lang.i18nRE ()) name side
 
     method startStep word = 
       self#operationRE "accept";
@@ -116,7 +130,7 @@ class reController (re: RegularExpressionView.model) (s: bool) =
         CtrlUtil.twoBoxes self#getCy_opt;
         re1#startAllTrees w;
         resultTree <- re1#accept w;
-        Ctrl.changeCtrlR ((new textController true) :> controller );
+        Ctrl.changeCtrl (new textController true) true;
         Cytoscape.resetStyle !Ctrl.ctrlR#getCy Cytoscape.reStyle;
         if (resultTree) then
           (!ListenersRE.resultCountListener ();
@@ -197,7 +211,7 @@ class reController (re: RegularExpressionView.model) (s: bool) =
 
     method replicateOnLeft =
       let c = new reController self#getRE false in
-        Ctrl.ctrlL := (c :> controller)
+        Ctrl.changeCtrl c false
 
     method printErrors =
       let errors = re1#errors in
