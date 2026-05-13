@@ -1869,4 +1869,4 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
 
 
-end 
+end

@@ -2539,31 +2539,6 @@ struct
     ],
     acceptStates : ["S"]
   } |}
-
-	let fst_branching = {| {
-    kind : "transducer",
-    description : "Nondeterministic FST with exponential branching per symbol",
-    name : "fst_branching",
-    inAlphabet : ["a","b"],
-    outAlphabet : ["x","y"],
-    states : ["S","A","B"],
-    initialState : "S",
-    transitions : [
-      ["S","","","A"],          
-      ["S","","","B"],
-
-      ["A","a","x","A"],       
-      ["A","a","y","A"],
-      ["A","b","x","A"],
-      ["A","b","y","A"],
-
-      ["B","a","x","B"],       
-      ["B","a","y","B"],
-      ["B","b","x","B"],
-      ["B","b","y","B"]
-    ],
-    acceptStates : ["A","B"]
-  } |}
 		
 (* Turing Machine *)
 
@@ -3195,8 +3170,7 @@ struct
 		("fst_complex_ND", fst_complex_ND);
 		("fst_M", fst_M);
 		("fst_Moore", fst_Moore);
-		("fst_Mealy", fst_Mealy);
-		("fst_branching", fst_branching)
+		("fst_Mealy", fst_Mealy)
 	]);
 
   ("Turing Machine",
@@ -16049,8 +16023,7 @@ struct
 		ignore (Model.checkWord fst.inAlphabet w);
 		let (ok, out) = acceptOut fst w in
 		ok && Model.checkWord fst.outAlphabet out
-
-	(* Accept helper for exercises: "inp->out" or fallback *)
+		
     let acceptExpectedOutput (fst: t) (w: word) : bool =
         let wstr = String.trim (word2str w) in
         match String.index_opt wstr '-' with

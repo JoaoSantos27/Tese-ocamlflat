@@ -1242,8 +1242,7 @@ struct
 		("fst_complex_ND", fst_complex_ND);
 		("fst_M", fst_M);
 		("fst_Moore", fst_Moore);
-		("fst_Mealy", fst_Mealy);
-		("fst_branching", fst_branching)
+		("fst_Mealy", fst_Mealy)
 	]);
 
   ("Turing Machine",
