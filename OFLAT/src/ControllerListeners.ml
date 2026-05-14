@@ -715,7 +715,7 @@ open ContextFreeGrammarLL1View;;
             if value = "optionNewRegularExpression" then createModel "RE" () else
             if value = "optionNewContextFreeGrammar" then createModel "CFG" () else
             if value = "optionNewGrammar" then createModel "GR" () else
-            if value = "optionNewTransducer" then createModel "FST" () else
+            if value = "optionNewAutomatonFST" then createModel "FST" () else
             if value = "optionNewTuringMachine" then createModel "TM" () else
             if value = "optionNewComposition" then createModel "Comp" ();
             select##.selectedIndex := 0;;

@@ -186,18 +186,25 @@ let elementExists id =
   | Not_found -> false
 
 let changeButtonColor but color =
-  let button = Dom_html.getElementById but in
-    button##.style##.backgroundColor := Js.string color 
+    let button_opt = Dom_html.document##getElementById (Js.string but) in
+    match Js.Opt.to_option button_opt with
+    | Some b -> b##.style##.backgroundColor := Js.string color
+    | None -> ()
 
 let putInnerHtml idtxt txt =
-  let element = Dom_html.getElementById idtxt in
-  element##.innerHTML := Js.string txt
+  let element_opt = Dom_html.document##getElementById (Js.string idtxt) in
+  match Js.Opt.to_option element_opt with
+  | Some element -> element##.innerHTML := Js.string txt
+  | None -> JS.log ("Warning: HTML ID not found -> " ^ idtxt)
 
 let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
-  let element = Dom_html.getElementById idtxt in
-    element##.innerHTML := (Js.string txt);
-    let tool = div2 idtool classTool txt1 in
+  let element_opt = Dom_html.document##getElementById (Js.string idtxt) in
+  match Js.Opt.to_option element_opt with
+  | Some element -> 
+      element##.innerHTML := (Js.string txt);
+      let tool = div2 idtool classTool txt1 in
       Dom.appendChild element tool
+  | None -> JS.log ("Warning: HTML Button ID not found -> " ^ idtxt)
 
   let listOnlyAutomataButtons = ["backwards"; "start"; "forward"; "selectRegex"]
   let listOnlyExpressionButtons = ["selectFA"; "start"]
@@ -212,12 +219,16 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   let listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"]
 
   let disableButton buttonName =
-    let buttonTo = Dom_html.getElementById buttonName in
-      buttonTo##setAttribute (Js.string "disabled") (Js.string "disabled")
+    let buttonTo_opt = Dom_html.document##getElementById (Js.string buttonName) in
+    match Js.Opt.to_option buttonTo_opt with
+    | Some b -> b##setAttribute (Js.string "disabled") (Js.string "disabled")
+    | None -> JS.log ("Warning: Tried to disable missing button -> " ^ buttonName)
   
   let enableButton buttonName =
-    let buttonTo = Dom_html.getElementById buttonName in
-      buttonTo##removeAttribute (Js.string "disabled")
+    let buttonTo_opt = Dom_html.document##getElementById (Js.string buttonName) in
+    match Js.Opt.to_option buttonTo_opt with
+    | Some b -> b##removeAttribute (Js.string "disabled")
+    | None -> JS.log ("Warning: Tried to enable missing button -> " ^ buttonName)
 
   let isButtonDisabled buttonName =
     let buttonTo = Dom_html.getElementById buttonName in
@@ -678,6 +689,63 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         Dom.appendChild buttonBox test;
         let tool = div2 "tooltipCloseRight" "tooltiptext1" (Lang.i18nTooltipCloseRight ()) in
           Dom.appendChild test tool
+
+  let putCyTransducerButtons () =
+    putCyButtons();
+    let buttonBox = Dom_html.getElementById "buttonBox" in
+    let divButtons1 = div "min" in
+      Dom.appendChild buttonBox divButtons1;
+    
+    (* Clean Button *)
+    let c = button1 (Lang.i18nClean ()) "clean" "tooltip3" !ListenersFST.cleanUselessListener in
+      Dom.appendChild divButtons1 c;
+    let tool = div2 "tooltipClean" "tooltiptext3" (Lang.i18nTooltipClean ()) in
+        Dom.appendChild c tool;
+
+    (* Deterministic Button *)
+    let de = button1 (Lang.i18nDeterministic ()) "deterministic" "tooltip3" !ListenersFST.getDeterministicListener in
+      Dom.appendChild divButtons1 de;
+    let tool = div2 "tooltipDeterministic" "tooltiptext3" (Lang.i18nTooltipDeterministic ()) in
+        Dom.appendChild de tool;
+
+    (* Minimize Button *)
+    let mi = button1 (Lang.i18nMinimize ()) "minimize" "tooltip3" !ListenersFST.defineMinimizedListener in
+      Dom.appendChild divButtons1 mi;
+    let tool = div2 "tooltipMinimize" "tooltiptext3" (Lang.i18nTooltipMinimize ()) in
+        Dom.appendChild mi tool;
+
+    let divButtons = div "prod" in
+      Dom.appendChild buttonBox divButtons;
+
+    (* Productive States Button *)
+    let b = button1 (Lang.i18nProductive ()) "productive" "tooltip3" !ListenersFST.paintAllProductivesListener in 
+      Dom.appendChild divButtons b;
+    let tool = div2 "tooltipProductive" "tooltiptext3" (Lang.i18nTooltipProductive ()) in
+        Dom.appendChild b tool;
+
+    (* Accessible/Reachable States Button *)
+    let a = button1 (Lang.i18nAccessible ()) "accessible" "tooltip3" !ListenersFST.paintAllReachableListener in
+      Dom.appendChild divButtons a;
+    let tool = div2 "tooltipAccessible" "tooltiptext3" (Lang.i18nTooltipAccessible ()) in
+        Dom.appendChild a tool;
+
+    (* Useful States Button *)
+    let u = button1 (Lang.i18nUseful ()) "useful" "tooltip3" !ListenersFST.paintAllUsefulListener in
+      Dom.appendChild divButtons u;
+    let tool = div2 "tooltipUseful" "tooltiptext3" (Lang.i18nTooltipUseful ()) in
+        Dom.appendChild u tool;
+
+    (* Clear Automaton Button *)
+    let divButtons3 = div "clear" in
+      Dom.appendChild buttonBox divButtons3;
+    let clearAuto = button1 (Lang.i18nClearAuto ()) "clearAuto" "tooltip3" !ListenersFST.clearAutoListener in
+      Dom.appendChild divButtons3 clearAuto;
+    let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
+        Dom.appendChild clearAuto tool;
+    let tableView = button1 ("Show Table View") "showTable" "tooltip3" !ListenersAutomaton.showTable in
+      Dom.appendChild divButtons3 tableView
+
+    (*TODO add more buttons (table, outputs)*)
     
   let putCyREButtons() =
     putCyButtons();
@@ -1327,14 +1395,14 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         Dom.appendChild infoBox minimal
   
   let getMealy isMealy infoBox = 
-    let info = if isMealy then Lang.i18nIsMealy () else Lang.i18nIsNotMealy () in
-      let sp = span "isMealy" info in 
-        Dom.appendChild infoBox sp
+    let info = (Lang.i18nMealy()) ^ (if isMealy then (Lang.i18nTrue()) else (Lang.i18nFalse())) in
+      let mealy = span "isMealy" info in 
+        Dom.appendChild infoBox mealy
 
   let getMoore isMoore infoBox = 
-    let info = if isMoore then Lang.i18nIsMoore () else Lang.i18nIsNotMoore () in
-      let sp = span "isMoore" info in 
-        Dom.appendChild infoBox sp
+    let info = (Lang.i18nMoore()) ^ (if isMoore then (Lang.i18nTrue()) else (Lang.i18nFalse())) in
+      let moore = span "isMoore" info in 
+        Dom.appendChild infoBox moore
   
   let getHasUselessStates hasUseless uStates infoBox = 
     if not hasUseless then 
@@ -1387,9 +1455,11 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
 
   let defineInformationBox s =
     let elementStr = if s then "infoBox2" else "infoBox" in
-    let element = Dom_html.getElementById elementStr in
-      element##.innerHTML := Js.string "";
-      element
+    match Dom_html.getElementById_opt elementStr with
+    | None -> Dom_html.createDiv Dom_html.document
+    | Some element ->
+        element##.innerHTML := Js.string "";
+        element
 
   let drawREStats kind name side =
     let infoBox = defineInformationBox side in
@@ -1408,6 +1478,19 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
               else (if (kind = (Lang.i18nFA ())) then getMinimism modelStat infoBox else getIsLinearBounded modelStat infoBox);
       getHasUselessStates hasUseless nUseless infoBox;
       getHighlight infoBox
+  
+  let drawFSTStats kind name isDeter isMealy isMoore hasUseless nUseless nStates nTrans isMin side =
+    let infoBox = defineInformationBox side in
+      getKind kind infoBox;
+      getName name infoBox;
+      getNumberStates nStates infoBox;
+      getNumberTransitions nTrans infoBox;
+      getDeterminim isDeter infoBox;
+      getMealy isMealy infoBox;
+      getMoore isMoore infoBox;
+      getHasUselessStates hasUseless nUseless infoBox;
+      getHighlight infoBox;
+      infoBox##.className := Js.string "infoBox pdaBox"
 
   let drawCFGStats kind name ll1 lr lf pConf clean prod access side =
     let infoBox = defineInformationBox side in
@@ -1454,8 +1537,9 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       infoBox##.className := Js.string "infoBox compBox"
 
   let changeHighlightName name =
-    let highlight = Dom_html.getElementById "gethighlight" in
-      highlight##.innerHTML := Js.string name
+    match Dom_html.getElementById_opt "gethighlight" with
+    | Some highlight -> highlight##.innerHTML := Js.string name
+    | None -> ()
 
   let changeHelpName name =
     if isButtonDisabled "helpAction" then enableButton "helpAction";

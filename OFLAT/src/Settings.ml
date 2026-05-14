@@ -9,6 +9,7 @@ open JS
 open OCamlFlat
 open AutomatonView
 open FiniteAutomatonView
+open TransducerView
 open PushdownAutomatonView
 open RegularExpressionView
 open ContextFreeGrammarBasicView
@@ -27,8 +28,9 @@ module Settings = struct
 	    HtmlPageClient.putInnerHtml "version" (Lang.i18nVersion ());
 
 	    HtmlPageClient.putInnerHtml "optionNewDefault" (Lang.i18nNewModel ());
-	    HtmlPageClient.putInnerHtml "optionNewAutomatonFA" (Lang.i18nMainTitle1());
-	    HtmlPageClient.putInnerHtml "optionNewAutomatonPDA" (Lang.i18nMainTitlePDA());
+      HtmlPageClient.putInnerHtml "optionNewAutomatonFA" (Lang.i18nMainTitle1());
+      HtmlPageClient.putInnerHtml "optionNewAutomatonFST" (Lang.i18nMainTitleFST()); 
+      HtmlPageClient.putInnerHtml "optionNewAutomatonPDA" (Lang.i18nMainTitlePDA());
 	    HtmlPageClient.putInnerHtml "optionNewRegularExpression" (Lang.i18nMainTitle2());
 	    HtmlPageClient.putInnerHtml "optionNewContextFreeGrammar" (Lang.i18nMainTitle4());
 	    HtmlPageClient.putInnerHtml "optionNewComposition" (Lang.i18nMainTitleComp());
@@ -44,8 +46,9 @@ module Settings = struct
 	    HtmlPageClient.putInnerHtml "start" (Lang.i18nStart ());
 	        
 	    HtmlPageClient.putInnerHtml "selectRegex" (Lang.i18nSelectRegex ());
-	    HtmlPageClient.putInnerHtml "selectFA" (Lang.i18nselectFA ());
-	    HtmlPageClient.putInnerHtml "selectPDA" (Lang.i18nselectPDA ());
+      HtmlPageClient.putInnerHtml "selectFA" (Lang.i18nselectFA ());
+      HtmlPageClient.putInnerHtml "selectFST" (Lang.i18nselectFST ()); 
+      HtmlPageClient.putInnerHtml "selectPDA" (Lang.i18nselectPDA ());
 	    HtmlPageClient.putInnerHtml "selectCFG" (Lang.i18nselectCFG ());
 	    HtmlPageClient.putInnerHtml "selectTM" (Lang.i18nselectTM ()); (* carolina *)
 	    HtmlPageClient.putInnerHtml "selectConv" (Lang.i18nSelectConv ());
@@ -76,7 +79,7 @@ module Settings = struct
 	    HtmlPageClient.putInnerHtml "and1" (Lang.i18nAnd ());
 	    HtmlPageClient.putInnerHtml "footerButton2" (Lang.i18nFooter1 ());
 
-	    if (StateVariables.getCy1Type() = StateVariables.getAutomatonType()) then
+	    if (StateVariables.getCy1Type() = StateVariables.getAutomatonType() || StateVariables.getCy1Type() = StateVariables.getTransducerType()) then
 	      (HtmlPageClient.putInnerHtml "tooltipCloseLeft" (Lang.i18nTooltipCloseLeft ());
 	      HtmlPageClient.putInnerHtmlButtons "save" (Lang.i18nSave ()) "tooltipSpecification" "tooltiptext1" (Lang.i18nTooltipSpecification ());
 	      HtmlPageClient.putInnerHtmlButtons "formatting" (Lang.i18nFormatting ()) "tooltipSpecification" "tooltiptext2" (Lang.i18nTooltipSpecification ());
@@ -231,9 +234,11 @@ module Settings = struct
 			| k when k = RegularExpression.kind -> 
 			    (new RegularExpressionView.model (JSon model) :> Model.model)
 			| k when k = PushdownAutomaton.kind -> 
-			    (new PushdownAutomatonView.model (JSon model) :> Model.model)
-			| k when k = Grammar.kind ->
-			    (new Grammar.model (JSon model) :> Model.model)
+          (new PushdownAutomatonView.model (JSon model) :> Model.model)
+      | k when k = Transducer.kind -> 
+          (new TransducerView.model (JSon model) :> Model.model)
+      | k when k = Grammar.kind ->
+					(new GrammarView.model (JSon model) :> Model.model)
 			| k when k = ContextFreeGrammar.kind ->
 			    (new ContextFreeGrammarView.model (JSon model) :> Model.model)
 			| k when k = TuringMachine.kind ->

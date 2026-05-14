@@ -251,6 +251,9 @@ let i18nFooter1 () =
 let i18nFA () =
   i18n ["Finite Automata"; "Autómato Finito"; "Automate Fini"]
 
+let i18nFST () =
+  i18n ["Finite State Transducer"; "Transdutor de Estado Finito"; "Transducteur d'État Fini"]
+
 let i18nRE () =
   i18n ["Regular Expression"; "Expressão Regular"; "Expression régulière"]
 
@@ -835,23 +838,13 @@ let i18nAlertTransitionExists() =
   ]
 
 let i18nIsMealy () = i18n[
-  "The automaton is a Mealy machine.";
-  "O automato é uma máquina de Mealy."
-]
-
-let i18nIsNotMealy () = i18n[
-  "The automaton is not a Mealy machine.";
-  "Não é uma máquina de Mealy."
+  "Mealy: ";
+  "Mealy: "
 ]
 
 let i18nIsMoore () = i18n[
-  "The automaton is a Moore machine.";
-  "É uma máquina de Moore."
-]
-
-let i18nIsNotMoore () = i18n[
-  "The automaton is not a Moore machine.";
-  "Não é uma máquina de Moore."
+  "Moore: ";
+  "Moore: "
 ]
 
 (** ---------------- Feedback ----------------- **)
@@ -1379,12 +1372,22 @@ let i18nTooltipToggleMode () =
 
 let i18nMealy () = 
   i18n [
-  "Mealy"; "Mealy"; "Mealy"
+  "Mealy: "; "Mealy: "; "Mealy: "
 ]
 let i18nMoore () = 
   i18n [
-  "Moore"; "Moore"; "Moore"
+  "Moore: "; "Moore: "; "Moore: "
 ]
+
+(** ----------------- Settings ------------------ **)
+let i18nChangeLang () =
+  i18n ["Language"; "Idioma"; "Langue"]
+
+let i18nChangeEmpty () =
+  i18n ["Empty Symbol"; "Símbolo vazio"; "Symbole vide"]
+
+let i18nChangeLayout () =
+  i18n ["Automaton layout"; "Layout do autômato"; "Disposition de l'automate"] 
 
 (** ----------------- Outros ------------------ **)
 let i18nSave () =

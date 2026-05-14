@@ -15,14 +15,16 @@ OCAMLFLAT = OCamlFlat
 OCAMLFLAT_BASE = ../$(OCAMLFLAT)
 OCAMLFLAT_LIB = $(OCAMLFLAT_BASE)/lib/$(OCAMLFLAT).ml
 NAMES = OCamlFlat Lang JS ViewUtil Listeners Cytoscape				\
-		AutomatonView												\
+		StateVariables										\
+		AutomatonView										\
 		FiniteAutomatonView RegularExpressionView TransducerView	\
-		StateVariables												\
 		ContextFreeGrammarBasicView ContextFreeGrammarLL1View		\
 		ContextFreeGrammarLRView ContextFreeGrammarView				\
 		PushdownAutomatonView TuringMachineView	CompositionView		\
 		GrammarView													\
+		LocalStorage												\
 		HtmlPageClient												\
+		Settings													\
 		Controller AutomatonController								\
 		FiniteAutomatonController RegularExpressionController		\
 		TransducerController ContextFreeGrammarController PushdownAutomatonController	\

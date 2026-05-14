@@ -260,9 +260,10 @@ struct
         in
         Set.iter (Cytoscape.addEdge cy) (mapToCytoscapeEdge self#representation.transitions)
 
-      method drawExample (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) = 
+      method drawExample (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) layout = 
         self#inputNodes cy;
-        self#inputEdges cy
+        self#inputEdges cy;
+        Cytoscape.runLayout cy layout
 
       method private getStatesFromConfigs (configs: Transducer.configurations) =
           Set.map (fun (st, _, _) -> st) configs
@@ -406,9 +407,10 @@ struct
           Cytoscape.paintNode cy2 newState color
         done
 
-      method drawMinimize (cy2: Cytoscape.cytoscape Js_of_ocaml.Js.t) (colors: string array) (n: int) = 
-        self#inputNodesPainting cy2 colors n;
-        self#inputEdges cy2
+      method drawMinimize cy2 colors number layout =
+        self#inputNodesPainting cy2 colors number;
+        self#inputEdges cy2;
+        Cytoscape.runLayout cy2 layout
 
       method displayTrace =
         let rec makeFSTPath path acc =
@@ -481,6 +483,10 @@ struct
       method resetToEditModel = 
         self#resetConfigMenu;
         self#destroyAllPoppers
+
+      method clearPoppers = 
+        self#destroyAllPoppers;
+        self#resetConfigMenu
 
       method private updateConfigMenu (cy:Cytoscape.cytoscape Js_of_ocaml.Js.t) configs =
         self#resetConfigMenu;

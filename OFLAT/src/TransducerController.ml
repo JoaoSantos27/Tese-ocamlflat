@@ -14,11 +14,13 @@ open AutomatonController
 open AutomatonView
 open TransducerView
 open Listeners
+open Settings
+open StateVariables
 
 class fstController (fst : TransducerView.model) (s: bool) =
   object (self) inherit automatonController(s) as super
 
-    val mutable myFST = fst
+    val mutable myFST: TransducerView.model = fst
 
     method operationAutomaton opName : unit =
         super#operation opName "FST"
@@ -31,9 +33,11 @@ class fstController (fst : TransducerView.model) (s: bool) =
     method model: Model.model = 
       (myFST :> Model.model)
 
-    method setTitle = 
-      CtrlUtil.oneBox self#getCy_opt;
-      HtmlPageClient.defineMainTitle Transducer.kind
+    method changeAutomata res =
+      myFST <- res
+
+    method getModel = 
+      myFST#toDisplayString "solution"
 
     method returnType = Transducer.kind
 
@@ -49,28 +53,20 @@ class fstController (fst : TransducerView.model) (s: bool) =
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons;
-      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
       HtmlPageClient.disableButton "selectRegex"
 
     method defineInformationBox =
-      let infoBox = HtmlPageClient.defineInformationBox side in
-      let deter = myFST#isDeterministic in 
-        HtmlPageClient.getDeterminim deter infoBox;
-      let min = if deter then myFST#isMinimized else false in
-        HtmlPageClient.getMinimism min infoBox;
-      let mealy = myFST#isMealy in
-      HtmlPageClient.getMealy mealy infoBox;
-      let moore = myFST#isMoore in
-      HtmlPageClient.getMoore moore infoBox;
-      let useful = myFST#areAllStatesUseful in
-      let uStates = myFST#getUselessStates in 
-        HtmlPageClient.getHasUselessStates useful uStates infoBox;
-      let nStates = myFST#numberStates in 
-        HtmlPageClient.getNumberStates nStates infoBox;
-      let nTransitions = myFST#numberTransitions in
-        HtmlPageClient.getNumberTransitions nTransitions infoBox;
-      let _ = myFST#buildTable in () 
-
+      let name = myFST#getName in
+      let isDeter = myFST#isDeterministic in
+      let isMin = if isDeter then myFST#isMinimized else false in
+      let isMealy = myFST#isMealy in
+      let isMoore = myFST#isMoore in
+      let hasUseless = not myFST#areAllStatesUseful in
+      let nUseless = myFST#getUselessStates in
+      let nStates = myFST#numberStates in
+      let nTrans = myFST#numberTransitions in
+      let _ = myFST#buildTable in
+        HtmlPageClient.drawFSTStats (Lang.i18nFST ()) name isDeter isMealy isMoore hasUseless nUseless nStates nTrans isMin side
 
     method addNode x y initial final : unit = 
       self#operationAutomaton "add Node";
@@ -83,17 +79,35 @@ class fstController (fst : TransducerView.model) (s: bool) =
             (JS.alertStr (Lang.i18nAlertExists ()))
           else 
             (myFST <- myFST#addNode st false;
+             super#resetStyle;
              Cytoscape.addNode self#getCy st ~x:x ~y:y initial final;
              self#defineInformationBox;)
 
-    method addInitialNode node =
+    method addInitialNode : unit =
       self#operationAutomaton "make node initial";
+      let promptResult = (JS.prompt (Lang.i18nTextEnterState ()) "A") in
+      match Js.Opt.to_option promptResult with
+      | None -> ()
+      | Some v ->
+          let node = (Js.to_string v) in
+          if (Set.belongs node myFST#representation.states) then
+            (JS.alertStr (Lang.i18nAlertExists ()))
+          else
+            (let stateExists = Set.belongs node myFST#representation.states in
+             myFST <- (myFST#addInitialNode node false stateExists);
+             let cy = self#getCy in
+             Cytoscape.resetFaElems cy;
+             myFST#drawExample cy (Settings.getSetting "layout");
+             self#defineInformationBox;)
+
+    method turnInitialNode node =
+      self#operationAutomaton "turn node initial";
       let stateExists = Set.belongs node myFST#representation.states in 
       myFST <- (myFST#addInitialNode node false stateExists);
       let cy = self#getCy in
       Cytoscape.resetFaElems cy;
-      myFST#drawExample cy;
-      self#defineInformationBox;
+      myFST#drawExample cy (Settings.getSetting "layout");
+      self#defineInformationBox
 
     method addFinalNode x y node =
       self#operationAutomaton "add final node";
@@ -110,18 +124,20 @@ class fstController (fst : TransducerView.model) (s: bool) =
       if (Set.belongs node myFST#representation.acceptStates) then
           (JS.alertStr (Lang.i18nAlertAlreadyFinal ()))
       else
-        (myFST <- (myFST#changeToFinal node);
-        Cytoscape.turnFinal self#getCy node);
-        self#defineInformationBox;
+        (super#resetStyle;
+         myFST <- (myFST#changeToFinal node);
+         Cytoscape.turnFinal self#getCy node);
+      self#defineInformationBox;
     
     method removeFinalNode node =
       self#operationAutomaton "make node not final";
       if (Set.belongs node myFST#representation.acceptStates) then
-        (myFST <- (myFST#removeFinal node);
-        Cytoscape.removeFinal self#getCy node)
+        (super#resetStyle;
+         myFST <- (myFST#removeFinal node);
+         Cytoscape.removeFinal self#getCy node)
       else
         (JS.alertStr (Lang.i18nAlertNonFinal ()));
-        self#defineInformationBox;
+      self#defineInformationBox;
 
     method eliminateNode node =
       self#operationAutomaton "eliminate node";
@@ -135,8 +151,9 @@ class fstController (fst : TransducerView.model) (s: bool) =
       else 
         if (Set.belongs node myFST#representation.states) then 
           (let isFinal = Set.belongs node myFST#representation.acceptStates in 
-           myFST <- myFST#eliminateNode node false isFinal;
+           super#resetStyle;
            Set.iter (fun el -> (eliminateNodeTransitions el node)) myFST#representation.transitions;
+           myFST <- myFST#eliminateNode node false isFinal;
            Cytoscape.removeNode self#getCy node;
            self#defineInformationBox;)
         else 
@@ -147,7 +164,8 @@ class fstController (fst : TransducerView.model) (s: bool) =
       let newName = JS.prompt (Lang.i18nRenameStateQuestion()) state in
       match Js.Opt.to_option newName with
       | None -> ()
-      | Some n -> myFST <- myFST#renameState state (Js.to_string n);
+      | Some n -> super#resetStyle;
+                  myFST <- myFST#renameState state (Js.to_string n);
                   Cytoscape.resetFaElems self#getCy;
                   self#defineExample
 
@@ -164,6 +182,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
             let iSym = symb input in
             let oSym = symb output in
             myFST <- myFST#newTransition (source, iSym, oSym, target);
+            super#resetStyle;
             Cytoscape.addEdge self#getCy (source, (symb2str iSym) ^ ":" ^ (symb2str oSym), target);
             self#defineInformationBox;
         | _ -> 
@@ -177,7 +196,8 @@ class fstController (fst : TransducerView.model) (s: bool) =
           let iSym = symb input in
           let oSym = symb output in
           if (Set.belongs (v1, iSym, oSym, v2) myFST#representation.transitions) then
-            (myFST <- (myFST#eliminateTransition(v1, iSym, oSym, v2));
+            (super#resetStyle;
+             myFST <- (myFST#eliminateTransition(v1, iSym, oSym, v2));
              Cytoscape.removeEdge self#getCy v1 label v2;
              self#defineInformationBox;)
           else 
@@ -185,15 +205,18 @@ class fstController (fst : TransducerView.model) (s: bool) =
       | _ -> JS.alertStr "Could not parse transition label to delete."
 
     method editModel = 
+      !ListenersAutomaton.editModelListener();
       ()
       
     method replicateOnLeft =
       let c = new fstController self#getFST false in
-      Ctrl.ctrlL := (c :> controller);
+      Ctrl.changeCtrl c false
 
     method defineMinimize listColors number =
+      self#operationAutomaton "minimize";
       !Ctrl.ctrlL#getFST#paintMinimization !Ctrl.ctrlL#getCy listColors;
-      myFST#drawMinimize self#getCy listColors number;
+      myFST#drawMinimize self#getCy listColors number (Settings.getSetting "layout");
+      self#defineInformationBox;
       Cytoscape.fit self#getCy_opt
 
     method convertToFA =
@@ -207,6 +230,9 @@ class fstController (fst : TransducerView.model) (s: bool) =
       self#operationAutomaton "convert to TM single tape";
       let tm = myFST#asTuringMachine in
       new TuringMachineView.model (Representation tm)
+
+    method getModelName =
+      "fst"
 
     method printErrors =
           let errors = myFST#errors in
@@ -223,4 +249,3 @@ class fstController (fst : TransducerView.model) (s: bool) =
         HtmlPageClient.displayGenStats visitedConfigs exact time
 
 end
-

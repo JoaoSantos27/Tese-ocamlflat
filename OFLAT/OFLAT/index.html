@@ -133,7 +133,7 @@
         <option id="optionNewAutomatonFA" value="optionNewAutomatonFA"></option>
         <option id="optionNewRegularExpression" value="optionNewRegularExpression"></option>
         <option id="optionNewAutomatonPDA" value="optionNewAutomatonPDA"></option>
-        <option id="optionNewTransducer" value="optionNewTransducer"></option>
+        <option id="optionNewAutomatonFST" value="optionNewAutomatonFST"></option>
         <option id="optionNewContextFreeGrammar" value="optionNewContextFreeGrammar"></option>
         <option id="optionNewGrammar" value="optionNewGrammar"></option>
         <option id="optionNewComposition" value="optionNewComposition"></option>
@@ -182,6 +182,7 @@
         <option id="selectConv" value="selectConv" hidden></option>
         <option id="selectRegex" value="selectRegex" disabled></option>
         <option id="selectFA" value="selectFA" disabled></option>
+        <option id="selectFST" value="selectFST" disabled></option>
         <option id="selectCFG" value="selectCFG" disabled></option>
         <option id="selectGR" value="selectGR" disabled></option>
         <option id="selectPDA" value="selectPDA" disabled></option>
@@ -200,6 +201,14 @@
     <div class="tooltip" onmouseover="jscode.tooltipExportModel ()">
       <button id="exportModel" onclick="jscode.exportToFile ()" disabled></button>
       <div id="tooltipExportModel" class="tooltiptext"></div>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipSaveModel ()">
+      <button id="saveModel" onclick="jscode.saveToRepository ()" disabled></button>
+      <div id="tooltipSaveModel" class="tooltiptext"></div>
+    </div>
+    <div class="tooltip" onmouseover="jscode.tooltipDeleteModels ()">
+      <button id="deleteModels" onclick="jscode.deleteModels ()"></button>
+      <div id="tooltipDeleteModels" class="tooltiptext"></div>
     </div>
     <div id="server"></div>
     <div id="examplesServer"></div>

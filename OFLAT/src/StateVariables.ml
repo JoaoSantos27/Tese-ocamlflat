@@ -56,6 +56,8 @@ module StateVariables =
         !cyType
   
       let getAutomatonType() = "finite automaton"
+
+      let getTransducerType() = "transducer"
   
       let getRegexType() = "regular expression"
   
