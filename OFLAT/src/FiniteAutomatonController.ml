@@ -57,7 +57,7 @@ class faController (fa: FiniteAutomatonView.model) (s: bool)=
                   if (Set.belongs st myFA#representation.states) then 
                     (JS.alertStr (Lang.i18nAlertExists ()))
                   else 
-                    (myFA <- myFA#addNode st false;
+                    (myFA <- (if final then myFA#addFinalNode st false false else myFA#addNode st false);
                     super#resetStyle;
                     Cytoscape.addNode self#getCy st ~x:x ~y:y initial final;
                     self#defineInformationBox;)

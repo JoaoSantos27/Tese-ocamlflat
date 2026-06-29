@@ -2456,7 +2456,7 @@ struct
 	let fst_ND = {| {
     kind : "transducer",
     description : "Nondeterministic  (2 transitions with same input)",
-    name : "fst3",
+    name : "fst_ND",
     inAlphabet : ["a"],
     outAlphabet : ["x","y"],
     states : ["S"],
@@ -2487,6 +2487,26 @@ struct
     acceptStates : ["S", "A"]
   } |}
 
+	let fst_det_min = {| {
+    kind : "transducer",
+    description : "Nondeterministic FST that can be determinized and then minimized",
+    name : "fst_det_min",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["x", "y"],
+    states : ["S", "A", "B"],
+    initialState : "S",
+    transitions : [
+      ["S", "a", "x", "A"],
+      ["S", "a", "x", "B"],
+      ["S", "b", "y", "S"],
+      ["A", "a", "x", "A"],
+      ["A", "b", "y", "S"],
+      ["B", "a", "x", "B"],
+      ["B", "b", "y", "S"]
+    ],
+    acceptStates : ["S", "A", "B"]
+  } |}
+
 	let fst_ND2 = {| {
     kind : "transducer",
     description : "dd",
@@ -2509,7 +2529,7 @@ struct
 	let fst_M = {| {
     kind : "transducer",
     description : "Minimizable: A and B are equivalent)",
-    name : "fst_min_merge_AB",
+    name : "fst_M",
     inAlphabet : ["a","b"],
     outAlphabet : ["x","y"],
     states : ["S","A","B"],
@@ -2530,7 +2550,7 @@ struct
 	let fst_Moore = {| {
     kind : "transducer",
     description : "Moore",
-    name : "fst2",
+    name : "fst_Moore",
     inAlphabet : ["a", "b"],
     outAlphabet : ["x", "y"],
     states : ["S","A"],
@@ -2547,7 +2567,7 @@ struct
 	let fst_Mealy = {| {
     kind : "transducer",
     description : "Deterministic & complete Mealy (outputs match inputs; not Moore)",
-    name : "fst7",
+    name : "fst_Mealy",
     inAlphabet : ["a","b"],
     outAlphabet : ["a","b"],
     states : ["S"],
@@ -3106,7 +3126,7 @@ struct
 			kind : "exercise",
 			description : "FST: identity transducer over a and b",
 			name : "exer_fst_identity",
-			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer). For example: 'a' -> 'a', 'ab' -> 'ab', 'ba' -> 'ba'.",
+			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer).",
 			inside : ["a->a", "b->b", "ab->ab", "ba->ba", "aab->aab"],
 			outside : [],
 			properties : ["transducer", "deterministic"]
@@ -3116,7 +3136,7 @@ struct
 			kind : "exercise",
 			description : "FST: Mealy machine swapping a and b",
 			name : "exer_fst_mealy",
-			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read. For example: 'a' -> 'b', 'ab' -> 'ba', 'aab' -> 'bba'.",
+			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read.",
 			inside : ["a->b", "b->a", "ab->ba", "ba->ab", "aab->bba"],
 			outside : [],
 			properties : ["transducer", "deterministic", "mealy"]
@@ -3124,11 +3144,41 @@ struct
 
 	let exer_fst_moore = {| {
 			kind : "exercise",
-			description : "FST: Moore machine outputting x on a and y on b",
+			description : "FST: Moore machine outputting x for every input symbol",
 			name : "exer_fst_moore",
-			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every 'a' read and 'y' for every 'b' read. For example: 'a' -> 'x', 'ab' -> 'xy', 'ba' -> 'yx', 'aab' -> 'xxy'.",
-			inside : ["a->x", "b->y", "ab->xy", "ba->yx", "aab->xxy"],
+			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every symbol read.",
+			inside : ["a->x", "b->x", "ab->xx", "ba->xx", "aab->xxx"],
 			outside : [],
+			properties : ["transducer", "deterministic", "moore"]
+		} |}
+
+	let exer_fst_detect_ab = {| {
+			kind : "exercise",
+			description : "FST: output 1 when reading b immediately after a",
+			name : "exer_fst_detect_ab",
+			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs '1' exactly when the current input symbol completes the substring 'ab', and outputs '0' otherwise.",
+			inside : ["a->0", "b->0", "ab->01", "ba->00", "aab->001", "abb->010", "baba->0010"],
+			outside : ["ab->00", "ab->11", "aab->011", "abb->011", "baba->0101"],
+			properties : ["transducer", "deterministic"]
+		} |}
+
+	let exer_fst_swap_abc_mealy = {| {
+			kind : "exercise",
+			description : "FST: Mealy machine swapping a and b while preserving c",
+			name : "exer_fst_swap_abc_mealy",
+			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b, c} that swaps 'a' and 'b', while leaving 'c' unchanged.",
+			inside : ["a->b", "b->a", "c->c", "ab->ba", "acb->bca", "cabca->cbacb"],
+			outside : ["a->a", "b->b", "c->a", "acb->bac", "cabca->cabca"],
+			properties : ["transducer", "deterministic", "mealy"]s
+		} |}
+
+	let exer_fst_alternate_moore = {| {
+			kind : "exercise",
+			description : "FST: Moore machine alternating x and y",
+			name : "exer_fst_alternate_moore",
+			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that alternates outputs 'x', 'y', 'x', 'y', ... regardless of the input symbols.",
+			inside : ["a->x", "b->x", "aa->xy", "ab->xy", "ba->xy", "aaa->xyx", "baba->xyxy"],
+			outside : ["a->y", "aa->xx", "ab->yx", "aaa->xxx", "baba->xxxx"],
 			properties : ["transducer", "deterministic", "moore"]
 		} |}
 
@@ -3187,6 +3237,7 @@ struct
 		("fst_ND", fst_ND);
 		("fst_ND2", fst_ND2);
 		("fst_complex_ND", fst_complex_ND);
+		("fst_det_min", fst_det_min);
 		("fst_M", fst_M);
 		("fst_Moore", fst_Moore);
 		("fst_Mealy", fst_Mealy)
@@ -3236,7 +3287,10 @@ struct
     ("exer_readwrite", exer_readwrite);
     ("exer_fst_identity", exer_fst_identity);
     ("exer_fst_mealy", exer_fst_mealy);
-    ("exer_fst_moore", exer_fst_moore)
+    ("exer_fst_moore", exer_fst_moore);
+    ("exer_fst_detect_ab", exer_fst_detect_ab);
+    ("exer_fst_swap_abc_mealy", exer_fst_swap_abc_mealy);
+    ("exer_fst_alternate_moore", exer_fst_alternate_moore)
   ])]
 
 	let examplesAll =
@@ -17233,7 +17287,6 @@ struct
         match String.index_opt wstr '-' with
         | Some i when i + 1 < String.length wstr && wstr.[i + 1] = '>' ->
             let inp = String.sub wstr 0 i |> String.trim |> str2word in
-						Util.println [("acceptExpectedOutput: input part extracted: " ^ (word2str inp))];
             let out_exp = String.sub wstr (i + 2) (String.length wstr - i - 2) |> String.trim |> str2word in
             let (ok, out_act) = acceptOut fst inp in
             ok && out_act = out_exp && Model.checkWord fst.outAlphabet out_act
@@ -17629,10 +17682,9 @@ struct
 		let sorted_l = List.sort (fun (s1, w1) (s2, w2) ->
 			if s1 <> s2 then compare s1 s2 else compare w1 w2
 		) l in
-		let s = String.concat "," (List.map (fun (s, w) ->
+		String.concat "_" (List.map (fun (s, w) ->
 			s ^ "" ^ (String.concat "" (List.map Symbol.symbD w))
-		) sorted_l) in
-	"{" ^ s ^ "}"
+		) sorted_l)
 
 	(**
 	* Check for
@@ -18485,7 +18537,7 @@ struct
 			| "transducer" -> true
 			| "finite-state transducer" -> true
 			| _ -> Model.checkProperty prop
-	let checkExercise ex fst = Util.println ["transducer hit"]; Model.checkExercise ex (acceptExpectedOutput fst) (checkProperty fst)	
+	let checkExercise ex fst = Model.checkExercise ex (acceptExpectedOutput fst) (checkProperty fst)	
 	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (acceptExpectedOutput fst) (checkProperty fst)
 
 	(* Ops *)
@@ -18545,6 +18597,10 @@ struct
 			method concatenate (fst: t): t = concatenate representation fst
 		(* Exercices support *)
 			method checkProperty (prop: string) = checkProperty representation prop	
+			method checkExercise (exercise: Exercise.exercise) =
+				checkExercise exercise#representation representation
+			method checkExerciseFailures (exercise: Exercise.exercise) =
+				checkExerciseFailures exercise#representation representation
 		(* Learn-OCaml support *)
 			method moduleName = moduleName
 			method xTypeName = xTypeName
@@ -24384,6 +24440,33 @@ struct
 		acceptStates : ["S"]
   } |}
 
+  let fstSwap = {| {
+    kind : "transducer",
+    description : "Swap a and b",
+    name : "fstSwap",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["a", "b"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [["S","a","b","S"], ["S","b","a","S"]],
+    acceptStates : ["S"]
+  } |}
+
+  let fstMooreConstantX = {| {
+    kind : "transducer",
+    description : "Moore machine mapping every input symbol to x",
+    name : "fstMooreConstantX",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["x"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S", "a", "x", "S"],
+      ["S", "b", "x", "S"]
+    ],
+    acceptStates : ["S"]
+  } |}
+
 
   let test0 () =
     let fst: t = make (Arg.Text fstIdentity) in
@@ -24534,6 +24617,24 @@ struct
     let accepted_b = TuringMachine.accept tm (BasicTypes.word "b") in
     Printf.printf "TM accept('b') = %b (expected false)\n" accepted_b
 
+  let test16 () =
+    let exercise = new Exercise.exercise (Arg.Predef "exer_fst_identity") in
+    let identity = new Transducer.model (Arg.Text fstIdentity) in
+    let swap = new Transducer.model (Arg.Text fstSwap) in
+    assert (identity#checkExercise exercise);
+    assert (not (swap#checkExercise exercise));
+    let (insideErrors, outsideErrors, properties) = identity#checkExerciseFailures exercise in
+    assert (Set.isEmpty insideErrors);
+    assert (Set.isEmpty outsideErrors);
+    assert (Set.isEmpty properties);
+    Printf.printf "FST exercise input/output checks passed\n"
+
+  let test17 () =
+    let moore = new Transducer.model (Arg.Text fstMooreConstantX) in
+    assert (moore#checkProperty "moore");
+    assert (moore#checkExercise (new Exercise.exercise (Arg.Predef "exer_fst_moore")));
+    Printf.printf "FST Moore exercise checks passed\n"
+
   let runAll =
     if Util.testing active "Transducer" then begin
       Util.header "test0";
@@ -24568,6 +24669,10 @@ struct
       test14 ();
       Util.header "test15 (asTuringMachine)";
       test15 ();
+      Util.header "test16 (exercise input/output)";
+      test16 ();
+      Util.header "test17 (moore exercise)";
+      test17 ();
       Util.header ""
     end
 end

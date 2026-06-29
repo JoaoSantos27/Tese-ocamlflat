@@ -842,24 +842,24 @@ open ContextFreeGrammarLL1View;;
       CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
       HtmlPageClient.clearBox1();
       createPDAController defaultPDA false;
-      !Ctrl.ctrlL#defineExample;
-
-    ListenersFST.createModelListener := fun () -> 
-      let defaultFST = new TransducerView.model (Representation {
-        inAlphabet = Set.empty;
-        outAlphabet = Set.empty;
-        states = Set.make ["START"]; 
-        initialState = "START";
-        transitions = Set.empty;
-        acceptStates = Set.empty
-      }) in
-      CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
-      HtmlPageClient.clearBox1();
-      createTransducerController defaultFST false;
       !Ctrl.ctrlL#defineExample;;
 
-    ListenersTM.createModelListener := fun () -> 
-       let defaultTM =
+  ListenersFST.createModelListener := fun () -> 
+    let defaultFST = new TransducerView.model (Representation {
+      inAlphabet = Set.empty;
+      outAlphabet = Set.empty;
+      states = Set.make ["START"]; 
+      initialState = "START";
+      transitions = Set.empty;
+      acceptStates = Set.empty
+    }) in
+    CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
+    HtmlPageClient.clearBox1();
+    createTransducerController defaultFST false;
+    !Ctrl.ctrlL#defineExample;;
+
+  ListenersTM.createModelListener := fun () -> 
+     let defaultTM =
 		new TuringMachineView.model (
 			Representation
 				{ TuringMachine.tm_zero with
@@ -867,10 +867,10 @@ open ContextFreeGrammarLL1View;;
 					initialState = "START"; }
 		) in
   
-      CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
-      HtmlPageClient.clearBox1();
-      createTMController defaultTM false;
-      !Ctrl.ctrlL#defineExample;;
+    CtrlUtil.oneBox !Ctrl.ctrlL#getCy_opt;
+    HtmlPageClient.clearBox1();
+    createTMController defaultTM false;
+    !Ctrl.ctrlL#defineExample;;
   
   ListenersRE.createModelListener := fun () ->
     try

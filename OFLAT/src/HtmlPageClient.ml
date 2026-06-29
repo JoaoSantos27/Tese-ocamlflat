@@ -703,7 +703,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         Dom.appendChild c tool;
 
     (* Deterministic Button *)
-    let de = button1 (Lang.i18nDeterministic ()) "deterministic" "tooltip3" !ListenersFST.getDeterministicListener in
+    let de = button1 (Lang.i18nDeterministicText ()) "deterministic" "tooltip3" !ListenersFST.getDeterministicListener in
       Dom.appendChild divButtons1 de;
     let tool = div2 "tooltipDeterministic" "tooltiptext3" (Lang.i18nTooltipDeterministic ()) in
         Dom.appendChild de tool;

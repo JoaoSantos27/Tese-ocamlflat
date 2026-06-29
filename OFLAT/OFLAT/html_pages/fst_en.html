@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<HR><h1>Finite-State Transducers</h1>
+
+<p> A finite-state transducer (FST) extends a finite automaton by producing output symbols while it reads input symbols.
+It defines a relation (or function, in the deterministic case) from input words over an alphabet to output words over another alphabet.
+
+<p> As with automata, transducers have states and labeled transitions. In an FST, each transition carries an <b>input:output</b> label.
+A run consumes the input and accumulates the output along the chosen path.
+
+<p> In a <b>Mealy machine</b>, outputs are produced on transitions. In a <b>Moore machine</b>, outputs are associated with states.
+Both are special cases of general FSTs.
+
+<p> A word is accepted if the input is fully consumed and the final state is accepting. The produced output is the concatenation of
+the outputs along the path.
+
+<p>More information in the course documentation.
+
+<h1>Commands</h1>
+
+<A NAME="Clean">
+<h2>Clean</h2>
+Removes useless states from the transducer (inaccessible and/or non-productive states).
+
+<A NAME="Deterministic">
+<h2>Determinize</h2>
+Attempts to determinize a transducer when possible. Some transducers cannot be determinized if they contain output conflicts.
+
+<A NAME="Minimize">
+<h2>Minimize</h2>
+Minimizes a deterministic transducer using the algorithm taught in class.
+
+<p>If the transducer is not deterministic, you must determinize it first (when possible).
+
+<A NAME="Productive">
+<h2>Productive states</h2>
+Paints productive states in orange.
+
+<p>A state is productive if it contributes to producing some accepted output.
+
+<A NAME="Accessible">
+<h2>Accessible states</h2>
+Paints accessible states in yellow.
+
+<p>A state is accessible if it is reachable from the initial state by some path.
+
+<A NAME="Usefull">
+<h2>Useful states</h2>
+Paints useful states in lilac.
+
+<p>A state is useful if it is both productive and accessible.
+
+<A NAME="CleanColors">
+<h2>Clean colors</h2>
+Clears state colors set by the previous commands.
+
+<A NAME="ShowTable">
+<h2>Show table</h2>
+Shows the transducer in tabular form.
+
+<A NAME="Animation">
+<h2>Animation</h2>
+
+<HR>
+
+</body>
+</html>

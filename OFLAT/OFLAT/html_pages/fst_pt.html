@@ -1,0 +1,67 @@
+<head><meta charset="UTF-8"></head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<HR><h1>Transdutores de estados finitos</h1>
+
+<p> Um transdutor de estados finitos (FST) estende um autómato finito produzindo símbolos de saída enquanto lê símbolos de entrada.
+Define uma relação (ou função, no caso determinista) entre palavras de entrada e palavras de saída.
+
+<p> Tal como nos autómatos, há estados e transições etiquetadas. Num FST, cada transição tem uma etiqueta <b>entrada:saída</b>.
+A execução consome a entrada e acumula a saída ao longo do percurso escolhido.
+
+<p> Num <b>transdutor de Mealy</b>, as saídas são produzidas nas transições. Num <b>transdutor de Moore</b>, as saídas estão associadas aos estados.
+Ambos são casos particulares de FSTs gerais.
+
+<p> Uma palavra é aceite quando a entrada é totalmente consumida e o estado corrente é final.
+A saída produzida é a concatenação das saídas ao longo do percurso.
+
+<p>Mais informação na documentação da disciplina.
+
+<h1>Comandos</h1>
+
+<A NAME="Clean">
+<h2>Limpar</h2>
+Remove do transdutor todos os estados inúteis (inacessíveis e/ou improdutivos).
+
+<A NAME="Deterministic">
+<h2>Tornar determinista</h2>
+Tenta determinizar um transdutor quando isso é possível. Alguns transdutores não são determinizáveis devido a conflitos de saída.
+
+<A NAME="Minimize">
+<h2>Minimizar</h2>
+Minimiza um transdutor determinista, usando o algoritmo das aulas.
+
+<p> Se o transdutor não for determinista, é preciso convertê-lo primeiro (quando possível).
+
+<A NAME="Productive">
+<h2>Estados produtivos</h2>
+Pinta de cor de laranja os estados produtivos.
+
+<p>Um estado é produtivo se contribuir para produzir alguma saída aceite.
+
+<A NAME="Accessible">
+<h2>Estados acessíveis</h2>
+Pinta de amarelo todos os estados acessíveis.
+
+<p>Um estado é acessível se, a partir do estado inicial, existir um percurso que o permita alcançar.
+
+<A NAME="Usefull">
+<h2>Estados úteis</h2>
+Pinta de lilás todos os estados úteis.
+
+<p>Um estado é útil se for ao mesmo tempo produtivo e acessível.
+
+<A NAME="CleanColors">
+<h2>Limpar cores</h2>
+Limpa as cores dos estados resultantes dos comandos anteriores.
+
+<A NAME="ShowTable">
+<h2>Mostrar tabela</h2>
+Mostra o transdutor sob a forma de tabela.
+
+<A NAME="Animation">
+<h2>Animação</h2>
+
+<HR>
+
+</body>

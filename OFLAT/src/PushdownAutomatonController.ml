@@ -131,8 +131,8 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
 				  else 
 					begin
             super#resetStyle; 
-					  myPDA <- myPDA#addState st;
-					  Cytoscape.addNode self#getCy st ~x:x ~y:y false false
+					  myPDA <- (if final then myPDA#addAcceptState st else myPDA#addState st);
+					  Cytoscape.addNode self#getCy st ~x:x ~y:y initial final
 					end;
 				  self#defineInformationBox
 

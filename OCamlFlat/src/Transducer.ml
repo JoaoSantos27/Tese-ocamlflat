@@ -92,7 +92,6 @@ struct
         match String.index_opt wstr '-' with
         | Some i when i + 1 < String.length wstr && wstr.[i + 1] = '>' ->
             let inp = String.sub wstr 0 i |> String.trim |> str2word in
-						Util.println [("acceptExpectedOutput: input part extracted: " ^ (word2str inp))];
             let out_exp = String.sub wstr (i + 2) (String.length wstr - i - 2) |> String.trim |> str2word in
             let (ok, out_act) = acceptOut fst inp in
             ok && out_act = out_exp && Model.checkWord fst.outAlphabet out_act
@@ -488,10 +487,9 @@ struct
 		let sorted_l = List.sort (fun (s1, w1) (s2, w2) ->
 			if s1 <> s2 then compare s1 s2 else compare w1 w2
 		) l in
-		let s = String.concat "," (List.map (fun (s, w) ->
+		String.concat "_" (List.map (fun (s, w) ->
 			s ^ "" ^ (String.concat "" (List.map Symbol.symbD w))
-		) sorted_l) in
-	"{" ^ s ^ "}"
+		) sorted_l)
 
 	(**
 	* Check for
@@ -1344,7 +1342,7 @@ struct
 			| "transducer" -> true
 			| "finite-state transducer" -> true
 			| _ -> Model.checkProperty prop
-	let checkExercise ex fst = Util.println ["transducer hit"]; Model.checkExercise ex (acceptExpectedOutput fst) (checkProperty fst)	
+	let checkExercise ex fst = Model.checkExercise ex (acceptExpectedOutput fst) (checkProperty fst)	
 	let checkExerciseFailures ex fst = Model.checkExerciseFailures ex (acceptExpectedOutput fst) (checkProperty fst)
 
 	(* Ops *)
@@ -1404,6 +1402,10 @@ struct
 			method concatenate (fst: t): t = concatenate representation fst
 		(* Exercices support *)
 			method checkProperty (prop: string) = checkProperty representation prop	
+			method checkExercise (exercise: Exercise.exercise) =
+				checkExercise exercise#representation representation
+			method checkExerciseFailures (exercise: Exercise.exercise) =
+				checkExerciseFailures exercise#representation representation
 		(* Learn-OCaml support *)
 			method moduleName = moduleName
 			method xTypeName = xTypeName

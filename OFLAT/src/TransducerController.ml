@@ -78,7 +78,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
           if (Set.belongs st myFST#representation.states) then 
             (JS.alertStr (Lang.i18nAlertExists ()))
           else 
-            (myFST <- myFST#addNode st false;
+            (myFST <- (if final then myFST#addFinalNode st false false else myFST#addNode st false);
              super#resetStyle;
              Cytoscape.addNode self#getCy st ~x:x ~y:y initial final;
              self#defineInformationBox;)

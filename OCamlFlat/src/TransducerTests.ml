@@ -270,6 +270,33 @@ struct
 		acceptStates : ["S"]
   } |}
 
+  let fstSwap = {| {
+    kind : "transducer",
+    description : "Swap a and b",
+    name : "fstSwap",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["a", "b"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [["S","a","b","S"], ["S","b","a","S"]],
+    acceptStates : ["S"]
+  } |}
+
+  let fstMooreConstantX = {| {
+    kind : "transducer",
+    description : "Moore machine mapping every input symbol to x",
+    name : "fstMooreConstantX",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["x"],
+    states : ["S"],
+    initialState : "S",
+    transitions : [
+      ["S", "a", "x", "S"],
+      ["S", "b", "x", "S"]
+    ],
+    acceptStates : ["S"]
+  } |}
+
 
   let test0 () =
     let fst: t = make (Arg.Text fstIdentity) in
@@ -420,6 +447,24 @@ struct
     let accepted_b = TuringMachine.accept tm (BasicTypes.word "b") in
     Printf.printf "TM accept('b') = %b (expected false)\n" accepted_b
 
+  let test16 () =
+    let exercise = new Exercise.exercise (Arg.Predef "exer_fst_identity") in
+    let identity = new Transducer.model (Arg.Text fstIdentity) in
+    let swap = new Transducer.model (Arg.Text fstSwap) in
+    assert (identity#checkExercise exercise);
+    assert (not (swap#checkExercise exercise));
+    let (insideErrors, outsideErrors, properties) = identity#checkExerciseFailures exercise in
+    assert (Set.isEmpty insideErrors);
+    assert (Set.isEmpty outsideErrors);
+    assert (Set.isEmpty properties);
+    Printf.printf "FST exercise input/output checks passed\n"
+
+  let test17 () =
+    let moore = new Transducer.model (Arg.Text fstMooreConstantX) in
+    assert (moore#checkProperty "moore");
+    assert (moore#checkExercise (new Exercise.exercise (Arg.Predef "exer_fst_moore")));
+    Printf.printf "FST Moore exercise checks passed\n"
+
   let runAll =
     if Util.testing active "Transducer" then begin
       Util.header "test0";
@@ -454,6 +499,10 @@ struct
       test14 ();
       Util.header "test15 (asTuringMachine)";
       test15 ();
+      Util.header "test16 (exercise input/output)";
+      test16 ();
+      Util.header "test17 (moore exercise)";
+      test17 ();
       Util.header ""
     end
 end

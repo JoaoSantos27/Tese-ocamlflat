@@ -509,7 +509,7 @@ struct
 	let fst_ND = {| {
     kind : "transducer",
     description : "Nondeterministic  (2 transitions with same input)",
-    name : "fst3",
+    name : "fst_ND",
     inAlphabet : ["a"],
     outAlphabet : ["x","y"],
     states : ["S"],
@@ -540,6 +540,26 @@ struct
     acceptStates : ["S", "A"]
   } |}
 
+	let fst_det_min = {| {
+    kind : "transducer",
+    description : "Nondeterministic FST that can be determinized and then minimized",
+    name : "fst_det_min",
+    inAlphabet : ["a", "b"],
+    outAlphabet : ["x", "y"],
+    states : ["S", "A", "B"],
+    initialState : "S",
+    transitions : [
+      ["S", "a", "x", "A"],
+      ["S", "a", "x", "B"],
+      ["S", "b", "y", "S"],
+      ["A", "a", "x", "A"],
+      ["A", "b", "y", "S"],
+      ["B", "a", "x", "B"],
+      ["B", "b", "y", "S"]
+    ],
+    acceptStates : ["S", "A", "B"]
+  } |}
+
 	let fst_ND2 = {| {
     kind : "transducer",
     description : "dd",
@@ -562,7 +582,7 @@ struct
 	let fst_M = {| {
     kind : "transducer",
     description : "Minimizable: A and B are equivalent)",
-    name : "fst_min_merge_AB",
+    name : "fst_M",
     inAlphabet : ["a","b"],
     outAlphabet : ["x","y"],
     states : ["S","A","B"],
@@ -583,7 +603,7 @@ struct
 	let fst_Moore = {| {
     kind : "transducer",
     description : "Moore",
-    name : "fst2",
+    name : "fst_Moore",
     inAlphabet : ["a", "b"],
     outAlphabet : ["x", "y"],
     states : ["S","A"],
@@ -600,7 +620,7 @@ struct
 	let fst_Mealy = {| {
     kind : "transducer",
     description : "Deterministic & complete Mealy (outputs match inputs; not Moore)",
-    name : "fst7",
+    name : "fst_Mealy",
     inAlphabet : ["a","b"],
     outAlphabet : ["a","b"],
     states : ["S"],
@@ -1159,7 +1179,7 @@ struct
 			kind : "exercise",
 			description : "FST: identity transducer over a and b",
 			name : "exer_fst_identity",
-			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer). For example: 'a' -> 'a', 'ab' -> 'ab', 'ba' -> 'ba'.",
+			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs the same sequence it reads (identity transducer).",
 			inside : ["a->a", "b->b", "ab->ab", "ba->ba", "aab->aab"],
 			outside : [],
 			properties : ["transducer", "deterministic"]
@@ -1169,7 +1189,7 @@ struct
 			kind : "exercise",
 			description : "FST: Mealy machine swapping a and b",
 			name : "exer_fst_mealy",
-			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read. For example: 'a' -> 'b', 'ab' -> 'ba', 'aab' -> 'bba'.",
+			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b} that swaps every symbol: outputs 'b' for every 'a' read and 'a' for every 'b' read.",
 			inside : ["a->b", "b->a", "ab->ba", "ba->ab", "aab->bba"],
 			outside : [],
 			properties : ["transducer", "deterministic", "mealy"]
@@ -1177,11 +1197,41 @@ struct
 
 	let exer_fst_moore = {| {
 			kind : "exercise",
-			description : "FST: Moore machine outputting x on a and y on b",
+			description : "FST: Moore machine outputting x for every input symbol",
 			name : "exer_fst_moore",
-			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every 'a' read and 'y' for every 'b' read. For example: 'a' -> 'x', 'ab' -> 'xy', 'ba' -> 'yx', 'aab' -> 'xxy'.",
-			inside : ["a->x", "b->y", "ab->xy", "ba->yx", "aab->xxy"],
+			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that outputs 'x' for every symbol read.",
+			inside : ["a->x", "b->x", "ab->xx", "ba->xx", "aab->xxx"],
 			outside : [],
+			properties : ["transducer", "deterministic", "moore"]
+		} |}
+
+	let exer_fst_detect_ab = {| {
+			kind : "exercise",
+			description : "FST: output 1 when reading b immediately after a",
+			name : "exer_fst_detect_ab",
+			problem : "Create a deterministic FINITE STATE TRANSDUCER over input alphabet {a, b} that outputs '1' exactly when the current input symbol completes the substring 'ab', and outputs '0' otherwise.",
+			inside : ["a->0", "b->0", "ab->01", "ba->00", "aab->001", "abb->010", "baba->0010"],
+			outside : ["ab->00", "ab->11", "aab->011", "abb->011", "baba->0101"],
+			properties : ["transducer", "deterministic"]
+		} |}
+
+	let exer_fst_swap_abc_mealy = {| {
+			kind : "exercise",
+			description : "FST: Mealy machine swapping a and b while preserving c",
+			name : "exer_fst_swap_abc_mealy",
+			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b, c} that swaps 'a' and 'b', while leaving 'c' unchanged.",
+			inside : ["a->b", "b->a", "c->c", "ab->ba", "acb->bca", "cabca->cbacb"],
+			outside : ["a->a", "b->b", "c->a", "acb->bac", "cabca->cabca"],
+			properties : ["transducer", "deterministic", "mealy"]s
+		} |}
+
+	let exer_fst_alternate_moore = {| {
+			kind : "exercise",
+			description : "FST: Moore machine alternating x and y",
+			name : "exer_fst_alternate_moore",
+			problem : "Create a deterministic MOORE MACHINE (Finite State Transducer) over input alphabet {a, b} that alternates outputs 'x', 'y', 'x', 'y', ... regardless of the input symbols.",
+			inside : ["a->x", "b->x", "aa->xy", "ab->xy", "ba->xy", "aaa->xyx", "baba->xyxy"],
+			outside : ["a->y", "aa->xx", "ab->yx", "aaa->xxx", "baba->xxxx"],
 			properties : ["transducer", "deterministic", "moore"]
 		} |}
 
@@ -1240,6 +1290,7 @@ struct
 		("fst_ND", fst_ND);
 		("fst_ND2", fst_ND2);
 		("fst_complex_ND", fst_complex_ND);
+		("fst_det_min", fst_det_min);
 		("fst_M", fst_M);
 		("fst_Moore", fst_Moore);
 		("fst_Mealy", fst_Mealy)
@@ -1289,7 +1340,10 @@ struct
     ("exer_readwrite", exer_readwrite);
     ("exer_fst_identity", exer_fst_identity);
     ("exer_fst_mealy", exer_fst_mealy);
-    ("exer_fst_moore", exer_fst_moore)
+    ("exer_fst_moore", exer_fst_moore);
+    ("exer_fst_detect_ab", exer_fst_detect_ab);
+    ("exer_fst_swap_abc_mealy", exer_fst_swap_abc_mealy);
+    ("exer_fst_alternate_moore", exer_fst_alternate_moore)
   ])]
 
 	let examplesAll =
