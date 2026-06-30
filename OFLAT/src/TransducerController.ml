@@ -51,7 +51,8 @@ class fstController (fst : TransducerView.model) (s: bool) =
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
-      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons;
       HtmlPageClient.disableButton "selectRegex"
 
@@ -170,6 +171,13 @@ class fstController (fst : TransducerView.model) (s: bool) =
                   self#defineExample
 
     method createTransition source target =
+      let getSymb trans =
+        let trimmed = String.trim trans in
+        if Settings.isEpsilon trimmed then epsilon else symb trimmed
+      in
+      let getText sy =
+        if sy = epsilon then StateVariables.returnEmpty () else symb2str sy
+      in
       self#operationAutomaton "add transition";
       let promptResult = (JS.prompt (Lang.i18nTextEnterTransition ()) "a,b") in
       match Js.Opt.to_option promptResult with
@@ -179,22 +187,26 @@ class fstController (fst : TransducerView.model) (s: bool) =
         let parts = String.split_on_char ',' str in
         match parts with
         | [input; output] ->
-            let iSym = symb input in
-            let oSym = symb output in
+            let iSym = getSymb input in
+            let oSym = getSymb output in
             myFST <- myFST#newTransition (source, iSym, oSym, target);
             super#resetStyle;
-            Cytoscape.addEdge self#getCy (source, (symb2str iSym) ^ ":" ^ (symb2str oSym), target);
+            Cytoscape.addEdge self#getCy (source, (getText iSym) ^ ":" ^ (getText oSym), target);
             self#defineInformationBox;
         | _ -> 
             JS.alertStr "Invalid format. Use 'input,output' (e.g., 'a,b')"
 
     method eliminateTransition (v1, label, v2) =
+      let getSymb trans =
+        let trimmed = String.trim trans in
+        if Settings.isEpsilon trimmed then epsilon else symb trimmed
+      in
       self#operationAutomaton "erase transition";
       let parts = String.split_on_char ':' label in
       match parts with
       | [input; output] -> 
-          let iSym = symb input in
-          let oSym = symb output in
+          let iSym = getSymb input in
+          let oSym = getSymb output in
           if (Set.belongs (v1, iSym, oSym, v2) myFST#representation.transitions) then
             (super#resetStyle;
              myFST <- (myFST#eliminateTransition(v1, iSym, oSym, v2));

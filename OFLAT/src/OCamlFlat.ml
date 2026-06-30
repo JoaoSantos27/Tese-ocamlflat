@@ -3169,7 +3169,7 @@ struct
 			problem : "Create a deterministic MEALY MACHINE (Finite State Transducer) over input alphabet {a, b, c} that swaps 'a' and 'b', while leaving 'c' unchanged.",
 			inside : ["a->b", "b->a", "c->c", "ab->ba", "acb->bca", "cabca->cbacb"],
 			outside : ["a->a", "b->b", "c->a", "acb->bac", "cabca->cabca"],
-			properties : ["transducer", "deterministic", "mealy"]s
+			properties : ["transducer", "deterministic", "mealy"]
 		} |}
 
 	let exer_fst_alternate_moore = {| {

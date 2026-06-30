@@ -896,9 +896,9 @@ let i18nAboutText4 () =
   "Il est développé en OCaml à l'aide des bibliothèques js_of_ocaml et Cytoscape.js, le code source étant disponible à "]
 
 let i18nAboutText5 () =  
-  i18n ["At this moment it is possible to work with finite automata, regular expressions and perform exercises."; 
-  "Neste momento é possível trabalhar com autómatos finitos, expressões regulares e realizar exercícios.";
-  "En ce moment, il est possible de travailler avec des automates finis, des expressions régulières et de résoudre des exercices."]
+  i18n ["At this moment it is possible to work with finite automata, finite-state transducers, regular expressions and perform exercises.";
+  "Neste momento e possivel trabalhar com automatos finitos, transdutores finitos, expressoes regulares e realizar exercicios.";
+  "En ce moment, il est possible de travailler avec des automates finis, des transducteurs finis, des expressions regulieres et de resoudre des exercices."]
 
 let i18nAboutText6 () = 
   i18n ["To import a file it must be in txt or JSON. The format of an automaton is:"; 
@@ -967,6 +967,49 @@ let i18nAboutText9 () =
     name: nom de l'expression régulière,
     re: expression régulière
   } " ]
+
+let i18nAboutTextTransducerFormat () =
+  i18n ["The format of a finite-state transducer is:";
+  "O formato de um transdutor finito e:";
+  "Le format d'un transducteur fini est:"]
+
+let i18nAboutTextTransducerExample () =
+  i18n ["
+  {
+    kind: transducer,
+    description: description of the transducer,
+    name: name of the transducer,
+    inAlphabet: [list of input symbols],
+    outAlphabet: [list of output symbols],
+    states: [list of states],
+    initialState: an initial state,
+    transitions: [List of transitions in the format [departure state, input symbol, output symbol, arrival state]],
+    acceptStates: [list of states]
+  } ";
+  "
+            {
+              kind: transducer,
+              description: descricao do transdutor,
+              name: nome do transdutor,
+              inAlphabet: [lista de simbolos de entrada],
+              outAlphabet: [lista de simbolos de saida],
+              states: [lista de estados],
+              initialState: um estado inicial,
+              transitions: [Lista de transicoes com formato [estado de partida, simbolo de entrada, simbolo de saida, estado de chegada]],
+              acceptStates: [lista de estados]
+            } ";
+            "
+  {
+    kind: transducer,
+    description: description du transducteur,
+    name: nom du transducteur,
+    inAlphabet: [liste des symboles d'entree],
+    outAlphabet: [liste des symboles de sortie],
+    states: [liste des etats],
+    initialState: un etat initial,
+    transitions: [Liste des transitions au format [etat de depart, symbole d'entree, symbole de sortie, etat d'arrivee]],
+    acceptStates: [liste des etats]
+  } "]
 
 let i18nAboutText10 () = 
   i18n ["The format of an exercise is:"; 

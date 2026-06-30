@@ -201,27 +201,29 @@ module ControllerListeners = struct
               createFAController fa true;
               !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
-      | 3 -> 
+      | 3 ->
+              JS.alertStr (Lang.i18nErrorConversion ())
+      | 4 ->
               let cfg = !Ctrl.ctrlL#convertToCFG in
               createCFGController cfg true;
               !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
-      | 4 -> 
+      | 5 ->
               let gr = !Ctrl.ctrlL#convertToGR in
               createGRController gr true;
               !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
-      | 5 -> 
+      | 6 ->
               let pda = !Ctrl.ctrlL#convertToPDA in
               createPDAController pda true;
               !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
-      | 6 -> 
+      | 7 ->
               let tm = !Ctrl.ctrlL#convertToTM_SingleTape in
               createTMController tm true;
               !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
-      | 7 -> 
+      | 8 ->
               let tm = !Ctrl.ctrlL#convertToTM_DualTape in
               createTMController tm true;
               !Ctrl.ctrlR#defineExample2;

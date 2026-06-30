@@ -242,12 +242,15 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       List.iter (fun el -> enableButton el) listOnlyPDAButtons;
             (* ????????????????????? TM ?? *)
       List.iter (fun el -> enableButton el) listOnlyAutomataButtons)
-    else if type1 = "finite state transducer" then
+    else if type1 = "finite state transducer" || type1 = "transducer" then
       (List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
-      List.iter (fun el -> enableButton el) listOnlyPDAButtons;
-      List.iter (fun el -> enableButton el) listOnlyAutomataButtons)
+      List.iter (fun el -> disableButton el) listOnlyPDAButtons;
+      List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> disableButton el) listOnlyTM2TapesConvertButtons;
+      List.iter (fun el -> enableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> enableButton el) listOtherButtons)
     else if type1 = "regular expression" then
       (List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGButtons;
@@ -1746,6 +1749,10 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
         Dom.appendChild aboutBox text15;
       let text16 = pre "aboutText9" (Lang.i18nAboutText9 ()) in 
         Dom.appendChild aboutBox text16;
+      let transducerText = p "aboutTextTransducerFormat" (Lang.i18nAboutTextTransducerFormat ()) in
+        Dom.appendChild aboutBox transducerText;
+      let transducerExample = pre "aboutTextTransducerExample" (Lang.i18nAboutTextTransducerExample ()) in
+        Dom.appendChild aboutBox transducerExample;
       let text17 = p "aboutText10" (Lang.i18nAboutText10 ()) in 
         Dom.appendChild aboutBox text17;
       let text18 = pre "aboutText11" (Lang.i18nAboutText11 ()) in 

@@ -5,6 +5,7 @@ open Js_of_ocaml
 open JS
 open HTMLTable
 open Cytoscape
+open StateVariables
 
 module TransducerView = 
 struct
@@ -254,7 +255,10 @@ struct
       method inputEdges (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) =
         let mapToCytoscapeEdge transitions =
             Set.map (fun (src, iSym, oSym, dst) ->
-                let label = (symb2str iSym) ^ ":" ^ (symb2str oSym) in
+                let symbText sy =
+                  if sy = epsilon then StateVariables.returnEmpty () else symb2str sy
+                in
+                let label = (symbText iSym) ^ ":" ^ (symbText oSym) in
                 (src, label, dst)
             ) self#representation.transitions
         in

@@ -50,7 +50,9 @@ module Settings = struct
       HtmlPageClient.putInnerHtml "selectFST" (Lang.i18nselectFST ()); 
       HtmlPageClient.putInnerHtml "selectPDA" (Lang.i18nselectPDA ());
 	    HtmlPageClient.putInnerHtml "selectCFG" (Lang.i18nselectCFG ());
+      HtmlPageClient.putInnerHtml "selectGR" (Lang.i18nselectGR ());
 	    HtmlPageClient.putInnerHtml "selectTM" (Lang.i18nselectTM ()); (* carolina *)
+      HtmlPageClient.putInnerHtml "selectTM2Tapes" (Lang.i18nselectTM2Tapes ());
 	    HtmlPageClient.putInnerHtml "selectConv" (Lang.i18nSelectConv ());
 
 	    HtmlPageClient.putInnerHtml "importModel" (Lang.i18nImportModel ());
