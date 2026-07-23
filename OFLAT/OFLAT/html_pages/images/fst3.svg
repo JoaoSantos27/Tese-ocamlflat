@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="220" viewBox="0 0 520 220">
+  <rect width="520" height="220" fill="#f7f7f7" stroke="#999"/>
+  <circle cx="100" cy="110" r="34" fill="#ddd" stroke="#333" stroke-width="3"/>
+  <circle cx="260" cy="70" r="34" fill="#ddd" stroke="#333" stroke-width="3"/>
+  <circle cx="260" cy="150" r="34" fill="#ddd" stroke="#333" stroke-width="3"/>
+  <circle cx="420" cy="110" r="34" fill="#ddd" stroke="#333" stroke-width="3"/>
+  <circle cx="420" cy="110" r="27" fill="none" stroke="#333" stroke-width="3"/>
+  <path d="M134 102 C175 72 205 66 226 68" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M134 118 C175 148 205 154 226 152" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M294 70 C345 72 372 85 394 102" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M294 150 C345 148 372 135 394 118" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="88" y="117" font-family="Arial" font-size="20">q0</text>
+  <text x="248" y="77" font-family="Arial" font-size="20">q1</text>
+  <text x="248" y="157" font-family="Arial" font-size="20">q2</text>
+  <text x="408" y="117" font-family="Arial" font-size="20">qf</text>
+  <text x="160" y="60" font-family="Arial" font-size="18">a:x</text>
+  <text x="160" y="170" font-family="Arial" font-size="18">a:z</text>
+  <text x="328" y="63" font-family="Arial" font-size="18">b:y</text>
+  <text x="328" y="168" font-family="Arial" font-size="18">b:w</text>
+  <text x="145" y="25" font-family="Arial" font-size="16" fill="#555">Non-deterministic FST placeholder</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker></defs>
+</svg>

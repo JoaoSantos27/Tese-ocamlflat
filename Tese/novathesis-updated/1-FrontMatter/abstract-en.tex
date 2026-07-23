@@ -1,0 +1,30 @@
+%!TEX root = ../template.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% abstract-en.tex
+%% NOVA thesis document file
+%%
+%% Abstract in English
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\typeout{NT FILE abstract-en.tex}%
+
+This dissertation presents the design and implementation of finite state transducers (FSTs) within the OCamlFLAT/OFLAT application, 
+a web-based educational tool for exploring concepts in computation theory developed at FCT NOVA. 
+Finite state transducers extend finite automata by associating output symbols with transitions, 
+enabling the modeling of transformations from input to output strings. 
+
+The current system consists of two separate components:
+Firstly, we have the OCamlFLAT library, a library with all the data structures and logic regarding the theoretical concepts of its supported models.
+And secondly, the OFLAT web application, which is built on top of the OCamlFLAT library, provides a pedagogical interactive graphic interface 
+for users to explore the models supported by the library.
+Both tools were written in OCaml, deliberately aiming to use a functional declarative style, 
+which in some cases manages to closely resemble the theoretical formalisms taught to students.
+It is a system that is in constant evolution, with new features being added to both the library and the web application.
+
+The work to be developed in this thesis involves the extension of these tools with new operations over transducers, 
+such as translation, acceptance, generation, classification and conversion.
+Additionally, the new concepts must be integrated in OFLAT's ecosystem, which includes model composition,
+and pedagogical exercises for students to practice and test their knowledge.
+
+The resulting system will allow users to build, modify, and analyze FSTs visually, 
+supporting better comprehension of theoretical principles through experimentation.

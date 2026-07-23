@@ -1,0 +1,135 @@
+\typeout{NT FILE chapter5.tex}%
+
+\chapter{Technologies}
+\label{cha:technologies}
+
+This chapter provides an overview of the key technologies used in the system. We present
+the OCaml programming language, the mechanisms for interoperability between OCaml and JavaScript, 
+and the use of additional libraries (such as Cytoscape.js) that enable both the functional and graphical aspects of
+the platform.
+
+\section{Why OCaml for OFLAT}
+OCaml offers strong static typing, pattern matching, and algebraic data types that map naturally to formal-language structures 
+(symbols, words, transitions, grammars). Immutable defaults and exhaustive matches help prevent logic gaps in algorithms 
+such as determinization, minimization, and composition of FSTs. The module system keeps model-specific code isolated yet composable, 
+which suits the multi-model nature of OFLAT (FA, RE, CFG, PDA, TM, FST).
+
+\section{OCaml Programming Language}
+
+OCaml is a general-purpose, high-level, multi-paradigm programming language that
+extends the Caml dialect of ML with object-oriented features. It was created in 1996 by
+Xavier Leroy, Jérôme Vouillon, Damien Doligez, Didier Rémy, Ascánder Suárez, and others
+at the French Institute for Research in Computer Science and Automation (INRIA). The
+functional programming fragment of OCaml is based on the concept of expressions, where
+computations are performed by evaluating expressions that produce values, naturally
+supporting a declarative programming paradigm. \cite{ocaml_about}
+
+\subsection{Declarative Programming}
+
+Declarative programming focuses on writing code that solves problems by describing their logical properties rather than by elaborating an algorithm filled with operational details. 
+In declarative programming\cite{declarative-programming}, the emphasis is on specifying what the program should accomplish, rather than how to achieve it step by step.
+
+For example, to determine the length of a list, a declarative solution might consist of a simple statement of the property: “the length of a list is one plus the length of its tail.” 
+In contrast, an imperative solution would typically involve initializing a counter to zero and then traversing the list, incrementing the counter for each element.
+Declarative programming is often considered very high-level because it is closer to mathematical methods and human thought processes, 
+as opposed to programming in a way that mimics machine operations.
+
+Recursive functions written in a declarative style are always inductive functions, in which the problem is reduced to smaller instances of the same problem. 
+This makes many complex problems easier to solve. The code also becomes more readable, as it resembles an equation and does not require mentally simulating its execution to understand it. 
+When writing inductive functions, it greatly helps if the data themselves are inductive in nature—for example, using lists or trees.
+There are situations where writing a declarative solution still requires sophisticated considerations. 
+For instance, to search for a value in an infinite binary tree, one must integrate the need to perform a breadth-first traversal into the solution. 
+The exploration of infinite data structures is frequent in this project, as the configuration spaces that need to be explored are often infinite.
+
+\section{Interoperability using js\_of\_ocaml}
+
+One of the fundamental technologies enabling the OCamlFLAT/OFLAT system to function as a web-based tool is the \texttt{js\_of\_ocaml} framework. 
+js\_of\_ocaml\cite{js-of-ocaml-manual} is the interoperability solution used for bridging OCaml and JavaScript. 
+Enabling the use of OCaml's type system and functional programming features in web development.
+With this we can code the entire tool in OCaml.
+js\_of\_ocaml is not only a compiler but a collection of tools that includes a library, a binding mechanism, and a syntactic extension.
+
+\section*{Compiler}
+
+At the core of \texttt{js\_of\_ocaml} is its compiler, which translates OCaml code into JavaScript code. 
+This compilation step typically follows the standard OCaml compilation pipeline: 
+the source code is first compiled using \texttt{ocamlc}, and the result is then passed to \texttt{js\_of\_ocaml} for translation into JavaScript.
+This allows us to have the type safety and early error detection provided by OCaml.
+
+\subsection{Bindings}
+Bindings are a crucial component for enabling interoperability between OCaml and JavaScript. 
+In the \texttt{js\_of\_ocaml} ecosystem, bindings are used extensively to connect both languages, 
+allowing OCaml code to access and manipulate JavaScript variables, functions and prototypes.
+
+For example, the JavaScript alert function can be made available from OCaml using the following binding:
+\begin{verbatim}
+  let alert (msg: string): unit = Js.Unsafe.global##alert (Js.string msg)
+\end{verbatim}
+
+This snippet wraps the browser's window.alert in an OCaml function, converting the
+OCaml string to a JavaScript string before invocation.
+
+As a second example, the following definition makes available on the OCaml side, the JavaScrip constructor for the Cytoscape objects (that represents graphs).
+
+\begin{verbatim}
+  let cytoscape_constructor: Js.Unsafe.t = Js.Unsafe.pure_js_expr "Cytoscape"
+\end{verbatim}
+
+The following OCaml type, as shown in Listing~\ref{lst:cytoscape_binding}, describes the structure of the Cytoscape objects, and it allows method invocation with type safety:
+
+\begin{lstlisting}[caption={Binding for Cytoscape object}, label={lst:cytoscape_binding}]
+class type cytoscape =
+object
+  method add : DataItem.t t -> unit meth
+  method remove : DataItem.t t -> unit meth
+  method remove_fromSelector : js_string t -> unit meth
+  method mount : Dom_html.element t -> unit meth
+  method layout : layout_options t -> layout t meth
+  method resize : unit meth
+  (*...*)
+  method edges : js_string t -> DataItem.t Js.t js_array Js.t meth
+  method nodes : js_string t -> DataItem.t Js.t js_array Js.t meth
+  method tapdragover : DataItem.t t -> unit meth
+  method contextMenus : 'c t -> contextMenus Js.t meth
+  method popper : 'z -> popper Js.t meth
+end
+\end{lstlisting}
+
+\section*{Syntax Extensions}
+
+To make JavaScript interoperation more idiomatic in OCaml, 
+\texttt{js\_of\_ocaml} provides syntax extensions that support type-safe method invocation and property access. 
+These extensions enable a natural coding style that mimics JavaScript syntax while remaining within OCaml's type system.
+
+\section*{Library}
+
+Beyond the compiler and bindings, \texttt{js\_of\_ocaml} includes a library that exposes a substantial portion of the browser's API. 
+This includes modules for:
+\begin{itemize}
+  \item DOM manipulation (\texttt{Dom\_html}, \texttt{Dom})
+  \item Event handling
+  \item HTML5 APIs
+  \item Canvas and graphics operations
+\end{itemize}
+
+
+\section{Cytoscape.js for Graph Visualization}
+
+Cytoscape.js is an open-source JavaScript library for graph theory analysis and visualization~\cite{cytoscape}. 
+In the context of the OFLAT system, it is used to render automata and tree structures graphically, 
+providing users with an intuitive and interactive interface to construct and manipulate formal models. 
+
+To integrate Cytoscape.js with OCaml, the OFLAT system uses bindings defined in the \texttt{Cytoscape.ml} module. 
+Graph operations such as adding nodes and edges are mapped to JavaScript via \texttt{js\_of\_ocaml}.
+
+\section{Web Technologies Used in OFLAT}
+
+Understanding OFLAT's web-based architecture requires familiarity with several core technologies:
+\begin{itemize}
+    \item \textbf{Web browsers} act as clients that fetch and render web content, translating HTML, CSS, and JavaScript into interactive interfaces~\cite{webbrowsers}.
+    \item \textbf{HTML} provides the structural markup for web pages, defining elements like headers, inputs, and buttons~\cite{html}.
+    \item \textbf{DOM} (Document Object Model) represents the HTML document as a tree of nodes that can be dynamically modified via JavaScript~\cite{dom}.
+    \item \textbf{JavaScript} enables dynamic behavior and interaction within web pages, and is essential for manipulating the DOM~\cite{javascript}.
+\end{itemize}
+
+

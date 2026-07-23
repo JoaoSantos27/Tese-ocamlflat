@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="160" viewBox="0 0 520 160">
+  <rect width="520" height="160" fill="#f7f7f7" stroke="#999"/>
+  <text x="30" y="45" font-family="Arial" font-size="22">Animation step 3</text>
+  <text x="30" y="85" font-family="Arial" font-size="18">Transition used: b:y</text>
+  <text x="30" y="115" font-family="Arial" font-size="18">Input remaining: epsilon</text>
+  <text x="30" y="140" font-family="Arial" font-size="18">Output produced: xy</text>
+</svg>

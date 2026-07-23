@@ -136,12 +136,15 @@ class faController (fa: FiniteAutomatonView.model) (s: bool)=
       let getSymb isEmpty trans =
         if isEmpty then epsilon else symb trans
       in
+      let getText sy =
+        if sy = epsilon then StateVariables.returnEmpty () else symb2str sy
+      in
       self#operationFA "erase transition";
       let c3 = getSymb (Settings.isEpsilon s) s in
       if (Set.belongs (v1, c3, v2) myFA#representation.transitions) then
         (super#resetStyle;
         myFA <- (myFA#eliminateTransition(v1, c3, v2));
-        Cytoscape.removeEdge self#getCy v1 s v2;
+        Cytoscape.removeEdge self#getCy v1 (getText c3) v2;
         self#defineInformationBox;)
       else 
         JS.alertStr ((Lang.i18nAlertTheTransition ()) ^ "(" ^ v1 ^ ", " ^ symb2str c3 ^ ", " ^ v2 ^ ")" ^ (Lang.i18nAlertDoNotExists ()))

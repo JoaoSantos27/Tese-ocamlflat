@@ -1,11 +1,82 @@
 <!DOCTYPE html>
 <html>
+<head><meta charset="UTF-8"></head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
 
-<head>
-</head>
-<body>
-	<div>
-		<H1 style="text-decoration:underline">Finite Automata</H1>
-		<H2>A finite automata...</H2>
-	</div>
+<HR><h1>Finite automata</h1>
+
+<p>A finite automaton is a computation model that can be used to specify a language. A language is a set of words over an alphabet.
+
+<p>The expressive power of finite automata is relatively weak: they describe only languages with a very regular structure, namely Chomsky Type-3 languages, also known as regular languages.
+
+<p>A language is specified by recognition. To test whether a word belongs to the language, the automaton is applied to the word and decides whether it is accepted or rejected.
+
+<p>An automaton consists of states and labeled transitions between states, without memory. One state is initial, and some states are final. To recognize a word, we start at the initial state and consume the symbols of the word sequentially while following available labeled transitions. The word is accepted iff the whole word has been consumed and the current state is final.
+
+<p>In a <b>deterministic automaton</b>, the transition set associates each pair (state, symbol) with at most one state. In other words, the transition relation is a function. Here is an example of a deterministic automaton:
+
+<p><img src="images/fa1.png"></img>
+
+<p>Examples of recognized words: <tt>'', 'ab', 'aba', 'abab', 'abaab', 'ababa', 'abaaba', 'ababab'</tt>.
+
+<p>In a <b>non-deterministic automaton</b>, several transitions with the same symbol may leave the same state; transitions labeled with epsilon are also allowed and can be used without consuming any symbol from the word. In this case the transition relation is not a function. Here is an example of a non-deterministic automaton, shown as a graph:
+
+<p><img src="images/fa3.png"></img>
+
+<p>Examples of recognized words: <tt>'', 'aa', 'ab', 'aaa', 'aab', 'aba', 'aaaa', 'aaab', 'abaa'</tt>.
+
+<p>More information in the course documentation.
+
+<h1>Commands</h1>
+
+<A NAME="Clean">
+<h2>Clean</h2>
+Removes all useless states from the automaton, that is, all unnecessary and non-productive states.
+
+<A NAME="Deterministic">
+<h2>Make deterministic</h2>
+Makes an automaton deterministic using the algorithm taught in class.
+
+<A NAME="Minimize">
+<h2>Minimize automaton</h2>
+Minimizes a deterministic automaton using the algorithm taught in class.
+
+<p>If the automaton is not deterministic, it must first be converted to a deterministic automaton using the appropriate command.
+
+<A NAME="Productive">
+<h2>Productive states</h2>
+Paints productive states in orange.
+
+<p>A state is productive if it contributes in some way to recognizing at least one word.
+
+<A NAME="Accessible">
+<h2>Accessible states</h2>
+Paints all accessible states in yellow.
+
+<p>A state is accessible if it can be reached from the initial state by some path in the graph.
+
+<A NAME="Usefull">
+<h2>Useful states</h2>
+Paints all useful states in lilac.
+
+<p>A state is useful if it is both productive and accessible.
+
+<A NAME="CleanColors">
+<h2>Clean colors</h2>
+Clears the state colors set by the previous command.
+
+<A NAME="ShowTable">
+<h2>Show table</h2>
+Shows the automaton in table form.
+
+<A NAME="Animation">
+<h2>Animation</h2>
+
+<p><img src="images/fa_a1.png"></img>
+<p><img src="images/fa_a2.png"></img>
+<p><img src="images/fa_a3.png"></img>
+
+<HR>
+
 </body>
+</html>

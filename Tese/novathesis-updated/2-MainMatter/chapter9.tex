@@ -1,0 +1,142 @@
+\typeout{NT FILE chapter9.tex}
+
+\chapter{Evaluation and Validation}
+\label{cha:evaluation}
+
+This chapter summarizes how the finite-state transducer (FST) extensions were validated in both the OCamlFLAT library and
+the OFLAT application. It covers test layers, manual verification flows, and representative use cases that exercise some of the
+most relevant features.
+
+\section{Testing Methodology}
+\label{sec:eval_methodology}
+
+Validation was performed in three layers:
+\begin{itemize}
+  \item \textbf{Library unit tests (OCamlFLAT):} Tests live alongside model files
+    (e.g., \texttt{TransducerTests.ml}) and target most functions such as \texttt{acceptOut}, \texttt{isDeterministic},
+    and \texttt{minimize}.
+  \item \textbf{Integration checks (OFLAT):} The JS build produced by \texttt{js\_of\_ocaml} was tested in the
+  browser: loading the app, creating/editing FST edges with input:output labels, running step-by-step execution, and
+  verifying that the info box and poppers update with accumulated output and configuration counts. Exercises using the
+      \texttt{input->output} format were validated to confirm UI feedback matches library behavior. Minimization and
+  determinization actions were also triggered from the UI to ensure results matched library functions.
+  \item \textbf{Manual exploratory runs:} For edge cases (epsilon outputs, nondeterministic branches, conflicting outputs,
+    and invalid output symbols), transducers were crafted in the UI and run through the stepper to confirm highlighting,
+    table rebuilds, and error surfacing behaved as described in Chapters~\ref{cha:oflat-design} and \ref{cha:oflat-implementation}.
+\end{itemize}
+
+\paragraph{Stress and scale checks.}
+We exercised transducers with high branching factors to observe exponential blow-up in trails and UI responsiveness, and ran determinization on conflicting-output FSTs to ensure non-termination is detected and reported as “undefined/failed” rather than hanging the UI.
+
+\section{Use Cases}
+\label{sec:eval_usecases}
+
+Each use case was exercised end-to-end: constructing the model in OFLAT, stepping through execution, and comparing results
+with the OCamlFLAT library output. This is not an exhaustive list of all features.
+
+\subsection{Case 1: Simulating a Moore Machine}
+\label{sec:eval_case_moore}
+A deterministic Moore machine was created with uniform outputs per state. The UI was used to:
+\begin{itemize}
+  \item Draw the graph and label edges with input symbols (output fixed by state), then run the stepper to confirm the info
+    box shows output determined solely by the current state.
+  \item Run the exercise checker with \texttt{inside} examples (e.g., \texttt{a->x}, \texttt{ab->xy}) to verify
+    	exttt{acceptExpectedOutput} passes and that the trace table displays the expected output word.
+  \item Invoke the property panel to confirm the \texttt{moore} and \texttt{deterministic} flags are satisfied.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{mooretrace.png} 
+	\caption{Moore machine execution highlighting state-based outputs and trace table.}
+  \label{fig:eval-moore}
+\end{figure}
+
+\subsection{Case 2: Non-Deterministic FST Execution}
+\label{sec:eval_case_ndfst}
+A nondeterministic FST with multiple outgoing edges per input was used to validate branching visuals and output tracking:
+\begin{itemize}
+	\item Step-by-step execution highlighted all active states; the chosen accepting path was overpainted, while alternative
+		branches stayed visible. The info box showed different accumulated outputs per branch.
+	\item Poppers reflected configuration multiplicity; advancing a step recomputed counts without rebuilding the graph.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+  \includegraphics[width=0.95\textwidth]{fst_poppers.png} 
+	\caption{Nondeterministic FST execution with branch highlights, popper counts, and output tracking.}
+	\label{fig:eval-ndfst}
+\end{figure}
+
+\subsection{Case 3: FST Minimization}
+\label{sec:eval_case_min}
+Minimization was tested on a deterministic FST with redundant states:
+\begin{itemize}
+  \item The minimization routine produced a reduced graph; the UI recolored equivalence classes and redrew edges using
+    \texttt{inputEdges} to preserve input:output labels.
+  \item Execution before and after minimization yielded identical input/output behaviour (checked via \texttt{acceptOut}),
+    and the trace table matched across versions.
+  \item Property checks displays that both \texttt{deterministic} and \texttt{minimal} properties were satisfied after the minimization.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fst_rendermin.png} 
+  \caption{FST minimization view with equivalence-class coloring and preserved input:output labels.}
+  \label{fig:eval-min}
+\end{figure}
+
+\subsection{Case 4: Determinization Failure (Conflicting Outputs)}
+\label{sec:eval_case_detfail}
+An FST with conflicting outputs for the same (state, input),
+and one with epsilon transitions leading to nondeterminism was tested:
+Attempting determinization surfaced library errors, 
+and the UI displayed the same message and preserved the original graph.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{det_failure1.png} 
+  \caption{Determinization failure due to epsilon transitions; error surfaced while graph is preserved.}
+  \label{fig:eval-detfail}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{det_failure2.png} 
+  \caption{Determinization failure due to conflicting outputs; error surfaced while graph is preserved.}
+  \label{fig:eval-detfail2}
+\end{figure}
+
+\subsection{Case 5: Output-Aware Exercises}
+\label{sec:eval_case_exercises}
+Exercises using the arrow notation were validated end to end:
+\begin{itemize}
+  \item Inside examples like \texttt{ab->xy} passed only when the produced output matched exactly; outside examples like \texttt{ab->xz} 
+  were rejected and shown with the actual output in the feedback panel.
+  \item The same cases run through the library's \texttt{acceptExpectedOutput} yielded identical verdicts, confirming consistency between UI and core logic.
+  \item Invalid output symbols (not in the declared output alphabet) were flagged immediately, both in the UI and via \texttt{acceptCheckOutput}.
+\end{itemize}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{ex_feedback.png} 
+  \caption{Output-aware exercise feedback with arrow notation, highlighting mismatches.}
+  \label{fig:eval-exercises}
+\end{figure}
+
+\subsection{Case 6: Scale (Branching Explosion)}
+\label{sec:eval_case_scale}
+A highly branching nondeterministic FST was run to gauge responsiveness:
+\begin{itemize}
+  \item Trail sizes grew exponentially with input length; the stepper remained responsive for short inputs but slowed as branches multiplied.
+  \item Poppers and the info box updated correctly with large configuration sets.
+\end{itemize}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{limitfst.png} 
+  \caption{Scale test with high branching; UI remains responsive while showing many active configurations.}
+  \label{fig:eval-scale}
+\end{figure}
+
+\section{Discussion and Limitations}
+\label{sec:eval_discussion}
+The graphical UI was not formally usability-tested; uniformity with existing models was prioritized, and a full UX study remains future work. 
+Determinization non-termination is detected and reported as an undefined/failed result to avoid UI hangs. 
+Performance degrades with exponential branching as expected; exploratory stress tests help bound practical input sizes.

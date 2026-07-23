@@ -158,6 +158,10 @@ struct
       val menuItems = Js.array (Array.of_list (Set.toList (processConfigMenus configs)))
     end 
 
+  let alphabetFromTransitions transitions =
+    let symbols = Set.map (fun (_, sy, _) -> sy) transitions in
+    Set.diff symbols (Set.make [epsilon])
+
   let buildIdsStateAndApplyF f node configs: unit =
     let configsOfState = getConfigsWithState (state node) configs in
     Set.iteri (fun idSuffix (st, _) -> f (buildIdFromState st idSuffix)) configsOfState
@@ -340,60 +344,36 @@ struct
             })
 
       method eliminateNode node isStart isFinish = 
-        let rep: t = self#representation in 
-        if (isStart && isFinish) then
-          new model (Representation{  
-            alphabet = rep.alphabet;
-	          states = Set.remove node rep.states;
-            initialState = "";
-            transitions = rep.transitions;
-            acceptStates = Set.remove node rep.acceptStates
-            })
-        else
-          if (isStart) then
-            new model (Representation{  
-              alphabet = rep.alphabet;
-	            states = Set.remove node rep.states;
-              initialState = "";
-              transitions = rep.transitions;
-              acceptStates = rep.acceptStates
-            })
-          else 
-            if (isFinish) then
-              new model (Representation{  
-                alphabet = rep.alphabet;
-	              states = Set.remove node rep.states;
-                initialState = rep.initialState;
-                transitions = rep.transitions;
-                acceptStates = Set.remove node rep.acceptStates
-            })
-          else
-            new model (Representation{  
-              alphabet = rep.alphabet;
-	            states = Set.remove node rep.states;
-              initialState = rep.initialState;
-              transitions = rep.transitions;
-              acceptStates = rep.acceptStates
-            })
+        let rep: t = self#representation in
+        let transitions = Set.filter (fun (src, _, dst) -> src <> node && dst <> node) rep.transitions in
+        new model (Representation{
+          alphabet = alphabetFromTransitions transitions;
+          states = Set.remove node rep.states;
+          initialState = if isStart then "" else rep.initialState;
+          transitions = transitions;
+          acceptStates = if isFinish then Set.remove node rep.acceptStates else rep.acceptStates
+        })
 
 
       method newTransition (a, b, c) = 
-      let rep: t = self#representation in 
+      let rep: t = self#representation in
+      let transitions = Set.add (a, b , c) rep.transitions in
         new model (Representation{
-            alphabet = Set.add b rep.alphabet;
+            alphabet = alphabetFromTransitions transitions;
 	          states = rep.states;
             initialState = rep.initialState;
-            transitions = Set.add (a, b , c) rep.transitions;
+            transitions = transitions;
             acceptStates = rep.acceptStates
       })
 
       method newEpsylonTransition (a, b, c) = 
-      let rep: t = self#representation in 
+      let rep: t = self#representation in
+      let transitions = Set.add (a, b , c) rep.transitions in
         new model (Representation{
-            alphabet = rep.alphabet;
+            alphabet = alphabetFromTransitions transitions;
 	          states = rep.states;
             initialState = rep.initialState;
-            transitions = Set.add (a, b , c) rep.transitions;
+            transitions = transitions;
             acceptStates = rep.acceptStates
       })
 
@@ -401,7 +381,7 @@ struct
         let rep: t = self#representation in 
         let transitions = Set.remove (a, b, c) rep.transitions in
         new model (Representation{
-          alphabet = rep.alphabet;
+          alphabet = alphabetFromTransitions transitions;
           states = rep.states;
           initialState = rep.initialState;
           transitions = transitions;

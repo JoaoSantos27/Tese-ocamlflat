@@ -73,7 +73,7 @@ module Lang =
     i18n ["OFLAT"; "OFLAT"; "OFLAT"]
 
   let i18nVersion () = 
-    i18n ["Version 4.1 BETA"; "Versão 4.1 BETA"; "Version 4.1 BETA"]
+    i18n ["Version 5.0"; "Versão 5.0"; "Version 5.0"]
     
   let i18nNewModel () =
     i18n ["New model"; "Novo modelo"; "Nouveau modèle"]

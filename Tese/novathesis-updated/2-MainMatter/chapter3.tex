@@ -1,0 +1,176 @@
+\typeout{NT FILE chapter3.tex}%
+
+\chapter{Related Work}
+\label{cha:related_work}
+
+\section{Introduction}
+In this chapter, we review existing pedagogical tools for teaching Formal Languages and Automata Theory (FLAT),
+with an emphasis on whether and how they support finite-state transducers (FSTs).
+We outline their key capabilities and usability aspects, then position OFLAT relative to them to contextualize the 
+contributions of this work.
+
+\section{JFLAP: Java Formal Languages and Automata Package}
+
+JFLAP (Java Formal Languages and Automata Package)\cite{JFLAP} is a widely adopted educational tool for teaching and learning formal languages and automata theory. 
+Initially developed in the 1990s by Professor Susan H. Rodger and her students at Rensselaer Polytechnic Institute, JFLAP was first created in C++ and X Window under the name FLAP. 
+It was later rewritten in Java and renamed JFLAP, enhancing its portability and usability. As a Java application, it runs on most systems equipped with the Java Runtime Environment (JRE).
+
+JFLAP offers a comprehensive suite of features supporting the construction, simulation, testing, and conversion of theoretical models. 
+It supports finite automata, formal grammar manipulation (regular, context-free, unrestricted grammars), Turing machines, and can convert between multiple of these models.
+
+The tool provides immediate visual feedback by allowing users to simulate automata step by step, highlighting state transitions and input consumption. 
+Figure~\ref{fig:JFLAPModels} illustrates the model option in JFLAP.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{JFLAPModels.png}
+  \caption{Model list available in JFLAP.}
+  \label{fig:JFLAPModels}
+\end{figure}
+
+JFLAP also offers support for finite-state transducers in the form of Mealy and Moore
+machines. It has simulation and visualization, allowing users
+to observe state transitions alongside produced outputs. It does not support general transducers.
+Figure~\ref{fig:jflap-mealy} shows a simple Mealy machine in JFLAP,.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{jflap-mealy.png}
+  \caption{A simple Mealy machine in JFLAP.}
+  \label{fig:jflap-mealy}
+\end{figure}
+
+This example shows us a Mealy machine includes a single state, \texttt{q0}, which serves as both the initial and active state throughout the computation. 
+The transitions are represented graphically by an arc, and are labeled in the form \texttt{input ; output}. In the example, we can see the transition with
+an input of \texttt{1} produces an output of \texttt{0}, and vice versa. The input string \texttt{10101} 
+provided below the state diagram, and the machine's output is displayed dynamically as the simulation progresses. 
+The interface includes a control panel with options such as \texttt{Step}, \texttt{Reset}, \texttt{Trace}, and others, allowing users to simulate the machine step-by-step.
+
+\subsubsection*{Conclusion}
+JFLAP distinguishes itself as one of the most complete and pedagogically effective tools in formal language education. 
+It supports a wide variety of computational models and conversions grounded in formal theory. 
+
+\section{FAdo}
+FAdo\cite{FAdo} is a Portuguese project developed at DCC/FCUP  
+for automata, regular expressions, grammars, and transducers. It offers minimization, 
+equivalence checking, classic language operations (union, intersection, complement), 
+and conversions between automata and regular expressions. 
+FAdo is code-first and does not ship a graphical or animated stepper;
+
+FAdo is primarily intended to be used programmatically within a Python interpreter or in script-based workflows. 
+As such, it does not provide a graphical user interface or native support for animated, step-by-step execution of automata.
+Instead, the FAdo library excels in flexibility and extensibility within a code-based environment. 
+(e.g., DFA/NFA acceptance methods such as \texttt{evalWordP}/\texttt{evalWordNFA}, transition functions, epsilon-closure helpers). 
+
+For transducers, the \texttt{transducers} module(see \cite{FAdo_transducers}) provides deterministic and 
+nondeterministic FSTs (DFT/NFT/GFT) and rational operations, 
+making it a useful reference implementation for batch testing and cross-checking. 
+The lack of a GUI makes it less immediate for beginners or visual walkthroughs, 
+but its strength is flexibility within Python for programmatic construction and analysis.
+
+\section{Automaton Simulator}
+
+The Automaton Simulator\cite{automatonSimulator} is an open-source, browser-based tool designed for constructing and simulating various types of automata. 
+It supports deterministic finite automata (DFA), nondeterministic finite automata (NFA), and pushdown automata (PDA), 
+which offers a simple and interactive environment for educational purposes. Although it does not support transducers, it is included here for its quality, simplicity, and breadth across classical automata.
+
+The interface is divided into several functional sections that enhance usability. 
+On the left-hand side Figure~\ref{fig:automaton-simulator-left-panel}, users can input strings for testing. 
+There are two main boxes: one labeled \texttt{Accept (one per line)} for input strings expected to be accepted by the automaton, 
+and one labeled \texttt{Reject (one per line)} for strings expected to be rejected. 
+These strings can be tested in bulk using the \textit{Bulk Testing} feature, which evaluates all entries at once and displays their acceptance or rejection.
+There is also a \texttt{Test/Debug} field, which allows for dynamic simulation.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{ASLeft.png}
+  \caption{Left panel of the Automaton Simulator.}
+  \label{fig:automaton-simulator-left-panel}
+\end{figure}
+
+Below these input areas is the \texttt{Test Results} panel, where detailed feedback is shown after the test runs. 
+Above the input section, buttons for loading, saving, and resetting the automaton are displayed. 
+The central canvas of the interface is where the automaton is constructed Figure~\ref{fig:automaton-simulator-center}. States are created by clicking, and transitions are added by clicking and dragging between states. 
+The simulation highlights the current state using a different color, the transition being taken, and the unprocessed portion of the input string. 
+This is especially useful in step-by-step simulations where the learner can observe the exact sequence of transitions being executed.
+
+Each state is displayed as a rounded rectangle, with different markings to indicate its role:
+\begin{itemize}
+  \item A checked box denotes an accepting (final) state.
+  \item Transitions are labeled with the input symbol that triggers them.
+\end{itemize}
+
+The simulator provides feedback on acceptance using textual cues such as "Accepted" or "Rejected", displayed near the top-left corner of the interface. 
+During step-by-step execution, this feedback updates in real time as the input string is consumed.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{ASCenter.png}
+  \caption{Central area of the Automaton Simulator.}
+  \label{fig:automaton-simulator-center}
+\end{figure}
+
+\subsubsection*{Conclusion}
+
+The Automaton Simulator provides an effective and user-friendly platform for constructing and simulating automata directly in the web browser. 
+Its strength lies in its simplicity and immediate feedback mechanism, which makes it a good tool for introductory coursework.
+Although it lacks the extensive model coverage and transformation tools found in more comprehensive platforms like JFLAP or OFLAT.
+
+
+\section{Flap.js}
+Flap.JS\cite{flapjs} is a web application therefore easily available on all kinds of devices, including mobile
+devices. It supports the graphical creation of Finite Automata, Regular Expressions, and
+Pushdown Automata, as well as tests and conversions, but none of these use animations, which would improve the
+learning process.
+In their web application, we can see that support for finite state transducers is not available, however,
+Mealy machines, Moore machines and turing machines are greyed out, indicating that they are planned features to be added in the future.
+Figure~\ref{fig:flapjs} shows the user interface, which while unusual can be a way to get perspective on different design approaches when it comes to graphical interfaces.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{flapjs.png}
+  \caption{Flap.js user interface.}
+  \label{fig:flapjs}
+\end{figure}
+
+\subsubsection*{Conclusion}
+
+Flap.js, as it stands, does not provide as much variety as some of the others, like JFLAP and OFLAT. It also has a less intuitive interface
+than Automaton Simulator, which is simpler and provides similar functionalities.
+
+\section{Other tools}
+
+Additional tools referenced in the literature include TAGS~\cite{chakraborty2011tags}, 
+and other simulator efforts reported in academic theses~\cite{andrade2014fsttool}. 
+Even when implementations are not readily available, they provide useful context on feature expectations for transducer-capable systems.
+
+\section{Comparison to OFLAT}
+
+Table~\ref{tab:related_work_comparison} summarizes how the reviewed tools relate to OFLAT, focusing on model coverage, 
+FST support, and pedagogical affordances.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{3.2cm}p{3.2cm}p{3.2cm}p{4cm}}
+    \toprule
+    Tool & Model coverage & FST support & Pedagogical/UX highlights \\
+    \midrule
+    JFLAP & Broad (FA, PDA, TM, grammars) & Mealy/Moore only (no general FST) & Mature UI, conversions, step-by-step runs \\
+    FAdo (library) & FA/RE focus (code-based) & General FST (library) & Programmatic, no GUI; suited for scripting/batch tests \\
+    Automaton Simulator & FA, NFA, PDA & None & Simple browser UI, bulk testing, live highlighting \\
+    Flap.js & FA, RE, PDA (FST planned) & Planned & Web-based, unconventional UI, animations limited \\
+        \textbf{OFLAT} & FA, RE, PDA, FST & Yes (incl. Mealy/Moore and general FST) & Web UI with step/run, output-aware acceptance \\
+    \bottomrule
+  \end{tabular}
+  \caption{Positioning OFLAT relative to related educational tools.}
+  \label{tab:related_work_comparison}
+\end{table}
+
+Key differentiators for OFLAT:
+\begin{itemize}
+  \item \textbf{Output-aware execution}: OFLAT exposes output checks (\texttt{acceptOut}, \texttt{acceptExpectedOutput}) 
+  aligned with FST semantics.
+  \item \textbf{Interactive visualization}: transition highlighting and step/run modes mirror the underlying transition relation and outputs.
+\end{itemize}
+
+

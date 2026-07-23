@@ -1,0 +1,452 @@
+\typeout{NT FILE chapter6.tex}%
+
+\chapter{OCamlFLAT Library Implementation}
+\label{cha:transducer-implementation}
+
+This chapter details the implementation of finite-state transducer (FST) support within the OCamlFLAT library. 
+All logic described here resides primarily in two source files: 
+\texttt{TransducerSupport.ml}, which defines the core data types, 
+and \texttt{Transducer.ml}, which implements all algorithmic functionality. 
+The implementation follows the same architectural conventions as the rest of OCamlFLAT, 
+namely a clean separation between type definitions, validation, execution, and higher-level algorithms, 
+each encapsulated in its own OCaml module.
+
+\section{Transducer Representation}
+\label{sec:back_representation}
+
+The foundation of the FST representation in the library is the OCaml record type \texttt{t}, 
+defined inside the \texttt{TransducerBasics} submodule of \texttt{TransducerSupport.ml}. 
+This record captures every component of the formal definition of a finite-state transducer as a 6-tuple:
+
+\begin{verbatim}
+type t = {
+  inAlphabet  : symbols;
+  outAlphabet : symbols;
+  states      : states;
+  initialState: state;
+  transitions : transitions4;
+  acceptStates: states
+}
+\end{verbatim}
+
+The field \texttt{inAlphabet} holds the set of input symbols and \texttt{outAlphabet} 
+holds the set of output symbols. These are kept as separate sets rather than unified, 
+which makes it straightforward to validate that transition symbols are drawn from the correct alphabet and to enforce the 
+semantic distinction between reading and writing. The \texttt{states}, \texttt{initialState}, and \texttt{acceptStates} 
+fields mirror the corresponding components found in finite automata representations.
+
+The most structurally significant type is \texttt{transitions4}, which is defined as a set of 4-tuples:
+
+\begin{verbatim}
+type transition4  = state * symbol * symbol * state
+type transitions4 = transition4 set
+\end{verbatim}
+
+Each element \texttt{(src, inputSym, outputSym, dst)} represents a single transition: reading symbol 
+\texttt{inputSym} in state \texttt{src} causes the machine to emit \texttt{outputSym} and move to state 
+\texttt{dst}. Both \texttt{inputSym} and \texttt{outputSym} may take the value \texttt{epsilon} 
+(represented as the string \texttt{\textasciitilde} in JSON and as the OCaml constant \texttt{epsilon} internally), 
+permitting $\varepsilon$-transitions on the input side and silent transitions on the output side. 
+This 4-tuple representation is the key distinction from the 3-tuple \texttt{(src, sym, dst)} used for finite automata, 
+and it is consistently used across all modules that manipulate transducers.
+
+The execution engine additionally defines a dedicated configuration type to track the full state of a computation at each step:
+
+\begin{verbatim}
+type configuration = state * word * word
+type configurations = configuration set
+type path           = configuration list
+type trail          = configurations list
+\end{verbatim}
+
+A \texttt{configuration} is a triple \texttt{(currentState, remainingInput, accumulatedOutput)}, 
+representing the current control state, the portion of the input word not yet consumed, and the sequence of output symbols 
+produced so far. A \texttt{path} is an ordered list of configurations tracing a single accepting run, and a \texttt{trail} 
+collects the full set of configuration sets visited at each step of the computation, which is used to drive the step-by-step 
+visualisation in the frontend.
+
+Serialisation and deserialisation are handled by the \texttt{TransducerConversions} module. The \texttt{fromJSon} 
+function reads a JSON object and constructs the OCaml record, using helper functions such as \texttt{JSon.fieldSymbolSet}, 
+\texttt{JSon.fieldStateSet}, and \texttt{JSon.fieldQuadsSet} to parse each field. The corresponding \texttt{toJSon} and 
+\texttt{toJSon2} functions produce JSON representations suitable for saving, loading, and transmitting the transducer definition. 
+The \texttt{kind} field is set to the string \texttt{"transducer"}, which is the key used throughout the system to dispatch 
+JSON objects to the correct model parser.
+
+\section{Validation and Properties}
+\label{sec:back_validation}
+
+Before any algorithm is applied to a transducer, the \texttt{validate} function in \texttt{TransducerPrivate} performs a series 
+of structural integrity checks. It verifies that neither alphabet contains epsilon, that the initial state is a member of the 
+state set, that all accept states belong to the state set, and that all states and symbols appearing in transitions are drawn 
+from their respective declared sets. Each failing check raises a descriptive error through the library's \texttt{Error} module. 
+This validation is invoked automatically whenever a transducer is constructed via the \texttt{make} entry point.
+
+Beyond basic structural validation, the implementation provides a rich set of property-checking functions that are exposed to the 
+exercise system and to the frontend.
+
+\paragraph{Determinism.}
+The function \texttt{isDeterministic} checks whether the transducer is deterministic in the strict sense,
+meaning it has no $\varepsilon$-input transitions and each (state, input symbol) pair leads to at most one transition 
+with at most one output symbol.
+
+The function proceeds in two stages. First, it performs a global scan over all transitions to test for the presence 
+of any $\varepsilon$-input transition, with the form \texttt{(\_,~epsilon,~\_,~\_)}:
+
+\begin{verbatim}
+let has_epsilon =
+  Set.exists (fun (_, b, _, _) -> b = epsilon) fst.transitions
+in
+if has_epsilon then false
+\end{verbatim}
+
+If any such transition exists the function immediately returns \texttt{false}, since $\varepsilon$-input transitions 
+are inherently nondeterministic in this strict model: the machine can advance its state without consuming any input, 
+which means that for the same input position there may be multiple reachable states.
+
+If no $\varepsilon$-transitions are present, the function proceeds to the second stage: a nested iteration over every 
+state and every input symbol in the declared input alphabet. For each pair \texttt{(st, input)}, it filters the 
+full transition set to collect all transitions whose source state is \texttt{st} and whose input symbol is 
+\texttt{input}. It then extracts two derived sets, the set of output symbols and the set of destination states 
+and requires that all three quantities (number of matching transitions, number of distinct outputs, number of 
+distinct destinations) are at most one:
+
+\begin{verbatim}
+Set.for_all (fun st ->
+  Set.for_all (fun input ->
+    let trs  = Set.filter (fun (a,b,_,_) -> a = st && b = input) fst.transitions in
+    let outs  = Set.map (fun (_,_,out,_) -> out)  trs in
+    let dests = Set.map (fun (_,_,_,d)   -> d)    trs in
+    Set.size trs <= 1 && Set.size outs <= 1 && Set.size dests <= 1
+  ) fst.inAlphabet
+) fst.states
+\end{verbatim}
+
+The three conditions together enforce the full determinism requirement. \texttt{Set.size trs <= 1} ensures there is 
+at most one applicable transition; \texttt{Set.size outs <= 1} ensures that transition has a unique output symbol; 
+and \texttt{Set.size dests <= 1} ensures it leads to a unique next state. All three must hold simultaneously because 
+the sets are derived independently and it is theoretically possible, due to the way transitions are stored, for 
+the output set or destination set to have size greater than one even when the transition set has size one, if two 
+transitions agree on source and input but differ on output or destination.
+
+The overall result is \texttt{true} only if both stages pass for every state and every input symbol, 
+confirming the transducer is fully deterministic with no ambiguity in either state or output.
+
+A more permissive function, \texttt{isDeterministicEpsilon}, was attempted, which handles transducers that contain 
+$\varepsilon$-transitions but may still be functionally deterministic.
+
+\paragraph{Completeness.}
+The function \texttt{isComplete} checks whether for every state and every non-epsilon input symbol there exists at least one 
+outgoing transition. This is a standard completeness condition. It is used as a prerequisite for both the Moore and Mealy checks, 
+since incomplete machines cannot be classical Mealy or Moore machines by definition.
+
+\paragraph{Moore and Mealy Machines.}
+The functions \texttt{isMooreMachine} and \texttt{isMealyMachine} verify membership in the two classical subclasses of FSTs.
+
+For Moore machines, the key invariant is that the output symbol associated with a transition depends only on the source state, 
+not on the input symbol. The implementation checks this by examining, for each state, the set of output symbols appearing on 
+all outgoing transitions. If this set has cardinality at most one, the state's output is uniform and the Moore condition holds:
+
+\begin{verbatim}
+let state_has_single_output =
+  Set.for_all (fun st ->
+    let outgoing = Set.filter (fun (a,_,_,_) -> a = st) fst.transitions in
+    let outputs  = Set.map   (fun (_,_,c,_)  -> c)     outgoing in
+    Set.size outputs <= 1
+  ) fst.states
+in
+deterministic && complete && state_has_single_output
+\end{verbatim}
+
+For Mealy machines, the condition is weaker: the output must be uniquely determined by the pair (state, input symbol), 
+rather than by state alone. The implementation checks that for every (state, input) pair, the set of output symbols across 
+all matching transitions has cardinality at most one. Both functions also require the machine to be deterministic and complete.
+
+\paragraph{Reachability, Productivity, and Cleanliness.}
+The library also implements state-level analyses mirroring those of finite automata. The function \texttt{reachable} 
+computes the set of all states reachable from a given state via any sequence of transitions, using iterative forward exploration. 
+The function \texttt{productive} identifies states from which some accepting state can be reached. 
+The function \texttt{getUsefulStates} returns the intersection of reachable and productive states, 
+and \texttt{cleanUselessStates} constructs an equivalent transducer containing only useful states and 
+only the transitions between them, recomputing the alphabets from the surviving transitions. The function \texttt{isClean} 
+delegates to the corresponding finite automaton analysis by projecting the transducer to its underlying automaton structure 
+using \texttt{asFiniteAutomaton}, which strips the output symbols from transitions.
+
+\section{Execution Engine}
+\label{sec:back_execution}
+
+The execution engine is implemented in the \texttt{TransducerAccept} module and follows the same general framework used for 
+finite automata and pushdown automata throughout OCamlFLAT. Computation proceeds by maintaining a set of active configurations 
+and expanding them step by step through the \texttt{nextConfigs} function.
+
+The initial configuration is constructed by \texttt{initialConfigs}, which wraps the start state, the full input word, 
+and an empty output accumulator into a singleton set:
+
+\begin{verbatim}
+let initialConfigs (fst: t) (w: word) : configurations =
+  Set.make [(fst.initialState, w, [])]
+\end{verbatim}
+
+The \texttt{nextConfigs} function defines the single-step transition relation over configurations. 
+Given a configuration \texttt{(st, w, out)}, it considers two cases. If the remaining input \texttt{w} is empty, 
+only $\varepsilon$-input transitions from \texttt{st} are applicable, and each such transition 
+\texttt{(st, epsilon, outSym, st2)} produces a new configuration \texttt{(st2, [], out @ [outSym])} 
+(with epsilon output symbols suppressed). If \texttt{w = x :: xs}, both symbol-consuming transitions on \texttt{x} 
+and $\varepsilon$-input transitions on the current state are applicable, and the results are merged:
+
+\begin{verbatim}
+| x::xs ->
+  let consume = Set.filter (fun (st1,sy,_,_) -> st1 = st && sy = x) fst.transitions in
+  let viaConsume = Set.map (build_next_config xs) consume in
+  let epsTr = Set.filter (fun (st1,sy,_,_) -> st1 = st && sy = epsilon) 
+  fst.transitions in
+  let viaEps = Set.map (build_next_config w) epsTr in
+  Set.union viaConsume viaEps
+\end{verbatim}
+
+The helper \texttt{build\_next\_config} constructs the next configuration given the new remaining input and the matched transition, 
+appending the output symbol to the accumulator when it is not epsilon.
+
+A configuration is accepting when the control state is in \texttt{acceptStates} and the remaining input word is empty. 
+The plain \texttt{accept} function simply tests whether any configuration in the reachable set eventually becomes accepting, 
+delegating to the generic \texttt{Model.accept} combinator.
+
+The function \texttt{acceptFull} returns a triple \texttt{(accepted, path, trail)}, where \texttt{path} 
+is the sequence of configurations along one accepting run and \texttt{trail} is the full history of all 
+configuration sets visited at each step. The trail is what the frontend uses to drive animated, step-by-step execution: 
+each element of the trail corresponds to one round of expansion, and the frontend renders the current state, 
+remaining input, and accumulated output at each step.
+
+The function \texttt{acceptOut} is a convenience wrapper over \texttt{acceptFull} that extracts only the output word from 
+the final configuration of an accepting run, returning a pair \texttt{(true, outputWord)} on acceptance or \texttt{(false, [])} 
+on rejection. This is the function used to answer the question ``what does this transducer produce on this input?'', 
+as opposed to the binary question of acceptance.
+
+Two additional helpers enforce output validation for exercises. \texttt{acceptCheckOutput} first checks that the input belongs to
+the declared input alphabet, runs \texttt{acceptOut}, and then verifies that the produced output word belongs to the declared
+output alphabet. \texttt{acceptExpectedOutput} extends this by supporting exercise words written as \texttt{input->output}:
+it parses the arrow, feeds the input part to the transducer, and accepts only if the actual output exactly matches the expected
+one (and still belongs to the output alphabet). The exercise harness now uses \texttt{acceptExpectedOutput}, so authors can list
+cases such as \texttt{a->a}, \texttt{ab->ab}, etc., in the \emph{inside} set to assert both acceptance and the precise output; any
+word without an arrow falls back to the alphabet-checked acceptance behaviour.
+
+Output-aware acceptance helper:
+\begin{verbatim}
+let acceptExpectedOutput (fst: t) (w: word) : bool =
+  let wstr = word2str w in
+  match String.index_opt wstr '-' with
+  | Some i when i + 1 < String.length wstr && wstr.[i + 1] = '>' ->
+      let inp = String.sub wstr 0 i |> str2word in
+      let out_exp = String.sub wstr (i + 2) (String.length wstr - i - 2) |> str2word in
+      let (ok, out_act) = acceptOut fst inp in
+      ok && out_act = out_exp && Model.checkWord fst.outAlphabet out_act
+  | _ -> acceptCheckOutput fst w
+\end{verbatim}
+This helper matches the library implementation: parse the arrow form, run the transducer on the input, 
+and only accept when the produced output matches exactly and belongs to the declared output alphabet.
+
+The \texttt{TransducerGenerate} module provides word generation functionality. Its \texttt{nextConfigs2} 
+function reverses the direction of exploration: rather than consuming an input word, it explores outgoing 
+transitions from the current state freely, accumulating both the input symbols read and the output symbols emitted. 
+The \texttt{generate} function uses this to enumerate all input words of a given length that the transducer accepts, 
+relying on the generic \texttt{Model.generate} infrastructure.
+
+\section{Algorithms}
+\label{sec:back_algorithms}
+
+\subsection{Determinization}
+The determinization algorithm is one of the most complex components of the FST implementation. 
+%Two variants were implemented, but ultimately only the first one is used.
+
+The implementation choices made for this algorithm were made after research and implementation attempts, and were necessitated by fundamental system limitations 
+within the OCamlFLAT/OFLAT architecture. Specifically, the system's transition data structure enforces that an output symbol 
+on a transition must be a single symbol rather than an arbitrary output string or sequence. 
+Consequently, supporting general delayed-output determinization, where $\varepsilon$-transitions 
+carry outputs and varying output lengths accumulate across subset paths would violate this single-symbol transition constraint 
+and break UI rendering and table mappings. While it could have been done, it would require significant changes to parts of the library that
+didn't pertain to me. Furthermore, deciding algorithmically which output-carrying $\varepsilon$-transition FSTs 
+can be successfully determinized introduces computational complications, as it requires tracking unbounded lookaheads and resolving complex 
+prefix-consistency guarantees across epsilon cycles. So the decision to restrict determinization to only handling transducers whose $\varepsilon$-transitions carry no output,
+was made, as it bypasses the mentioned constraints, ensuring predictable execution, and a reliable interface for the web application.
+
+\texttt{toDeterministic}, handles transducers whose $\varepsilon$-transitions carry no output. 
+It begins by rejecting the input if any $\varepsilon$-transition has a non-epsilon output symbol. 
+If this check passes, it applies a standard subset construction used in finite automata, adapted for transducers. 
+The algorithm maintains a worklist of sets of NFST states (each representing a single DFST state), 
+starts from the $\varepsilon$-closure of the initial state, and iterates by computing for each unprocessed state 
+set and each input symbol the set of states reachable via that symbol followed by $\varepsilon$-closure. 
+If at any point two transitions with the same source state and input symbol are found to produce different output symbols, 
+the algorithm raises an internal exception \texttt{DeterminizationFailed} and returns the original transducer unchanged. 
+The state names in the resulting deterministic transducer are synthesised by the \texttt{fusedfstState} function, 
+which concatenates the names of the constituent NFST states into a canonical string representation enclosed in curly braces.
+
+
+
+%The other variant, \texttt{toDeterministicEpsilon}, handles transducers with output-producing $\varepsilon$-transitions. 
+%This requires a more subtle algorithm based on the concept of \emph{delayed output}. Each state in the determinized transducer 
+%is represented not as a set of NFA states, but as a set of \texttt{(state, word)} pairs, where the word component tracks the 
+%output that has been accumulated along $\varepsilon$-transitions but not yet committed to a transition label. The algorithm is:
+
+%\begin{enumerate}
+%  \item Begin with the $\varepsilon$-output-closure of the initial state, computed by \texttt{closeEmptyOut}.
+%  \item For each current DFST state (a set of \texttt{(state, word)} pairs) and each input symbol, compute all reachable 
+%  \texttt{(nextState, fullOutputWord)} pairs by following symbol-consuming transitions and then taking $\varepsilon$-closures.
+%  \item Compute the longest common prefix (LCP) of all output words in the result. This LCP is the output emitted on the transition. 
+%  Subtract the LCP from each word to form the delayed suffix, and use the resulting \texttt{(state, suffix)} pairs as the next DFST 
+%  state.
+%  \item If the LCP is non-empty, its first symbol becomes the output label of the new transition. Otherwise, the transition is silent.
+%  \item Continue until no new DFST states are discovered.
+%\end{enumerate}
+
+%The LCP computation is handled by the \texttt{lcp} and \texttt{suffix} helper functions, and the consistency of outputs at each step
+% is enforced by the \texttt{prefix\_consistent} and \texttt{hasConflictOut} checks. If the algorithm cannot commit to a 
+% single output prefix at any step, it reports an error and returns the original transducer.
+
+%Delayed-output determinization step:
+%\begin{verbatim}
+%let getNext (q: dfstState) (sy: symbol) (all_transitions: transitions4) =
+%  let allResults =
+%    Set.flatMap
+%      (fun (st, outPrefix) ->
+%        let moveTransitions =
+%          Set.filter (fun (a, b, _, _) -> a = st && b = sy) all_transitions
+%        in
+%        Set.flatMap
+%          (fun (_, _, moveOut, destSt) ->
+%            let newPrefix = outPrefix @ [moveOut] in
+%            let epsClosure = closeEmptyOut destSt all_transitions in
+%            Set.map (fun (s, epsOut) -> (s, newPrefix @ epsOut)) epsClosure)
+%          moveTransitions)
+%      q
+%  in
+%  if Set.isEmpty allResults then None
+%  else
+%    let allWords = Set.map (fun (_, w) -> w) allResults in
+%    let firstWord = (Set.toList allWords) |> List.hd in
+%    let lcpWord = Set.fold_left lcp firstWord allWords in
+%    let newdfstState = Set.map (fun (s, w) -> (s, suffix lcpWord w)) allResults in
+%    let outSymbol = if List.length lcpWord > 0 then List.hd lcpWord else epsilon in
+%    Some (outSymbol, newdfstState)
+%\end{verbatim}
+%The determinization step computes reachable \texttt{(state, word)} pairs, commits the longest common prefix as the emitted
+%output, and propagates any remaining suffixes as delayed output for the successor DFST state.
+
+
+\subsection{Minimization}
+
+The \texttt{minimize} function reduces a deterministic transducer to its minimal equivalent using a partition-refinement 
+algorithm analogous to Hopcroft's algorithm for finite automata~\cite{hopcroft2006automata}, but adapted to account for output symbols,
+following the approach described by Mohri~\cite{mohri1998minimization}.
+
+The algorithm begins by removing all useless states via \texttt{cleanUselessStates}, then partitions the remaining states into 
+two initial blocks: accepting states and non-accepting states. It then iteratively refines this partition. 
+In each refinement step, every block is split according to the \emph{signature} of its member states, 
+where the signature of a state is the set of triples \texttt{(inputSymbol, outputSymbol, destinationBlock)} 
+derived from its outgoing transitions. Two states have the same signature if and only if they are behaviourally 
+indistinguishable with respect to input consumption, output production, and the equivalence class of their successors. 
+The refinement continues until no further splitting is possible:
+
+\begin{verbatim}
+let rec refine (partition: states Set.t) : states Set.t =
+  let refined = Set.flatMap
+    (fun block -> Set.make (refine_block partition block)) partition in
+  if Set.equals refined partition then partition
+  else refine refined
+\end{verbatim}
+
+Once the fixed point is reached, a representative state is chosen from each equivalence class 
+(the first element of the class, as ordered by the set representation), and all transitions are re-mapped to use representatives. 
+The resulting transducer has one state per equivalence class and is guaranteed to be the unique minimal deterministic 
+transducer recognising the same input-output relation.
+
+The function \texttt{isMinimized} checks whether a deterministic transducer is already minimal by running 
+\texttt{minimize} and comparing the number of states. If the count is unchanged, the transducer is already minimal.
+
+\subsection{Conversion to Turing Machine}
+
+The function \texttt{asTuringMachine} converts an FST into an equivalent 2-tape Turing machine, 
+where tape 1 acts as a read-only input tape and tape 2 acts as a write-only output tape. 
+This is used to demonstrate the relationship between transducers and more general models of computation.
+
+The conversion works as follows. Each FST transition \texttt{(q1, a, b, q2)} where \texttt{a} is not epsilon becomes
+ a TM transition that reads \texttt{a} from tape 1, reads the blank symbol from tape 2, 
+ moves to state \texttt{q2}, writes \texttt{a} back on tape 1 (keeping it read-only), writes \texttt{b} on tape 2, 
+ and advances both heads rightward. If the output symbol \texttt{b} is epsilon, the tape 2 head stays in place and 
+ the blank is preserved. For $\varepsilon$-input transitions, a separate set of TM transitions is generated for 
+ each possible symbol on tape 1, keeping the tape 1 head stationary while still writing to tape 2. Finally, 
+ a dedicated accepting state \texttt{q\_accept\_tm} is added, and each FST accepting state receives a transition 
+ to it when both tapes read the blank symbol, signalling that the input has been fully consumed and processing is complete.
+
+\section{Composition and Operations}
+\label{sec:back_operations}
+
+The \texttt{TransducerComposition} module implements five structural operations on transducers: composition, 
+union, intersection, inverse, and concatenation. All are implemented using worklist-based state-space exploration 
+or simple structural transformations.
+
+\paragraph{Composition.}
+Given two transducers $T_1 : A \to B$ and $T_2 : B \to C$, their composition $T_1 \circ T_2 : A \to C$ is the 
+transducer that feeds the output of $T_1$ directly into $T_2$. The implementation uses a product-construction 
+worklist over pairs of states \texttt{(q1, q2)}, one from each transducer. Three cases of synchronisation are handled:
+
+\begin{itemize}
+  \item \textbf{Lock-step:} $T_1$ consumes a non-epsilon input symbol \texttt{a} and emits 
+  \texttt{b}; $T_2$ simultaneously consumes \texttt{b} and emits \texttt{c}. 
+  The composed transition is \texttt{(q1,q2) --a/c--> (q1',q2')}.
+  \item \textbf{$T_1$ epsilon-step:} $T_1$ takes an $\varepsilon$-input transition emitting 
+  \texttt{b}; $T_2$ consumes \texttt{b} and emits \texttt{c}. The composed transition is labelled with $\varepsilon$ input.
+  \item \textbf{$T_2$ epsilon-step:} $T_2$ takes an $\varepsilon$-input transition independently; 
+  $T_1$ stays at its current state. The composed transition is a pure $\varepsilon$ step.
+\end{itemize}
+
+State names in the composed transducer are formed by concatenating the names of the component states with an 
+underscore separator via the \texttt{fuse\_states} helper. A pair of states is accepting in the composition 
+if and only if both component states are accepting.
+
+\paragraph{Union.}
+The union $T_1 \cup T_2$ is constructed by introducing a fresh initial state and adding two silent 
+$\varepsilon$-transitions, one to the renamed initial state of $T_1$ and one to the renamed initial state of $T_2$. 
+The states and transitions of both machines are renamed with suffix \texttt{\_1} and \texttt{\_2} respectively to 
+avoid name collisions, and their sets are merged. This is the standard nondeterministic union construction for automata, 
+directly adapted to transducers.
+
+\paragraph{Intersection.}
+The intersection $T_1 \cap T_2$ is defined as the transducer whose accepted pairs \texttt{(w, v)} are exactly 
+those accepted by both $T_1$ and $T_2$. The implementation uses a product construction where a transition 
+is added to the result only when both machines simultaneously make a transition with identical input and identical output. 
+This is more restrictive than composition and captures the set-theoretic intersection of the input-output relations. 
+Three synchronisation cases are handled: lock-step moves where both machines agree on input and output, and two cases 
+for independent silent $(\varepsilon, \varepsilon)$ steps by either machine.
+
+\paragraph{Inverse.}
+The inverse $T^{-1}$ of a transducer $T$ is formed by swapping the roles of the input and output alphabets and 
+swapping the input and output symbols in every transition. The implementation is a simple structural map over the 
+transition set and a swap of \texttt{inAlphabet} and \texttt{outAlphabet}. If $T$ maps input word $w$ to output word $v$, 
+then $T^{-1}$ maps $v$ to $w$.
+
+\paragraph{Concatenation.}
+The concatenation $T_1 \cdot T_2$ accepts a pair \texttt{(w, v)} if and only if there exist $w = w_1 w_2$ and 
+$v = v_1 v_2$ such that $T_1$ accepts \texttt{(w1, v1)} and $T_2$ accepts \texttt{(w2, v2)}. 
+The implementation renames both machines to avoid state collisions, connects every accepting state of $T_1$ 
+to the initial state of $T_2$ via a silent $(\varepsilon, \varepsilon)$ transition, and sets the accepting states of the result 
+to be those of $T_2$ alone. The initial state of the concatenation is that of $T_1$.
+
+\section{Integration Points Exposed to OFLAT}
+
+The library surface made available to the OFLAT frontend aligns with the features highlighted earlier:
+\begin{itemize}
+  \item \textbf{Acceptance with outputs}: \texttt{acceptOut} returns the produced output word; 
+  \texttt{acceptExpectedOutput} enforces equality against an expected word (parsed from \texttt{input->output}) and validates both alphabets. 
+  These power output-aware exercises and quick checks.
+  \item \textbf{Stepwise visualization}: \texttt{acceptFull} returns both a sample accepting path and the full trail of configuration sets. 
+  The frontend consumes the trail to highlight active states/transitions (via \texttt{inputEdges}) 
+  and to display the evolving output during stepping.
+  \item \textbf{Generation}: \texttt{generate} enumerates accepted input/output pairs of bounded length, reused by the generic 
+  generation UI and exercise scaffolding.
+  \item \textbf{Transformations}: determinization/minimization, inverse, union/intersection/concatenation, 
+  and composition are exposed so OFLAT can chain models and present derived transducers directly to the user.
+  \item \textbf{JSON interoperability}: \texttt{toJSon}/\texttt{fromJSon} keep a stable \texttt{kind = "transducer"} tag, 
+  ensuring saved files load correctly across the web client and the OCaml library.
+\end{itemize}
+
+These hooks ensure the theoretical and algorithmic support described above is consumable by the web UI without duplicating logic in JavaScript.
+

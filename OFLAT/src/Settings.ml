@@ -254,7 +254,15 @@ module Settings = struct
   			if repository = "" then "{}" else repository
 
   	let isEpsilon word =
-  		List.mem word emptyOptions
+      let word = String.trim word in
+      let epsilonAliases = [
+        "~";
+        "\206\181"; (* epsilon *)
+        "\206\187"; (* lambda *)
+        "\195\142\194\181"; (* mojibake epsilon kept for existing data *)
+        "\195\142\194\187"  (* mojibake lambda kept for existing data *)
+      ] in
+      List.mem word emptyOptions || List.mem word epsilonAliases
 
 	let saveModel name model =
   		let repoJson = match JSon.parse (getRepository()) with

@@ -53,6 +53,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons;
       HtmlPageClient.disableButton "selectRegex"
 
@@ -201,6 +202,9 @@ class fstController (fst : TransducerView.model) (s: bool) =
         let trimmed = String.trim trans in
         if Settings.isEpsilon trimmed then epsilon else symb trimmed
       in
+      let getText sy =
+        if sy = epsilon then StateVariables.returnEmpty () else symb2str sy
+      in
       self#operationAutomaton "erase transition";
       let parts = String.split_on_char ':' label in
       match parts with
@@ -210,7 +214,7 @@ class fstController (fst : TransducerView.model) (s: bool) =
           if (Set.belongs (v1, iSym, oSym, v2) myFST#representation.transitions) then
             (super#resetStyle;
              myFST <- (myFST#eliminateTransition(v1, iSym, oSym, v2));
-             Cytoscape.removeEdge self#getCy v1 label v2;
+             Cytoscape.removeEdge self#getCy v1 ((getText iSym) ^ ":" ^ (getText oSym)) v2;
              self#defineInformationBox;)
           else 
             JS.alertStr ((Lang.i18nAlertTheTransition ()) ^ " does not exist")

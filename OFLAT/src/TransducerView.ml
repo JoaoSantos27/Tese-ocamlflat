@@ -85,6 +85,12 @@ struct
       val menuItems = Js.array (Array.of_list (Set.toList (processConfigMenus configs)))
     end 
 
+  let alphabetsFromTransitions transitions =
+    let removeEpsilon symbols = Set.diff symbols (Set.make [epsilon]) in
+    let inAlphabet = Set.map (fun (_, inSym, _, _) -> inSym) transitions in
+    let outAlphabet = Set.map (fun (_, _, outSym, _) -> outSym) transitions in
+    (removeEpsilon inAlphabet, removeEpsilon outAlphabet)
+
   let buildIdsStateAndApplyF f node configs: unit =
     let configsOfState = getConfigsWithState node configs in
     Set.iteri (fun idSuffix (st, _, _) -> f (buildIdFromState st idSuffix)) configsOfState
@@ -209,8 +215,10 @@ struct
         let new_initial = if isStart then "" else rep.initialState in
         let new_accepts = if isFinish then Set.remove node rep.acceptStates else rep.acceptStates in
         let new_transitions = Set.filter (fun (s, _, _, d) -> s <> node && d <> node) rep.transitions in
-        new model (Arg.Representation { 
-          rep with 
+        let new_inAlphabet, new_outAlphabet = alphabetsFromTransitions new_transitions in
+        new model (Arg.Representation {
+          inAlphabet = new_inAlphabet;
+          outAlphabet = new_outAlphabet;
           states = new_states; 
           initialState = new_initial; 
           acceptStates = new_accepts;
@@ -219,9 +227,8 @@ struct
 
       method newTransition (src, inSym, outSym, dst) = 
         let rep = self#representation in
-        let new_inAlpha = if inSym <> epsilon then Set.add inSym rep.inAlphabet else rep.inAlphabet in
-        let new_outAlpha = if outSym <> epsilon then Set.add outSym rep.outAlphabet else rep.outAlphabet in
         let new_trans = Set.add (src, inSym, outSym, dst) rep.transitions in
+        let new_inAlpha, new_outAlpha = alphabetsFromTransitions new_trans in
         new model (Arg.Representation { 
           rep with 
           inAlphabet = new_inAlpha;
@@ -232,7 +239,13 @@ struct
       method eliminateTransition (src, inSym, outSym, dst) = 
         let rep = self#representation in 
         let new_trans = Set.remove (src, inSym, outSym, dst) rep.transitions in
-        new model (Arg.Representation { rep with transitions = new_trans })
+        let new_inAlpha, new_outAlpha = alphabetsFromTransitions new_trans in
+        new model (Arg.Representation {
+          rep with
+          inAlphabet = new_inAlpha;
+          outAlphabet = new_outAlpha;
+          transitions = new_trans
+        })
 
       method renameState state name =
         let rep = self#representation in 

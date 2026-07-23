@@ -99,6 +99,7 @@ class virtual controller0 =
     val listOnlyTMConvertButtons = ["selectTM"]	(* carolina *)
     val listOnlyTM2TapesConvertButtons = ["selectTM2Tapes"]
     val listOnlyFSTConvertButtons = ["selectFA"; "selectTM"]
+    val listOnlyFSTButtons = ["backwards"; "start"; "forward"]
     val listOnlyCFGButtons = ["testing"; "trace"; "generate"; "backwards"; "start"; "forward"]
     val listOnlyGRButtons = ["testing"; "trace"; "generate"]
     val listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"; "exportModel"]

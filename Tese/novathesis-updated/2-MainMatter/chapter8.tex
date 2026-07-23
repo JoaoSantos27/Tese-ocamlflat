@@ -1,0 +1,155 @@
+\typeout{NT FILE chapter8.tex}%
+
+\chapter{OFLAT Implementation}
+\label{cha:oflat-implementation}
+
+This chapter describes how finite-state transducer (FST) functionality is integrated into the existing OFLAT code. It
+covers module responsibilities, rendering logic, and how the new pieces reuse pre-existing abstractions for
+other automata models. The goal is to provide FST support without altering the architecture established for FA, PDA,
+and TM. The design perspective is covered separately in \autoref{cha:oflat-design}.
+
+\section{Workspace and Graph Interaction}
+\label{sec:oflat_workspace}
+OFLAT keeps a shared rendering layer around Cytoscape.js, with thin OCaml bindings in \texttt{Cytoscape.ml}. FST support
+reuses the same primitives as finite automata:
+\begin{itemize}
+  \item \textbf{Node lifecycle:} methods such as \texttt{addNode}, \texttt{addInitialNode}, and \texttt{addFinalNode}
+      extend \texttt{TransducerView.model} (which inherits \texttt{AutomatonView.model}). They update the in-memory
+      representation and immediately reflect changes on the graph (initial/accepting glyphs, labels).
+  \item \textbf{Edges with input and output:} \texttt{inputEdges} maps each transition \((src, inSym, outSym, dst)\) to a
+      Cytoscape edge labeled \texttt{in:out}. Epsilon is rendered with the same tilde used elsewhere in OFLAT to stay
+      consistent with existing models.
+  \item \textbf{Style reset and repaint:} before runs, styles are reset (\texttt{Cytoscape.faStyle}) so later execution
+      highlights remain visible. Minimization coloring and best-path accents reuse the same paint helpers used for FA.
+\end{itemize}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fst_rendermin.png}
+  \caption{Rendering view with input:output edges and minimized coloring.}
+  \label{fig:oflat-impl-render}
+\end{figure}
+
+Edge construction for input/output labels:
+\begin{verbatim}
+method inputEdges (cy: Cytoscape.cytoscape Js_of_ocaml.Js.t) =
+	let mapToCytoscapeEdge transitions =
+		Set.map (fun (src, iSym, oSym, dst) ->
+			let label = (symb2str iSym) ^ ":" ^ (symb2str oSym) in
+			(src, label, dst)
+		) self#representation.transitions
+	in
+	Set.iter (Cytoscape.addEdge cy) (mapToCytoscapeEdge self#representation.transitions)
+\end{verbatim}
+Each transition becomes a Cytoscape edge labeled \texttt{input:output}, using the same epsilon glyph as elsewhere.
+
+\section{Information Box, Poppers, and Menus}
+\label{sec:oflat_infobox}
+FST execution introduces richer configuration data (state, remaining input, accumulated output). The UI represents this via:
+\begin{itemize}
+  \item \textbf{Configuration menus:} built with \texttt{contextMenus}, populated from configuration sets at each step.
+	  IDs are generated per-state to allow selective show/hide on hover. Menus are rebuilt whenever the step changes.
+  \item \textbf{Poppers for configuration counts:} \texttt{buildPoppersConfigsCounter} creates poppers per node showing
+	  how many configurations currently live there. They track node movement and viewport changes via subscribed events
+	  (position, pan, zoom, resize).
+  \item \textbf{Info display:} configuration details (state, remaining input, output so far) are presented in the info box
+	  so users can correlate graph highlights with exact words being processed.
+\end{itemize}
+
+\section{Step-by-Step Execution Pipeline}
+\label{sec:oflat_stepbystep}
+Execution leverages the library \texttt{Transducer.acceptFull}, which returns (accepted flag, best path, trail of
+configuration sets). The view code keeps these in mutable fields and drives the UI as follows:
+\begin{itemize}
+  \item \textbf{Trail and path storage:} \texttt{steps} holds the trail (array of configuration sets); \texttt{bestPath}
+	  stores a single accepting path. Statistics (visited configs, timing, exactness) come from \texttt{Model.stats()}.
+  \item \textbf{Painting states:} each step paints all active states; accepting states use the same accent as FA. The
+	  chosen accepting path (if any) is overpainted in a darker color so users see which branch was selected among
+	  nondeterministic options.
+  \item \textbf{Menus and poppers refresh:} on every step change, configuration menus are rebuilt and poppers refreshed to
+	  reflect the current configuration counts, ensuring hover interactions stay accurate.
+  \item \textbf{Word and output view:} the sentence display marks consumed vs. remaining input with a bar and shows the
+	  accumulated output for the current configuration, aligning text feedback with graph highlights.
+\end{itemize}
+
+Initial and next steps:
+\begin{verbatim}
+method setInitialStep cy =
+    self#staticAcceptFull;
+    Cytoscape.resetStyle cy Cytoscape.faStyle;
+    if Array.length steps > 0 then self#initAllMenusAndFeatures cy steps.(0)
+
+method setNextStep cy =
+    if position < Array.length steps then
+        self#updateAllMenusAndFeatures cy steps.(position)
+\end{verbatim}
+Step initialization runs the computation, resets styles, and builds menus/poppers; 
+advancing a step refreshes the overlays using cached trail data.
+
+\subsection*{UI data flow and state}
+The UI keeps a set of mutable fields in the model instance to avoid recomputation: (1) \texttt{steps} (the trail) and
+	\texttt{bestPath}, (2) the current step index, (3) cached popper handles, and (4) the last rendered input/output strings.
+On a step change the view invalidates only what changed: it repaints nodes/edges, rebuilds menus and poppers from the cached
+trail slice, and reuses the existing Cytoscape elements instead of rebuilding the graph. Rendering throttles to the Cytoscape
+animation frame callback to avoid flicker on rapid scrubbing.
+
+\section{Tables, Traces, and Minimization}
+\label{sec:oflat_tables}
+Tabular views rely on the shared \texttt{HTMLTable} helpers and adapt to FST specifics:
+\begin{itemize}
+  \item \textbf{Transition tables:} built per input alphabet (plus epsilon if present). Cells aggregate destinations and
+	  output symbols as \texttt{dest/output}. Rebuilds occur after edits to keep data consistent with the graph.
+  \item \textbf{Execution traces:} for a best path, the trace table lists step index, current state, produced output, and
+	  remaining input. The final row is colored green/red depending on acceptance.
+	\item \textbf{Minimization coloring:} equivalence classes from the library minimization partition are painted on the
+	  graph using the same color palette as FA; edges are redrawn using \texttt{inputEdges} to keep labels intact.
+\end{itemize}
+
+\section{Exercise Handling}
+\label{sec:oflat_exercises}
+Exercise evaluation for FSTs follows the same pipeline used for other models but is adapted to the transducer semantics:
+\begin{itemize}
+	\item \textbf{Input\,$\to$\,Output assertions:} Exercise words can be written as \texttt{input->output}. The view passes
+		these strings to the library helper \texttt{acceptExpectedOutput}, which parses the arrow, runs the transducer on the
+		input, and asserts the produced output matches exactly (and belongs to the declared output alphabet). Plain words
+		without an arrow are handled by \texttt{acceptCheckOutput}, which enforces input and output alphabet membership.
+	\item \textbf{Inside/Outside sets:} The inside set lists pairs the model must accept (e.g., \texttt{a->a}, \texttt{ab->ab});
+		the outside set can include counterexamples (e.g., \texttt{a->b}) to ensure incorrect mappings are rejected. The UI
+		surfaces failures by highlighting the offending cases and showing the actual output returned by the transducer.
+	\item \textbf{Properties:} Standard properties (deterministic, complete, Mealy/Moore, minimal, clean) are delegated to the
+		library checks already described. Results are shown alongside input/output verdicts so users see structural issues and
+		behavioural mismatches together.
+	\item \textbf{Feedback loop:} On submission, the exercise runner collects acceptance results, output mismatches, and property
+		violations, then updates the info box and tables. Because the same acceptance helpers drive both the exercise evaluator
+		and the step-by-step view, traces shown in the UI match exactly what the checker has used.
+	\item \textbf{UI specifics:} Failing inside cases are shown with the actual output alongside the expected arrow form; failing
+		outside cases are flagged when the model accepts or emits output where it should not. Property failures appear in the
+		same panel so users see behavioural and structural issues together. The editor keeps the graph intact—only tables and
+		status banners refresh—to reduce disruption while iterating on fixes.
+\end{itemize}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{ex_feedback.png} 
+  \caption{Exercise feedback: input$\to$output cases with actual outputs and property results.}
+  \label{fig:oflat-impl-exercises}
+\end{figure}
+
+Exercise hooks exposed by the transducer module:
+\begin{verbatim}
+let checkExercise ex fst = Model.checkExercise ex 
+(acceptExpectedOutput fst) (checkProperty fst)
+let checkExerciseFailures ex fst = Model.checkExerciseFailures 
+ex (acceptExpectedOutput fst) (checkProperty fst)
+\end{verbatim}
+Exercises reuse the library's output-aware acceptance and property checks directly, so the UI surfaces the same 
+verdicts as the core model.
+
+\section{Integration Boundaries}
+\label{sec:oflat_integration}
+The FST view layer is intentionally thin: it delegates acceptance, generation, determinization, and minimization to library
+modules (\texttt{Transducer.accept}, \texttt{acceptFull}, \texttt{generate}, \texttt{minimize}), then renders the returned
+trail/partitions. This preserves OFLAT's existing separation between computation (library) and interaction (view).
+We also leverage the newer exercise-facing helpers \texttt{acceptCheckOutput} and \texttt{acceptExpectedOutput} to keep
+input/output validation consistent with the transducer library, ensuring UI traces and checks match the library's
+acceptance semantics. When determinization fails to terminate (e.g., output conflicts causing an infinite construction),
+the UI reports a non-termination message and leaves the existing graph intact rather than spinning indefinitely.
+

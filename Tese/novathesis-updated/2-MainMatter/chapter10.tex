@@ -1,0 +1,54 @@
+\typeout{NT FILE chapter10.tex}%
+
+\chapter{Conclusion and Future Work}
+\label{cha:conclusion}
+
+\section{Conclusion}
+\label{sec:conclusion_summary}
+
+This dissertation extended both the new improved OCamlFLAT library and the OFLAT web application with full support for finite-state
+transducers (FST). On the library side, we added output-aware acceptance functions (\texttt{acceptOut},
+\texttt{acceptExpectedOutput}), minimization and determinism checks adapted to input/output labels, and utilities used by
+the UI (e.g., \texttt{inputEdges}). On the UI side, OFLAT now edits and executes FSTs with the same interaction patterns as
+other models: input:output edge labels, step-by-step execution with branch highlights, accumulated-output display in the
+info box, popper counts for nondeterminism, synchronized trace/transition tables, and exercise validation using the
+\texttt{input->output} format. The bridge built with \texttt{js\_of\_ocaml} keeps the browser client in sync with the
+OCaml models.
+
+Evaluation combined unit tests in OCamlFLAT with manual and integration checks in OFLAT, exercising deterministic and
+nondeterministic runs, Moore-style outputs, and minimization. The result is a cohesive teaching tool where students can
+construct, visualize, step through, and assess FSTs with immediate feedback that matches formal definitions.
+
+\section{Summary of Contributions}
+\label{sec:conclusion_contrib}
+\begin{itemize}
+	\item \textbf{Library}: New FST data model and algorithms 
+    (acceptOut/acceptExpectedOutput, determinization variants, minimization, 
+    composition/union/intersection/inverse/concatenation, projection, TM conversion) 
+    plus JSON interoperability for persistence.
+	\item \textbf{UI}: End-to-end FST authoring and execution in OFLAT with input:output edge labels, 
+    trail-driven stepping, output-aware exercises, and reuse of Cytoscape-based visualization primitives.
+	\item \textbf{Pedagogy}: Consistent interaction patterns across FA/PDA/TM/FST, 
+    output-aware checking for exercises, and tables/traces aligned with textbook definitions.
+	\item \textbf{Tooling}: Single-language pipeline via \texttt{js\_of\_ocaml}, 
+    keeping logic and UI behavior synchronized.
+\end{itemize}
+
+\section{Future Work}
+\label{sec:future_work}
+
+The work conducted in this dissertation will be integrated into the latest OFLAT release in the near future,
+this new version has various improvements and bug fixes on the UI side, but the modular approach of this implementation
+allows this integration to be seamless.
+
+Besides that, several extensions could further improve the platform:
+\begin{itemize}
+    \item \textbf{Exercise and grading flow:} support automatic generation of input/output test sets and richer feedback for
+        counterexamples.
+    \item \textbf{UX polish and accessibility:} Colorblind-safe palettes, and add
+        lightweight tutorials or guided tours for first-time users.
+    \item \textbf{Further models:} explore other transducer models (e.g., weighted, probabilistic) to expand the didactic scope while reusing
+        the existing interaction patterns.
+    \item \textbf{Performance and scale:} stress-test high-branching FSTs, add non-termination guards in determinization, 
+	and show clear guidance on practical limits.
+\end{itemize}

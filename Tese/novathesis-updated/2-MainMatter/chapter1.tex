@@ -1,0 +1,64 @@
+\typeout{NT FILE chapter1.tex}%
+
+\chapter{Introduction}
+\label{cha:introduction}
+
+\section{Context}
+
+Theory of Computation is a fundamental area in computer science that includes various
+fields of study, including this work's focus: Formal Languages and Automata
+Theory (FLAT). These play a critical role in modeling computational processes, verifying system behavior, 
+and designing compilers and interpreters. 
+
+Despite its theoretical significance, FLAT concepts can be difficult to grasp due to their abstract nature. For students, interactive
+visualization and step-by-step simulation are critical aids. OCamlFLAT/OFLAT, developed at NOVA School of Science and Technology, already
+supports finite automata, grammars, pushdown automata, and Turing machines. However, it lacks finite-state transducers (FST), a
+model that adds output generation to automata and is central to translation, lexical analysis, and many teaching examples.
+
+While FSTs are well-established in the literature, pedagogical tools that let learners build, simulate, and analyze them with
+output tracking are scarce or incomplete. This dissertation fills that gap by extending both the OCamlFLAT library and the OFLAT
+web interface with native FST support, aiming to deliver a consistent, interactive learning experience alongside the existing
+models.
+
+\section{Objectives}
+
+The primary goal of this thesis is to design and implement support for finite-state transducers within the OCamlFLAT/OFLAT ecosystem. This includes:
+\begin{itemize}
+  \item Defining data structures and algorithms to model FSTs (including acceptance with expected outputs, determinism checks, and minimization).
+  \item Exposing output-aware operations in OCamlFLAT (e.g., \texttt{acceptOut}, \texttt{acceptExpectedOutput}, \texttt{inputEdges}) 
+  consistent with existing automata APIs.
+  \item Integrating FST editing and step-by-step execution into OFLAT with input:output edge labels, accumulated-output display, 
+  and nondeterministic branch visuals.
+  \item Enabling exercise checking with \texttt{input->output} examples so UI feedback matches library semantics.
+\end{itemize}
+
+By enriching the system with transducer functionality, we aim to provide a more comprehensive pedagogical platform that supports a broader 
+spectrum of the Chomsky hierarchy and theoretical computation models. This will enhance both teaching and learning by enabling students 
+and instructors to explore complex language transformations through hands-on experimentation.
+
+\section{Contributions}
+\label{sec:intro_contrib}
+
+The main contributions of this dissertation are:
+\begin{itemize}
+  \item A finite-state transducer extension to OCamlFLAT with output-aware acceptance, determinism checks, and minimization utilities reused by the UI.
+  \item An OFLAT integration that supports interactive FST construction, step-by-step execution with accumulated outputs, branch highlighting, 
+  popper counts, and exercise checking for \texttt{input->output} cases.
+  \item An evaluation covering unit tests, integration checks in the browser, and representative FST use cases, with guidance for future improvements.
+\end{itemize}
+
+\section{Structure of the Document}
+
+The remainder of this document is structured as follows. 
+\begin{itemize}
+  \item Chapter~\ref{cha:background} introduces the necessary concepts in formal languages and automata, focusing on finite-state transducers.
+  \item Chapter~\ref{cha:related_work} surveys related tools and positions this work against existing automata/FST teaching environments.
+  \item Chapter~\ref{cha:current_system} presents the OCamlFLAT/OFLAT platform as it existed before this work.
+  \item Chapter~\ref{cha:technologies} outlines the key technologies used (OCaml, \texttt{js\_of\_ocaml}, Cytoscape.js, and supporting libraries).
+  \item Chapter~\ref{cha:transducer-implementation} details the OCamlFLAT FST implementation (data types, acceptance, determinism, minimization).
+  \item Chapter~\ref{cha:oflat-design} describes the OFLAT design and user experience for FSTs (interaction model, visuals, feedback surfaces).
+  \item Chapter~\ref{cha:oflat-implementation} explains the OFLAT implementation, including event wiring, data flow, rendering, and exercise checking.
+  \item Chapter~\ref{cha:evaluation} presents the evaluation methodology, test layers, and representative use cases.
+  \item Chapter~\ref{cha:conclusion} summarizes the results and outlines future work.
+\end{itemize}
+

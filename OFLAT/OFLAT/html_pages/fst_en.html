@@ -11,8 +11,12 @@ It defines a relation (or function, in the deterministic case) from input words 
 <p> As with automata, transducers have states and labeled transitions. In an FST, each transition carries an <b>input:output</b> label.
 A run consumes the input and accumulates the output along the chosen path.
 
+<p><img src="images/fst1.svg"></img>
+
 <p> In a <b>Mealy machine</b>, outputs are produced on transitions. In a <b>Moore machine</b>, outputs are associated with states.
 Both are special cases of general FSTs.
+
+<p><img src="images/fst3.svg"></img>
 
 <p> A word is accepted if the input is fully consumed and the final state is accepting. The produced output is the concatenation of
 the outputs along the path.
@@ -63,6 +67,10 @@ Shows the transducer in tabular form.
 
 <A NAME="Animation">
 <h2>Animation</h2>
+
+<p><img src="images/fst_a1.svg"></img>
+<p><img src="images/fst_a2.svg"></img>
+<p><img src="images/fst_a3.svg"></img>
 
 <HR>
 

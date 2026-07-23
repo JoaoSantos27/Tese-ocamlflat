@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<HR><h1>Automates finis</h1>
+
+<p>Un automate fini est un modèle de calcul qui peut être utilisé pour spécifier un langage. Un langage est un ensemble de mots sur un alphabet.
+
+<p>Le pouvoir expressif des automates finis est relativement limité : ils décrivent seulement des langages avec une structure très régulière, c'est-à-dire les langages de type 3 de Chomsky, appelés langages réguliers.
+
+<p>La spécification d'un langage se fait par reconnaissance. Pour tester si un mot appartient au langage, on applique l'automate au mot et l'automate décide si le mot est accepté ou rejeté.
+
+<p>Un automate est constitué d'états et de transitions étiquetées entre états, sans mémoire. Un état est initial et certains états sont finaux. Pour reconnaître un mot, on commence dans l'état initial et on consomme les symboles du mot séquentiellement en suivant les transitions étiquetées disponibles. Le mot est accepté ssi tout le mot a été consommé et l'état courant est final.
+
+<p>Dans un <b>automate déterministe</b>, l'ensemble des transitions associe à chaque paire (état, symbole) au plus un état. Autrement dit, la relation de transition est une fonction. Voici un exemple d'automate déterministe :
+
+<p><img src="images/fa1.png"></img>
+
+<p>Exemples de mots reconnus : <tt>'', 'ab', 'aba', 'abab', 'abaab', 'ababa', 'abaaba', 'ababab'</tt>.
+
+<p>Dans un <b>automate non déterministe</b>, plusieurs transitions avec le même symbole peuvent sortir du même état ; les transitions étiquetées par epsilon sont aussi permises et peuvent être utilisées sans consommer de symbole du mot. Dans ce cas, la relation de transition n'est pas une fonction. Voici un exemple d'automate non déterministe, présenté sous forme de graphe :
+
+<p><img src="images/fa3.png"></img>
+
+<p>Exemples de mots reconnus : <tt>'', 'aa', 'ab', 'aaa', 'aab', 'aba', 'aaaa', 'aaab', 'abaa'</tt>.
+
+<p>Plus d'information dans la documentation du cours.
+
+<h1>Commandes</h1>
+
+<A NAME="Clean">
+<h2>Nettoyer</h2>
+Supprime tous les états inutiles de l'automate, c'est-à-dire les états non nécessaires et non productifs.
+
+<A NAME="Deterministic">
+<h2>Rendre déterministe</h2>
+Rend un automate déterministe en utilisant l'algorithme présenté en cours.
+
+<A NAME="Minimize">
+<h2>Minimiser l'automate</h2>
+Minimise un automate déterministe en utilisant l'algorithme présenté en cours.
+
+<p>Si l'automate n'est pas déterministe, il doit d'abord être converti en automate déterministe avec la commande appropriée.
+
+<A NAME="Productive">
+<h2>États productifs</h2>
+Colorie les états productifs en orange.
+
+<p>Un état est productif s'il contribue d'une certaine façon à la reconnaissance d'au moins un mot.
+
+<A NAME="Accessible">
+<h2>États accessibles</h2>
+Colorie tous les états accessibles en jaune.
+
+<p>Un état est accessible s'il peut être atteint depuis l'état initial par un chemin dans le graphe.
+
+<A NAME="Usefull">
+<h2>États utiles</h2>
+Colorie tous les états utiles en lilas.
+
+<p>Un état est utile s'il est à la fois productif et accessible.
+
+<A NAME="CleanColors">
+<h2>Effacer les couleurs</h2>
+Efface les couleurs des états définies par les commandes précédentes.
+
+<A NAME="ShowTable">
+<h2>Afficher le tableau</h2>
+Affiche l'automate sous forme de tableau.
+
+<A NAME="Animation">
+<h2>Animation</h2>
+
+<p><img src="images/fa_a1.png"></img>
+<p><img src="images/fa_a2.png"></img>
+<p><img src="images/fa_a3.png"></img>
+
+<HR>
+
+</body>
+</html>

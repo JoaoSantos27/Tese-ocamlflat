@@ -214,6 +214,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   let listOnlyTMConvertButtons = ["selectTM"] (* carolina *)
   let listOnlyTM2TapesConvertButtons = ["selectTM2Tapes"]
   let listOnlyFSTConvertButtons = ["selectFA"; "selectTM"]
+  let listOnlyFSTButtons = ["backwards"; "start"; "forward"]
   let listOnlyCFGButtons = ["testing"; "trace"; "generate"; "backwards"; "start"; "forward"]
   let listOnlyGRButtons = ["testing"; "trace"; "generate"]
   let listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"]
@@ -250,6 +251,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> disableButton el) listOnlyTM2TapesConvertButtons;
       List.iter (fun el -> enableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> enableButton el) listOnlyFSTButtons;
       List.iter (fun el -> enableButton el) listOtherButtons)
     else if type1 = "regular expression" then
       (List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
@@ -745,6 +747,10 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       Dom.appendChild divButtons3 clearAuto;
     let tool = div2 "tooltipClearAuto" "tooltiptext3" (Lang.i18nTooltipClear ()) in
         Dom.appendChild clearAuto tool;
+    let refreshLayout = button1 (Lang.i18nRefreshL ()) "refreshLayout" "tooltip3" !ListenersAutomaton.refreshLayout in
+      Dom.appendChild divButtons3 refreshLayout;
+    let tool = div2 "tooltipRefreshLayout" "tooltiptext3" (Lang.i18nTooltipRefreshL ()) in
+        Dom.appendChild refreshLayout tool;
     let tableView = button1 ("Show Table View") "showTable" "tooltip3" !ListenersAutomaton.showTable in
       Dom.appendChild divButtons3 tableView
 
@@ -1836,7 +1842,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       let textBox = Dom_html.getElementById "textBox" in
         let modelFileName = modelName ^ "_" ^ langVal in
           textBox##.style##.height := Js.string "100%";
-          let docDir = "html_pages/" ^ modelFileName ^ ".html" in
+          let docDir = "html_pages/" ^ modelFileName ^ ".html?v=5.0" in
             textBox##.innerHTML := Js.string ("<object id='helpBox' class='helpBox' type='text/html' data='" ^ docDir ^ "'></object>")
 
     let showHelpAnimation modelName animName =
@@ -1845,7 +1851,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       let textBox = Dom_html.getElementById "textBox" in
         let modelFileName = modelName ^ "_" ^ langVal in
           textBox##.style##.height := Js.string "100%";
-          let docDir = "html_pages/" ^ modelFileName ^ ".html#" ^ animName in
+          let docDir = "html_pages/" ^ modelFileName ^ ".html?v=5.0#" ^ animName in
             textBox##.innerHTML := Js.string ("<object id='helpBox' class='helpBox' type='text/html' data='" ^ docDir ^ "'></object>")
 
 end 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<HR><h1>Transducteurs finis</h1>
+
+<p>Un transducteur fini (FST) étend un automate fini en produisant des symboles de sortie pendant qu'il lit des symboles d'entrée.
+Il définit une relation (ou une fonction, dans le cas déterministe) entre les mots d'entrée et les mots de sortie.
+
+<p>Comme les automates, les transducteurs ont des états et des transitions étiquetées. Dans un FST, chaque transition porte une étiquette <b>entrée:sortie</b>.
+Une exécution consomme l'entrée et accumule la sortie le long du chemin choisi.
+
+<p><img src="images/fst1.svg"></img>
+
+<p>Dans une <b>machine de Mealy</b>, les sorties sont produites sur les transitions. Dans une <b>machine de Moore</b>, les sorties sont associées aux états.
+Les deux sont des cas particuliers des FST généraux.
+
+<p><img src="images/fst3.svg"></img>
+
+<p>Un mot est accepté lorsque l'entrée est entièrement consommée et que l'état courant est final.
+La sortie produite est la concaténation des sorties le long du chemin.
+
+<p>Plus d'information dans la documentation du cours.
+
+<h1>Commandes</h1>
+
+<A NAME="Clean">
+<h2>Nettoyer</h2>
+Supprime les états inutiles du transducteur (inaccessibles et/ou non productifs).
+
+<A NAME="Deterministic">
+<h2>Rendre déterministe</h2>
+Essaie de déterminiser un transducteur lorsque c'est possible. Certains transducteurs ne peuvent pas être déterminisés à cause de conflits de sortie.
+
+<A NAME="Minimize">
+<h2>Minimiser</h2>
+Minimise un transducteur déterministe en utilisant l'algorithme présenté en cours.
+
+<p>Si le transducteur n'est pas déterministe, il faut d'abord le déterminiser lorsque c'est possible.
+
+<A NAME="Productive">
+<h2>États productifs</h2>
+Colorie les états productifs en orange.
+
+<p>Un état est productif s'il contribue à produire une sortie acceptée.
+
+<A NAME="Accessible">
+<h2>États accessibles</h2>
+Colorie tous les états accessibles en jaune.
+
+<p>Un état est accessible s'il est atteignable depuis l'état initial par un chemin.
+
+<A NAME="Usefull">
+<h2>États utiles</h2>
+Colorie tous les états utiles en lilas.
+
+<p>Un état est utile s'il est à la fois productif et accessible.
+
+<A NAME="CleanColors">
+<h2>Effacer les couleurs</h2>
+Efface les couleurs des états définies par les commandes précédentes.
+
+<A NAME="ShowTable">
+<h2>Afficher le tableau</h2>
+Affiche le transducteur sous forme de tableau.
+
+<A NAME="Animation">
+<h2>Animation</h2>
+
+<p><img src="images/fst_a1.svg"></img>
+<p><img src="images/fst_a2.svg"></img>
+<p><img src="images/fst_a3.svg"></img>
+
+<HR>
+
+</body>
+</html>

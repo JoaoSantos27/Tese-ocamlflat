@@ -1,0 +1,106 @@
+\typeout{NT FILE chapter7.tex}%
+
+\chapter{OFLAT Design and Features}
+\label{cha:oflat-design}
+
+This chapter deepens the description of the existing \textbf{graphical} OFLAT application (web-based) with a focus 
+on how finite-state transducer (FST)
+support was integrated. The goal is to show how users interact with FSTs without disturbing established workflows
+for other automata models. Implementation details appear in \autoref{cha:oflat-implementation}.
+
+\section{Design Goals}
+\label{sec:oflatdesign_goals}
+The interface is shaped by four principles:
+\begin{itemize}
+  \item \textbf{Discoverable actions:} core tasks (add states, create transitions, run, step, inspect) stay on-canvas
+	  through direct manipulation and context menus.
+  \item \textbf{Pedagogical feedback:} color, overlays, and tables make nondeterminism and acceptance paths explicit;
+	  configuration counts and traces match textbook views for FA and extend cleanly to FST (with output words).
+  \item \textbf{Consistency:} the same gestures and menus operate for FA, PDA, TM, and now FST;
+  \item \textbf{Low-friction:} edits apply in place with immediate visual updates; auxiliary panes (tables, traces)
+	  live adjacent to the canvas so users can alternate between graph and data quickly.
+\end{itemize}
+
+\section{Workspace and Graph Interaction}
+\label{sec:oflatdesign_workspace}
+The canvas (Cytoscape.js) remains the primary surface for model construction and inspection. For FSTs, edges carry
+      \textit{input:output} label:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fst_labels.png}
+  \caption{OFLAT canvas with input:output edge labels.}
+  \label{fig:oflat-canvas}
+\end{figure}
+\begin{itemize}
+  \item direct add/move/rename of states; toggling initial/accepting via node menus;
+  \item creation and removal of transitions with inline editors that accept both input and output symbols (epsilon allowed);
+  \item zoom/pan with popper overlays that stay anchored to nodes even as the viewport moves.
+\end{itemize}
+Visual coding distinguishes initial and accepting states; a neutral base style is restored before each run so execution
+highlights remain readable.
+
+\section{Information Box, Poppers, and Context Menus}
+\label{sec:oflatdesign_infobox}
+Node context menus expose per-configuration entries during step-by-step execution. Poppers display the count of active
+configurations on each node, giving quick feedback on nondeterministic branching. The information box surfaces the current
+configuration details: state, remaining input, and accumulated output (for FSTs). All overlays are lightweight and follow
+node movement to avoid obscuring the graph.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fst_poppers.png}
+  \caption{Information box and popper displaying state/input/output and configuration counts.}
+  \label{fig:oflat-infobox}
+\end{figure}
+
+\section{Step-by-Step Execution Experience}
+\label{sec:oflatdesign_step}
+Execution highlights every active state at the current step. In nondeterministic scenarios, the path chosen by the engine
+is painted in a darker accent while alternative branches keep a lighter shade, making the selected witness path evident
+without hiding other possibilities. Users advance or rewind one step at a time; the input word view marks consumed vs.
+remaining symbols with a cursor separator. For FSTs, the accumulated output is shown alongside the remaining input.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fst_step.png}
+  \caption{Step-by-step execution with highlighted path, input cursor, and accumulated output.}
+  \label{fig:oflat-step}
+\end{figure}
+
+\section{Trace Tables and Minimization Views}
+\label{sec:oflatdesign_tables}
+Tabular views mirror formal definitions: transition tables per input symbol (and input:output for FSTs), execution trace
+tables with state, remaining input, and produced output, and minimization colorings that render equivalence classes on the
+graph. Tables rebuild automatically when the model changes, keeping visualization and data in sync.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{tracefst.png}
+  \caption{Trace table for an FST run showing state, remaining input, and produced output.}
+  \label{fig:oflat-trace}
+\end{figure}
+
+\section{Supported Models and Scope}
+\label{sec:oflatdesign_models}
+The interaction model is uniform across finite automata, pushdown automata, Turing machines, and finite-state transducers.
+For FSTs, edge labels include input/output, configuration displays carry both remaining input and output, and popper counts
+reflect configuration multiplicity.
+
+\section{FST-Specific Workflows}
+\label{sec:oflatdesign_fstworkflows}
+The UI surfaces FST capabilities without diverging from existing gestures:
+\begin{itemize}
+  \item \textbf{Create and edit transitions:} inline editors accept \texttt{input:output}, with epsilon allowed on either side; 
+  validation reuses the library alphabets to flag typos early.
+  \item \textbf{Run vs. check outputs:} For exercises, \texttt{acceptExpectedOutput} lets inside sets specify \texttt{input->output} pairs, ensuring 
+  exact output matching.
+  \item \textbf{Visualization hooks:} the configuration trail from \texttt{acceptFull} drives node highlighting and popper counts 
+  (via \texttt{inputEdges}); accumulated output is shown in the information box and trace tables at each step.
+  \item \textbf{Transformations and minimization:} determinization/minimization (when applicable) and 
+  composition/union/intersection/inverse/concatenation are callable from the same menu used for FA/PDA/TM, 
+  returning a new FST rendered on the canvas.
+  \item \textbf{Generation:} bounded word generation lists input/output pairs, mirroring the FA/PDA generation UI but including produced 
+  outputs.
+\end{itemize}
+
+\section{Navigation to the Implementation View}
+\label{sec:oflatdesign_nav}
+Implementation details, module structure, event wiring, rendering logic, and the bridge from the library to the UI, are
+covered in \autoref{cha:oflat-implementation}.

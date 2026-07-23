@@ -1,55 +1,61 @@
+<!DOCTYPE html>
+<html>
 <head><meta charset="UTF-8"></head>
 <body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
 
 <HR><h1>Transdutores de estados finitos</h1>
 
-<p> Um transdutor de estados finitos (FST) estende um autómato finito produzindo símbolos de saída enquanto lê símbolos de entrada.
-Define uma relação (ou função, no caso determinista) entre palavras de entrada e palavras de saída.
+<p>Um transdutor de estados finitos (FST) estende um automato finito produzindo simbolos de saida enquanto le simbolos de entrada.
+Define uma relacao (ou funcao, no caso determinista) entre palavras de entrada e palavras de saida.
 
-<p> Tal como nos autómatos, há estados e transições etiquetadas. Num FST, cada transição tem uma etiqueta <b>entrada:saída</b>.
-A execução consome a entrada e acumula a saída ao longo do percurso escolhido.
+<p>Tal como nos automatos, ha estados e transicoes etiquetadas. Num FST, cada transicao tem uma etiqueta <b>entrada:saida</b>.
+A execucao consome a entrada e acumula a saida ao longo do percurso escolhido.
 
-<p> Num <b>transdutor de Mealy</b>, as saídas são produzidas nas transições. Num <b>transdutor de Moore</b>, as saídas estão associadas aos estados.
-Ambos são casos particulares de FSTs gerais.
+<p><img src="images/fst1.svg"></img>
 
-<p> Uma palavra é aceite quando a entrada é totalmente consumida e o estado corrente é final.
-A saída produzida é a concatenação das saídas ao longo do percurso.
+<p>Num <b>transdutor de Mealy</b>, as saidas sao produzidas nas transicoes. Num <b>transdutor de Moore</b>, as saidas estao associadas aos estados.
+Ambos sao casos particulares de FSTs gerais.
 
-<p>Mais informação na documentação da disciplina.
+<p><img src="images/fst3.svg"></img>
+
+<p>Uma palavra e aceite quando a entrada e totalmente consumida e o estado corrente e final.
+A saida produzida e a concatenacao das saidas ao longo do percurso.
+
+<p>Mais informacao na documentacao da disciplina.
 
 <h1>Comandos</h1>
 
 <A NAME="Clean">
 <h2>Limpar</h2>
-Remove do transdutor todos os estados inúteis (inacessíveis e/ou improdutivos).
+Remove do transdutor todos os estados inuteis (inacessiveis e/ou improdutivos).
 
 <A NAME="Deterministic">
 <h2>Tornar determinista</h2>
-Tenta determinizar um transdutor quando isso é possível. Alguns transdutores não são determinizáveis devido a conflitos de saída.
+Tenta determinizar um transdutor quando isso e possivel. Alguns transdutores nao sao determinizaveis devido a conflitos de saida.
 
 <A NAME="Minimize">
 <h2>Minimizar</h2>
 Minimiza um transdutor determinista, usando o algoritmo das aulas.
 
-<p> Se o transdutor não for determinista, é preciso convertê-lo primeiro (quando possível).
+<p>Se o transdutor nao for determinista, e preciso converte-lo primeiro (quando possivel).
 
 <A NAME="Productive">
 <h2>Estados produtivos</h2>
 Pinta de cor de laranja os estados produtivos.
 
-<p>Um estado é produtivo se contribuir para produzir alguma saída aceite.
+<p>Um estado e produtivo se contribuir para produzir alguma saida aceite.
 
 <A NAME="Accessible">
-<h2>Estados acessíveis</h2>
-Pinta de amarelo todos os estados acessíveis.
+<h2>Estados acessiveis</h2>
+Pinta de amarelo todos os estados acessiveis.
 
-<p>Um estado é acessível se, a partir do estado inicial, existir um percurso que o permita alcançar.
+<p>Um estado e acessivel se, a partir do estado inicial, existir um percurso que o permita alcancar.
 
 <A NAME="Usefull">
-<h2>Estados úteis</h2>
-Pinta de lilás todos os estados úteis.
+<h2>Estados uteis</h2>
+Pinta de lilas todos os estados uteis.
 
-<p>Um estado é útil se for ao mesmo tempo produtivo e acessível.
+<p>Um estado e util se for ao mesmo tempo produtivo e acessivel.
 
 <A NAME="CleanColors">
 <h2>Limpar cores</h2>
@@ -60,8 +66,13 @@ Limpa as cores dos estados resultantes dos comandos anteriores.
 Mostra o transdutor sob a forma de tabela.
 
 <A NAME="Animation">
-<h2>Animação</h2>
+<h2>Animacao</h2>
+
+<p><img src="images/fst_a1.svg"></img>
+<p><img src="images/fst_a2.svg"></img>
+<p><img src="images/fst_a3.svg"></img>
 
 <HR>
 
 </body>
+</html>
