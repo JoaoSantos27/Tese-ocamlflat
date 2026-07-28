@@ -98,11 +98,11 @@ class virtual controller0 =
     val listOnlyGRConvertButtons = ["selectGR"]
     val listOnlyTMConvertButtons = ["selectTM"]	(* carolina *)
     val listOnlyTM2TapesConvertButtons = ["selectTM2Tapes"]
-    val listOnlyFSTConvertButtons = ["selectFA"; "selectTM"]
+    val listOnlyFSTConvertButtons = ["selectFST"]
     val listOnlyFSTButtons = ["backwards"; "start"; "forward"]
     val listOnlyCFGButtons = ["testing"; "trace"; "generate"; "backwards"; "start"; "forward"]
     val listOnlyGRButtons = ["testing"; "trace"; "generate"]
-    val listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"; "exportModel"]
+    val listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"; "exportModel"; "saveModel"]
     val listDisCompButtons = ["trace"; "backwards"; "start"; "forward"; "autoAccept"]
 
     method locked : bool = false
@@ -188,6 +188,7 @@ class virtual controller0 =
     method updateButtons = 
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGButtons;
@@ -230,11 +231,10 @@ class virtual controller0 =
     method getPDA : PushdownAutomatonView.model = Error.fatal "get PDA"
     method getRE : RegularExpressionView.model = Error.fatal "get RE"
     method getCFG : ContextFreeGrammarView.model = Error.fatal "get CFG"
+    method getTM : TuringMachineView.model = Error.fatal "get TM"
 
     method getGR : GrammarView.model = Error.fatal "get GR"
     method handleOp (operation: string) : unit = Error.fatal "GR operations"
-    
-    (*  ????? getTM  *)
     method getComp : CompositionView.model = Error.fatal "get Comp"  (* carolina *)
     method getExercise : Exercise.exercise = Error.fatal "get RE"
     method getResultTree : bool = Error.fatal "get Result Tree"

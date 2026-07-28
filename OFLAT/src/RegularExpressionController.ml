@@ -188,6 +188,7 @@ class reController (re: RegularExpressionView.model) (s: bool) =
       HtmlPageClient.changeButtonColor "autoAccept" "";
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyExpressionButtons;
 
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyGRConvertButtons;

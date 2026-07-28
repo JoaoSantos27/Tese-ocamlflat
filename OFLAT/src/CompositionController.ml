@@ -209,6 +209,7 @@ class compController (comp: CompositionView.model) (s: bool) =
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyPDAButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyGRConvertButtons;

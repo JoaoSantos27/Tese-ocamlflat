@@ -73,6 +73,8 @@
           (PDA (PushdownAutomaton.make (Arg.JSon j)))
         else if TuringMachine.kind = kind then
           (TM (TuringMachine.make (Arg.JSon j)))
+		    else if Transducer.kind = kind then
+		      (FST (Transducer.make (Arg.JSon j)))
         else if Grammar.kind = kind then     (*PEDRO CARLOS *)
           (GR (Grammar.make (Arg.JSon j)))  (*PEDRO CARLOS *)
         else if CompositionSupport.kind = kind then
@@ -107,6 +109,8 @@
         JSon.toString (PolyModel.pda2model pda)#toJSon
       | TM tm ->
         JSon.toString (PolyModel.tm2model tm)#toJSon
+	    | FST fst ->
+		    JSon.toString (Transducer.toJSon fst)
       | GR gr ->                                        (*PEDRO CARLOS *)
         JSon.toString (PolyModel.gr2model gr)#toJSon    (*PEDRO CARLOS *)
       | GRO gr ->                                       (*PEDRO CARLOS *)
@@ -151,6 +155,8 @@
       PushdownAutomaton.toJSon2 (Entity.dummyId PushdownAutomaton.kind) pda
     | TM tm ->
       TuringMachine.toJSon2 (Entity.dummyId TuringMachine.kind) tm
+	  | FST fst ->
+	    Transducer.toJSon2 (Entity.dummyId Transducer.kind) fst
     | FAO fao ->
       fao#toJSon2 
     | REO reo ->

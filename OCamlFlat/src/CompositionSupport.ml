@@ -37,6 +37,7 @@ struct
 		| Intersect of t * t
 		| Star of t
 		| FA of FiniteAutomaton.t
+		| FST of Transducer.t
 		| RE of RegularExpression.t
 		| CFG of ContextFreeGrammar.t
 		| PDA of PushdownAutomaton.t

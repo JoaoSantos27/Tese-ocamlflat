@@ -43,6 +43,7 @@ class pdaController (pda: PushdownAutomatonView.model) (s: bool)=
       HtmlPageClient.changeButtonColor "autoAccept" "";
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyExpressionButtons;

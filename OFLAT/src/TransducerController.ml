@@ -45,17 +45,17 @@ class fstController (fst : TransducerView.model) (s: bool) =
       HtmlPageClient.putCyTransducerButtons ()
 
     method updateButtons =
-      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyGRConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
-      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyExpressionButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTMConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons;
-      HtmlPageClient.disableButton "selectRegex"
 
     method defineInformationBox =
       let name = myFST#getName in
@@ -238,8 +238,8 @@ class fstController (fst : TransducerView.model) (s: bool) =
     method convertToFA =
       let open FiniteAutomatonView in
       self#operationAutomaton "convert to FA";
-      let fa = myFST#asFiniteAutomaton in
-      new FiniteAutomatonView.model (Representation fa)
+      let fa = PolyModel.fst2fa (myFST :> Transducer.model) in
+      new FiniteAutomatonView.model (Representation (fa#representation))
 
     method convertToTM_SingleTape =
       let open TuringMachineView in

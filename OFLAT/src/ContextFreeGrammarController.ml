@@ -162,6 +162,7 @@ class virtual cfgLL1Controller (cfg: ContextFreeGrammarView.model) (s:bool) =
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTM2TapesConvertButtons;
 
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons
   
@@ -279,6 +280,7 @@ class cfgLRController (cfg: ContextFreeGrammarView.model) (s: bool)=
     List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTM2TapesConvertButtons;
 
     List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyAutomataButtons;
+    List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
     List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyExpressionButtons;
     List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
 end

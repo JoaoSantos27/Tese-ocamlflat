@@ -3473,6 +3473,7 @@ struct
 			method isContextFreeGrammar : bool = false
 			method isPushdownAutomaton : bool = false
 			method isTuringMachine : bool = false
+			method isTransducer : bool = false
 			method isExercise : bool = false
 			method isComposition : bool = false
 		(* Show *)			
@@ -18649,6 +18650,7 @@ struct
 		| Intersect of t * t
 		| Star of t
 		| FA of FiniteAutomaton.t
+		| FST of Transducer.t
 		| RE of RegularExpression.t
 		| CFG of ContextFreeGrammar.t
 		| PDA of PushdownAutomaton.t
@@ -19852,6 +19854,31 @@ struct
 end
 
 (********************************************************************)
+module FA2FST =
+struct
+	let fa2fst (fa: FiniteAutomaton.t): Transducer.t =
+	{	inAlphabet = fa.alphabet;
+		outAlphabet = Set.empty;
+		states = fa.states;
+		initialState = fa.initialState;
+		transitions = Set.map (fun (src, input, dst) -> (src, input, epsilon, dst)) fa.transitions;
+		acceptStates = fa.acceptStates
+	}
+end
+
+(********************************************************************)
+module FST2FA =
+struct
+	let fst2fa (fst: Transducer.t): FiniteAutomaton.t =
+	{	alphabet = fst.inAlphabet;
+		states = fst.states;
+		initialState = fst.initialState;
+		transitions = Set.map (fun (src, input, _output, dst) -> (src, input, dst)) fst.transitions;
+		acceptStates = fst.acceptStates
+	}
+end
+
+(********************************************************************)
 module RE2TM =
 struct
 	let re2tm (re: RegularExpression.t): TuringMachine.t =
@@ -20139,6 +20166,8 @@ struct
 	let pda2cfg = PDA2CFG.pda2cfg
 	
 	let fa2tm = FA2TM.fa2tm
+	let fa2fst = FA2FST.fa2fst
+	let fst2fa = FST2FA.fst2fa
 	let fa2gr = FA2GR.fa2gr (* PEDRO CARLOS *)
 	let re2tm = RE2TM.re2tm
 	let pda2tm = PDA2TM.pda2tm
@@ -20214,6 +20243,9 @@ struct
 	let fa2model (fa: FiniteAutomaton.t): FiniteAutomaton.model =
 		new FiniteAutomaton.model (Arg.Representation fa)
 
+	let fst2model (fst: Transducer.t): Transducer.model =
+		new Transducer.model (Arg.Representation fst)
+
 	let re2model (re: RegularExpression.t): RegularExpression.model =
 		new RegularExpression.model (Arg.Representation re)
 
@@ -20260,6 +20292,10 @@ struct
 		if model#isTuringMachine then TuringMachine.make (Arg.JSon (model#toJSon))
 		else Error.fatal "model2tm"
 
+	let model2fst (model: Model.model): Transducer.t =
+		if model#isTransducer then Transducer.make (Arg.JSon (model#toJSon))
+		else Error.fatal "model2fst"
+
 	(* Carolina *)
 	let model2comp (model: Model.model): CompositionSupport.t =
 		if model#isFiniteAutomaton then FA (model2fa model)
@@ -20267,6 +20303,7 @@ struct
 		else if model#isPushdownAutomaton then PDA (model2pda model)
 		else if model#isContextFreeGrammar then CFG (model2cfg model)
 		else if model#isTuringMachine then TM (model2tm model)
+		else if model#isTransducer then FST (model2fst model)
 		(********************************************************************)
 		(*PEDRO CARLOS *)
 		(********************************************************************)
@@ -20296,6 +20333,8 @@ struct
 	let pda2cfg m = cfg2model (pda2cfg m#representation)
 	
 	let fa2tm m = tm2model (fa2tm m#representation)
+	let fa2fst m = fst2model (fa2fst m#representation)
+	let fst2fa m = fa2model (fst2fa m#representation)
 	let re2tm m = tm2model (re2tm m#representation)
 
 	let cfg2tm m = tm2model (cfg2tm m#representation)
@@ -21160,6 +21199,8 @@ end
           (PDA (PushdownAutomaton.make (Arg.JSon j)))
         else if TuringMachine.kind = kind then
           (TM (TuringMachine.make (Arg.JSon j)))
+		    else if Transducer.kind = kind then
+		      (FST (Transducer.make (Arg.JSon j)))
         else if Grammar.kind = kind then     (*PEDRO CARLOS *)
           (GR (Grammar.make (Arg.JSon j)))  (*PEDRO CARLOS *)
         else if CompositionSupport.kind = kind then
@@ -21194,6 +21235,8 @@ end
         JSon.toString (PolyModel.pda2model pda)#toJSon
       | TM tm ->
         JSon.toString (PolyModel.tm2model tm)#toJSon
+	    | FST fst ->
+		    JSon.toString (Transducer.toJSon fst)
       | GR gr ->                                        (*PEDRO CARLOS *)
         JSon.toString (PolyModel.gr2model gr)#toJSon    (*PEDRO CARLOS *)
       | GRO gr ->                                       (*PEDRO CARLOS *)
@@ -21238,6 +21281,8 @@ end
       PushdownAutomaton.toJSon2 (Entity.dummyId PushdownAutomaton.kind) pda
     | TM tm ->
       TuringMachine.toJSon2 (Entity.dummyId TuringMachine.kind) tm
+	  | FST fst ->
+	    Transducer.toJSon2 (Entity.dummyId Transducer.kind) fst
     | FAO fao ->
       fao#toJSon2 
     | REO reo ->

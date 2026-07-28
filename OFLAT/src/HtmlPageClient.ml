@@ -213,11 +213,11 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
   let listOnlyGRConvertButtons = ["selectGR"]
   let listOnlyTMConvertButtons = ["selectTM"] (* carolina *)
   let listOnlyTM2TapesConvertButtons = ["selectTM2Tapes"]
-  let listOnlyFSTConvertButtons = ["selectFA"; "selectTM"]
+  let listOnlyFSTConvertButtons = ["selectFST"]
   let listOnlyFSTButtons = ["backwards"; "start"; "forward"]
   let listOnlyCFGButtons = ["testing"; "trace"; "generate"; "backwards"; "start"; "forward"]
   let listOnlyGRButtons = ["testing"; "trace"; "generate"]
-  let listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"]
+  let listOtherButtons = ["testing"; "trace"; "generate"; "fitGraph"; "editModel"; "exportModel"; "saveModel"]
 
   let disableButton buttonName =
     let buttonTo_opt = Dom_html.document##getElementById (Js.string buttonName) in
@@ -240,26 +240,30 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       (List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
+      List.iter (fun el -> enableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> enableButton el) listOnlyPDAButtons;
             (* ????????????????????? TM ?? *)
       List.iter (fun el -> enableButton el) listOnlyAutomataButtons)
     else if type1 = "finite state transducer" || type1 = "transducer" then
-      (List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
+      (List.iter (fun el -> enableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> disableButton el) listOnlyPDAButtons;
       List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> disableButton el) listOnlyTM2TapesConvertButtons;
-      List.iter (fun el -> enableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> disableButton el) listOnlyFSTConvertButtons;
+      List.iter (fun el -> enableButton el) listOnlyTMConvertButtons;
       List.iter (fun el -> enableButton el) listOnlyFSTButtons;
       List.iter (fun el -> enableButton el) listOtherButtons)
     else if type1 = "regular expression" then
       (List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> enableButton el) listOnlyExpressionButtons)
     else if type1 = "context free grammar" then
       (List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> enableButton el) listOnlyPDAButtons;
@@ -267,6 +271,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       List.iter (fun el -> enableButton el) listOnlyCFGButtons)
     else if type1 = "grammar" then
       (List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
+      List.iter (fun el -> disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
       List.iter (fun el -> disableButton el) listOnlyGRConvertButtons;
       List.iter (fun el -> disableButton el) listOnlyPDAButtons;
@@ -275,6 +280,7 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       List.iter (fun el -> enableButton el) listOnlyGRButtons)
     else
       (List.iter (fun el -> disableButton el) listOnlyExpressionButtons;
+      List.iter (fun el -> disableButton el) listOnlyFSTConvertButtons;
       List.iter (fun el -> disableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> disableButton el) listOnlyPDAButtons;
       List.iter (fun el -> disableButton el) listOnlyCFGConvertButtons;
@@ -818,19 +824,19 @@ let putInnerHtmlButtons idtxt txt idtool classTool txt1 =
       let row1 = div "row1" in
         row1##.style##.cssText := Js.string "display: flex; flex-wrap: wrap; height: fit-content;";
         Dom.appendChild buttonBox row1;
-        let clean = button1 (Lang.i18nClean ()) "cleanGR" "tooltip3" (fun () -> !Listeners.runOp "clean") in
+        let clean = button1 (Lang.i18nClean ()) "cleanGR" "tooltip3" (fun () -> !ListenersGR.grOps "clean") in
           Dom.appendChild row1 clean;
           let tool = div2 "tooltipCleanGR" "tooltiptext3" (Lang.i18nTooltipCFGClean ()) in
             Dom.appendChild clean tool; 
-        let kuroda = button1 (Lang.i18nKuroda ()) "kurodaGR" "tooltip3" (fun () -> !Listeners.runOp "kuroda") in
+        let kuroda = button1 (Lang.i18nKuroda ()) "kurodaGR" "tooltip3" (fun () -> !ListenersGR.grOps "kuroda") in
           Dom.appendChild row1 kuroda;
           let tool = div2 "tooltipKurodaGR" "tooltiptext3" (Lang.i18nTooltipGRKuroda ()) in
             Dom.appendChild kuroda tool;
-        let penttonen = button1 (Lang.i18nPenttonen ()) "penttonenGR" "tooltip3" (fun () -> !Listeners.runOp "penttonen") in
+        let penttonen = button1 (Lang.i18nPenttonen ()) "penttonenGR" "tooltip3" (fun () -> !ListenersGR.grOps "penttonen") in
           Dom.appendChild row1 penttonen;
           let tool = div2 "tooltipPenttonenGR" "tooltiptext3" (Lang.i18nTooltipGRPenttonen ()) in
             Dom.appendChild penttonen tool;
-        let nonContractingToCSG = button1 (Lang.i18monoCSG ()) "nonContractingToCSGGRGR" "tooltip3" (fun () -> !Listeners.runOp "nonContractingToCSG") in
+        let nonContractingToCSG = button1 (Lang.i18monoCSG ()) "nonContractingToCSGGRGR" "tooltip3" (fun () -> !ListenersGR.grOps "nonContractingToCSG") in
           Dom.appendChild row1 nonContractingToCSG;
           let tool = div2 "nonContractingToCSGGRGR" "tooltiptext3" (Lang.i18nTooltipnonContractingToCSG ()) in
             Dom.appendChild nonContractingToCSG tool

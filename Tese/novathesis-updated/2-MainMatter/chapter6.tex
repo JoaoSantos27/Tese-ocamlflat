@@ -263,12 +263,10 @@ on a transition must be a single symbol rather than an arbitrary output string o
 Consequently, supporting general delayed-output determinization, where $\varepsilon$-transitions 
 carry outputs and varying output lengths accumulate across subset paths would violate this single-symbol transition constraint 
 and break UI rendering and table mappings. While it could have been done, it would require significant changes to parts of the library that
-didn't pertain to me. Furthermore, deciding algorithmically which output-carrying $\varepsilon$-transition FSTs 
-can be successfully determinized introduces computational complications, as it requires tracking unbounded lookaheads and resolving complex 
-prefix-consistency guarantees across epsilon cycles. So the decision to restrict determinization to only handling transducers whose $\varepsilon$-transitions carry no output,
+didn't pertain to me. So the decision to restrict determinization to not handling transducers with output-producing $\varepsilon$-transitions,
 was made, as it bypasses the mentioned constraints, ensuring predictable execution, and a reliable interface for the web application.
 
-\texttt{toDeterministic}, handles transducers whose $\varepsilon$-transitions carry no output. 
+\texttt{toDeterministic}, handles all transducers except those with output-producing $\varepsilon$-transitions. 
 It begins by rejecting the input if any $\varepsilon$-transition has a non-epsilon output symbol. 
 If this check passes, it applies a standard subset construction used in finite automata, adapted for transducers. 
 The algorithm maintains a worklist of sets of NFST states (each representing a single DFST state), 

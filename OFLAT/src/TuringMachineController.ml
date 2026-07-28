@@ -86,6 +86,7 @@ class tmController (tm: TuringMachineView.model) (s: bool)=
     List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyCFGConvertButtons;
     List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyTM2TapesConvertButtons;
     List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyPDAButtons;
+    List.iter (fun el -> HtmlPageClient.disableButton el) listOnlyFSTConvertButtons;
     List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTMButtons;
     List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons;
     if myTM#isDeterministic then begin

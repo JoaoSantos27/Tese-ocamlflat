@@ -202,7 +202,10 @@ module ControllerListeners = struct
               !Ctrl.ctrlR#defineExample2;
               Cytoscape.fit !Ctrl.ctrlR#getCy_opt
       | 3 ->
-              JS.alertStr (Lang.i18nErrorConversion ())
+              let fst = !Ctrl.ctrlL#convertToFST in
+              createTransducerController fst true;
+              !Ctrl.ctrlR#defineExample2;
+              Cytoscape.fit !Ctrl.ctrlR#getCy_opt
       | 4 ->
               let cfg = !Ctrl.ctrlL#convertToCFG in
               createCFGController cfg true;
@@ -315,6 +318,41 @@ module ControllerListeners = struct
               HtmlPageClient.changeHelpName (Lang.i18nAccessible ());
               (!Ctrl.ctrlL#getAutomaton)#reachablePainting !Ctrl.ctrlL#getCy;;
 
+  ListenersTM.paintAllUsefulListener :=
+    fun () -> !Ctrl.ctrlL#resetStyle;
+              !Ctrl.ctrlL#operation "Useful" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHighlightName (Lang.i18nUsefulBox ());
+              HtmlPageClient.changeHelpName (Lang.i18nUseful ());
+              (!Ctrl.ctrlL#getTM)#usefulPainting !Ctrl.ctrlL#getCy;;
+
+  ListenersTM.paintAllProductivesListener :=
+    fun () -> !Ctrl.ctrlL#resetStyle;
+              !Ctrl.ctrlL#operation "Productive" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHighlightName (Lang.i18nProductiveBox ());
+              HtmlPageClient.changeHelpName (Lang.i18nProductive ());
+              (!Ctrl.ctrlL#getTM)#productivePainting !Ctrl.ctrlL#getCy;;
+
+  ListenersTM.paintAllReachableListener :=
+    fun () -> !Ctrl.ctrlL#resetStyle;
+              !Ctrl.ctrlL#operation "Accessible" ((!Ctrl.ctrlL#model)#id).kind;
+              HtmlPageClient.changeHighlightName (Lang.i18nAccessibleBox ());
+              HtmlPageClient.changeHelpName (Lang.i18nAccessible ());
+              (!Ctrl.ctrlL#getTM)#reachablePainting !Ctrl.ctrlL#getCy;;
+
+  ListenersTM.cleanUselessListener :=
+    fun () ->
+      let tm = !Ctrl.ctrlL#getTM in
+      if tm#areAllStatesUseful then
+        JS.alertStr (Lang.i18nAlertClean ())
+      else
+        let cleanedTM = tm#cleanUselessStatesCy !Ctrl.ctrlL#getCy in
+        CtrlUtil.twoBoxes !Ctrl.ctrlL#getCy_opt;
+        createTMController cleanedTM true;
+        !Ctrl.ctrlR#defineExample2;
+        Cytoscape.fit !Ctrl.ctrlR#getCy_opt;;
+
+  ListenersTM.clearAutoListener :=
+    fun () -> !ListenersAutomaton.clearAutoListener ();
 (* ML *)
 
   ListenersAutomaton.addNode := fun x y -> !Ctrl.ctrlL#addNode x y false false;;

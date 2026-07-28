@@ -283,7 +283,14 @@ The following operations are specific to finite-state transducers:
     The DFA determinization construction can be partially extended to transducers; however, 
     output conflicts may prevent completion. 
     Not all non-deterministic transducers admit equivalent deterministic versions (see Fig.~\ref{nondetfst}). 
-    Characterizations of determinizable transducers have been proposed, along with algorithms for testing determinization. 
+    Characterizations of determinizable transducers have been proposed,
+    namely the "twins property": this property is  a necessary and
+    sufficient condition that characterizes determinizability. Note that
+    there are efficient algorithms (albeit complex) for testing the twins
+    property \cite{allauzen2003twins} and also
+    efficient algorithms for determinization of transducers enjoying the
+    "twins property" \cite{mohri1997finite}.
+
 
     \item \textbf{Minimization} There are several algorithms for minimizing transducers.
 

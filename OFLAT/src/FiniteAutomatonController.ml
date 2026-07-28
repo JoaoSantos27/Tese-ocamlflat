@@ -208,6 +208,7 @@ class faController (fa: FiniteAutomatonView.model) (s: bool)=
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyPDAButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyCFGConvertButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyTMConvertButtons;
+      List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyFSTConvertButtons;
 
       List.iter (fun el -> HtmlPageClient.enableButton el) listOnlyAutomataButtons;
       List.iter (fun el -> HtmlPageClient.enableButton el) listOtherButtons
@@ -264,6 +265,12 @@ class faController (fa: FiniteAutomatonView.model) (s: bool)=
       self#operationFA "convert to TM single tape";
       let tm = PolyModel.fa2tm (myFA :> FiniteAutomaton.model) in
       new TuringMachineView.model (Representation (tm#representation))
+
+    method convertToFST =
+      let open TransducerView in
+      self#operationFA "convert to FST";
+      let fst = PolyModel.fa2fst (myFA :> FiniteAutomaton.model) in
+      new TransducerView.model (Representation (fst#representation))
 
     method getModelName =
       "fa"

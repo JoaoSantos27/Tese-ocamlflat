@@ -75,9 +75,9 @@ As a second example, the following definition makes available on the OCaml side,
   let cytoscape_constructor: Js.Unsafe.t = Js.Unsafe.pure_js_expr "Cytoscape"
 \end{verbatim}
 
-The following OCaml type, as shown in Listing~\ref{lst:cytoscape_binding}, describes the structure of the Cytoscape objects, and it allows method invocation with type safety:
+The following OCaml type, as shown below, describes the structure of the Cytoscape objects, and it allows method invocation with type safety:
 
-\begin{lstlisting}[caption={Binding for Cytoscape object}, label={lst:cytoscape_binding}]
+\begin{verbatim}
 class type cytoscape =
 object
   method add : DataItem.t t -> unit meth
@@ -93,7 +93,7 @@ object
   method contextMenus : 'c t -> contextMenus Js.t meth
   method popper : 'z -> popper Js.t meth
 end
-\end{lstlisting}
+\end{verbatim}
 
 \section*{Syntax Extensions}
 

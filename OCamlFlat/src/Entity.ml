@@ -152,6 +152,7 @@ struct
 			method isContextFreeGrammar : bool = false
 			method isPushdownAutomaton : bool = false
 			method isTuringMachine : bool = false
+			method isTransducer : bool = false
 			method isExercise : bool = false
 			method isComposition : bool = false
 		(* Show *)			
